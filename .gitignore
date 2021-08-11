@@ -1,0 +1,2 @@
+# Don't lay README in .github folder
+.github/README.*
