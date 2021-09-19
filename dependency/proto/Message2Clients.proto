@@ -1,0 +1,149 @@
+//Message2Clients
+syntax = "proto3";
+package Protobuf;
+option csharp_namespace = "Communication.Proto";
+
+import "MessageType.proto";
+enum GameObjType
+{
+    Character = 0;
+    Wall = 1;
+    Prop = 2;
+    Bullet = 3;
+    BirthPoint = 4;
+    OutOfBoundBlock = 5;
+    Grass=6;
+}
+
+//角色可见属性的枚举，包括：Ground（外围）0，Grass1、2、3，以及角色技能带来的隐身4
+enum PlaceType
+{
+    Ground=0;
+    Grass1=1;
+    Grass2=2;
+    Grass3=3;
+    Invisible=4;
+}
+
+//道具类型，此为编写时的临时名称，具体道具名称可以待主题确定后更改
+enum PropType
+{
+    Null = 0;
+    Accelerate = 1;
+    plusAP = 2;
+    minusCD = 3;
+    addHP = 4;
+    Shield = 5;
+    addLIFE = 6;
+    Spear = 7;
+    Decelerate = 8;
+    minusAP = 9;
+    addCD = 10;
+}      //暂且不加更改。前6个信息重用为THUAI5的道具，后几个保留以备日后增加道具类型。
+
+enum ShapeType
+{
+	Circle = 0;       //仍然，子弹和人物为圆形，格子为方形
+	Square = 1;
+}
+
+enum PassiveSkillType
+{
+    PSkill0 = 0;
+    PSkill1 = 1;
+    PSkill2 = 2;
+    PSkill3 = 3;
+    PSkill4 = 4;
+    PSkill5 = 5;
+}
+
+enum ActiveSkillType
+{
+    ASkill0 = 0;
+    ASkill1 = 1;
+    ASkill2 = 2;
+    ASkill3 = 3;
+    ASkill4 = 4;
+    ASkill5 = 5;
+}
+
+
+enum BulletType //现在好像变成射手的专属枚举了（
+{
+    Bullet0 = 0;     //普通子弹
+    Bullet1 = 1;     //爆弾
+}
+
+
+message GameObjInfo
+{
+    GameObjType gameObjType = 1;
+    
+    //以下当gameObjType为任意值时均时有效
+    int64 guid = 2;			//每个游戏对象有一个全局ID，即guid
+    int32 x = 3;
+    int32 y = 4;
+    double facingDirection = 5;
+    int32 moveSpeed = 6;
+    bool canMove = 7;
+    bool isMoving = 8;
+    ShapeType shapeType = 9;	//形状
+    int32 radius = 10;		//圆形物体的半径或正方形内切圆半径
+    
+    //以下当gameObjType为Character、Prop和Bullet时才有效
+    int64 teamID = 11;		//人物所属队伍ID或子弹、道具的发射主人所属队伍ID，其他情况为无效ID
+
+    //以下当gameObjType为Bullet时才有效
+    int32 bap = 12;			//子弹攻击力（改名了）
+    int32 boomRange = 13;	//子弹爆炸范围
+    
+    //以下当gameObjType为Character和Prop时有效
+    PropType propType = 14;	//当前人物持有的道具类型或道具的类型
+    
+    //以下仅当gameObjType为Prop时有效
+    bool isLaid = 15;		//是否已经被放置
+    
+    //以下仅当gameObjType为Character时有效
+    bool isDying = 16;		//正在死亡复活中……
+    int32 CD = 17;                     //回复子弹速度，并非技能CD
+    int32 maxBulletNum = 18;
+    int32 bulletNum = 19;
+    int32 maxHp = 20;
+    int32 hp = 21;
+    int32 lifeNum = 22;		//第几条命
+    PassiveSkillType pSkill = 23;   //被动技能池
+    ActiveSkillType aSkill1 = 24;  //主动1
+    ActiveSkillType aSkill2 = 25;  //主动2
+    PlaceType place = 26;            //角色位置状态，是否可见
+}
+
+//发送单个信息时
+message MessageToOneClient
+{
+    int64 playerID = 1;			//指明发送给谁
+    int64 teamID = 2;			//指明发送给谁
+    
+    MessageType messageType = 3;
+    int64 guid = 4;             //自己的guid
+    string message = 5;         //如果 messageType 为 Send，则为要发送的消息
+    //注意：这里尚未决定是否要改。突然发现只发送字符串比现在的THUAI5机制更自由。。。
+}
+
+//发送全局信息时
+message MessageToClient
+{
+    int64 playerID = 1;			//指明发送给谁
+    int64 teamID = 2;			//指明发送给谁
+    
+    MessageType messageType = 3;
+    GameObjInfo selfInfo = 4;	//自己的个人信息
+    int32 teamScore = 5;                //本队伍的分数
+    repeated GameObjInfo gameObjs = 6;		//当前地图上的所有对象
+
+    message OneTeamGUIDs
+    {
+        repeated int64 teammateGUIDs = 1;
+    }
+
+    repeated OneTeamGUIDs PlayerGUIDs = 7;  //所有玩家的GUID，第一维的 0、1、2…… 分别为队伍编号，每个队伍的0、1、2、……元素分别为playerID为0、1、2、……的玩家的GUID，若不存在该玩家，则为Constant::Constant::InvalidGUID
+}
