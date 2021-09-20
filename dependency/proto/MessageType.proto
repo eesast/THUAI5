@@ -1,0 +1,22 @@
+//MessageType
+syntax = "proto3";
+package Protobuf;
+option csharp_namespace = "Communication.Proto";
+
+enum MessageType
+{
+    AddPlayer = 0;
+    Move = 1;
+    Attack = 2;         //注：编者设想“除携带被动技能‘命中’的人物外，其余人物均不以子弹攻击”
+    Pick = 3;
+    Use = 4;
+    Throw = 5;
+    Send = 6;
+    InvalidPlayer = 7;
+    ValidPlayer = 8;
+    StartGame = 9;
+    Gaming = 10;
+    EndGame = 11;
+    UseSkill1=12;   //新增信息类型：使用主动技能1
+    UseSkill2=13;   //使用主动技能2
+}
