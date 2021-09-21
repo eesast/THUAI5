@@ -28,5 +28,9 @@ namespace Preparation.Utility
         {
             return Math.Sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
         }
+        public Vector2 ToVector2()
+        {
+            return new Vector2(this.x, this.y);
+        }
     }
 }
