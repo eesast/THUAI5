@@ -5,11 +5,7 @@ namespace Preparation.GameObj
 {
     public abstract class GameObj:IGameObj
     {
-        public enum GameObjType
-        {
-            Character = 0,
-            Obj = 1
-        }
+        
         protected readonly object gameObjLock = new object();
         protected readonly XYPosition birthPos;
 

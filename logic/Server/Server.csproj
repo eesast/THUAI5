@@ -9,4 +9,8 @@
     <Compile Remove="IGameObj.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
 </Project>
