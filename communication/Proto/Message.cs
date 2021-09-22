@@ -3,7 +3,7 @@ using System.IO;
 using Google.Protobuf;
 
 namespace Communication.Proto
-{
+{ 
     public enum PacketType
     {
         MessageToClient = 0,    // 全局信息

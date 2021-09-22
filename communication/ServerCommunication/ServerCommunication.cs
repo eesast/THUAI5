@@ -1,34 +1,67 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using HPSocket;
 using HPSocket.Tcp;
 using Communication.Proto;
-using Google.Protobuf;
+using System.Threading;
 
-namespace ServerCommunication
+namespace Communication.ServerCommunication
 {
-    public delegate void OnReceiveCallback();
+    public delegate void OnReceiveCallback(); 
     public delegate void OnConnectCallback();
 
     public sealed class ServerCommunication:IDisposable // 提供释放资源的接口
     {
+        private static readonly ConcurrentDictionary<ulong, IntPtr> dict = new ConcurrentDictionary<UInt64, IntPtr>(); // 储存当前所有玩家的信息
+        private static AutoResetEvent allConnectionClosed = new AutoResetEvent(false); // 是否所有玩家都已经断开了连接
+
         private BlockingCollection<IGameMessage> msgQueue; // 储存信息的线程安全队列 
         private TcpPackServer server;
         public event OnReceiveCallback OnReceive;      // 用于赋给server的事件 发送信息时
-        public event OnConnectCallback OnConnect;      //                     收到client的请求连接信息时
+        public event OnConnectCallback OnConnect;      // 收到client的请求连接信息时
 
-        public ServerCommunication()
+        public ServerCommunication(string endpoint = "127.0.0.1")
         {
             server = new TcpPackServer();
             msgQueue = new BlockingCollection<IGameMessage>();
 
+            server.OnAccept += delegate (IServer sender, IntPtr connId, IntPtr client)
+            {
+                OnConnect?.Invoke();
+                return HandleResult.Ok;
+            };
+
+            server.OnReceive += delegate (IServer sender, IntPtr connId, byte[] bytes)
+            {
+                Message message = new Message();
+                //MessageToServer m2s = message.Content as MessageToServer;
+                //ulong key = ((ulong)m2s.PlayerID | (ulong)m2s.TeamID << 32);
+                //if (dict.ContainsKey(key))
+                //{
+                //    Console.WriteLine($"More than one client claims to have the same ID {m2s.TeamID} {m2s.PlayerID}."); // 这种情况可以强制退出游戏吗...
+                //    return HandleResult.Error;
+                //}
+                //dict.TryAdd(key, connId); // 此处有多次发送的问题
+
+                message.Deserialize(bytes);
+                try
+                {
+                    msgQueue.Add(message);//理论上这里可能抛出异常ObjectDisposedException或InvalidOperationException
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception occured when adding an item to the queue:" + e.Message);
+                }
+                OnReceive?.Invoke();
+                return HandleResult.Ok;
+            };
         }
 
         /// <summary>
         /// 监听某一端口的操作
         /// </summary>
-        public bool Listen(ushort port)
+        public bool Listen(ushort port = 7777)
         {
             server.Port = port;
             bool isListenning = server.Start();
@@ -54,7 +87,7 @@ namespace ServerCommunication
             message.PacketType = PacketType.MessageToClient;
 
             byte[] bytes;
-            message.WriteTo(out bytes); // 生成字节流
+            message.Serialize(out bytes); // 生成字节流
             SendOperation(bytes);
         }
 
@@ -70,7 +103,7 @@ namespace ServerCommunication
             message.PacketType = PacketType.MessageToOneClient;
 
             byte[] bytes;
-            message.WriteTo(out bytes); // 生成字节流
+            message.Serialize(out bytes); // 生成字节流
             SendOperation(bytes);
         }
 

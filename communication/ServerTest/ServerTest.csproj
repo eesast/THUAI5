@@ -5,4 +5,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Proto\Proto.csproj" />
+    <ProjectReference Include="..\ServerCommunication\ServerCommunication.csproj" />
+  </ItemGroup>
+
 </Project>

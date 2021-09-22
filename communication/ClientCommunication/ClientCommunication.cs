@@ -6,19 +6,19 @@ using HPSocket.Tcp;
 using Communication.Proto;
 using System.Threading;
 
-namespace ClientCommunication
+namespace Communication.ClientCommunication
 {
     public delegate void OnReceiveCallback();
 
     /// <summary>
-    /// ¿Í»§¶ËÀà
+    /// å®¢æˆ·ç«¯ç±»
     /// </summary>
-    class ClientCommunication : IDisposable
+    public class ClientCommunication : IDisposable
     {
         private TcpPackClient client;
         private BlockingCollection<IGameMessage> msgQueue;
         public event OnReceiveCallback OnReceive;
-        private readonly int maxtimeout = 30000; // ³¬Ê±½ç¶¨Ê±¼ä
+        private readonly int maxtimeout = 30000; // è¶…æ—¶ç•Œå®šæ—¶é—´
         
         public ClientCommunication()
         {
@@ -27,7 +27,7 @@ namespace ClientCommunication
             client.OnReceive += delegate (IClient sender, byte[] bytes)
             {
                 Message message = new Message();
-                message.Deserialize(bytes); // ½âÂëĞÅÏ¢
+                message.Deserialize(bytes); // è§£ç ä¿¡æ¯
                 try
                 {
                     msgQueue.Add(message);
@@ -42,7 +42,7 @@ namespace ClientCommunication
         }
 
         /// <summary>
-        /// Á¬½Óµ½serverµÄ²Ù×÷
+        /// è¿æ¥åˆ°serverçš„æ“ä½œ
         /// </summary>
         /// <param name="IP"></param>
         /// <param name="port"></param>
@@ -69,7 +69,7 @@ namespace ClientCommunication
             return false;
         }
         /// <summary>
-        /// Ïòserver·¢ËÍµÄÓÃ»§º¯Êı
+        /// å‘serverå‘é€çš„ç”¨æˆ·å‡½æ•°
         /// </summary>
         /// <param name="msg"></param>
         public void SendMessage(MessageToServer msg)
@@ -78,11 +78,11 @@ namespace ClientCommunication
             message.Content = msg;
             message.PacketType = PacketType.MessageToServer;
             byte[] bytes;
-            message.WriteTo(out bytes);
+            message.Serialize(out bytes);
             SendOperation(bytes);
         }
         /// <summary>
-        /// Ïòserver·¢ËÍĞÅÏ¢Ëùµ÷ÓÃµÄÕæÊµ²Ù×÷
+        /// å‘serverå‘é€ä¿¡æ¯æ‰€è°ƒç”¨çš„çœŸå®æ“ä½œ
         /// </summary>
         /// <param name="bytes"></param>
         private void SendOperation(byte[] bytes)
@@ -95,7 +95,7 @@ namespace ClientCommunication
 
 
         /// <summary>
-        /// ÒÔÒıÓÃĞÎÊ½·µ»ØĞÅÏ¢
+        /// ä»¥å¼•ç”¨å½¢å¼è¿”å›ä¿¡æ¯
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
@@ -114,7 +114,7 @@ namespace ClientCommunication
         }
 
         /// <summary>
-        /// ÒÔ·µ»ØÖµĞÎÊ½·µ»ØĞÅÏ¢
+        /// ä»¥è¿”å›å€¼å½¢å¼è¿”å›ä¿¡æ¯
         /// </summary>
         /// <returns></returns>
         public IGameMessage Take()
@@ -131,7 +131,7 @@ namespace ClientCommunication
         }
 
         /// <summary>
-        /// Í£Ö¹client¶Ë
+        /// åœæ­¢clientç«¯
         /// </summary>
         /// <returns></returns>
         public bool Stop()
@@ -140,7 +140,7 @@ namespace ClientCommunication
         }
 
         /// <summary>
-        /// À¬»ø»ØÊÕ
+        /// åƒåœ¾å›æ”¶
         /// </summary>
         public void Dispose()
         {
