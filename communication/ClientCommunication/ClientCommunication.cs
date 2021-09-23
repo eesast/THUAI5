@@ -44,8 +44,8 @@ namespace Communication.ClientCommunication
         /// <summary>
         /// 连接到server的操作
         /// </summary>
-        /// <param name="IP"></param>
-        /// <param name="port"></param>
+        /// <param name="IP">IP 地址</param>
+        /// <param name="port">端口编号</param>
         /// <returns></returns>
         public bool Connect(string IP, ushort port)
         {
