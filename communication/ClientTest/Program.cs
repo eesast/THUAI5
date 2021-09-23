@@ -6,15 +6,19 @@ namespace ClientTest
 {
     class ClientTest
     {
+        
         static void Main(string[] args)
         {
+            string ip = "127.0.0.1";
             try
             {
                 Console.WriteLine($"my params are {int.Parse(args[0])} and {int.Parse(args[1])}");
+                Console.WriteLine($"connect to ip {args[2]}");
+                ip = args[2];
             }
             catch(Exception e)
             {
-                Console.WriteLine("no params!");
+                Console.WriteLine("wrong params!");
                 Environment.Exit(0); // 我也不知道这样做合适不合适...
             }
             ClientCommunication client = new ClientCommunication();
@@ -26,7 +30,7 @@ namespace ClientTest
                 Console.WriteLine(m2one);
             };
 
-            if (client.Connect("127.0.0.1",7777))
+            if (client.Connect(ip,7777))
             {
                 Console.WriteLine("success to connect to the server.");
             }
