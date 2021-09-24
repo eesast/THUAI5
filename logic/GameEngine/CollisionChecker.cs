@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
-/// <summary>
-/// 有待改进，待我想想
-/// </summary>
 
 namespace GameEngine
 {
@@ -62,7 +59,7 @@ namespace GameEngine
 			return null;
 		}
 		/// <summary>
-		/// /// 可移动物体（圆）向矩形物体移动时，可移动且不会碰撞的最大距离
+		/// /// 可移动物体（圆）向矩形物体移动时，可移动且不会碰撞的最大距离。直接用double计算，防止误差
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <param name="square">矩形的中心坐标</param>
@@ -88,11 +85,10 @@ namespace GameEngine
 		/// <returns>最大可能的移动距离</returns>
 		public double FindMax(IMoveable obj, XYPosition nextPos, Vector moveVec)
 		{
-			const int numOfGridPerCell = 1000; //本来应该在Constant中，这里先写着防止有bug
 			double maxLen = (double)uint.MaxValue;
 			double tmpMax = maxLen; //暂存最大值
 
-			// 先找只考虑墙的最大距离。这么做的话，objlist中不应当添加墙
+			// 先找只考虑墙的最大距离。需要明确的是，objlist中不应当添加墙
 			var desination = moveVec;
 			double maxOnlyConsiderWall = maxLen;
 			while(desination.length>0)
@@ -101,7 +97,7 @@ namespace GameEngine
 				{
 					maxOnlyConsiderWall = MaxMoveToSquare(obj, gameMap.GetCell(Vector.Vector2XY(desination) + obj.Position));
 				}
-				desination.length -= numOfGridPerCell / (Math.Abs(Math.Cos(desination.angle)));
+				desination.length -= Constant.numOfPosGridPerCell / (Math.Abs(Math.Cos(desination.angle)));
             }
 
 			tmpMax = maxLen;

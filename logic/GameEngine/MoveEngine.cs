@@ -9,8 +9,6 @@ namespace GameEngine
 {
     public class MoveEngine
     {
-		const int numOfStepPerSecond = 20; //应该放在Constant中，这里先写着方便debug
-
 		/// <summary>
 		/// 碰撞结束后要做的事情
 		/// </summary>
@@ -55,7 +53,7 @@ namespace GameEngine
 			/*由于四周是墙，所以人物永远不可能与越界方块碰撞*/
 			XYPosition nextPos = obj.Position + Vector.Vector2XY(moveVec);
 			double maxLen = collisionChecker.FindMax(obj, nextPos, moveVec);
-			maxLen = Math.Min(maxLen, obj.MoveSpeed / numOfStepPerSecond);
+			maxLen = Math.Min(maxLen, obj.MoveSpeed / Constant.numOfStepPerSecond);
 			obj.Move(new Vector(moveVec.angle, maxLen));
 		}
 
@@ -72,9 +70,6 @@ namespace GameEngine
 						obj.IsMoving = true;
 					}
 
-					const int numOfStepPerSecond = 20; //应放在const中
-					const int numOfGridPerCell = 1000;
-
 					Vector moveVec = new Vector(obj.FacingDirection, 0.0);
 					double deltaLen = moveVec.length - Math.Sqrt(obj.Move(moveVec));  //转向，并用deltaLen存储行走的误差
 					IGameObj? collisionObj = null;
@@ -84,7 +79,7 @@ namespace GameEngine
 						() => gameTimer.IsGaming && obj.CanMove && !obj.IsResetting,
 						() =>
 						{
-							moveVec.length = obj.MoveSpeed / numOfStepPerSecond ;
+							moveVec.length = obj.MoveSpeed / Constant.numOfStepPerSecond ;
 
 							//越界情况处理：如果越界，则与越界方块碰撞
 							bool flag; //循环标志
@@ -114,10 +109,10 @@ namespace GameEngine
 
 							return true;
 						},
-						numOfGridPerCell / numOfStepPerSecond,
+						Constant.numOfPosGridPerCell / Constant.numOfStepPerSecond,
 						() =>
 						{
-							int leftTime = moveTime % (numOfGridPerCell / numOfStepPerSecond);
+							int leftTime = moveTime % (Constant.numOfPosGridPerCell / Constant.numOfStepPerSecond);
 							bool flag;
 							do
 							{
