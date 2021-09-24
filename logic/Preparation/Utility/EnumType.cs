@@ -29,7 +29,7 @@ namespace Preparation.Utility
         Grass3 = 3,
         Invisible = 4
     }
-    enum BulletType //子弹的类型
+    public enum BulletType //子弹的类型
     {
         Bullet0 = 0,    //普通子弹
         Bullet1 = 1     //爆弾
@@ -48,7 +48,7 @@ namespace Preparation.Utility
         minusAP = 9,
         addCD = 10
     }
-    enum PassiveSkillType   // 被动技能
+    public enum PassiveSkillType   // 被动技能
     {
         PSkill0 = 0,
         PSkill1 = 1,
@@ -57,7 +57,7 @@ namespace Preparation.Utility
         PSkill4 = 4,
         PSkill5 = 5
     }
-    enum ActiveSkillType    // 主动技能
+    public enum ActiveSkillType    // 主动技能
     {
         ASkill0 = 0,
         ASkill1 = 1,
