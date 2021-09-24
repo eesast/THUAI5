@@ -11,7 +11,7 @@ namespace Preparation.GameObj
             Obj = 1
         }
         public GameObjType ObjType { get; }
-
+        
         protected readonly object gameObjLock = new object();
         public object MoveLock { get => gameObjLock; }
         protected readonly XYPosition birthPos;
