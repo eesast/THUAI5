@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Preparation", "Preparation\Preparation.csproj", "{84B5D876-B6DE-499C-9EF2-D924FDC984B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameEngine", "GameEngine\GameEngine.csproj", "{C1CEF591-E65C-4E16-A369-F5F9EA46F978}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameEngine", "GameEngine\GameEngine.csproj", "{C1CEF591-E65C-4E16-A369-F5F9EA46F978}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrameRateTask", "FrameRateTask\FrameRateTask.csproj", "{EF19C94E-92A2-4973-BD5E-25FCFBB5D926}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C1CEF591-E65C-4E16-A369-F5F9EA46F978}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1CEF591-E65C-4E16-A369-F5F9EA46F978}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1CEF591-E65C-4E16-A369-F5F9EA46F978}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF19C94E-92A2-4973-BD5E-25FCFBB5D926}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF19C94E-92A2-4973-BD5E-25FCFBB5D926}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF19C94E-92A2-4973-BD5E-25FCFBB5D926}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF19C94E-92A2-4973-BD5E-25FCFBB5D926}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
