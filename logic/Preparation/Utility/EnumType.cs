@@ -15,6 +15,10 @@ namespace Preparation.Utility
         BirthPoint = 4,
         OutOfBoundBlock = 5,
         Grass = 6
+    public enum GameObjType
+    {
+        Player = 0,
+        Object = 1
     }
     public enum ShapeType
     {

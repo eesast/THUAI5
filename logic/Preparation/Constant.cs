@@ -2,6 +2,7 @@
 using Preparation.Utility;
 
 namespace Preparation
+
 {
     public static class Constant
     {
