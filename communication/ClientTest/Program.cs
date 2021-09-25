@@ -6,7 +6,6 @@ namespace ClientTest
 {
     class ClientTest
     {
-        
         static void Main(string[] args)
         {
             string ip = "127.0.0.1";
