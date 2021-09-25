@@ -1,4 +1,8 @@
-﻿using Preparation.Interface;
+﻿
+//已弃用：MoveableObj类，包含属性在抽象/具体类实现
+
+/*
+using Preparation.Interface;
 using Preparation.Utility;
 
 namespace Preparation.GameObj
@@ -47,3 +51,4 @@ namespace Preparation.GameObj
         }
     }
 }
+//*/
