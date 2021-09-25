@@ -1,7 +1,4 @@
-﻿using Preparation.GameObj;
-using Preparation.Utility;
-
-namespace Preparation.Utility
+﻿namespace Preparation.Utility
 {
     public static class Constant
     {
