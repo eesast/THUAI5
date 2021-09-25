@@ -5,6 +5,9 @@ namespace Preparation
 {
     public static class Constant
     {
+        /// <summary>
+        /// 基础常数与常方法
+        /// </summary>
         public const int numOfPosGridPerCell = 1000;            // 每格的【坐标单位】数
         public const int numOfStepPerSecond = 20;               // 每秒行走的步数
 
@@ -22,5 +25,19 @@ namespace Preparation
         {
             return pos.y / numOfPosGridPerCell;
         }
+        /// <summary>
+        /// 玩家相关
+        /// </summary>
+        public const int basicAp = 1000;	// 初始攻击力
+        public const int basicHp = 6000;	// 初始血量
+        public const int basicCD = 1000;    // 初始冷却
+        public const int basicBulletNum = 12;   // 初始子弹量（如果是射手）
+        public const int MinAP = 0; // 最小攻击力
+        public const int MaxAP = int.MaxValue;  //最大攻击力
+        /// <summary>
+        /// 道具相关
+        /// </summary>
+        public const int MinPropTypeNum = 1;
+        public const int MaxPropTypeNum = 10;
     }
 }

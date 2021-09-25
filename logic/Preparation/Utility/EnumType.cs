@@ -66,6 +66,15 @@ namespace Preparation.Utility
         ASkill4 = 4,
         ASkill5 = 5
     }
+    public enum BuffType    //buff
+    {
+        MoveSpeed = 0,
+        AP = 1,
+        CD = 2,
+        Shield = 3,
+        AddLIFE = 4,
+        Spear = 5
+    }
     /*public enum JobType : int   // 职业，貌似被废弃了。——LHR
     {
         Job0 = 0,

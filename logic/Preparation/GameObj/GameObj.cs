@@ -127,6 +127,11 @@ namespace Preparation.GameObj
                 }
             }
         }
+        /// <summary>
+        /// 原初移动速度，THUAI4在Character类中
+        /// </summary>
+        private int orgMoveSpeed;
+        public int OrgMoveSpeed { get => orgMoveSpeed; protected set { orgMoveSpeed = value; } }
         public virtual bool CanSee(GameObj obj)
         {
             if (obj.Place == PlaceType.Invisible) //先判断是否隐身
@@ -149,6 +154,22 @@ namespace Preparation.GameObj
             return (long)(XYVec.ToVector2() * new Vector2(0, 0));
         }
         /// <summary>
+        /// 设置位置
+        /// </summary>
+        /// <param name="newpos">新位置</param>
+        public void SetPosition(XYPosition newpos)
+        {
+            Position = newpos;
+        }
+        /// <summary>
+        /// 设置移动速度
+        /// </summary>
+        /// <param name="newMoveSpeed">新速度</param>
+        public void SetMoveSpeed(int newMoveSpeed)
+        {
+            MoveSpeed = newMoveSpeed;
+        }
+        /// <summary>
         /// 复活时数据重置
         /// </summary>
         public virtual void Reset()
@@ -168,7 +189,7 @@ namespace Preparation.GameObj
         /// 在xfgg点播下设计了这个抽象辅助方法，在具体类中实现
         /// </summary>
         /// <returns> 依具体类及该方法参数而定，默认为false </returns> 
-        protected virtual bool IgnoreCollideExecutor(IGameObj targetObj)=>false;
+        protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
         bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
         public GameObj(XYPosition initPos,int initRadius,PlaceType initPlace)
         {

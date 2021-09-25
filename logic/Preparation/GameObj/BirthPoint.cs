@@ -6,15 +6,23 @@ namespace Preparation.GameObj
     /// <summary>
     /// 出生点
     /// </summary>
-    public class BirthPoint : GameObj
+    public class BirthPoint : ObjOfCharacter
     {
         public BirthPoint(XYPosition initPos, int radius) : base(initPos, radius, PlaceType.Land) 
         {
             this.CanMove = false;
             this.Type = GameObjType.BirthPoint;
         }
-        public override bool IsRigid => false; // 与THUAI4不同，改成了非刚体
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj) => true;  // 出生点不与任何东西碰撞
+        // 修改建议：需要避免非自己的玩家进入出生点，否则会重叠
+        public override bool IsRigid => true;
+        protected override bool IgnoreCollideExecutor(IGameObj targetObj)
+        {
+            if (targetObj.Type != GameObjType.Character)
+                return true;    // 非玩家不碰撞
+            else if (targetObj.Type == GameObjType.Character && targetObj.ID == this.Parent.ID)
+                return true;    // 出生点所属的玩家不碰撞
+            return false;
+        }
         public override ShapeType Shape => ShapeType.Square; // 与THUAI4不同，改成了方形
     }
 }
