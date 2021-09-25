@@ -3,18 +3,32 @@ using Preparation.Utility;
 
 namespace Preparation.GameObj
 {
-    public abstract class GameObj:IGameObj
+    /// <summary>
+    /// 一切游戏元素的总基类，与THUAI4不同，继承IMoveable接口（出于一切物体其实都是可运动的指导思想）——LHR
+    /// </summary>
+    public abstract class GameObj : IMoveable
     {
-        public enum GameObjType
-        {
-            Character = 0,
-            Obj = 1
-        }
-        public GameObjType ObjType { get; }
         
         protected readonly object gameObjLock = new object();
-        public object MoveLock { get => gameObjLock; }
+        /// <summary>
+        /// 可移动物体专用锁
+        /// </summary>
+        public object MoveLock => gameObjLock;
+
         protected readonly XYPosition birthPos;
+
+        private GameObjType type;
+        public GameObjType Type
+        {
+            get => type;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    type = value;
+                }
+            }
+        }
 
         public long ID { get;}
 
@@ -97,11 +111,27 @@ namespace Preparation.GameObj
                 }
             }
         }
+
+        protected int moveSpeed;
         /// <summary>
-        /// 能否看见指定物体，根据物体的位置标志进行判断
+        /// 移动速度
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
+        public int MoveSpeed
+        {
+            get => moveSpeed;
+            protected set
+            {
+                lock (gameObjLock)
+                {
+                    moveSpeed = value;
+                }
+            }
+        }
+        /// <summary>
+        /// 原初移动速度，THUAI4在Character类中
+        /// </summary>
+        private int orgMoveSpeed;
+        public int OrgMoveSpeed { get => orgMoveSpeed; protected set { orgMoveSpeed = value; } }
         public virtual bool CanSee(GameObj obj)
         {
             if (obj.Place == PlaceType.Invisible) //先判断是否隐身
@@ -112,12 +142,55 @@ namespace Preparation.GameObj
                 return true;
             return false;
         }
+        // 移动，改变坐标
+        public long Move(Vector moveVec)
+        {
+            var XYVec = Vector.Vector2XY(moveVec);
+            lock (gameObjLock)
+            {
+                FacingDirection = moveVec.angle;
+                this.Position += XYVec;
+            }
+            return (long)(XYVec.ToVector2() * new Vector2(0, 0));
+        }
         /// <summary>
-        /// 构造方法
+        /// 设置位置
         /// </summary>
-        /// <param name="initPos">初始位置</param>
-        /// <param name="initRadius"></param>
-        /// <param name="initPlace">初始位置标志</param>
+        /// <param name="newpos">新位置</param>
+        public void SetPosition(XYPosition newpos)
+        {
+            Position = newpos;
+        }
+        /// <summary>
+        /// 设置移动速度
+        /// </summary>
+        /// <param name="newMoveSpeed">新速度</param>
+        public void SetMoveSpeed(int newMoveSpeed)
+        {
+            MoveSpeed = newMoveSpeed;
+        }
+        /// <summary>
+        /// 复活时数据重置
+        /// </summary>
+        public virtual void Reset()
+        {
+            lock (gameObjLock)
+            {
+                
+                FacingDirection = 0.0;
+                IsMoving = false;
+                CanMove = false;
+                IsResetting = true;
+                this.Position = birthPos;
+            }
+        }
+        /// <summary>
+        /// 为了使IgnoreCollide多态化并使GameObj能不报错地继承IMoveable
+        /// 在xfgg点播下设计了这个抽象辅助方法，在具体类中实现
+        /// </summary>
+        /// <returns> 依具体类及该方法参数而定，默认为false </returns> 
+        protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
+        bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
         public GameObj(XYPosition initPos,int initRadius,PlaceType initPlace)
         {
             this.birthPos = initPos;
