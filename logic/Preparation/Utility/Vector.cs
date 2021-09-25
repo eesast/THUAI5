@@ -11,6 +11,10 @@ namespace Preparation.Utility
         {
             return new XYPosition((int)(v.length * Math.Cos(v.angle)), (int)(v.length * Math.Sin(v.angle)));
         }
+        public Vector2 ToVector2()
+        {
+            return new Vector2((int)(this.length * Math.Cos(this.angle)), (int)(this.length * Math.Sin(this.angle)));
+        }
         public static Vector XY2Vector(double x, double y)
         {
             return new Vector(Math.Atan2(y, x), Math.Sqrt(x * x + y * y));
