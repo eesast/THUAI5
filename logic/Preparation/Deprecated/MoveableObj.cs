@@ -7,7 +7,7 @@ using Preparation.Utility;
 
 namespace Preparation.GameObj
 {
-    public abstract class MoveableObj: GameObj,IMoveable
+    public abstract class MoveableObj: GameObj, IMoveable
     {
         private int moveSpeed;
         public int MoveSpeed
@@ -21,16 +21,16 @@ namespace Preparation.GameObj
                 }
             }
         }
-        protected readonly object moveLock = new object();
         public override ShapeType Shape => ShapeType.Circle; //会移动的一定是圆形
         public MoveableObj(XYPosition initPos, int initRadius, PlaceType initPlace,int initSpeed):base(initPos,initRadius,initPlace)
         {
             moveSpeed = initSpeed;
         }
+        protected abstract bool IgnoreCollision(IGameObj targetObj);
         public long Move(Vector moveVec)
         {
             var XYVec = Vector.Vector2XY(moveVec);
-            lock (moveLock)
+            lock (gameObjLock)
             {
                 FacingDirection = moveVec.angle;
                 this.Position += XYVec;
@@ -40,16 +40,13 @@ namespace Preparation.GameObj
 
         public virtual void Reset() //复活时数据重置
         {
-            lock (moveLock)
-            {
-                this.Position = birthPos;
-            }
             lock(gameObjLock)
             {
                 FacingDirection = 0.0;
                 IsMoving = false;
                 CanMove = false;
                 IsResetting = true;
+                this.Position = birthPos;
             }
         }
     }
