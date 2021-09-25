@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\CAPI",
+    "\\CAPI\\CAPI",
+    "\\communication",
+    "\\communication\\ClientCommunication",
+    "\\logic",
+    "\\logic\\Client"
+  ],
+  "SelectedNode": "\\logic\\Client\\MainWindow.xaml.cs",
+  "PreviewInSolutionExplorer": false
+}
