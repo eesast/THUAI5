@@ -17,7 +17,6 @@ namespace ClientTest
             try
             {
                 Console.WriteLine($"my params are {int.Parse(args[0])} and {int.Parse(args[1])}");
-                Console.WriteLine($"connect to ip {args[2]} with port {args[3]}");
             }
             catch(Exception e)
             {
@@ -33,6 +32,7 @@ namespace ClientTest
                     port = ushort.Parse(args[3]);
                 }
             }
+            Console.WriteLine($"Connect to ip {ip} and port {port}");
            
             ClientCommunication client = new ClientCommunication();
             client.OnReceive += delegate ()
