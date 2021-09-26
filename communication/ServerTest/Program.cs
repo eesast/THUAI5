@@ -8,10 +8,20 @@ namespace ServerTest
 {
     class Test
     {
+        /// <summary>
+        /// args[0] 监听端口(选填，默认7777)
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
+            ushort port = 7777;
+            if(args.Length!=0)
+            {
+                port = ushort.Parse(args[0]);
+            }
+
             ServerCommunication server = new ServerCommunication();
-            server.Listen(7777); // 监听端口
+            server.Listen(port); // 监听端口
             server.OnConnect += delegate ()
             {
                Console.WriteLine("A client connects");
