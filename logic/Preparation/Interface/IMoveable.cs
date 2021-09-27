@@ -5,9 +5,10 @@ namespace Preparation.Interface
 {
     public interface IMoveable:IGameObj
     {
-        public int MoveSpeed { get; }
-        public long Move(Vector moveVec);
         Object MoveLock { get; }
+        public int MoveSpeed { get; }
+        public long Move(Vector moveVec); 
+        protected bool IgnoreCollide(IGameObj targetObj);   // 忽略碰撞，在具体类中实现
         public bool WillCollideWith(IGameObj targetObj,XYPosition nextPos) //检查下一位置是否会和目标物碰撞
         {                                                                  //会移动的只有子弹和人物，都是Circle           
             if (!targetObj.IsRigid || targetObj.ID == ID)

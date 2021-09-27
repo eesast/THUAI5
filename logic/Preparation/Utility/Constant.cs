@@ -4,6 +4,15 @@
     {
         public const int numOfPosGridPerCell = 1000;            // 每格的【坐标单位】数
         public const int numOfStepPerSecond = 20;               // 每秒行走的步数
+        public const double basicAttackRange = 4;               // 基本攻击范围
+        public const int basicMaxHP = 100;                      // 基本血量
+        public const double basicCD = 3;                        // 基本换弹CD
+        public const int basicMaxBulletNum = 5;                 // 基本最大子弹值
+        public const double basicBulletBombRange = 5;           // 基本子弹爆炸范围
+        public const int basicMoveSpeed = 10;                   // 基本移动速度
+        public const int basicBulletMoveSpeed = 10;             // 基本子弹移动速度
+        public const int addScoreWhenKillOneLevelPlayer = 10;   // 击杀一级角色获得的加分
+        public const int scoreInrease = 2;                      // 每高一级，击杀该角色多的加分
 
         public static XYPosition GetCellCenterPos(int x, int y)   // 求格子的中心坐标
         {
