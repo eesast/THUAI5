@@ -8,7 +8,13 @@ namespace Preparation.GameObj
     /// </summary>
     public abstract class GameObj : IMoveable
     {
-
+        public enum GameObjType
+        {
+            Character = 0,
+            Obj = 1
+        }
+        public GameObjType ObjType { get; }
+        
         protected readonly object gameObjLock = new object();
         /// <summary>
         /// 可移动物体专用锁
@@ -29,6 +35,8 @@ namespace Preparation.GameObj
                 }
             }
         }
+
+        public long ID { get;}
 
         public long ID { get; }
 
@@ -120,6 +128,20 @@ namespace Preparation.GameObj
         public int MoveSpeed
         {
             get => moveSpeed;
+            set
+            {
+                lock (gameObjLock)
+                {
+                    moveSpeed = value;
+                }
+            }
+        }
+        /// <summary>
+        /// 原初移动速度，THUAI4在Character类中
+        /// </summary>
+        public int MoveSpeed
+        {
+            get => moveSpeed;
             protected set
             {
                 lock (gameObjLock)
@@ -192,7 +214,7 @@ namespace Preparation.GameObj
         /// <returns> 依具体类及该方法参数而定，默认为false </returns> 
         protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
         bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
-        public GameObj(XYPosition initPos, int initRadius, PlaceType initPlace)
+        public GameObj(XYPosition initPos,int initRadius,PlaceType initPlace)
         {
             this.birthPos = initPos;
             this.Radius = initRadius;

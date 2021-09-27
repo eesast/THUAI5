@@ -64,7 +64,7 @@ namespace Preparation.GameObj
 
     internal sealed class Bullet0 : Bullet
     {
-        public Bullet0(XYPosition initPos, int radius, int initSpeed, int BombRange, int ap, bool hasSpear) : base(initPos, radius, initSpeed, BombRange, ap, hasSpear) { }
+        public Bullet0(XYPosition initPos, int radius, int initSpeed, int BombRange, int ap, bool hasSpear) : base(initPos, radius, initSpeed,BombRange, ap, hasSpear) {}
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
         public override int BulletBombRange => 3;

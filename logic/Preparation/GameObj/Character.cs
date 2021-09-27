@@ -4,11 +4,15 @@ using Preparation.Utility;
 
 namespace Preparation.GameObj
 {
-    public abstract partial class Character : MoveableObj, ICharacter	// 负责人LHR摆烂中...该文件下抽象部分类已基本完工，剩下的在buffmanager里写
+    public abstract partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...该文件下抽象部分类已基本完工，剩下的在buffmanager里写
     {
+        public readonly object propLock = new object();
+        private object beAttackedLock = new object();
+        public object PropLock => propLock;
         public object SkillLock => gameObjLock;
+        #region 角色的基本属性及方法，包括与道具、子弹的交互方法
         /// <summary>
-        /// 装弹冷却/近战攻击冷却
+        /// 装弹冷却
         /// </summary>
         protected int cd;
         public int CD
@@ -23,10 +27,61 @@ namespace Preparation.GameObj
                 }
             }
         }
-        public int OrgCD { get; protected set; }	// 原初冷却
+        public int orgCD { get; protected set; }
+        /// <summary>
+        /// 技能一冷却
+        /// </summary>
+        protected int cd1;
+        public int CD1
+        {
+            get => cd1;
+            private set
+            {
+                lock (gameObjLock)
+                {
+                    cd1 = value;
+                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
+                }
+            }
+        }
+        public int OrgCD1 { get; protected set; }   // 技能一原初冷却
+        /// <summary>
+        /// 技能二冷却
+        /// </summary>
+        protected int cd2;
+        public int CD2
+        {
+            get => cd2;
+            private set
+            {
+                lock (gameObjLock)
+                {
+                    cd2 = value;
+                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
+                }
+            }
+        }
+        public int OrgCD2 { get; protected set; }   // 技能二原初冷却
+        /// <summary>
+        /// 技能三冷却
+        /// </summary>
+        protected int cd3;
+        public int CD3
+        {
+            get => cd3;
+            private set
+            {
+                lock (gameObjLock)
+                {
+                    cd3 = value;
+                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
+                }
+            }
+        }
+        public int OrgCD3 { get; protected set; }	// 技能三原初冷却
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;	// 人物最大子弹数
-        protected int bulletNum;
+        protected int bulletNum;	
         public int BulletNum => bulletNum;  // 目前持有的子弹数
         public int MaxHp { get; protected set; }    // 最大血量
         protected int hp;
@@ -40,7 +95,7 @@ namespace Preparation.GameObj
                 else hp = value;
             }
         }
-        private int deathCount = 0;
+        private int deathCount = 0;       
         public int DeathCount => deathCount;  // 玩家的死亡次数
         protected int ap;   // 当前攻击力
         public int AP
@@ -56,6 +111,8 @@ namespace Preparation.GameObj
             }
         }
         public int OrgAp { get; protected set; }    // 原初攻击力
+        private int level;
+        public int Level => level;  // 当前等级
         private int score;
         public int Score => score;  // 当前分数
 
@@ -136,13 +193,32 @@ namespace Preparation.GameObj
             }
         }*/
 
-        public abstract Bullet bullet { get; } //人物的发射子弹类型，射程伤害等信息存在具体子弹里
+        /// <summary>
+        /// 进行一次远程攻击
+        /// </summary>
+        /// <param name="posOffset"></param>
+        /// <param name="bulletRadius"></param>
+        /// <param name="basicBulletMoveSpeed"></param>
+        /// <returns>攻击操作发出的子弹</returns>
+        public Bullet? RemoteAttack(XYPosition posOffset, int bulletRadius, int basicBulletMoveSpeed)
+        {
+            if (TrySubBulletNum()) return ProduceOneBullet(posOffset, bulletRadius, basicBulletMoveSpeed);
+            else return null;
+        }
+        /// <summary>
+        /// 产生一颗子弹
+        /// </summary>
+        /// <param name="posOffset"></param>
+        /// <param name="bulletRadius"></param>
+        /// <param name="basicBulletMoveSpeed"></param>
+        /// <returns>产生的子弹</returns>
+        protected abstract Bullet ProduceOneBullet(XYPosition posOffset, int bulletRadius, int basicBulletMoveSpeed);
 
         /// <summary>
         /// 尝试将子弹数量减1
         /// </summary>
         /// <returns>减操作是否成功</returns>
-        private bool TrySubBulletNum()
+        private bool TrySubBulletNum()	
         {
             lock (gameObjLock)
             {
@@ -179,7 +255,7 @@ namespace Preparation.GameObj
         {
             lock (gameObjLock)
             {
-                if (hp < MaxHp)
+                if(hp < MaxHp)
                 {
                     hp = MaxHp > hp + add ? hp + add : MaxHp;
                     Debugger.Output(this, " hp has added to: " + hp.ToString());
@@ -227,7 +303,59 @@ namespace Preparation.GameObj
             lock (gameObjLock)
             {
                 score += add;
-                Debugger.Output(this, " 's score has been added to: " + score.ToString());
+                //Debugger.Output(this, " 's score has been added to: " + score.ToString());
+            }
+        }
+        /// <summary>
+        /// 减分
+        /// </summary>
+        /// <param name="sub">减少量</param>
+        public void SubScore(int sub)
+        {
+            lock (gameObjLock)
+            {
+                score -= sub;
+                //Debugger.Output(this, " 's score has been subed to: " + score.ToString());
+            }
+        }
+        /// <summary>
+        /// 遭受攻击
+        /// </summary>
+        /// <param name="subHP"></param>
+        /// <param name="hasSpear"></param>
+        /// <param name="attacker">伤害来源</param>
+        /// <returns>是否因该攻击而死</returns>
+        public bool BeAttack(int subHP, bool hasSpear, Character? attacker)
+        {
+            lock (beAttackedLock)
+            {
+                if (hp <= 0) return false;
+                if (!(attacker?.TeamID == this.TeamID))
+                {
+                    if (hasSpear || !HasShield) TrySubHp(subHP);
+                    if (hp <= 0) TryActivatingLIFE();
+                }
+                return hp <= 0;
+            }
+        }
+        /// <summary>
+        /// 攻击被反弹，反弹伤害不会再被反弹
+        /// </summary>
+        /// <param name="subHP"></param>
+        /// <param name="hasSpear"></param>
+        /// <param name="bouncer">反弹伤害者</param>
+        /// <returns>是否因反弹伤害而死</returns>
+        private bool BeBounced(int subHP, bool hasSpear, Character? bouncer)
+        {
+            lock (beAttackedLock)
+            {
+                if (hp <= 0) return false;
+                if (!(bouncer?.TeamID == this.TeamID))
+                {
+                    if (hasSpear || !HasShield) TrySubHp(subHP);
+                    if (hp <= 0) TryActivatingLIFE();
+                }
+                return hp <= 0;
             }
         }
 
@@ -262,24 +390,27 @@ namespace Preparation.GameObj
                 }
             }
         }
+        #endregion
 
         #region 角色拥有的buff相关属性、方法（目前还是完全照搬的）
         /*public void AddMoveSpeed(double add, int buffTime) => buffManeger.AddMoveSpeed(add, buffTime, newVal => { MoveSpeed = newVal; }, OrgMoveSpeed);
 
         public void AddAP(double add, int buffTime) => buffManeger.AddAP(add, buffTime, newVal => { AP = newVal; }, OrgAp);
 
-        public void ChangeCD(double discount, int buffTime) => buffManeger.ChangeCD(discount, buffTime, newVal => { CD = newVal; }, OrgCD);
+        public void ChangeCD1(double discount, int buffTime) => buffManeger.ChangeCD1(discount, buffTime, newVal => { CD1 = newVal; }, OrgCD1);
+        public void ChangeCD2(double discount, int buffTime) => buffManeger.ChangeCD2(discount, buffTime, newVal => { CD2 = newVal; }, OrgCD2);
+        public void ChangeCD3(double discount, int buffTime) => buffManeger.ChangeCD3(discount, buffTime, newVal => { CD3 = newVal; }, OrgCD3);
 
         public void AddShield(int shieldTime) => buffManeger.AddShield(shieldTime);
         public bool HasShield => buffManeger.HasShield;
 
         public void AddLIFE(int LIFETime) => buffManeger.AddLIFE(LIFETime);
-        public bool HasTotem => buffManeger.HasTotem;
+        public bool HasLIFE => buffManeger.HasLIFE;
 
         public void AddSpear(int spearTime) => buffManeger.AddSpear(spearTime);
         public bool HasSpear => buffManeger.HasSpear;
 
-        private void TryActivatingTotem()
+        private void TryActivatingLIFE()
         {
             if (buffManeger.TryActivatingTotem())
             {
@@ -299,6 +430,7 @@ namespace Preparation.GameObj
             buffManeger.ClearAll();*/
         }
         public override bool IsRigid => true;
+        public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
             /*if (targetObj is BirthPoint && object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))    // 自己的出生点可以忽略碰撞
@@ -311,16 +443,13 @@ namespace Preparation.GameObj
             }
             return false;*/
         }
-        public bool BeAttack(Bullet bullet)  //去世就返回true
-        {
-            HP -= bullet.AP;
-            if (HP <= 0)
-                return true;
-            else return false;
+
         }
-        public Character(XYPosition initPos, int initRadius, PlaceType initPlace, int initSpeed) : base(initPos, initRadius, initPlace, initSpeed)
+        public Character(XYPosition initPos, int initRadius, PlaceType initPlace, int initSpeed) :base(initPos,initRadius,initPlace)
         {
             this.CanMove = true;
+            this.Type = GameObjType.Character;
+            this.moveSpeed = initSpeed;
         }
     }
 }
