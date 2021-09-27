@@ -12,22 +12,56 @@ namespace Preparation.GameObj
 
         #region 角色的基本属性及方法，包括与道具、子弹的交互方法
         /// <summary>
-        /// 装弹冷却/近战攻击冷却
+        /// 技能一冷却
         /// </summary>
-        protected int cd;
-        public int CD
+        protected int cd1;
+        public int CD1
         {
-            get => cd;
+            get => cd1;
             private set
             {
                 lock (gameObjLock)
                 {
-                    cd = value;
+                    cd1 = value;
                     //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
                 }
             }
         }
-        public int OrgCD { get; protected set; }	// 原初冷却
+        public int OrgCD1 { get; protected set; }   // 技能一原初冷却
+        /// <summary>
+        /// 技能二冷却
+        /// </summary>
+        protected int cd2;
+        public int CD2
+        {
+            get => cd2;
+            private set
+            {
+                lock (gameObjLock)
+                {
+                    cd2 = value;
+                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
+                }
+            }
+        }
+        public int OrgCD2 { get; protected set; }   // 技能二原初冷却
+        /// <summary>
+        /// 技能三冷却
+        /// </summary>
+        protected int cd3;
+        public int CD3
+        {
+            get => cd3;
+            private set
+            {
+                lock (gameObjLock)
+                {
+                    cd3 = value;
+                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
+                }
+            }
+        }
+        public int OrgCD3 { get; protected set; }	// 技能三原初冷却
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;	// 人物最大子弹数
         protected int bulletNum;	
@@ -51,6 +85,8 @@ namespace Preparation.GameObj
             }
         }
         public int OrgAp { get; protected set; }    // 原初攻击力
+        private int level;
+        public int Level => level;  // 当前等级
         private int score;
         public int Score => score;  // 当前分数
 
@@ -96,7 +132,6 @@ namespace Preparation.GameObj
             }
         }
 
-        public abstract BulletType Bullet { get; } //人物的发射子弹类型，射程伤害等信息存在具体子弹里
         /// <summary>
         /// 进行一次远程攻击
         /// </summary>
@@ -237,12 +272,7 @@ namespace Preparation.GameObj
                 if (!(attacker?.TeamID == this.TeamID))
                 {
                     if (hasSpear || !HasShield) TrySubHp(subHP);
-                    if (hp <= 0) TryActivatingTotem();
-                    if (Job == JobType.Job6) attacker?.BeBounced(subHP * 3 / 4, this.HasSpear, this);   //职业6可以反弹伤害
-                }
-                else if (attacker?.Job == JobType.Job6)
-                {
-                    TryAddHp(subHP * 6);               // 职业六回血6倍
+                    if (hp <= 0) TryActivatingLIFE();
                 }
                 return hp <= 0;
             }
@@ -262,11 +292,7 @@ namespace Preparation.GameObj
                 if (!(bouncer?.TeamID == this.TeamID))
                 {
                     if (hasSpear || !HasShield) TrySubHp(subHP);
-                    if (hp <= 0) TryActivatingTotem();
-                }
-                else if (attacker?.Job == JobType.Job6)
-                {
-                    TryAddHp(subHP * 6);               // 职业六回血6倍
+                    if (hp <= 0) TryActivatingLIFE();
                 }
                 return hp <= 0;
             }
@@ -309,18 +335,20 @@ namespace Preparation.GameObj
 
         public void AddAP(double add, int buffTime) => buffManeger.AddAP(add, buffTime, newVal => { AP = newVal; }, OrgAp);
 
-        public void ChangeCD(double discount, int buffTime) => buffManeger.ChangeCD(discount, buffTime, newVal => { CD = newVal; }, OrgCD);
+        public void ChangeCD1(double discount, int buffTime) => buffManeger.ChangeCD1(discount, buffTime, newVal => { CD1 = newVal; }, OrgCD1);
+        public void ChangeCD2(double discount, int buffTime) => buffManeger.ChangeCD2(discount, buffTime, newVal => { CD2 = newVal; }, OrgCD2);
+        public void ChangeCD3(double discount, int buffTime) => buffManeger.ChangeCD3(discount, buffTime, newVal => { CD3 = newVal; }, OrgCD3);
 
         public void AddShield(int shieldTime) => buffManeger.AddShield(shieldTime);
         public bool HasShield => buffManeger.HasShield;
 
         public void AddLIFE(int LIFETime) => buffManeger.AddLIFE(LIFETime);
-        public bool HasTotem => buffManeger.HasTotem;
+        public bool HasLIFE => buffManeger.HasLIFE;
 
         public void AddSpear(int spearTime) => buffManeger.AddSpear(spearTime);
         public bool HasSpear => buffManeger.HasSpear;
 
-        private void TryActivatingTotem()
+        private void TryActivatingLIFE()
         {
             if (buffManeger.TryActivatingTotem())
             {
@@ -340,6 +368,7 @@ namespace Preparation.GameObj
             buffManeger.ClearAll();
         }
         public override bool IsRigid => true;
+        public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
             if (targetObj is BirthPoint && object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))    // 自己的出生点可以忽略碰撞

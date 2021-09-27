@@ -8,74 +8,82 @@ namespace Preparation.Utility
     /// </summary>
     public enum GameObjType
     {
-        Character = 0,
-        Wall = 1,
-        Prop = 2,
-        Bullet = 3,
-        BirthPoint = 4,
-        OutOfBoundBlock = 5,
-        Grass = 6
+        Null = 0,
+        Character = 1,
+        Wall = 2,
+        Prop = 3,
+        Bullet = 4,
+        BirthPoint = 5,
+        OutOfBoundBlock = 6,
+        Grass = 7
     }
     public enum ShapeType
     {
-        Circle = 0,      //仍然，子弹和人物为圆形，格子为方形
-        Square = 1
+        Null = 0,
+        Circle = 1,      //仍然，子弹和人物为圆形，格子为方形
+        Square = 2
     }
     public enum PlaceType  //位置标志，包括陆地，草丛，以及角色技能带来的隐身。
     {
-        Land = 0,
-        Grass1 = 1,
-        Grass2 = 2,
-        Grass3 = 3,
-        Invisible = 4
+        Null = 0,
+        Land = 1,
+        Grass1 = 2,
+        Grass2 = 3,
+        Grass3 = 4,
+        Invisible = 5
     }
-    public enum BulletType //子弹的类型
+    /*public enum BulletType //子弹的类型，废弃
     {
-        Bullet0 = 0,    //普通子弹
-        Bullet1 = 1     //爆弾
-    }
+        Null = 0,
+        Bullet0 = 1,    //普通子弹
+        Bullet1 = 2     //爆弾
+    }*/
     public enum PropType    // 道具的类型
     {
         Null = 0,
-        Accelerate = 1,
-        plusAP = 2,
-        minusCD = 3,
-        addHP = 4,
-        Shield = 5,
-        addLIFE = 6,
-        Spear = 7,
-        Decelerate = 8,
-        minusAP = 9,
-        addCD = 10
+        addHP = 1,
+        addAP = 2,
+        addSpeed = 3,
+        addLIFE = 4,
+        minusCD = 5,
+        Gem = 6,    // 新增：宝石
+        Shield = 7,
+        Spear = 8,
+        minusSpeed = 9,
+        minusAP = 10,
+        addCD = 11,
     }
     public enum PassiveSkillType   // 被动技能
     {
-        PSkill0 = 0,
-        PSkill1 = 1,
-        PSkill2 = 2,
-        PSkill3 = 3,
-        PSkill4 = 4,
-        PSkill5 = 5
+        Null = 0,
+        PSkill0 = 1,
+        PSkill1 = 2,
+        PSkill2 = 3,
+        PSkill3 = 4,
+        PSkill4 = 5,
+        PSkill5 = 6
     }
     public enum ActiveSkillType    // 主动技能
     {
-        ASkill0 = 0,
-        ASkill1 = 1,
-        ASkill2 = 2,
-        ASkill3 = 3,
-        ASkill4 = 4,
-        ASkill5 = 5
+        Null = 0,
+        ASkill0 = 1,
+        ASkill1 = 2,
+        ASkill2 = 3,
+        ASkill3 = 4,
+        ASkill4 = 5,
+        ASkill5 = 6
     }
     public enum BuffType    //buff
     {
-        MoveSpeed = 0,
-        AP = 1,
-        CD = 2,
-        Shield = 3,
-        AddLIFE = 4,
-        Spear = 5
+        Null = 0,
+        MoveSpeed = 1,
+        AP = 2,
+        CD = 3,
+        Shield = 4,
+        AddLIFE = 5,
+        Spear = 6
     }
-    /*public enum JobType : int   // 职业，貌似被废弃了。——LHR
+    /*public enum JobType : int   // 职业，废弃。——LHR
     {
         Job0 = 0,
         Job1 = 1,
