@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using Preparation.GameData;
 
 namespace Preparation.GameObj
 {

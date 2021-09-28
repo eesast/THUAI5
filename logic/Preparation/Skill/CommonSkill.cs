@@ -1,6 +1,7 @@
 ﻿using Preparation.GameObj;
 using System.Threading;
 using Preparation.Utility;
+using Preparation.GameData;
 
 namespace Preparation.Skill 
 {
