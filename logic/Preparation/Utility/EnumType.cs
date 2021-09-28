@@ -79,8 +79,8 @@ namespace Preparation.Utility
         MoveSpeed = 1,
         AP = 2,
         CD = 3,
-        Shield = 4,
-        AddLIFE = 5,
+        AddLIFE = 4,
+        Shield = 5,
         Spear = 6
     }
     /*public enum JobType : int   // 职业，废弃。——LHR

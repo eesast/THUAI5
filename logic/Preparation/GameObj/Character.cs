@@ -371,7 +371,7 @@ namespace Preparation.GameObj
 
         private void TryActivatingLIFE()
         {
-            if (buffManeger.TryActivatingTotem())
+            if (buffManeger.TryActivatingLIFE())
             {
                 hp = MaxHp;
             }

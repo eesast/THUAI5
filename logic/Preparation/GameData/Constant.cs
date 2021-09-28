@@ -1,4 +1,7 @@
-﻿namespace Preparation.Utility
+﻿using Preparation.GameObj;
+using Preparation.Utility;
+
+namespace Preparation.GameData
 {
     public static class Constant
     {
@@ -17,11 +20,8 @@
         public const int addScoreWhenKillOneLevelPlayer = 10;   // 击杀一级角色获得的加分
         public const int scoreInrease = 2;                      // 每高一级，击杀该角色多的加分
 
-        public const int commonSkillCD = 30000;                 // 普通技能理想cd
-        public const int commonSkillTime = 10000;               // 普通技能理想持续时间
-
-        public const int bulletRadius = 200;                    //子弹理想半径
-
+        public const int MinSpeed = 1;             //最小速度
+        public const int MaxSpeed = int.MaxValue;  //最大速度
         public static XYPosition GetCellCenterPos(int x, int y)   // 求格子的中心坐标
         {
             XYPosition ret = new XYPosition(x * numOfPosGridPerCell + numOfPosGridPerCell / 2,
