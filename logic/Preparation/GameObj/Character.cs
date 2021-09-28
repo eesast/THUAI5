@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Preparation.GameData;
 using Preparation.Interface;
 using Preparation.Utility;
 
@@ -9,68 +9,46 @@ namespace Preparation.GameObj
         public readonly object propLock = new object();
         private object beAttackedLock = new object();
         public object PropLock => propLock;
-
+        public object SkillLock => gameObjLock;
         #region 角色的基本属性及方法，包括与道具、子弹的交互方法
         /// <summary>
-        /// 技能一冷却
+        /// 装弹冷却
         /// </summary>
-        protected int cd1;
-        public int CD1
+        protected int cd;
+        public int CD
         {
-            get => cd1;
+            get => cd;
             private set
             {
                 lock (gameObjLock)
                 {
-                    cd1 = value;
+                    cd = value;
                     //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
                 }
             }
         }
-        public int OrgCD1 { get; protected set; }   // 技能一原初冷却
-        /// <summary>
-        /// 技能二冷却
-        /// </summary>
-        protected int cd2;
-        public int CD2
+        public int orgCD { get; protected set; }
+        
+        private bool isCommonSkillAvailable = true; //普通技能可用标志
+        public bool IsCommonSkillAvailable
         {
-            get => cd2;
-            private set
+            get => isCommonSkillAvailable;
+            set
             {
-                lock (gameObjLock)
-                {
-                    cd2 = value;
-                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
-                }
+                lock(gameObjLock)
+                    isCommonSkillAvailable = value;
             }
         }
-        public int OrgCD2 { get; protected set; }   // 技能二原初冷却
-        /// <summary>
-        /// 技能三冷却
-        /// </summary>
-        protected int cd3;
-        public int CD3
-        {
-            get => cd3;
-            private set
-            {
-                lock (gameObjLock)
-                {
-                    cd3 = value;
-                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
-                }
-            }
-        }
-        public int OrgCD3 { get; protected set; }	// 技能三原初冷却
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;	// 人物最大子弹数
         protected int bulletNum;	
         public int BulletNum => bulletNum;  // 目前持有的子弹数
         public int MaxHp { get; protected set; }    // 最大血量
         protected int hp;
-        public int HP => hp;    // 当前血量
+        public int HP => hp;
         private int deathCount = 0;       
         public int DeathCount => deathCount;  // 玩家的死亡次数
+
         protected int ap;   // 当前攻击力
         public int AP
         {
@@ -85,12 +63,58 @@ namespace Preparation.GameObj
             }
         }
         public int OrgAp { get; protected set; }    // 原初攻击力
-        private int level;
-        public int Level => level;  // 当前等级
+
         private int score;
         public int Score => score;  // 当前分数
 
-        private Prop? propInventory;
+        private int attackRange;
+        public int AttackRange => attackRange;
+
+        private double vampire = 0; // 回血率：0-1之间
+        public double Vampire
+        {
+            get => vampire;
+            set
+            {
+                if (value > 1)
+                    lock(gameObjLock)
+                        vampire = 1;
+                else if (value < 0)
+                    lock (gameObjLock)
+                        vampire = 0;
+                else
+                    lock (gameObjLock)
+                        vampire = value;
+            }
+        }
+        private int level = 1;
+        public int Level
+        {
+            get => level;
+            set
+            {
+                lock(gameObjLock)
+                    level = value;
+            }
+        }
+        private Bullet bulletOfPlayer;
+        public Bullet BulletOfPlayer
+        {
+            get => bulletOfPlayer;
+            set
+            {
+                lock (gameObjLock)
+                    bulletOfPlayer = value;
+            }
+        }
+
+        private delegate bool CommonSkill(Character player); //返回是否成功释放
+        CommonSkill commonSkill;
+        public bool UseCommonSkill()
+        {
+            return commonSkill(this);
+        }
+        /*private Prop? propInventory;
         public Prop? PropInventory  //持有的道具
         {
             get => propInventory;
@@ -130,7 +154,7 @@ namespace Preparation.GameObj
                     isModifyingProp = value;
                 }
             }
-        }
+        }*/
 
         /// <summary>
         /// 进行一次远程攻击
@@ -192,16 +216,14 @@ namespace Preparation.GameObj
         /// <returns>加操作是否成功</returns>
         public bool TryAddHp(int add)
         {
-            lock (gameObjLock)
+            if(hp < MaxHp)
             {
-                if(hp < MaxHp)
-                {
+                lock (gameObjLock)
                     hp = MaxHp > hp + add ? hp + add : MaxHp;
-                    //Debugger.Output(this, " hp has added to: " + hp.ToString());
-                    return true;
-                }
-                return false;
+                Debugger.Output(this, " hp has added to: " + hp.ToString());
+                return true;
             }
+            return false;
         }
         /// <summary>
         /// 尝试减血
@@ -209,17 +231,15 @@ namespace Preparation.GameObj
         /// <param name="sub">减血量</param>
         /// <returns>减操作是否成功</returns>
         public bool TrySubHp(int sub)
-        {
-            lock (gameObjLock)
+        {            
+            if (hp > 0)
             {
-                if (hp > 0)
-                {
+                lock(gameObjLock)
                     hp = 0 >= hp - sub ? 0 : hp - sub;
-                    //Debugger.Output(this, " hp has subed to: " + hp.ToString());
-                    return true;
-                }
-                return false;
+                Debugger.Output(this, " hp has subed to: " + hp.ToString());
+                return true;
             }
+            return false;
         }
         /// <summary>
         /// 增加死亡次数
@@ -297,6 +317,7 @@ namespace Preparation.GameObj
                 return hp <= 0;
             }
         }
+
         /// <summary>
         /// 角色所属队伍ID
         /// </summary>
@@ -309,7 +330,7 @@ namespace Preparation.GameObj
                 lock (gameObjLock)
                 {
                     teamID = value;
-                    //Debugger.Output(this, " joins in the team: " + value.ToString());
+                    Debugger.Output(this, " joins in the team: " + value.ToString());
                 }
             }
         }
@@ -358,20 +379,20 @@ namespace Preparation.GameObj
         #endregion
         public override void Reset()
         {
-            AddDeathCount();
+            /*AddDeathCount();
             base.Reset();
             this.moveSpeed = OrgMoveSpeed;
             hp = MaxHp;
             ap = OrgAp;
             PropInventory = null;
             bulletNum = maxBulletNum / 2;
-            buffManeger.ClearAll();
+            buffManeger.ClearAll();*/
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj is BirthPoint && object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))    // 自己的出生点可以忽略碰撞
+            /*if (targetObj is BirthPoint && object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))    // 自己的出生点可以忽略碰撞
             {
                 return true;
             }
@@ -379,13 +400,13 @@ namespace Preparation.GameObj
             {
                 return true;
             }
-            return false;
+            return false;*/
         }
-        public Character(XYPosition initPos, int initRadius, PlaceType initPlace, int initSpeed) :base(initPos,initRadius,initPlace)
+        public Character(XYPosition initPos, int initRadius, PlaceType initPlace,int initSpeed) :base(initPos,initRadius,initPlace)
         {
             this.CanMove = true;
             this.Type = GameObjType.Character;
-            this.moveSpeed = initSpeed;
+            this.MoveSpeed = initSpeed;
         }
     }
 }

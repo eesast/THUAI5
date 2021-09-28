@@ -6,7 +6,7 @@ namespace Preparation.GameObj
     /// <summary>
     /// 逻辑墙
     /// </summary>
-    public class OutOfBoundBlock:GameObj
+    public class OutOfBoundBlock: GameObj, IOutOfBound
     {
         public OutOfBoundBlock(XYPosition initPos) : base(initPos, int.MaxValue, PlaceType.Land) 
         {

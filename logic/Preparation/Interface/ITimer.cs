@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Preparation.Interface
 {
 	public interface ITimer

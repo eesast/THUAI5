@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Preparation.GameData;
 using Preparation.Interface;
 using Preparation.Utility;
 
@@ -36,7 +36,7 @@ namespace Preparation.GameObj
         /// <summary>
         /// 爆炸区域半径
         /// </summary>
-        public abstract int BulletBombRange { get; }
+        public abstract double BulletBombRange { get; }
         /// <summary>
         /// 与THUAI4不同的一个攻击判定方案，通过这个函数判断爆炸时能否伤害到target
         /// </summary>
@@ -49,14 +49,21 @@ namespace Preparation.GameObj
             if (targetObj is BirthPoint || targetObj.Type == GameObjType.Prop) return true;	// 子弹不会与出生点和道具碰撞
             return false;
         }
-        public Bullet(XYPosition initPos, int radius, int initSpeed, int BombRange, int ap, bool hasSpear) : base(initPos, radius, PlaceType.Null/*不知是否合适？*/)
+        public Bullet(XYPosition initPos, int radius, int initSpeed, int ap, bool hasSpear) : base(initPos, radius, PlaceType.Null)
         {
             this.CanMove = true;
             this.Type = GameObjType.Bullet;
             this.moveSpeed = initSpeed;
-            this.bulletBombRange = BombRange;
             this.ap = ap;
             this.hasSpear = hasSpear;
+        }
+        public Bullet(Character player,int radius,int initSpeed,int ap):base(player.Position,radius,PlaceType.Null)
+        {
+            this.CanMove = true;
+            this.Type = GameObjType.Bullet;
+            this.moveSpeed = initSpeed;
+            this.ap = ap;
+            this.hasSpear = player.HasSpear;
         }
         public override bool IsRigid => true;	// 默认为true
         public override ShapeType Shape => ShapeType.Circle;	// 默认为圆形
@@ -64,10 +71,25 @@ namespace Preparation.GameObj
 
     internal sealed class Bullet0 : Bullet
     {
-        public Bullet0(XYPosition initPos, int radius, int initSpeed, int BombRange, int ap, bool hasSpear) : base(initPos, radius, initSpeed,BombRange, ap, hasSpear) {}
+        public Bullet0(XYPosition initPos, int radius, int initSpeed, int ap, bool hasSpear) : base(initPos, radius, initSpeed, ap, hasSpear) { }
+        public Bullet0(Character player, int radius, int initSpeed, int ap) : base(player, radius, initSpeed, ap) { }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
-        public override int BulletBombRange => 3;
+        public override double BulletBombRange => Constant.basicBulletBombRange;
+
+        public override bool CanAttack(GameObj target)
+        {
+            // 圆形攻击范围
+            return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
+        }
+    }
+    internal sealed class AtomBomb : Bullet
+    {
+        public AtomBomb(XYPosition initPos, int radius, int initSpeed, int ap, bool hasSpear) : base(initPos, radius, initSpeed, ap, hasSpear) { }
+        public AtomBomb(Character player, int radius, int initSpeed, int ap) : base(player, radius, initSpeed, ap) { }
+        public override bool IsRigid => true;
+        public override ShapeType Shape => ShapeType.Circle;
+        public override double BulletBombRange => 3 * Constant.basicBulletBombRange;
 
         public override bool CanAttack(GameObj target)
         {
