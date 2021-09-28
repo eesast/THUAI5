@@ -4,7 +4,7 @@ using Preparation.Utility;
 
 namespace Preparation.Skill
 {
-    public class FastShoot:PassiveSkill
+    /*public class FastShoot:PassiveSkill
     {
         public override double AttackRange => Constant.basicAttackRange * 0.8;
         public override double BulletBombRange => Constant.basicBulletBombRange * 0.8;
@@ -24,6 +24,6 @@ namespace Preparation.Skill
         public override double BulletBombRange => Constant.basicBulletBombRange * 0.8;
         public override int MaxBulletNum => Constant.basicMaxBulletNum;
         public override double BulletMoveSpeed => Constant.basicBulletMoveSpeed * 0.4;
-    }
+    }*/
 
 }

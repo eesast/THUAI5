@@ -4,7 +4,7 @@ namespace Preparation.Interface
 {
     public interface IGameObj
     {
-        public GameObjType Type { get; set; } //将THUAI4的getgameobjtype方法改为此接口属性
+        public GameObjType Type { get; set; }
         public long ID { get; }
         public XYPosition Position { get; } // if Square, Pos equals the center
         public double FacingDirection { get; }

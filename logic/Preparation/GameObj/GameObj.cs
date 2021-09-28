@@ -7,14 +7,7 @@ namespace Preparation.GameObj
     /// 一切游戏元素的总基类，与THUAI4不同，继承IMoveable接口（出于一切物体其实都是可运动的指导思想）——LHR
     /// </summary>
     public abstract class GameObj : IMoveable
-    {
-        public enum GameObjType
-        {
-            Character = 0,
-            Obj = 1
-        }
-        public GameObjType ObjType { get; }
-        
+    {   
         protected readonly object gameObjLock = new object();
         /// <summary>
         /// 可移动物体专用锁
@@ -35,9 +28,6 @@ namespace Preparation.GameObj
                 }
             }
         }
-
-        public long ID { get;}
-
         public long ID { get; }
 
         private XYPosition position;
@@ -119,8 +109,6 @@ namespace Preparation.GameObj
                 }
             }
         }
-        public abstract PlaceType GetPlaceType(); //获取当前gameobj的placetype，这里返回的不应该是Invisible，而是处在哪个区域。
-                                                  //每次攻击或每帧刷新时，都该调用该函数更新placetype
         protected int moveSpeed;
         /// <summary>
         /// 移动速度
@@ -129,20 +117,6 @@ namespace Preparation.GameObj
         {
             get => moveSpeed;
             set
-            {
-                lock (gameObjLock)
-                {
-                    moveSpeed = value;
-                }
-            }
-        }
-        /// <summary>
-        /// 原初移动速度，THUAI4在Character类中
-        /// </summary>
-        public int MoveSpeed
-        {
-            get => moveSpeed;
-            protected set
             {
                 lock (gameObjLock)
                 {

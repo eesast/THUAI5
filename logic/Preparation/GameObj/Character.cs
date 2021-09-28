@@ -28,75 +28,27 @@ namespace Preparation.GameObj
             }
         }
         public int orgCD { get; protected set; }
-        /// <summary>
-        /// 技能一冷却
-        /// </summary>
-        protected int cd1;
-        public int CD1
+        
+        private bool isCommonSkillAvailable = true; //普通技能可用标志
+        public bool IsCommonSkillAvailable
         {
-            get => cd1;
-            private set
+            get => isCommonSkillAvailable;
+            set
             {
-                lock (gameObjLock)
-                {
-                    cd1 = value;
-                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
-                }
+                lock(gameObjLock)
+                    isCommonSkillAvailable = value;
             }
         }
-        public int OrgCD1 { get; protected set; }   // 技能一原初冷却
-        /// <summary>
-        /// 技能二冷却
-        /// </summary>
-        protected int cd2;
-        public int CD2
-        {
-            get => cd2;
-            private set
-            {
-                lock (gameObjLock)
-                {
-                    cd2 = value;
-                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
-                }
-            }
-        }
-        public int OrgCD2 { get; protected set; }   // 技能二原初冷却
-        /// <summary>
-        /// 技能三冷却
-        /// </summary>
-        protected int cd3;
-        public int CD3
-        {
-            get => cd3;
-            private set
-            {
-                lock (gameObjLock)
-                {
-                    cd3 = value;
-                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
-                }
-            }
-        }
-        public int OrgCD3 { get; protected set; }	// 技能三原初冷却
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;	// 人物最大子弹数
         protected int bulletNum;	
         public int BulletNum => bulletNum;  // 目前持有的子弹数
         public int MaxHp { get; protected set; }    // 最大血量
         protected int hp;
-        public int HP
-        {
-            get => hp;
-            set
-            {
-                if (value > MaxHp)
-                    hp = MaxHp;
-                else hp = value;
-            }
-        }
+        public int HP => hp;
         private int deathCount = 0;       
         public int DeathCount => deathCount;  // 玩家的死亡次数
+
         protected int ap;   // 当前攻击力
         public int AP
         {
@@ -111,23 +63,13 @@ namespace Preparation.GameObj
             }
         }
         public int OrgAp { get; protected set; }    // 原初攻击力
-        private int level;
-        public int Level => level;  // 当前等级
+
         private int score;
         public int Score => score;  // 当前分数
 
         private int attackRange;
         public int AttackRange => attackRange;
 
-        private bool isCommonSkillAvailable = true; //普通技能可用标志
-        public bool IsCommonSkillAvailable 
-        {
-            get => isCommonSkillAvailable;
-            set
-            {
-                isCommonSkillAvailable = value;
-            }
-        }
         private double vampire = 0; // 回血率：0-1之间
         public double Vampire
         {
@@ -135,10 +77,14 @@ namespace Preparation.GameObj
             set
             {
                 if (value > 1)
-                    vampire = 1;
+                    lock(gameObjLock)
+                        vampire = 1;
                 else if (value < 0)
-                    vampire = 0;
-                else vampire = value;
+                    lock (gameObjLock)
+                        vampire = 0;
+                else
+                    lock (gameObjLock)
+                        vampire = value;
             }
         }
         private int level = 1;
@@ -147,10 +93,27 @@ namespace Preparation.GameObj
             get => level;
             set
             {
-                level = value;
+                lock(gameObjLock)
+                    level = value;
+            }
+        }
+        private Bullet bulletOfPlayer;
+        public Bullet BulletOfPlayer
+        {
+            get => bulletOfPlayer;
+            set
+            {
+                lock (gameObjLock)
+                    bulletOfPlayer = value;
             }
         }
 
+        private delegate bool CommonSkill(Character player); //返回是否成功释放
+        CommonSkill commonSkill;
+        public bool UseCommonSkill()
+        {
+            return commonSkill(this);
+        }
         /*private Prop? propInventory;
         public Prop? PropInventory  //持有的道具
         {
@@ -253,16 +216,14 @@ namespace Preparation.GameObj
         /// <returns>加操作是否成功</returns>
         public bool TryAddHp(int add)
         {
-            lock (gameObjLock)
+            if(hp < MaxHp)
             {
-                if(hp < MaxHp)
-                {
+                lock (gameObjLock)
                     hp = MaxHp > hp + add ? hp + add : MaxHp;
-                    Debugger.Output(this, " hp has added to: " + hp.ToString());
-                    return true;
-                }
-                return false;
+                Debugger.Output(this, " hp has added to: " + hp.ToString());
+                return true;
             }
+            return false;
         }
         /// <summary>
         /// 尝试减血
@@ -270,17 +231,15 @@ namespace Preparation.GameObj
         /// <param name="sub">减血量</param>
         /// <returns>减操作是否成功</returns>
         public bool TrySubHp(int sub)
-        {
-            lock (gameObjLock)
+        {            
+            if (hp > 0)
             {
-                if (hp > 0)
-                {
+                lock(gameObjLock)
                     hp = 0 >= hp - sub ? 0 : hp - sub;
-                    Debugger.Output(this, " hp has subed to: " + hp.ToString());
-                    return true;
-                }
-                return false;
+                Debugger.Output(this, " hp has subed to: " + hp.ToString());
+                return true;
             }
+            return false;
         }
         /// <summary>
         /// 增加死亡次数
@@ -393,7 +352,7 @@ namespace Preparation.GameObj
         #endregion
 
         #region 角色拥有的buff相关属性、方法（目前还是完全照搬的）
-        /*public void AddMoveSpeed(double add, int buffTime) => buffManeger.AddMoveSpeed(add, buffTime, newVal => { MoveSpeed = newVal; }, OrgMoveSpeed);
+        public void AddMoveSpeed(double add, int buffTime) => buffManeger.AddMoveSpeed(add, buffTime, newVal => { MoveSpeed = newVal; }, OrgMoveSpeed);
 
         public void AddAP(double add, int buffTime) => buffManeger.AddAP(add, buffTime, newVal => { AP = newVal; }, OrgAp);
 
@@ -416,7 +375,7 @@ namespace Preparation.GameObj
             {
                 hp = MaxHp;
             }
-        }*/
+        }
         #endregion
         public override void Reset()
         {
@@ -443,13 +402,11 @@ namespace Preparation.GameObj
             }
             return false;*/
         }
-
-        }
-        public Character(XYPosition initPos, int initRadius, PlaceType initPlace, int initSpeed) :base(initPos,initRadius,initPlace)
+        public Character(XYPosition initPos, int initRadius, PlaceType initPlace,int initSpeed) :base(initPos,initRadius,initPlace)
         {
             this.CanMove = true;
             this.Type = GameObjType.Character;
-            this.moveSpeed = initSpeed;
+            this.MoveSpeed = initSpeed;
         }
     }
 }
