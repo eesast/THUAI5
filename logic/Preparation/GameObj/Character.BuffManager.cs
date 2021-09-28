@@ -10,6 +10,9 @@ namespace Preparation.GameObj
     public abstract partial class Character
     {
         private BuffManeger buffManeger;
+        /// <summary>
+        /// buff管理器，目前为全抄THUAI4（佐以修改部分变量名，变uint为int）
+        /// </summary>
         private class BuffManeger
         {
             private const int BuffTypeNum = 7;	// buff的种类个数，即enum BuffType的成员个数
