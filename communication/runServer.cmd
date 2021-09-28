@@ -1,0 +1,1 @@
+.\ServerTest\bin\Debug\net5.0\ServerTest.exe
