@@ -22,7 +22,7 @@ namespace Client
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window
-    {     
+    {
         public MainWindow()
         {
             timer = new DispatcherTimer();
@@ -77,7 +77,7 @@ namespace Client
         //Client控制函数
         private void ClickToBegin(object sender, RoutedEventArgs e)
         {
-        
+
         }
 
         private void ClickToPause(object sender, RoutedEventArgs e)
@@ -87,7 +87,7 @@ namespace Client
 
         private void ClickToSetMode(object sender, RoutedEventArgs e)
         {
-           
+
         }
 
         //其他比赛信息
@@ -141,7 +141,7 @@ namespace Client
         private void ClickToEnterVS(object sender, RoutedEventArgs e)
         {
             try
-            { 
+            {
                 FileStream route = new FileStream("VSRoute.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);//创建路径文件 
                 StreamReader Route = new StreamReader(route);
                 string s = Route.ReadLine();
@@ -172,7 +172,7 @@ namespace Client
         {
             //for debug
             i = (i + 1) % 2;
-            switch(i)
+            switch (i)
             {
                 case 0:
                     textBox[25, 25].Background = Brushes.White;
