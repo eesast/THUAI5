@@ -1,7 +1,7 @@
 ﻿using Preparation.GameObj;
 using Preparation.Utility;
 
-namespace Preparation
+namespace Preparation.GameData
 {
     public static class Constant
     {
@@ -11,6 +11,8 @@ namespace Preparation
         public const int numOfPosGridPerCell = 1000;            // 每格的【坐标单位】数
         public const int numOfStepPerSecond = 20;               // 每秒行走的步数
 
+        public const int MinSpeed = 1;             //最小速度
+        public const int MaxSpeed = int.MaxValue;  //最大速度
         public static XYPosition GetCellCenterPos(int x, int y)   // 求格子的中心坐标
         {
             XYPosition ret = new XYPosition(x * numOfPosGridPerCell + numOfPosGridPerCell / 2,
