@@ -4,7 +4,7 @@ using Preparation.Utility;
 
 namespace Preparation.Interface
 {
-    public interface IMap:IGameObj
+    public interface IMap
     {
         ITimer Timer { get; }
         List<ICharacter> PlayerList { get; }

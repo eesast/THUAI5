@@ -4,6 +4,7 @@ using Preparation.GameObj;
 using Preparation.Interface;
 using Preparation.Utility;
 using Timothy.FrameRateTask;
+using Preparation.GameData;
 
 namespace GameEngine
 {
@@ -57,7 +58,7 @@ namespace GameEngine
 			obj.Move(new Vector(moveVec.angle, maxLen));
 		}
 
-		public void MoveObj(MoveableObj obj,int moveTime,double direction)
+		public void MoveObj(GameObj obj,int moveTime,double direction)
         {
 			new Thread
 			(
