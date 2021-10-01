@@ -1,15 +1,14 @@
-﻿using Preparation.Interface;
-using Preparation.Utility;
+﻿using Preparation.Utility;
 using Preparation.GameData;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
     /// <summary>
     /// 墙体
     /// </summary>
     public class Wall : GameObj
     {
-        public Wall(XYPosition initPos) : base(initPos, Constant.numOfPosGridPerCell, PlaceType.Land) 
+        public Wall(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell, PlaceType.Land) 
         {
             this.CanMove = false;
             this.Type = GameObjType.Wall;

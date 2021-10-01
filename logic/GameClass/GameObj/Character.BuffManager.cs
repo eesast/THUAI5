@@ -5,7 +5,7 @@ using System.Threading;
 using Preparation.Utility;
 using Preparation.GameData;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
     public abstract partial class Character
     {
@@ -73,10 +73,10 @@ namespace Preparation.GameObj
             }
 
             public void AddMoveSpeed(double add, int buffTime, Action<int> SetNewMoveSpeed, int orgMoveSpeed)
-                => AddBuff(new BuffValue(add), buffTime, BuffType.MoveSpeed, () => SetNewMoveSpeed(ReCalculateFloatBuff(BuffType.MoveSpeed, orgMoveSpeed, Constant.MaxSpeed, Constant.MinSpeed)));
+                => AddBuff(new BuffValue(add), buffTime, BuffType.MoveSpeed, () => SetNewMoveSpeed(ReCalculateFloatBuff(BuffType.MoveSpeed, orgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed)));
 
             public void AddAP(double add, int buffTime, Action<int> SetNewAp, int orgAp)
-                => AddBuff(new BuffValue(add), buffTime, BuffType.AP, () => SetNewAp(ReCalculateFloatBuff(BuffType.AP, orgAp, Constant.MaxAP, Constant.MinAP)));
+                => AddBuff(new BuffValue(add), buffTime, BuffType.AP, () => SetNewAp(ReCalculateFloatBuff(BuffType.AP, orgAp, GameData.MaxAP, GameData.MinAP)));
 
             public void ChangeCD(double discount, int buffTime, Action<int> SetNewCD, int orgCD)
                 => AddBuff(new BuffValue(discount), buffTime, BuffType.CD, () => SetNewCD(ReCalculateFloatBuff(BuffType.CD, orgCD, int.MaxValue, 1)));

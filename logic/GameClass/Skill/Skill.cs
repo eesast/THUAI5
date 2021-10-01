@@ -1,13 +1,14 @@
-﻿using Preparation.GameObj;
+﻿using GameClass.GameObj;
 
-namespace Preparation.Skill
+namespace GameClass.Skill
 {
     public abstract class PassiveSkill
     {
-       /* public abstract double AttackRange { get; }
-        public abstract double BulletBombRange { get; }
-        public abstract int MaxBulletNum { get; }
-        public abstract double BulletMoveSpeed { get; }*/
+        /* public abstract double AttackRange { get; }
+         public abstract double BulletBombRange { get; }
+         public abstract int MaxBulletNum { get; }
+         public abstract double BulletMoveSpeed { get; }*/
+        public abstract void SkillEffect(Character player);
     }
     public abstract class CommonSkill
     {/*

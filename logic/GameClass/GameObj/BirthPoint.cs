@@ -2,14 +2,14 @@
 using Preparation.Utility;
 using Preparation.GameData;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
     /// <summary>
     /// 出生点
     /// </summary>
     public class BirthPoint : ObjOfCharacter
     {
-        public BirthPoint(XYPosition initPos) : base(initPos, Constant.numOfPosGridPerCell, PlaceType.Land) 
+        public BirthPoint(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell, PlaceType.Land) 
         {
             this.CanMove = false;
             this.Type = GameObjType.BirthPoint;

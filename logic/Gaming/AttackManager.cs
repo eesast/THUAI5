@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading;
-using Preparation.GameObj;
+﻿using System.Threading;
+using GameClass.GameObj;
+using Preparation.GameData;
 using Preparation.Utility;
 using GameEngine;
 
@@ -26,15 +26,15 @@ namespace Gaming
                     gameMap.PlayerListLock.ExitWriteLock(); 
                 }
                 playerBeingShot.Reset();
-                ((Character?)bullet.Parent)?.AddScore(Constant.addScoreWhenKillOneLevelPlayer);  //给击杀者加分
+                ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  //给击杀者加分
 
                 new Thread
                     (() =>
                     {
 
-                        Thread.Sleep(Constant.deadRestoreTime);
+                        Thread.Sleep(GameData.deadRestoreTime);
 
-                        playerBeingShot.AddShield(Constant.shieldTimeAtBirth);  //复活加个盾
+                        playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  //复活加个盾
 
                             gameMap.PlayerListLock.EnterWriteLock();
                         try
@@ -50,7 +50,7 @@ namespace Gaming
                         playerBeingShot.IsResetting = false;
                     }
                     )
-                { IsBackground = true }.Start();*/
+                { IsBackground = true }.Start();
             }
         }
         private void BulletBomb(Bullet bullet, GameObj? objBeingShot)
@@ -60,7 +60,7 @@ namespace Gaming
             gameMap.ObjListLock.EnterWriteLock();
             try
             {
-                foreach (Obj obj in gameMap.ObjList)
+                foreach (ObjOfCharacter obj in gameMap.ObjList)
                 {
                     if (obj.ID == bullet.ID)
                     {
@@ -75,7 +75,7 @@ namespace Gaming
                 if(objBeingShot is Character)
                 {
                     BombOnePlayer(bullet, (Character)objBeingShot);
-                    bullet.Parent.HP = (int)(bullet.Parent.HP + bullet.Parent.Vampire * bullet.Ap);  //造成伤害根据吸血率来吸血
+                    bullet.Parent.HP = (int)(bullet.Parent.HP + bullet.Parent.Vampire * bullet.AP);  //造成伤害根据吸血率来吸血
                 }
                 /*else if (objBeingShot is Bullet)        //子弹不能相互引爆，若要更改这一设定，取消注释即可。
                 {
@@ -83,8 +83,21 @@ namespace Gaming
                 }*/
 
             }
-            //子弹爆炸
 
+            //子弹爆炸会发生的事↓↓↓
+            /*
+            赶
+            紧
+            写
+            完
+            啊
+            啊
+            啊
+            啊
+            ！
+            ！
+            ！
+             */
         }
     }
 }
