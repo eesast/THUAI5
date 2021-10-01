@@ -8,14 +8,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Preparation", "Preparation\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameEngine", "GameEngine\GameEngine.csproj", "{C1CEF591-E65C-4E16-A369-F5F9EA46F978}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3FC859ED-E82F-4C0F-B531-9BDA066AAA33}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BE94BE7A-369D-4148-9E5E-5B00FE52C424}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrameRateTask", "FrameRateTask\FrameRateTask.csproj", "{1307F310-A240-4E10-ACB2-5F187D70F74D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3FC859ED-E82F-4C0F-B531-9BDA066AAA33}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BE94BE7A-369D-4148-9E5E-5B00FE52C424}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
@@ -23,6 +23,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameClass", "GameClass\GameClass.csproj", "{C46AFFCE-AC47-480B-A823-C1DB948AAE8D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gaming", "Gaming\Gaming.csproj", "{899D4146-B923-4C7D-A39E-F4D6372CF2C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Client\Client.csproj", "{BDCAFA75-56F1-4892-B89C-4727A6D28A27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +56,10 @@ Global
 		{899D4146-B923-4C7D-A39E-F4D6372CF2C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{899D4146-B923-4C7D-A39E-F4D6372CF2C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{899D4146-B923-4C7D-A39E-F4D6372CF2C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDCAFA75-56F1-4892-B89C-4727A6D28A27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDCAFA75-56F1-4892-B89C-4727A6D28A27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDCAFA75-56F1-4892-B89C-4727A6D28A27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDCAFA75-56F1-4892-B89C-4727A6D28A27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
