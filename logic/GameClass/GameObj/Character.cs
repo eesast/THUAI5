@@ -2,7 +2,7 @@
 using Preparation.Interface;
 using Preparation.Utility;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
     public abstract partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...
     {
@@ -28,24 +28,21 @@ namespace Preparation.GameObj
             }
         }
         public int OrgCD { get; protected set; }
-        
-        private bool isCommonSkillAvailable = true; //普通技能可用标志
-        public bool IsCommonSkillAvailable
-        {
-            get => isCommonSkillAvailable;
-            set
-            {
-                lock(gameObjLock)
-                    isCommonSkillAvailable = value;
-            }
-        }
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;	// 人物最大子弹数
         protected int bulletNum;	
         public int BulletNum => bulletNum;  // 目前持有的子弹数
         public int MaxHp { get; protected set; }    // 最大血量
         protected int hp;
-        public int HP => hp;
+        public int HP
+        {
+            get => hp;
+            set
+            {
+                lock (gameObjLock)
+                    hp = value;
+            }
+        }
         private int deathCount = 0;       
         public int DeathCount => deathCount;  // 玩家的死亡次数
 
@@ -70,7 +67,7 @@ namespace Preparation.GameObj
         private double attackRange;
         public double AttackRange => attackRange;
 
-        private double vampire = 0; // 回血率：0-1之间
+        private double vampire; // 回血率：0-1之间
         public double Vampire
         {
             get => vampire;
@@ -87,6 +84,8 @@ namespace Preparation.GameObj
                         vampire = value;
             }
         }
+        public double oriVampire = 0;
+
         private int level = 1;
         public int Level
         {
@@ -106,13 +105,6 @@ namespace Preparation.GameObj
                 lock (gameObjLock)
                     bulletOfPlayer = value;
             }
-        }
-
-        private delegate bool CommonSkill(Character player); //返回是否成功释放
-        CommonSkill commonSkill;
-        public bool UseCommonSkill()
-        {
-            return commonSkill(this);
         }
         private Prop? propInventory;
         public Prop? PropInventory  //持有的道具
@@ -397,7 +389,7 @@ namespace Preparation.GameObj
             /*else if (targetObj is Mine && ((Mine)targetObj).Parent?.TeamID == TeamID)   // 自己队的炸弹忽略碰撞
             {
                 return true;
-            }*/
+            }
             return false;
         }
         public Character(XYPosition initPos, int initRadius, PlaceType initPlace,int initSpeed) :base(initPos,initRadius,initPlace)

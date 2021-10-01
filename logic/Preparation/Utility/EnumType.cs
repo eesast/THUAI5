@@ -1,6 +1,4 @@
-﻿using Preparation.GameObj;
-using Preparation.Interface;
-
+﻿
 namespace Preparation.Utility
 {
     /// <summary>
@@ -56,9 +54,9 @@ namespace Preparation.Utility
     public enum PassiveSkillType   // 被动技能
     {
         Null = 0,
-        PSkill0 = 1,
-        PSkill1 = 2,
-        PSkill2 = 3,
+        RecoverAfterBattle = 1,
+        SpeedUpWhenLeavingGrass = 2,
+        Vampire = 3,
         PSkill3 = 4,
         PSkill4 = 5,
         PSkill5 = 6
@@ -66,10 +64,10 @@ namespace Preparation.Utility
     public enum ActiveSkillType    // 主动技能
     {
         Null = 0,
-        ASkill0 = 1,
-        ASkill1 = 2,
-        ASkill2 = 3,
-        ASkill3 = 4,
+        BecomeVampire = 1,
+        BecomeAssassin = 2,
+        NuclearWeapon = 3,
+        SuperFast = 4,
         ASkill4 = 5,
         ASkill5 = 6
     }

@@ -20,7 +20,7 @@ namespace GameEngine
 			XYPosition nextPos = obj.Position + Vector.Vector2XY(moveVec);
 			if (!obj.IsRigid)
 			{
-				if (gameMap.OutOfBound(obj.Position)) 
+				if (gameMap.IsOutOfBound(obj)) 
 					return gameMap.GetOutOfBound(nextPos);
 				return null;
 			}
@@ -98,7 +98,7 @@ namespace GameEngine
 				{
 					maxOnlyConsiderWall = MaxMoveToSquare(obj, gameMap.GetCell(Vector.Vector2XY(desination) + obj.Position));
 				}
-				desination.length -= Constant.numOfPosGridPerCell / (Math.Abs(Math.Cos(desination.angle)));
+				desination.length -= GameData.numOfPosGridPerCell / (Math.Abs(Math.Cos(desination.angle)));
             }
 
 			tmpMax = maxLen;

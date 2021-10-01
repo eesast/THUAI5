@@ -2,14 +2,14 @@
 using Preparation.Utility;
 using Preparation.GameData;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
     /// <summary>
     /// 草丛
     /// </summary>
     public abstract class Grass : GameObj
     {
-        public Grass(XYPosition initPos) : base(initPos, Constant.numOfPosGridPerCell, PlaceType.Land) 
+        public Grass(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell, PlaceType.Land) 
         {
             this.CanMove = false;
             this.Type = GameObjType.Grass;

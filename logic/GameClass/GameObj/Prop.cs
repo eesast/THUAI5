@@ -1,7 +1,7 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
     public abstract class Prop : ObjOfCharacter //LHR摆烂中...抽象类及所有增益道具已写完
     {

@@ -8,7 +8,7 @@
         Title="ErrorDisplayer" Height="200" Width="350">
     <Grid Margin="432,219,-0.4,0">
         <TextBox Name="errorDisplayer" HorizontalAlignment="Left" Height="46" Margin="-373,-174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="228" IsReadOnly="True"/>
-        <Image Source="Warning.png" HorizontalAlignment="Left" Height="46" Margin="-423,-174,0,0" VerticalAlignment="Top" Width="50"/>
+        <Image Margin="-415,-174,373,128" Stretch="Fill" Source="pack://siteoforigin:,,,/Warning.png"/>
 
     </Grid>
 </Window>

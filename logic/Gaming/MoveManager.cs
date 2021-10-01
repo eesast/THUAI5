@@ -1,5 +1,5 @@
 ﻿using System;
-using Preparation.GameObj;
+using GameClass.GameObj;
 using GameEngine;
 
 namespace Gaming

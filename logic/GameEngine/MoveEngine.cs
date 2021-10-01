@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using Preparation.GameObj;
 using Preparation.Interface;
 using Preparation.Utility;
 using Timothy.FrameRateTask;
@@ -54,11 +53,11 @@ namespace GameEngine
 			/*由于四周是墙，所以人物永远不可能与越界方块碰撞*/
 			XYPosition nextPos = obj.Position + Vector.Vector2XY(moveVec);
 			double maxLen = collisionChecker.FindMax(obj, nextPos, moveVec);
-			maxLen = Math.Min(maxLen, obj.MoveSpeed / Constant.numOfStepPerSecond);
+			maxLen = Math.Min(maxLen, obj.MoveSpeed / GameData.numOfStepPerSecond);
 			obj.Move(new Vector(moveVec.angle, maxLen));
 		}
 
-		public void MoveObj(GameObj obj,int moveTime,double direction)
+		public void MoveObj(IMoveable obj,int moveTime,double direction)
         {
 			new Thread
 			(
@@ -80,7 +79,7 @@ namespace GameEngine
 						() => gameTimer.IsGaming && obj.CanMove && !obj.IsResetting,
 						() =>
 						{
-							moveVec.length = obj.MoveSpeed / Constant.numOfStepPerSecond ;
+							moveVec.length = obj.MoveSpeed / GameData.numOfStepPerSecond ;
 
 							//越界情况处理：如果越界，则与越界方块碰撞
 							bool flag; //循环标志
@@ -96,7 +95,7 @@ namespace GameEngine
 										flag=true;
 										break;
 									case AfterCollision.Destroyed:
-										//Debugger.Output(obj, " collide with " + collisionObj.ToString() + " and has been removed from the game.");
+										Debugger.Output(obj, " collide with " + collisionObj.ToString() + " and has been removed from the game.");
 										isDestroyed = true;
 										return false;
 									case AfterCollision.MoveMax:
@@ -110,10 +109,10 @@ namespace GameEngine
 
 							return true;
 						},
-						Constant.numOfPosGridPerCell / Constant.numOfStepPerSecond,
+						GameData.numOfPosGridPerCell / GameData.numOfStepPerSecond,
 						() =>
 						{
-							int leftTime = moveTime % (Constant.numOfPosGridPerCell / Constant.numOfStepPerSecond);
+							int leftTime = moveTime % (GameData.numOfPosGridPerCell / GameData.numOfStepPerSecond);
 							bool flag;
 							do
 							{
@@ -133,7 +132,7 @@ namespace GameEngine
 												flag = true;
 												break;
 											case AfterCollision.Destroyed:
-												//Debugger.Output(obj, " collide with " + collisionObj.ToString() + " and has been removed from the game.");
+												Debugger.Output(obj, " collide with " + collisionObj.ToString() + " and has been removed from the game.");
 												isDestroyed = true;
 												break;
 											case AfterCollision.MoveMax:
@@ -168,7 +167,7 @@ namespace GameEngine
 								Console.WriteLine("Debug info: Object moving time exceed for once.");
 							}
 #endif
-					}
+						}
 					}.Start();
 				}
 			).Start();

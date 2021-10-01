@@ -1,7 +1,7 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
     /// <summary>
     /// 逻辑墙
