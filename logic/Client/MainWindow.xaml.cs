@@ -25,8 +25,10 @@ namespace Client
     {
         public MainWindow()
         {
+            textBox = new TextBox[52, 52];
+            gameObject = new TextBox();
             timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(10000000);
+            timer.Interval = new TimeSpan(1000000/60);
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
             timer.Start();
@@ -34,29 +36,46 @@ namespace Client
             //绘制地图
             try
             {
-                for (int x = 0; x < 50; x++)
+                for (int x = 0; x < 52; x++)
                 {
-                    for (int y = 0; y < 50; y++)
+                    for (int y = 0; y < 52; y++)
                     {
                         textBox[x, y] = new TextBox();
                         textBox[x, y].Text = "";
-                        textBox[x, y].Background = Brushes.Black;
-                        textBox[x, y].BorderBrush = Brushes.Black;
-                        textBox[x, y].Height = 10;
-                        textBox[x, y].Width = 10;
+                        if (x==51||y==51||x==0||y==0)
+                        {
+                            textBox[x, y].Background = Brushes.Gray;
+                            textBox[x, y].BorderBrush = Brushes.Gray;
+                        }//不然就什么也不做，节省时间。如果有密集恐惧症患者，加一句边框赋值白色。
+                        textBox[x, y].Height = 13;
+                        textBox[x, y].Width = 13;
                         textBox[x, y].HorizontalAlignment = HorizontalAlignment.Left;
                         textBox[x, y].VerticalAlignment = VerticalAlignment.Top;
-                        textBox[x, y].Margin = new Thickness(10 * x, 10 * y, 0, 0);
-                        textBox[x, y].IsEnabled = true;
-                        Map.Children.Add(textBox[x, y]);
+                        textBox[x, y].Margin = new Thickness(13 * x, 13 * y, 0, 0);
+                        textBox[x, y].IsReadOnly = true;
+                        //textBox[x, y].IsEnabled = true;
+                        BottomLayerOfMap.Children.Add(textBox[x, y]);
                     }
-                }
+                }           //设想用配置文件加载地图。但要做好配置文件加密。。。
+                            //注：队伍用边框区分，人物编号以背景颜色区分
+                            //角色死亡则对应信息框变灰
+                            //被动技能和buff在人物编号后用彩色文字注明
+                            //饼：允许玩家自定义人物名称
             }
             catch (Exception exc)
             {
                 ErrorDisplayer error = new ErrorDisplayer("发生错误。以下是系统报告\n" + exc.Message);
                 error.Show();
             }
+            gameObject.Height = 13;
+            gameObject.Width = 13;
+            gameObject.BorderBrush = Brushes.Orange;
+            gameObject.Background = Brushes.Orange;
+            gameObject.HorizontalAlignment = HorizontalAlignment.Left;
+            gameObject.VerticalAlignment = VerticalAlignment.Top;
+            gameObject.IsReadOnly = true;
+            gameObject.IsEnabled = true;
+            UpperLayerOfMap.Children.Add(gameObject);
         }
 
         //基础窗口函数
@@ -91,34 +110,6 @@ namespace Client
         }
 
         //其他比赛信息
-        private void CallTeam1Message(object sender, RoutedEventArgs e)
-        {
-            InfoDisplayer infoDisplayer1 = new InfoDisplayer();
-            infoDisplayer1.teamNumber = 1;
-            if (flag[0] == 0)
-            {
-                infoDisplayer1.Title = "team2信息";
-                infoDisplayer1.Left = 18;
-                infoDisplayer1.Top = 61;
-                infoDisplayer1.Show();
-                flag[0]++;
-            }
-        }
-
-
-        private void CallTeam2Message(object sender, RoutedEventArgs e)
-        {
-            InfoDisplayer infoDisplayer2 = new InfoDisplayer();
-            infoDisplayer2.teamNumber = 2;
-            if (flag[1] == 0)
-            {
-                infoDisplayer2.Title = "team2信息";
-                infoDisplayer2.Left = 1218;
-                infoDisplayer2.Top = 61;
-                infoDisplayer2.Show();
-                flag[1]++;
-            }
-        }
 
         //可能需要通信协助
         private void ClickToSetConnect(object sender, RoutedEventArgs e)
@@ -158,7 +149,7 @@ namespace Client
         {
             try
             {
-                Process.Start("https://eesast.com/login");
+                Process.Start("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "https://eesast.com");
             }
             catch (Exception exc)
             {
@@ -171,21 +162,13 @@ namespace Client
         private void Refresh(object sender, EventArgs e)
         {
             //for debug
-            i = (i + 1) % 2;
-            switch (i)
-            {
-                case 0:
-                    textBox[25, 25].Background = Brushes.White;
-                    break;
-                case 1:
-                    textBox[25, 25].Background = Brushes.Black;
-                    break;
-            }
+            gameObject.Margin = new Thickness(300 + 50 * Math.Cos(i * 3.14 / 180), 300 + 50 * Math.Sin(i * 3.14 / 180),0,0);
+            i++;
         }
         //以下为Mainwindow自定义属性
-        private TextBox[,] textBox = new TextBox[50, 50];
+        private TextBox[,] textBox;
         private DispatcherTimer timer;//定时器
         private static int i;//for debug
-        public static int[] flag = new int[2];//防止重复唤出窗口
+        private TextBox gameObject;
     }
 }
