@@ -27,14 +27,22 @@ namespace GameClass.GameObj
                 }
             }
         }
-        public int orgCD { get; protected set; }
+        public int OrgCD { get; protected set; }
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;	// 人物最大子弹数
         protected int bulletNum;	
         public int BulletNum => bulletNum;  // 目前持有的子弹数
         public int MaxHp { get; protected set; }    // 最大血量
         protected int hp;
-        public int HP => hp;
+        public int HP
+        {
+            get => hp;
+            set
+            {
+                lock (gameObjLock)
+                    hp = value;
+            }
+        }
         private int deathCount = 0;       
         public int DeathCount => deathCount;  // 玩家的死亡次数
 

@@ -17,14 +17,14 @@ namespace Client
     /// <summary>
     /// InfoDisplayer.xaml 的交互逻辑
     /// </summary>
-    
+
     public partial class InfoDisplayer : Window
     {
         public InfoDisplayer()
         {
             InitializeComponent();
             WindowStartupLocation = WindowStartupLocation.Manual;
-            Closing += new System.ComponentModel.CancelEventHandler((object sender,CancelEventArgs e)=> { MainWindow.flag[teamNumber - 1]--; });
+            Closing += new System.ComponentModel.CancelEventHandler((object sender, CancelEventArgs e) => { MainWindow.flag[teamNumber - 1]--; });
         }
 
         private void DragWindow(object sender, RoutedEventArgs e)
