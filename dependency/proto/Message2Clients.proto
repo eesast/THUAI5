@@ -6,17 +6,18 @@ option csharp_namespace = "Communication.Proto";
 import "MessageType.proto";
 
 /*---------------------------------2021-10-1重写.proto---------------------------------------*/
+/*---------------------------------2021-10-2更改 by TCL---------------------------------------*/
 
 message ChangeableCharacterProperty
 {
     int64 x = 1;
     int64 y = 2;
-    int64 attack = 3;
-    double timeUntilAttack = 4;
+    int64 attackRange = 3;
+    int64 bulletNum = 4;
     int64 speed = 5;
     int64 life = 6;
-    double timeUntilSkillOne = 7;
-    double timeUntilSkillTwo = 8;
+    double timeUntilCommonSkillAvailable = 7;   
+    double timeUntilUltimateSkillAvailable = 8;
     int64 gemNum = 9;
     BuffType buff = 10;
     PropType prop = 11;
@@ -41,11 +42,11 @@ message MessageOfProp
 message MessageOfBullet
 {
     BulletType type = 1;
-    int64 bap = 2;
+    int64 bulletAP = 2;
     int64 boomRange = 3;
 }
 
-message MessageToInitialize
+message MessageToInitialize //初始化信息，只在Server接收Client的开始游戏信息后发送，内容是在整局游戏里不变的数据
 {
     int64 MapSerial = 1;
     int64 NumberOfValidPlayer = 2;
@@ -66,11 +67,12 @@ message MessageToAddInstance
 
 message MessageToDestroyInstance
 {
-    int64 guid;
+    int64 guid = 1;
 }
 //拿到要销毁物体的guid后，Client端vector释放掉该guid位置的物体信息，并置为null回收该地址，同时删除该物品的对应控件句柄。
 //人物的guid无法被回收，死亡时颜色变为透明。任何试图将guid1-8删除的操作应被认定为非法。
 //子弹被销毁的同时会显示一个爆炸效果。饼：画圆
+
 message MessageToOperate
 {
     int32 operateKind = 1;
