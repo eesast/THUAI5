@@ -9,7 +9,18 @@
 
   <ItemGroup>
     <None Remove="Logo.png" />
+    <None Remove="Player.png" />
+    <None Remove="Team.png" />
     <None Remove="Warning.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Player.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Team.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
