@@ -7,8 +7,7 @@ namespace Preparation.GameObj
     /// 一切游戏元素的总基类，与THUAI4不同，继承IMoveable接口（出于一切物体其实都是可运动的指导思想）——LHR
     /// </summary>
     public abstract class GameObj : IMoveable
-    {
-        
+    {   
         protected readonly object gameObjLock = new object();
         /// <summary>
         /// 可移动物体专用锁
@@ -29,55 +28,54 @@ namespace Preparation.GameObj
                 }
             }
         }
-
-        public long ID { get;}
+        public long ID { get; }
 
         private XYPosition position;
-        public XYPosition Position 
-        { 
-            get => position; 
-            protected set 
-            { 
-                lock (gameObjLock) 
-                { 
-                    position = value; 
-                } 
-            } 
+        public XYPosition Position
+        {
+            get => position;
+            protected set
+            {
+                lock (gameObjLock)
+                {
+                    position = value;
+                }
+            }
         }
         public abstract bool IsRigid { get; }
 
         private double facingDirection = 0;
-        public double FacingDirection 
+        public double FacingDirection
         {
-            get => facingDirection; 
-            set 
-            { 
-                lock (gameObjLock) 
-                    facingDirection = value; 
-            } 
+            get => facingDirection;
+            set
+            {
+                lock (gameObjLock)
+                    facingDirection = value;
+            }
         }
         public abstract ShapeType Shape { get; }
-        
+
         private bool canMove;
         public bool CanMove
         {
             get => canMove;
             set
             {
-                lock(gameObjLock)
+                lock (gameObjLock)
                 {
                     canMove = value;
                 }
             }
         }
-        
+
         private bool isMoving;
         public bool IsMoving
         {
             get => isMoving;
             set
             {
-                lock(gameObjLock)
+                lock (gameObjLock)
                 {
                     isMoving = value;
                 }
@@ -90,7 +88,7 @@ namespace Preparation.GameObj
             get => isResetting;
             set
             {
-                lock(gameObjLock)
+                lock (gameObjLock)
                 {
                     isResetting = value;
                 }
@@ -105,13 +103,12 @@ namespace Preparation.GameObj
             get => place;
             set
             {
-                lock(gameObjLock)
+                lock (gameObjLock)
                 {
                     place = value;
                 }
             }
         }
-
         protected int moveSpeed;
         /// <summary>
         /// 移动速度
@@ -119,7 +116,7 @@ namespace Preparation.GameObj
         public int MoveSpeed
         {
             get => moveSpeed;
-            protected set
+            set
             {
                 lock (gameObjLock)
                 {
@@ -176,7 +173,7 @@ namespace Preparation.GameObj
         {
             lock (gameObjLock)
             {
-                
+
                 FacingDirection = 0.0;
                 IsMoving = false;
                 CanMove = false;

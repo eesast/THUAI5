@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using Preparation.GameData;
 
 namespace Preparation.GameObj
 {
@@ -8,7 +9,7 @@ namespace Preparation.GameObj
     /// </summary>
     public class BirthPoint : ObjOfCharacter
     {
-        public BirthPoint(XYPosition initPos, int radius) : base(initPos, radius, PlaceType.Land) 
+        public BirthPoint(XYPosition initPos) : base(initPos, Constant.numOfPosGridPerCell, PlaceType.Land) 
         {
             this.CanMove = false;
             this.Type = GameObjType.BirthPoint;

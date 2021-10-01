@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using Preparation.GameData;
 
 namespace Preparation.GameObj
 {
@@ -8,7 +9,7 @@ namespace Preparation.GameObj
     /// </summary>
     public abstract class Grass : GameObj
     {
-        public Grass(XYPosition initPos, int radius) : base(initPos, radius, PlaceType.Land) 
+        public Grass(XYPosition initPos) : base(initPos, Constant.numOfPosGridPerCell, PlaceType.Land) 
         {
             this.CanMove = false;
             this.Type = GameObjType.Grass;
@@ -19,21 +20,21 @@ namespace Preparation.GameObj
     }
     public class Grass1:Grass
     {
-        public Grass1(XYPosition initPos, int radius) : base(initPos, radius) 
+        public Grass1(XYPosition initPos) : base(initPos) 
         {
             this.Place = PlaceType.Grass1;
         }
     }
     public class Grass2 : Grass
     {
-        public Grass2(XYPosition initPos, int radius) : base(initPos, radius)
+        public Grass2(XYPosition initPos) : base(initPos)
         {
             this.Place = PlaceType.Grass2;
         }
     }
     public class Grass3 : Grass
     {
-        public Grass3(XYPosition initPos, int radius) : base(initPos, radius)
+        public Grass3(XYPosition initPos) : base(initPos)
         {
             this.Place = PlaceType.Grass1;
         }
