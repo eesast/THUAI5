@@ -4,6 +4,7 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
+        public object SkillLock => gameObjLock;
         private delegate bool ActiveSkill(Character player); //返回值：是否成功释放了技能
         private delegate void PassiveSkill(Character player);
         ActiveSkill commonSkill;
@@ -11,14 +12,14 @@ namespace GameClass.GameObj
         {
             return commonSkill(this);
         }
-        private bool isCommonSkillAvailable = true; //普通技能可用标志
-        public bool IsCommonSkillAvailable
+        private int timeUntilCommonSkillAvailable = 0; //还剩多少时间可以使用普通技能
+        public int TimeUntilCommonSkillAvailable
         {
-            get => isCommonSkillAvailable;
+            get => timeUntilCommonSkillAvailable;
             set
             {
-                lock (gameObjLock)
-                    isCommonSkillAvailable = value;
+                lock (SkillLock)
+                    TimeUntilCommonSkillAvailable = value < 0 ? 0 : value;
             }
         }
         PassiveSkill passiveSkill;
