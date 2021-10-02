@@ -24,7 +24,7 @@ enum MessageType
 
 enum GameObjType
 {
-    Null = 0;
+    NullGameObjType = 0;
     Character = 1;
     Wall = 2;
     Prop = 3;
@@ -35,13 +35,13 @@ enum GameObjType
 }
 enum ShapeType
 {
-    Null = 0;
+    NullShapeType = 0;
     Circle = 1;     //仍然，子弹和人物为圆形，格子为方形
     Square = 2;
 }
 enum PlaceType  //位置标志，包括陆地，草丛，以及角色技能带来的隐身。游戏中每一帧都要刷新各个物体的该属性
 {
-    Null = 0;
+    NullPlaceType = 0;
     Land = 1;
     Grass1 = 2;
     Grass2 = 3;
@@ -50,7 +50,7 @@ enum PlaceType  //位置标志，包括陆地，草丛，以及角色技能带�
 }
 enum PropType    // 道具的类型
 {
-    Null = 0;
+    NullPropType = 0;
     addHP = 1;
     addAP = 2;
     addSpeed = 3;
@@ -65,7 +65,7 @@ enum PropType    // 道具的类型
 }
 enum PassiveSkillType   // 被动技能，有名字的都是已经实现了的
 {
-    Null = 0;
+    NullPassiveSkillType = 0;
     RecoverAfterBattle = 1;
     SpeedUpWhenLeavingGrass = 2;
     Vampire = 3;
@@ -75,7 +75,7 @@ enum PassiveSkillType   // 被动技能，有名字的都是已经实现了的
 }
 enum ActiveSkillType    // 主动技能，有名字的都是已经实现了的
 {
-    Null = 0;
+    NullActiveSkillType = 0;
     BecomeVampire = 1;
     BecomeAssassin = 2;
     NuclearWeapon = 3;
@@ -85,17 +85,17 @@ enum ActiveSkillType    // 主动技能，有名字的都是已经实现了的
 }
 enum BuffType    //buff
 {
-    Null = 0;
+    NullBuffType = 0;
     MoveSpeed = 1;
     AP = 2;
     CD = 3;
     AddLIFE = 4;
-    Shield = 5;
-    Spear = 6;
+    ShieldBuff = 5;
+    SpearBuff = 6;
 }
 enum BulletType  //会有不同类型的子弹，现在只实现了“原子弹”
 {
-    Null = 0;
+    NullBulletType = 0;
     AtomBomb = 1;
     // ...
     // ...
