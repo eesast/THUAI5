@@ -1,13 +1,14 @@
-﻿using Preparation.GameObj;
-using Preparation.Utility;
+﻿using Preparation.Utility;
 
 namespace Preparation.GameData
 {
-    public static class Constant
+    public static class GameData
     {
         public const int numOfPosGridPerCell = 1000;            // 每格的【坐标单位】数
         public const int numOfStepPerSecond = 20;               // 每秒行走的步数
         public const int lengthOfMap = 50000;                   // 地图长度
+        public const long gameDuration = 600000;                // 游戏时长600000ms = 10min 
+        public const long frameDuration = 50;                   // 每帧时长
 
         public const int MinSpeed = 1;             //最小速度
         public const int MaxSpeed = int.MaxValue;  //最大速度

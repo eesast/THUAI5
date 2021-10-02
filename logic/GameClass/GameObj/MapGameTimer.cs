@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Preparation.Interface;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
 	public partial class Map
 	{

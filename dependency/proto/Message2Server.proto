@@ -16,8 +16,7 @@ message MessageToServer
     double angle = 6;		//角度参数
     int64 ToPlayerID = 7;	//当messageType为Send时有效，为发送对象的ID
     string message = 8;		//当messageType为Send时有效，为发送的消息
-    PassiveSkillType pSkill=9;  //AddPlayer时添加的被动技能，下面是添加的两个主动技能。
+    PassiveSkillType pSkill=9;  //AddPlayer时添加的被动技能，下面是添加的一个主动技能。
     ActiveSkillType aSkill1=10;  
-    ActiveSkillType aSkill2=11;
 }
 

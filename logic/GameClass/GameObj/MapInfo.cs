@@ -1,7 +1,7 @@
 ﻿using Preparation.Utility;
 using Preparation.GameData;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
     public static class MapInfo
     {
@@ -12,7 +12,7 @@ namespace Preparation.GameObj
         /// <returns></returns>
         public static PlaceType GetPlaceType(GameObj obj)
         {
-			uint type = defaultMap[obj.Position.x / Constant.numOfPosGridPerCell, obj.Position.y / Constant.numOfPosGridPerCell];
+			uint type = defaultMap[obj.Position.x / GameData.numOfPosGridPerCell, obj.Position.y / GameData.numOfPosGridPerCell];
 			if (type == 1)
 				return PlaceType.Grass1;
 			else if (type == 2)

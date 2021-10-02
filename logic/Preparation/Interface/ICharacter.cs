@@ -7,5 +7,8 @@ namespace Preparation.Interface
     {
         object PropLock { get; }
         public long TeamID { get; }
+        public int HP { get; set; }
+        public double Vampire { get; }
+
     }
 }

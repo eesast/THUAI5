@@ -1,7 +1,7 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
 	/// <summary>
 	/// 所有物，玩家可以存进“物品栏”的东西

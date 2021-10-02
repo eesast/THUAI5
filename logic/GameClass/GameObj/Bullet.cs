@@ -2,7 +2,7 @@
 using Preparation.Interface;
 using Preparation.Utility;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
     public abstract class Bullet : ObjOfCharacter   // LHR摸鱼中...已写完抽象类及一个派生类
     {
@@ -75,7 +75,7 @@ namespace Preparation.GameObj
         public Bullet0(Character player, int radius, int initSpeed, int ap) : base(player, radius, initSpeed, ap) { }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
-        public override double BulletBombRange => Constant.basicBulletBombRange;
+        public override double BulletBombRange => GameData.basicBulletBombRange;
 
         public override bool CanAttack(GameObj target)
         {
@@ -89,7 +89,7 @@ namespace Preparation.GameObj
         public AtomBomb(Character player, int radius, int initSpeed, int ap) : base(player, radius, initSpeed, ap) { }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
-        public override double BulletBombRange => 3 * Constant.basicBulletBombRange;
+        public override double BulletBombRange => 3 * GameData.basicBulletBombRange;
 
         public override bool CanAttack(GameObj target)
         {

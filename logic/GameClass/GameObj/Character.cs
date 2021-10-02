@@ -2,14 +2,13 @@
 using Preparation.Interface;
 using Preparation.Utility;
 
-namespace Preparation.GameObj
+namespace GameClass.GameObj
 {
     public abstract partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...该文件下抽象部分类已基本完工，剩下的在buffmanager里写
     {
         public readonly object propLock = new object();
         private object beAttackedLock = new object();
         public object PropLock => propLock;
-        public object SkillLock => gameObjLock;
         #region 角色的基本属性及方法，包括与道具、子弹的交互方法
         /// <summary>
         /// 装弹冷却
@@ -27,25 +26,22 @@ namespace Preparation.GameObj
                 }
             }
         }
-        public int orgCD { get; protected set; }
-        
-        private bool isCommonSkillAvailable = true; //普通技能可用标志
-        public bool IsCommonSkillAvailable
-        {
-            get => isCommonSkillAvailable;
-            set
-            {
-                lock(gameObjLock)
-                    isCommonSkillAvailable = value;
-            }
-        }
+        public int OrgCD { get; protected set; }
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;	// 人物最大子弹数
         protected int bulletNum;	
         public int BulletNum => bulletNum;  // 目前持有的子弹数
         public int MaxHp { get; protected set; }    // 最大血量
         protected int hp;
-        public int HP => hp;
+        public int HP
+        {
+            get => hp;
+            set
+            {
+                lock (gameObjLock)
+                    hp = value;
+            }
+        }
         private int deathCount = 0;       
         public int DeathCount => deathCount;  // 玩家的死亡次数
 
@@ -70,7 +66,7 @@ namespace Preparation.GameObj
         private int attackRange;
         public int AttackRange => attackRange;
 
-        private double vampire = 0; // 回血率：0-1之间
+        private double vampire; // 回血率：0-1之间
         public double Vampire
         {
             get => vampire;
@@ -87,6 +83,8 @@ namespace Preparation.GameObj
                         vampire = value;
             }
         }
+        public double oriVampire = 0;
+
         private int level = 1;
         public int Level
         {
@@ -107,14 +105,7 @@ namespace Preparation.GameObj
                     bulletOfPlayer = value;
             }
         }
-
-        private delegate bool CommonSkill(Character player); //返回是否成功释放
-        CommonSkill commonSkill;
-        public bool UseCommonSkill()
-        {
-            return commonSkill(this);
-        }
-        /*private Prop? propInventory;
+        private Prop? propInventory;
         public Prop? PropInventory  //持有的道具
         {
             get => propInventory;
@@ -154,7 +145,7 @@ namespace Preparation.GameObj
                     isModifyingProp = value;
                 }
             }
-        }*/
+        }
 
         /// <summary>
         /// 进行一次远程攻击
@@ -168,14 +159,6 @@ namespace Preparation.GameObj
             if (TrySubBulletNum()) return ProduceOneBullet(posOffset, bulletRadius, basicBulletMoveSpeed);
             else return null;
         }
-        /// <summary>
-        /// 产生一颗子弹
-        /// </summary>
-        /// <param name="posOffset"></param>
-        /// <param name="bulletRadius"></param>
-        /// <param name="basicBulletMoveSpeed"></param>
-        /// <returns>产生的子弹</returns>
-        protected abstract Bullet ProduceOneBullet(XYPosition posOffset, int bulletRadius, int basicBulletMoveSpeed);
 
         /// <summary>
         /// 尝试将子弹数量减1
@@ -283,16 +266,20 @@ namespace Preparation.GameObj
         /// <param name="subHP"></param>
         /// <param name="hasSpear"></param>
         /// <param name="attacker">伤害来源</param>
-        /// <returns>是否因该攻击而死</returns>
-        public bool BeAttack(int subHP, bool hasSpear, Character? attacker)
+        /// <returns>人物在受到攻击后死了吗</returns>
+        public bool BeAttack(Bullet bullet)
         {
             lock (beAttackedLock)
             {
-                if (hp <= 0) return false;
-                if (!(attacker?.TeamID == this.TeamID))
+                if (hp <= 0) return false;  //原来已经死了
+                if (bullet.Parent.TeamID != this.TeamID)
                 {
-                    if (hasSpear || !HasShield) TrySubHp(subHP);
-                    if (hp <= 0) TryActivatingLIFE();
+                    if (HasShield)
+                        if (bullet.HasSpear)
+                            TrySubHp(bullet.AP);
+                        else return false;
+
+                    if (hp <= 0) TryActivatingLIFE();  //如果有复活甲
                 }
                 return hp <= 0;
             }
@@ -379,20 +366,20 @@ namespace Preparation.GameObj
         #endregion
         public override void Reset()
         {
-            /*AddDeathCount();
+            AddDeathCount();
             base.Reset();
             this.moveSpeed = OrgMoveSpeed;
             hp = MaxHp;
             ap = OrgAp;
             PropInventory = null;
             bulletNum = maxBulletNum / 2;
-            buffManeger.ClearAll();*/
+            buffManeger.ClearAll();
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            /*if (targetObj is BirthPoint && object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))    // 自己的出生点可以忽略碰撞
+            if (targetObj is BirthPoint && object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))    // 自己的出生点可以忽略碰撞
             {
                 return true;
             }
@@ -400,7 +387,7 @@ namespace Preparation.GameObj
             {
                 return true;
             }
-            return false;*/
+            return false;
         }
         public Character(XYPosition initPos, int initRadius, PlaceType initPlace,int initSpeed) :base(initPos,initRadius,initPlace)
         {
