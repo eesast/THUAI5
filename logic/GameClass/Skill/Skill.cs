@@ -20,6 +20,7 @@ namespace GameClass.Skill
         public abstract int MoveSpeed { get; }
         public abstract double BulletMoveSpeed { get; }*/
         public abstract bool SkillEffect(Character player);
+        public abstract int DurationTime { get; } //技能持续时间
         public abstract int CD { get; }
     }
     public abstract class UtimateSkill

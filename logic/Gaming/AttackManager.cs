@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using GameClass.GameObj;
 using Preparation.GameData;
 using Preparation.Utility;
@@ -10,6 +11,24 @@ namespace Gaming
     {
         Map gameMap;
         MoveEngine moveEngine;
+        public AttackManager(Map gameMap)
+        {
+            this.gameMap = gameMap;
+            this.moveEngine = new MoveEngine
+            (
+                gameMap: gameMap,
+                OnCollision: (obj, collisionObj, moveVec) =>
+                 {
+                     BulletBomb((Bullet)obj, (GameObj)collisionObj);
+                     return MoveEngine.AfterCollision.Destroyed;
+                 },
+                EndMove: obj =>
+                 {
+                     Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
+                     BulletBomb((Bullet)obj, null);
+                 }
+            );
+        }
         private void BombOnePlayer(Bullet bullet,Character playerBeingShot)
         {
             if(playerBeingShot.BeAttack(bullet))
