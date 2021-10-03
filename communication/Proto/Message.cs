@@ -13,10 +13,8 @@ namespace Communication.Proto
         MessageToOneClient = 1, // 单人信息
         // 以下的枚举全部由原来的（指THUAI4和THUAI5的上一个版本）的MessageToClient拆分而来，一方面降低了广播带来的信息耦合程度，另一方面也增强了代码的可读性
         MessageToInitialize = 2,
-        MessageToAddInstance = 3,
-        MessageToDestroyInstance = 4,
-        MessageToOperate = 5,
-        MessageToRefresh = 6,
+        MessageToOperate = 3,
+        MessageToRefresh = 4,
     }
     /// <summary>
     /// 信息的通用接口，包含信息类型和内容

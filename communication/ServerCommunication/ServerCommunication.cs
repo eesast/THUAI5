@@ -112,6 +112,8 @@ namespace Communication.ServerCommunication
 
         // 以下提供了"向client发送信息"的多个重载函数,针对性更强,可根据逻辑需求任意使用
         // 当然，以下代码可能有一些不精简的地方，以后可能会稍作改动
+        // 我的见解是这样的：server中的SendToClient应该不需要指定oneof中的内容（应该是在游戏逻辑中指定，指定完毕以后就没有另一种选项的存储空间了），实际上server只需要做两件事情：1.发送信息 2.视情况适时报出警告或错误
+        // 此处需要说明一下protobuf中的oneof语法在C#中的使用：proto编译生成的cs文件会自动生成一个枚举值（除了oneof中的不同类型还有一个None），以供使用者随时判断
 
         /// <summary>
         /// 发送单人信息
@@ -138,6 +140,10 @@ namespace Communication.ServerCommunication
             SendOperation(bytes);
         }
 
+        /// <summary>
+        /// 需要发送的初始化信息
+        /// </summary>
+        /// <param name="m2i">初始化信息</param>
         public void SendToClient(MessageToInitialize m2i)
         {
             Message message = new Message();
@@ -150,11 +156,20 @@ namespace Communication.ServerCommunication
             SendOperation(bytes);
         }
 
-        // 这里我的见解是这样的：server中的SendToClient应该不需要指定oneof中的内容（应该是在游戏逻辑中指定），实际上server只需要做两件事情：1.发送信息 2.视情况适时报出警告或错误
-        // 此处需要说明一下protobuf中的oneof语法在C#中的使用：proto编译生成的cs文件会自动生成一个枚举值（除了oneof中的不同类型还有一个None），以供使用者随时判断
-        public void SendToClient(MessageToAddInstance m2a)
+        /// <summary>
+        /// 当MessageToOperate被指定为"AddInstance"时，server所需要进行的判断和终端显示操作（注意这是个private函数，没有必要暴露给玩家）
+        /// </summary>
+        /// <param name="m2o">操作信息</param>
+        private void OperationOfAddInstance(ref MessageToOperate m2o)
         {
-            switch(m2a.MessageOfInstanceCase)
+            var m2a = m2o.MessageToAddInstance;
+            int key = m2a.Guid;
+            if (instanceDict.ContainsKey(key))
+            {
+                Console.WriteLine($"Repeated construction with guid:{key} and type:{m2a.MessageOfInstanceCase}");
+                return;
+            }
+            switch (m2a.MessageOfInstanceCase)
             {
                 case MessageToAddInstance.MessageOfInstanceOneofCase.MessageOfBullet:
                     instanceDict.TryAdd(m2a.Guid, GameObjType.Bullet);
@@ -166,59 +181,59 @@ namespace Communication.ServerCommunication
                     Console.WriteLine("Instance type hasn't been assigned");
                     return;
             }
-            Message message = new Message();
-            message.Content = m2a;
-            message.PacketType = PacketType.MessageToAddInstance;
-
-            int key = m2a.Guid;
-            if(instanceDict.ContainsKey(key))
-            {
-                Console.WriteLine($"Repeated construction with guid:{key} and type:{m2a.MessageOfInstanceCase}");
-                return;
-            }
-
-            byte[] bytes;
-            message.Serialize(out bytes); // 生成字节流
-            SendOperation(bytes);
         }
 
-        // 销毁某一物体的guid(玩家除外)
-        public void SendToClient(MessageToDestroyInstance m2d)
+        /// <summary>
+        /// 当MessageToOperate被指定为"DestroyInstance"时，server所需要进行的判断和终端显示操作（注意这是个private函数，没有必要暴露给玩家）
+        /// </summary>
+        /// <param name="m2o">操作信息</param>
+        private void OperationOfDestroyInstance(ref MessageToOperate m2o)
         {
-            Message message = new Message();
-            message.Content = m2d;
-            message.PacketType = PacketType.MessageToDestroyInstance;
-
-            // 有一个问题是，既然都用上字典了，那为什么还需要遍历??我再研究一下
+            var m2d = m2o.MessageToDestroyInstance;
             foreach (int id in instanceDict.Keys)
             {
                 if (id == m2d.Guid)
                 {
                     instanceDict.TryRemove(id, out GameObjType tmp);
                     Console.WriteLine($"Instance with guid:{id} and type:{tmp} has been destroyed.");
-                    byte[] bytes;
-                    message.Serialize(out bytes); // 生成字节流
-                    SendOperation(bytes);
                     return;
                 }
             }
             Console.WriteLine($"No instance with guid:{m2d.Guid}");
         }
 
-        // 操作指令
+        /// <summary>
+        /// 需要发送的操作信息（需要调用前述的两个private函数进行信息的进一步判断与显示）
+        /// </summary>
+        /// <param name="m2o">操作信息</param>
         public void SendToClient(MessageToOperate m2o)
         {
             Message message = new Message();
             message.Content = m2o;
             message.PacketType = PacketType.MessageToOperate;
 
-            // 这两个发送应该也没什么大忌，就先直接发送吧...
+            switch (m2o.MessageOfOperationCase)
+            {
+                case MessageToOperate.MessageOfOperationOneofCase.MessageToAddInstance:
+                    OperationOfAddInstance(ref m2o);
+                    break;
+                case MessageToOperate.MessageOfOperationOneofCase.MessageToDestroyInstance:
+                    OperationOfDestroyInstance(ref m2o);
+                    break;
+                default:
+                    Console.WriteLine("Operation type hasn't been assigned");
+                    return;
+            }
+
             byte[] bytes;
             message.Serialize(out bytes);
             SendOperation(bytes);
         }
 
-        // 刷新指令
+        /// <summary>
+        /// 需要发送的更新信息
+        /// </summary>
+        /// <param name="m2r">更新信息</param>
         public void SendToClient(MessageToRefresh m2r)
         {
             Message message = new Message();
