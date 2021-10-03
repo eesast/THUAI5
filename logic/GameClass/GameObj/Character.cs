@@ -4,7 +4,7 @@ using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
-    public abstract partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...该文件下抽象部分类已基本完工，剩下的在buffmanager里写
+    public partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...该文件下抽象部分类已基本完工，剩下的在buffmanager里写
     {
         public readonly object propLock = new object();
         private object beAttackedLock = new object();
@@ -150,14 +150,18 @@ namespace GameClass.GameObj
         /// <summary>
         /// 进行一次远程攻击
         /// </summary>
-        /// <param name="posOffset"></param>
-        /// <param name="bulletRadius"></param>
-        /// <param name="basicBulletMoveSpeed"></param>
+        /// <param name="posOffset">子弹初始位置偏差值</param>
         /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? RemoteAttack(XYPosition posOffset, int bulletRadius, int basicBulletMoveSpeed)
+        public Bullet? RemoteAttack(XYPosition posOffset)
         {
-            if (TrySubBulletNum()) return ProduceOneBullet(posOffset, bulletRadius, basicBulletMoveSpeed);
+            if (TrySubBulletNum()) return ProduceOneBullet(this.Position + posOffset);
             else return null;
+        }
+        protected Bullet ProduceOneBullet(XYPosition initPos)
+        {
+            var newBullet = this.bulletOfPlayer.Clone();
+            newBullet.SetPosition(initPos);
+            return newBullet;
         }
 
         /// <summary>

@@ -26,7 +26,7 @@ namespace GameClass.Skill
 
                     new FrameRateTaskExecutor<int>
                     (
-                        () => true,
+                        () => !player.IsResetting,
                         () =>
                         {
                             player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
@@ -48,7 +48,7 @@ namespace GameClass.Skill
 
                     new FrameRateTaskExecutor<int>
                      (
-                         () => player.TimeUntilCommonSkillAvailable > 0,
+                         () => player.TimeUntilCommonSkillAvailable > 0 && !player.IsResetting,
                          () =>
                          {
                              player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
@@ -96,7 +96,7 @@ namespace GameClass.Skill
                     Debugger.Output(player, "becomes assassin!");
                     new FrameRateTaskExecutor<int>
                     (
-                        () => true,
+                        () => !player.IsResetting,
                         () =>
                         {
                             player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
@@ -118,7 +118,7 @@ namespace GameClass.Skill
 
                     new FrameRateTaskExecutor<int>
                      (
-                         () => player.TimeUntilCommonSkillAvailable > 0,
+                         () => player.TimeUntilCommonSkillAvailable > 0 && !player.IsResetting,
                          () =>
                          {
                              player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
@@ -159,7 +159,7 @@ namespace GameClass.Skill
                 new Thread
                 (() =>
                 {
-                    Bullet b = player.BulletOfPlayer;
+                    Bullet b = player.BulletOfPlayer.Clone();
                     lock (player.SkillLock)
                     {
                         player.BulletOfPlayer = new AtomBomb(player, GameData.bulletRadius, b.MoveSpeed, (int)(1.5 * b.AP));
@@ -167,7 +167,7 @@ namespace GameClass.Skill
                     Debugger.Output(player, "uses atombomb!");
                     new FrameRateTaskExecutor<int>
                     (
-                        () => true,
+                        () => !player.IsResetting,
                         () =>
                         {
                             player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
@@ -189,7 +189,7 @@ namespace GameClass.Skill
 
                     new FrameRateTaskExecutor<int>
                      (
-                         () => player.TimeUntilCommonSkillAvailable > 0,
+                         () => player.TimeUntilCommonSkillAvailable > 0 && !player.IsResetting,
                          () =>
                          {
                              player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
@@ -238,7 +238,7 @@ namespace GameClass.Skill
                     Debugger.Output(player, "moves very fast!");
                     new FrameRateTaskExecutor<int>
                     (
-                        () => true,
+                        () => !player.IsResetting,
                         () =>
                         {
                             player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
@@ -260,7 +260,7 @@ namespace GameClass.Skill
 
                     new FrameRateTaskExecutor<int>
                      (
-                         () => player.TimeUntilCommonSkillAvailable > 0,
+                         () => player.TimeUntilCommonSkillAvailable > 0 && !player.IsResetting,
                          () =>
                          {
                              player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
