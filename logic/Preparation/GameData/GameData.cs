@@ -38,13 +38,15 @@ namespace Preparation.GameData
         public const int MaxAP = int.MaxValue;  //最大攻击力
         public const double basicAttackRange = 4000;               // 基本攻击范围
         public const double basicBulletBombRange = 5000;           // 基本子弹爆炸范围
-        public const int basicMoveSpeed = 10;                   // 基本移动速度
-        public const int basicBulletMoveSpeed = 10;             // 基本子弹移动速度
+        public const int basicMoveSpeed = 10;                   // 基本移动速度，单位：ms-1
+        public const int basicBulletMoveSpeed = 10;             // 基本子弹移动速度，单位：ms-1
         public const int addScoreWhenKillOneLevelPlayer = 10;   // 击杀一级角色获得的加分
         public const int scoreInrease = 2;                      // 每高一级，击杀该角色多的加分
         public const int commonSkillCD = 30000;    //普通技能标准冷却时间
         public const int commonSkillTime = 10000;  //普通技能标准持续时间
         public const int bulletRadius = 200;       //默认子弹半径
+        public const int reviveTime = 30000;       //复活时间
+        public const int shieldTimeAtBirth = 3000;  //复活时的护盾时间
         /// <summary>
         /// 道具相关
         /// </summary>

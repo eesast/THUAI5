@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Collections.Generic;
 using GameClass.GameObj;
 using Preparation.GameData;
 using Preparation.Utility;
@@ -51,7 +52,7 @@ namespace Gaming
                     (() =>
                     {
 
-                        Thread.Sleep(GameData.deadRestoreTime);
+                        Thread.Sleep(GameData.reviveTime);
 
                         playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  //复活加个盾
 
@@ -104,19 +105,50 @@ namespace Gaming
             }
 
             //子弹爆炸会发生的事↓↓↓
-            /*
-            赶
-            紧
-            写
-            完
-            啊
-            啊
-            啊
-            啊
-            ！
-            ！
-            ！
-             */
+            var beAttackedList = new List<Character>();
+            gameMap.PlayerListLock.EnterWriteLock();
+            try 
+            { 
+                foreach(Character player in gameMap.PlayerList)
+                {
+                    if(bullet.CanAttack(player))
+                    {
+                        beAttackedList.Add(player);
+                    }
+                }
+            }
+            finally { gameMap.PlayerListLock.ExitReadLock(); }
+            foreach(Character beAttackedPlayer in beAttackedList)
+            {
+                BombOnePlayer(bullet, beAttackedPlayer);
+            }
+            beAttackedList.Clear();
+        }
+        public bool attack(Character player, double angle)  //射出去的子弹泼出去的水（狗头）
+        {                                                   //子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
+            if (player.IsResetting)
+                return false;
+            Bullet bullet = player.RemoteAttack
+                (
+                    new XYPosition  //子弹紧贴人物生成。
+                    (
+                        (int)((player.Radius + player.BulletOfPlayer.Radius) * Math.Cos(angle)),
+                        (int)((player.Radius + player.BulletOfPlayer.Radius) * Math.Sin(angle))
+                    )
+                );
+            if (bullet != null)
+            {
+                bullet.CanMove = true;
+                gameMap.ObjListLock.EnterReadLock();
+                try
+                {
+                    gameMap.ObjList.Add(bullet);
+                }
+                finally { gameMap.ObjListLock.ExitReadLock(); }
+                moveEngine.MoveObj(bullet, (player.AttackRange - player.Radius - player.BulletOfPlayer.Radius) / bullet.MoveSpeed, angle);  //这里时间参数除出来的单位要是ms
+                return true;
+            }
+            else return false;
         }
     }
 }

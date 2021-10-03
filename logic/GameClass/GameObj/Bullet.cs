@@ -4,7 +4,7 @@ using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
-    public abstract class Bullet : ObjOfCharacter   // LHR摸鱼中...已写完抽象类及一个派生类
+    public abstract class Bullet : ObjOfCharacter  // LHR摸鱼中...已写完抽象类及一个派生类
     {
         private int ap;
         /// <summary>
@@ -65,8 +65,10 @@ namespace GameClass.GameObj
             this.ap = ap;
             this.hasSpear = player.HasSpear;
         }
+        public Bullet(XYPosition initPos, Bullet bullet) : base(initPos, bullet.Radius, PlaceType.Null) { }
         public override bool IsRigid => true;	// 默认为true
         public override ShapeType Shape => ShapeType.Circle;	// 默认为圆形
+        public abstract Bullet Clone();  //深复制子弹
     }
 
     internal sealed class Bullet0 : Bullet
@@ -82,6 +84,10 @@ namespace GameClass.GameObj
             // 圆形攻击范围
             return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
         }
+        public override Bullet0 Clone()
+        {
+            return new Bullet0(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
+        }
     }
     internal sealed class AtomBomb : Bullet
     {
@@ -95,6 +101,10 @@ namespace GameClass.GameObj
         {
             // 圆形攻击范围
             return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
+        }
+        public override AtomBomb Clone()
+        {
+            return new AtomBomb(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
         }
     }
 }
