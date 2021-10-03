@@ -13,7 +13,8 @@ namespace Communication.ServerCommunication
 
     public sealed class ServerCommunication:IDisposable // 提供释放资源的接口
     {
-        private static readonly ConcurrentDictionary<ulong, IntPtr> dict = new ConcurrentDictionary<ulong, IntPtr>(); // 储存当前所有玩家的信息
+        private static readonly ConcurrentDictionary<ulong, IntPtr> playerDict = new ConcurrentDictionary<ulong, IntPtr>(); // 储存当前所有玩家的id
+        private static readonly ConcurrentDictionary<int, GameObjType> instanceDict = new ConcurrentDictionary<int, GameObjType>(); // 储存所有的子弹和道具信息
         private static AutoResetEvent allConnectionClosed = new AutoResetEvent(false); // 是否所有玩家都已经断开了连接
 
         private BlockingCollection<IGameMessage> msgQueue; // 储存信息的线程安全队列 
@@ -47,12 +48,12 @@ namespace Communication.ServerCommunication
                 MessageToServer m2s = message.Content as MessageToServer;
                 ulong key = ((ulong)m2s.PlayerID | (ulong)m2s.TeamID << 32);
 
-                if (dict.ContainsKey(key))
+                if (playerDict.ContainsKey(key))
                 {
                     Console.WriteLine($"More than one client claims to have the same ID {m2s.TeamID} {m2s.PlayerID}. And this client won't be able to receive message from server."); // 这种情况可以强制退出游戏吗...
                     return HandleResult.Error;
                 }
-                dict.TryAdd(key, connId); // 此处有多次发送的问题
+                playerDict.TryAdd(key, connId); // 此处有多次发送的问题
                 try
                 {
                     msgQueue.Add(message); 
@@ -68,11 +69,11 @@ namespace Communication.ServerCommunication
             // 有玩家退出时的操作(不知道这个原先在Agent中的功能迁移到Server中是否还有必要)
             server.OnClose += delegate (IServer sender, IntPtr connId, SocketOperation socketOperation, int errorCode)
             {
-                foreach(ulong id in dict.Keys)
+                foreach(ulong id in playerDict.Keys)
                 {
-                    if (dict[id] == connId)
+                    if (playerDict[id] == connId)
                     {
-                        if (!dict.TryRemove(id, out IntPtr temp))
+                        if (!playerDict.TryRemove(id, out IntPtr temp))
                         {
                             return HandleResult.Error;
                         }
@@ -83,7 +84,7 @@ namespace Communication.ServerCommunication
                 }
                 // 虽然有着重复队伍名称和玩家编号的client确实收不到信息，但还是会连在server上，这里的ConnectionCount也有谜之bug...
                 Console.WriteLine($"Now the connect number is { server.ConnectionCount }");
-                if (dict.IsEmpty)
+                if (playerDict.IsEmpty)
                 {
                     allConnectionClosed.Set();
                 }
@@ -109,25 +110,13 @@ namespace Communication.ServerCommunication
             return isListenning;
         }
 
-        /// <summary>
-        /// 发送全局信息
-        /// </summary>
-        public void SendToClient(MessageToClient m2c)
-        {   
-            // 构造信息
-            Message message = new Message();
-            message.Content = m2c;
-            message.PacketType = PacketType.MessageToClient;
-
-            byte[] bytes;
-            message.Serialize(out bytes); // 生成字节流
-            SendOperation(bytes);
-        }
+        // 以下提供了"向client发送信息"的多个重载函数,针对性更强,可根据逻辑需求任意使用
+        // 当然，以下代码可能有一些不精简的地方，以后可能会稍作改动
 
         /// <summary>
         /// 发送单人信息
         /// </summary>
-        /// <param name="msg"></param>
+        /// <param name="m21c">要发送的单播信息</param>
         /// <returns></returns>
         public void SendToClient(MessageToOneClient m21c)
         {
@@ -136,20 +125,116 @@ namespace Communication.ServerCommunication
             message.PacketType = PacketType.MessageToOneClient;
 
             // 判断对应的玩家编号是否存在，不存在就报错
+            // 关于这里为什么要使用ulong?
             ulong key = ((ulong)m21c.PlayerID | ((ulong)m21c.TeamID << 32));
-            if (!dict.ContainsKey(key))
+            if (!playerDict.ContainsKey(key))
             {
                 Console.WriteLine($"Error: No such player corresponding to ID {m21c.TeamID} {m21c.PlayerID}");
+                // 这里需不需要return??
+                return;
             }
             byte[] bytes;
             message.Serialize(out bytes); // 生成字节流
             SendOperation(bytes);
         }
 
+        public void SendToClient(MessageToInitialize m2i)
+        {
+            Message message = new Message();
+            message.Content = m2i;
+            message.PacketType = PacketType.MessageToInitialize;
+
+            // 初始化应该不需要加太多判断的信息，即使加也应该在逻辑内容中加，所以我就直接发送了...
+            byte[] bytes;
+            message.Serialize(out bytes);
+            SendOperation(bytes);
+        }
+
+        // 这里我的见解是这样的：server中的SendToClient应该不需要指定oneof中的内容（应该是在游戏逻辑中指定），实际上server只需要做两件事情：1.发送信息 2.视情况适时报出警告或错误
+        // 此处需要说明一下protobuf中的oneof语法在C#中的使用：proto编译生成的cs文件会自动生成一个枚举值（除了oneof中的不同类型还有一个None），以供使用者随时判断
+        public void SendToClient(MessageToAddInstance m2a)
+        {
+            switch(m2a.MessageOfInstanceCase)
+            {
+                case MessageToAddInstance.MessageOfInstanceOneofCase.MessageOfBullet:
+                    instanceDict.TryAdd(m2a.Guid, GameObjType.Bullet);
+                    break;
+                case MessageToAddInstance.MessageOfInstanceOneofCase.MessageOfProp:
+                    instanceDict.TryAdd(m2a.Guid, GameObjType.Prop);
+                    break;
+                default: // 此时的枚举类型为MessageToAddInstance.MessageOfInstanceOneofCase.None，也就是说，此时的oneof信息没有被成功指定
+                    Console.WriteLine("Instance type hasn't been assigned");
+                    return;
+            }
+            Message message = new Message();
+            message.Content = m2a;
+            message.PacketType = PacketType.MessageToAddInstance;
+
+            int key = m2a.Guid;
+            if(instanceDict.ContainsKey(key))
+            {
+                Console.WriteLine($"Repeated construction with guid:{key} and type:{m2a.MessageOfInstanceCase}");
+                return;
+            }
+
+            byte[] bytes;
+            message.Serialize(out bytes); // 生成字节流
+            SendOperation(bytes);
+        }
+
+        // 销毁某一物体的guid(玩家除外)
+        public void SendToClient(MessageToDestroyInstance m2d)
+        {
+            Message message = new Message();
+            message.Content = m2d;
+            message.PacketType = PacketType.MessageToDestroyInstance;
+
+            // 有一个问题是，既然都用上字典了，那为什么还需要遍历??我再研究一下
+            foreach (int id in instanceDict.Keys)
+            {
+                if (id == m2d.Guid)
+                {
+                    instanceDict.TryRemove(id, out GameObjType tmp);
+                    Console.WriteLine($"Instance with guid:{id} and type:{tmp} has been destroyed.");
+                    byte[] bytes;
+                    message.Serialize(out bytes); // 生成字节流
+                    SendOperation(bytes);
+                    return;
+                }
+            }
+            Console.WriteLine($"No instance with guid:{m2d.Guid}");
+        }
+
+        // 操作指令
+        public void SendToClient(MessageToOperate m2o)
+        {
+            Message message = new Message();
+            message.Content = m2o;
+            message.PacketType = PacketType.MessageToOperate;
+
+            // 这两个发送应该也没什么大忌，就先直接发送吧...
+            byte[] bytes;
+            message.Serialize(out bytes);
+            SendOperation(bytes);
+        }
+
+        // 刷新指令
+        public void SendToClient(MessageToRefresh m2r)
+        {
+            Message message = new Message();
+            message.Content = m2r;
+            message.PacketType = PacketType.MessageToRefresh;
+
+            byte[] bytes;
+            message.Serialize(out bytes);
+            SendOperation(bytes);
+        }
+
+
         /// <summary>
-        /// 上面那两个函数只是给用户调用发送的接口，这里才是真正的发送操作
+        /// 上面的多个函数只是给用户调用发送的接口，这里才是真正的发送操作
         /// </summary>
-        /// <param name="bytes"></param>
+        /// <param name="bytes">由对象信息转化而来的字节流</param>
         private void SendOperation(byte[] bytes)
         {
             List<IntPtr> IDs = server.GetAllConnectionIds();
@@ -166,8 +251,8 @@ namespace Communication.ServerCommunication
         /// <summary>
         /// 以引用形式返回信息
         /// </summary>
-        /// <param name="msg"></param>
-        /// <returns></returns>
+        /// <param name="msg">需要使用的单条信息</param>
+        /// <returns>是否提取成功</returns>
         public bool TryTake(out IGameMessage msg)
         {
             try
@@ -185,7 +270,7 @@ namespace Communication.ServerCommunication
         /// <summary>
         /// 以返回值形式返回信息
         /// </summary>
-        /// <returns></returns>
+        /// <returns>返回的信息</returns>
         public IGameMessage Take()
         {
             try

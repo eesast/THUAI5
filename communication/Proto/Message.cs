@@ -4,17 +4,27 @@ using Google.Protobuf;
 
 namespace Communication.Proto
 { 
+    /// <summary>
+    /// 游戏信息类型。此处的类型完全根据proto文件的信息决定，实际上可以自行删减——把所有的"MessageToxx"类的名称都列举在这里就可以了
+    /// </summary>
     public enum PacketType
     {
-        MessageToClient = 0,    // 全局信息
+        MessageToServer = 0,
         MessageToOneClient = 1, // 单人信息
-        MessageToServer = 2,
+        // 以下的枚举全部由原来的（指THUAI4和THUAI5的上一个版本）的MessageToClient拆分而来，一方面降低了广播带来的信息耦合程度，另一方面也增强了代码的可读性
+        MessageToInitialize = 2,
+        MessageToAddInstance = 3,
+        MessageToDestroyInstance = 4,
+        MessageToOperate = 5,
+        MessageToRefresh = 6,
     }
-
+    /// <summary>
+    /// 信息的通用接口，包含信息类型和内容
+    /// </summary>
     public interface IGameMessage
     {
         PacketType PacketType { get; set; }
-        IMessage Content { get; set; } // Protobuf的通用接口
+        IMessage Content { get; set; } 
     }
 
     /// <summary>
@@ -39,18 +49,8 @@ namespace Communication.Proto
 
             type = (PacketType)br.ReadInt32();
             string typename = null;
-            switch (type)
-            {
-                case PacketType.MessageToClient:
-                    typename = "Communication.Proto.MessageToClient";
-                    break;
-                case PacketType.MessageToOneClient:
-                    typename = "Communication.Proto.MessageToOneClient";
-                    break;
-                case PacketType.MessageToServer:
-                    typename = "Communication.Proto.MessageToServer";
-                    break;
-            }
+            // 由于枚举值增多，这里将“枚举转类型名称”改写成一种更加简洁的方式
+            typename = "Communication.Proto." + Enum.GetName(typeof(PacketType), type);
 
             try
             {
