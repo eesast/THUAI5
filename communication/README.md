@@ -33,22 +33,18 @@ C# 通信组件
 
 ## 一些想法
 
-* 既然决意要去掉Agent，暂时应该做以下调整：
+1. 命令行参数的问题基本已经解决，即使有，到时候只要与逻辑组稍加协商后就可改动，问题应该不大。
 
-  1. Agent的绝大多数功能都要迁移到Server中。在THUAI4中，endpoint和port都需要在Agent中指定，而现在需要将这一功能迁移到Server中。因此需要在Server中添加对命令行参数的处理。
+2. 关于ServerCommunication：现在可以发送的类有：MessageToInitialize，MessageToOperate，MessageToRefresh，MessageToOneClient。MessageToAddInstance和MessageToDestroyInstance已经嵌套在了MessageToOperate中，故不需要单独发送（而这两个类又嵌套了MessageOfProp和MessageOfBullet，更不需要单独发送了）。
 
-     但这就又涉及到了一个问题：需不需要做Commandline Tool。在THUAI4的Agent中，由于Agent.cs是一个Program，可以直接用`CommandLineUtils`做一个命令行工具，但THUAI5的ServerCommunication是一个dll，不能直接按Commandline Tool的思路去做。
+3. 关于ServerTest：本来我想写得更细化一些，模拟一次完整的游戏过程，但考虑到我不太懂游戏逻辑，部分细节不明确，只好作罢（
 
-     但其实也不怎么影响使用，只不过用户体验感会差一些。
-     
-  2. 使用Server时，命令行参数（包括端口号和IP）应该如何指定？难道在Server test里加吗？
-  
-  3. 如何实现所有client全部关闭时server也自动关闭？
-  
-* 再次梳理以下THUAI4和THUAI5中的端口分配
+4. 关于“如何降低proto文件和server的耦合关系”，我想做以下几点说明：
 
-  1. THUAI4:Client不需要手动指定端口，直连`"127.0.0.1", 7777`即可。因为Client直连Agent，Agent一定在本机上，而Agent默认的侦听端口是7777。虽然THUAI4中可以在命令行中设置侦听端口，但改成7777以外的值会出现“Agent start unsuccessfully”。Agent需要指定`-s -p`，`-s`除了指定IP地址外，还需要指定目标机的侦听端口（默认是8888）。而Server也是默认侦听8888。`-p`则是Agent的侦听端口。
-  2. THUAI5:从THUAI4的设计上看，似乎没有解决端口占用的问题??(也可能是我太菜没看出来)，因此THUAI5暂时..放过这个问题。但远程IP地址的指定还是必须的。所以client的命令行参数还要再多一个IP地址...
+   * Message.cs中的枚举值PacketType是必须要根据protobuf文件改动的，这个确实没有更好的解决办法。
+   * ServerCommunication.cs中的若干个重载函数，理论上可以都可以用一个IMessage接口实现，但考虑到发送的信息本身与逻辑息息相关，需要在终端输出不同的success、warning、error等提示信息，所以只好多一个类就多写一个重载。
+
+   proto和server不能完全解耦，但改动思路还是比较简单的。
 
 ## 开发人员
 

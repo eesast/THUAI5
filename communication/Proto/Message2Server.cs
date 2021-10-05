@@ -25,20 +25,19 @@ namespace Communication.Proto {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChRNZXNzYWdlMlNlcnZlci5wcm90bxIIUHJvdG9idWYaEU1lc3NhZ2VUeXBl",
-            "LnByb3RvGhVNZXNzYWdlMkNsaWVudHMucHJvdG8i2QIKD01lc3NhZ2VUb1Nl",
+            "LnByb3RvGhVNZXNzYWdlMkNsaWVudHMucHJvdG8irQIKD01lc3NhZ2VUb1Nl",
             "cnZlchIqCgttZXNzYWdlVHlwZRgBIAEoDjIVLlByb3RvYnVmLk1lc3NhZ2VU",
             "eXBlEhAKCHBsYXllcklEGAIgASgDEg4KBnRlYW1JRBgDIAEoAxIkCghwcm9w",
             "VHlwZRgEIAEoDjISLlByb3RvYnVmLlByb3BUeXBlEhoKEnRpbWVJbk1pbGxp",
             "c2Vjb25kcxgFIAEoBRINCgVhbmdsZRgGIAEoARISCgpUb1BsYXllcklEGAcg",
             "ASgDEg8KB21lc3NhZ2UYCCABKAkSKgoGcFNraWxsGAkgASgOMhouUHJvdG9i",
             "dWYuUGFzc2l2ZVNraWxsVHlwZRIqCgdhU2tpbGwxGAogASgOMhkuUHJvdG9i",
-            "dWYuQWN0aXZlU2tpbGxUeXBlEioKB2FTa2lsbDIYCyABKA4yGS5Qcm90b2J1",
-            "Zi5BY3RpdmVTa2lsbFR5cGVCFqoCE0NvbW11bmljYXRpb24uUHJvdG9iBnBy",
-            "b3RvMw=="));
+            "dWYuQWN0aXZlU2tpbGxUeXBlQhaqAhNDb21tdW5pY2F0aW9uLlByb3RvYgZw",
+            "cm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Communication.Proto.MessageTypeReflection.Descriptor, global::Communication.Proto.Message2ClientsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageToServer), global::Communication.Proto.MessageToServer.Parser, new[]{ "MessageType", "PlayerID", "TeamID", "PropType", "TimeInMilliseconds", "Angle", "ToPlayerID", "Message", "PSkill", "ASkill1", "ASkill2" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageToServer), global::Communication.Proto.MessageToServer.Parser, new[]{ "MessageType", "PlayerID", "TeamID", "PropType", "TimeInMilliseconds", "Angle", "ToPlayerID", "Message", "PSkill", "ASkill1" }, null, null, null, null)
           }));
     }
     #endregion
@@ -89,7 +88,6 @@ namespace Communication.Proto {
       message_ = other.message_;
       pSkill_ = other.pSkill_;
       aSkill1_ = other.aSkill1_;
-      aSkill2_ = other.aSkill2_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -143,7 +141,7 @@ namespace Communication.Proto {
 
     /// <summary>Field number for the "propType" field.</summary>
     public const int PropTypeFieldNumber = 4;
-    private global::Communication.Proto.PropType propType_ = global::Communication.Proto.PropType.Null;
+    private global::Communication.Proto.PropType propType_ = global::Communication.Proto.PropType.NullPropType;
     /// <summary>
     ///messageType为Pick时要捡起的道具类型
     /// </summary>
@@ -218,9 +216,9 @@ namespace Communication.Proto {
 
     /// <summary>Field number for the "pSkill" field.</summary>
     public const int PSkillFieldNumber = 9;
-    private global::Communication.Proto.PassiveSkillType pSkill_ = global::Communication.Proto.PassiveSkillType.Pskill0;
+    private global::Communication.Proto.PassiveSkillType pSkill_ = global::Communication.Proto.PassiveSkillType.NullPassiveSkillType;
     /// <summary>
-    ///AddPlayer时添加的被动技能，下面是添加的两个主动技能。
+    ///AddPlayer时添加的被动技能，下面是添加的一个主动技能。
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -233,25 +231,13 @@ namespace Communication.Proto {
 
     /// <summary>Field number for the "aSkill1" field.</summary>
     public const int ASkill1FieldNumber = 10;
-    private global::Communication.Proto.ActiveSkillType aSkill1_ = global::Communication.Proto.ActiveSkillType.Askill0;
+    private global::Communication.Proto.ActiveSkillType aSkill1_ = global::Communication.Proto.ActiveSkillType.NullActiveSkillType;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Communication.Proto.ActiveSkillType ASkill1 {
       get { return aSkill1_; }
       set {
         aSkill1_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "aSkill2" field.</summary>
-    public const int ASkill2FieldNumber = 11;
-    private global::Communication.Proto.ActiveSkillType aSkill2_ = global::Communication.Proto.ActiveSkillType.Askill0;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Communication.Proto.ActiveSkillType ASkill2 {
-      get { return aSkill2_; }
-      set {
-        aSkill2_ = value;
       }
     }
 
@@ -280,7 +266,6 @@ namespace Communication.Proto {
       if (Message != other.Message) return false;
       if (PSkill != other.PSkill) return false;
       if (ASkill1 != other.ASkill1) return false;
-      if (ASkill2 != other.ASkill2) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -291,14 +276,13 @@ namespace Communication.Proto {
       if (MessageType != global::Communication.Proto.MessageType.AddPlayer) hash ^= MessageType.GetHashCode();
       if (PlayerID != 0L) hash ^= PlayerID.GetHashCode();
       if (TeamID != 0L) hash ^= TeamID.GetHashCode();
-      if (PropType != global::Communication.Proto.PropType.Null) hash ^= PropType.GetHashCode();
+      if (PropType != global::Communication.Proto.PropType.NullPropType) hash ^= PropType.GetHashCode();
       if (TimeInMilliseconds != 0) hash ^= TimeInMilliseconds.GetHashCode();
       if (Angle != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Angle);
       if (ToPlayerID != 0L) hash ^= ToPlayerID.GetHashCode();
       if (Message.Length != 0) hash ^= Message.GetHashCode();
-      if (PSkill != global::Communication.Proto.PassiveSkillType.Pskill0) hash ^= PSkill.GetHashCode();
-      if (ASkill1 != global::Communication.Proto.ActiveSkillType.Askill0) hash ^= ASkill1.GetHashCode();
-      if (ASkill2 != global::Communication.Proto.ActiveSkillType.Askill0) hash ^= ASkill2.GetHashCode();
+      if (PSkill != global::Communication.Proto.PassiveSkillType.NullPassiveSkillType) hash ^= PSkill.GetHashCode();
+      if (ASkill1 != global::Communication.Proto.ActiveSkillType.NullActiveSkillType) hash ^= ASkill1.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -329,7 +313,7 @@ namespace Communication.Proto {
         output.WriteRawTag(24);
         output.WriteInt64(TeamID);
       }
-      if (PropType != global::Communication.Proto.PropType.Null) {
+      if (PropType != global::Communication.Proto.PropType.NullPropType) {
         output.WriteRawTag(32);
         output.WriteEnum((int) PropType);
       }
@@ -349,17 +333,13 @@ namespace Communication.Proto {
         output.WriteRawTag(66);
         output.WriteString(Message);
       }
-      if (PSkill != global::Communication.Proto.PassiveSkillType.Pskill0) {
+      if (PSkill != global::Communication.Proto.PassiveSkillType.NullPassiveSkillType) {
         output.WriteRawTag(72);
         output.WriteEnum((int) PSkill);
       }
-      if (ASkill1 != global::Communication.Proto.ActiveSkillType.Askill0) {
+      if (ASkill1 != global::Communication.Proto.ActiveSkillType.NullActiveSkillType) {
         output.WriteRawTag(80);
         output.WriteEnum((int) ASkill1);
-      }
-      if (ASkill2 != global::Communication.Proto.ActiveSkillType.Askill0) {
-        output.WriteRawTag(88);
-        output.WriteEnum((int) ASkill2);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -383,7 +363,7 @@ namespace Communication.Proto {
         output.WriteRawTag(24);
         output.WriteInt64(TeamID);
       }
-      if (PropType != global::Communication.Proto.PropType.Null) {
+      if (PropType != global::Communication.Proto.PropType.NullPropType) {
         output.WriteRawTag(32);
         output.WriteEnum((int) PropType);
       }
@@ -403,17 +383,13 @@ namespace Communication.Proto {
         output.WriteRawTag(66);
         output.WriteString(Message);
       }
-      if (PSkill != global::Communication.Proto.PassiveSkillType.Pskill0) {
+      if (PSkill != global::Communication.Proto.PassiveSkillType.NullPassiveSkillType) {
         output.WriteRawTag(72);
         output.WriteEnum((int) PSkill);
       }
-      if (ASkill1 != global::Communication.Proto.ActiveSkillType.Askill0) {
+      if (ASkill1 != global::Communication.Proto.ActiveSkillType.NullActiveSkillType) {
         output.WriteRawTag(80);
         output.WriteEnum((int) ASkill1);
-      }
-      if (ASkill2 != global::Communication.Proto.ActiveSkillType.Askill0) {
-        output.WriteRawTag(88);
-        output.WriteEnum((int) ASkill2);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -434,7 +410,7 @@ namespace Communication.Proto {
       if (TeamID != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(TeamID);
       }
-      if (PropType != global::Communication.Proto.PropType.Null) {
+      if (PropType != global::Communication.Proto.PropType.NullPropType) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) PropType);
       }
       if (TimeInMilliseconds != 0) {
@@ -449,14 +425,11 @@ namespace Communication.Proto {
       if (Message.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Message);
       }
-      if (PSkill != global::Communication.Proto.PassiveSkillType.Pskill0) {
+      if (PSkill != global::Communication.Proto.PassiveSkillType.NullPassiveSkillType) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) PSkill);
       }
-      if (ASkill1 != global::Communication.Proto.ActiveSkillType.Askill0) {
+      if (ASkill1 != global::Communication.Proto.ActiveSkillType.NullActiveSkillType) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ASkill1);
-      }
-      if (ASkill2 != global::Communication.Proto.ActiveSkillType.Askill0) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ASkill2);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -479,7 +452,7 @@ namespace Communication.Proto {
       if (other.TeamID != 0L) {
         TeamID = other.TeamID;
       }
-      if (other.PropType != global::Communication.Proto.PropType.Null) {
+      if (other.PropType != global::Communication.Proto.PropType.NullPropType) {
         PropType = other.PropType;
       }
       if (other.TimeInMilliseconds != 0) {
@@ -494,14 +467,11 @@ namespace Communication.Proto {
       if (other.Message.Length != 0) {
         Message = other.Message;
       }
-      if (other.PSkill != global::Communication.Proto.PassiveSkillType.Pskill0) {
+      if (other.PSkill != global::Communication.Proto.PassiveSkillType.NullPassiveSkillType) {
         PSkill = other.PSkill;
       }
-      if (other.ASkill1 != global::Communication.Proto.ActiveSkillType.Askill0) {
+      if (other.ASkill1 != global::Communication.Proto.ActiveSkillType.NullActiveSkillType) {
         ASkill1 = other.ASkill1;
-      }
-      if (other.ASkill2 != global::Communication.Proto.ActiveSkillType.Askill0) {
-        ASkill2 = other.ASkill2;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -558,10 +528,6 @@ namespace Communication.Proto {
             ASkill1 = (global::Communication.Proto.ActiveSkillType) input.ReadEnum();
             break;
           }
-          case 88: {
-            ASkill2 = (global::Communication.Proto.ActiveSkillType) input.ReadEnum();
-            break;
-          }
         }
       }
     #endif
@@ -615,10 +581,6 @@ namespace Communication.Proto {
           }
           case 80: {
             ASkill1 = (global::Communication.Proto.ActiveSkillType) input.ReadEnum();
-            break;
-          }
-          case 88: {
-            ASkill2 = (global::Communication.Proto.ActiveSkillType) input.ReadEnum();
             break;
           }
         }
