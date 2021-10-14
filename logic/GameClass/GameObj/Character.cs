@@ -9,7 +9,6 @@ namespace GameClass.GameObj
         public readonly object propLock = new object();
         private object beAttackedLock = new object();
         public object PropLock => propLock;
-        public object SkillLock => gameObjLock;
         #region 角色的基本属性及方法，包括与道具、子弹的交互方法
         /// <summary>
         /// 装弹冷却
@@ -151,23 +150,19 @@ namespace GameClass.GameObj
         /// <summary>
         /// 进行一次远程攻击
         /// </summary>
-        /// <param name="posOffset"></param>
-        /// <param name="bulletRadius"></param>
-        /// <param name="basicBulletMoveSpeed"></param>
+        /// <param name="posOffset">子弹初始位置偏差值</param>
         /// <returns>攻击操作发出的子弹</returns>
-        public Bullet? RemoteAttack(XYPosition posOffset, int bulletRadius, int basicBulletMoveSpeed)
+        public Bullet? RemoteAttack(XYPosition posOffset)
         {
-            if (TrySubBulletNum()) return ProduceOneBullet(posOffset, bulletRadius, basicBulletMoveSpeed);
+            if (TrySubBulletNum()) return ProduceOneBullet(this.Position + posOffset);
             else return null;
         }
-        /// <summary>
-        /// 产生一颗子弹
-        /// </summary>
-        /// <param name="posOffset"></param>
-        /// <param name="bulletRadius"></param>
-        /// <param name="basicBulletMoveSpeed"></param>
-        /// <returns>产生的子弹</returns>
-        protected abstract Bullet ProduceOneBullet(XYPosition posOffset, int bulletRadius, int basicBulletMoveSpeed);
+        protected Bullet ProduceOneBullet(XYPosition initPos)
+        {
+            var newBullet = this.bulletOfPlayer.Clone();
+            newBullet.SetPosition(initPos);
+            return newBullet;
+        }
 
         /// <summary>
         /// 尝试将子弹数量减1
@@ -275,16 +270,20 @@ namespace GameClass.GameObj
         /// <param name="subHP"></param>
         /// <param name="hasSpear"></param>
         /// <param name="attacker">伤害来源</param>
-        /// <returns>是否因该攻击而死</returns>
-        public bool BeAttack(int subHP, bool hasSpear, Character? attacker)
+        /// <returns>人物在受到攻击后死了吗</returns>
+        public bool BeAttack(Bullet bullet)
         {
             lock (beAttackedLock)
             {
-                if (hp <= 0) return false;
-                if (!(attacker?.TeamID == this.TeamID))
+                if (hp <= 0) return false;  //原来已经死了
+                if (bullet.Parent.TeamID != this.TeamID)
                 {
-                    if (hasSpear || !HasShield) TrySubHp(subHP);
-                    if (hp <= 0) TryActivatingLIFE();
+                    if (HasShield)
+                        if (bullet.HasSpear)
+                            TrySubHp(bullet.AP);
+                        else return false;
+
+                    if (hp <= 0) TryActivatingLIFE();  //如果有复活甲
                 }
                 return hp <= 0;
             }
@@ -386,7 +385,7 @@ namespace GameClass.GameObj
             {
                 return true;
             }
-            /*else if (targetObj is Mine && ((Mine)targetObj).Parent?.TeamID == TeamID)   // 自己队的炸弹忽略碰撞
+            else if (targetObj is DebuffMine && ((DebuffMine)targetObj).Parent?.TeamID == TeamID)   // 自己队的地雷忽略碰撞
             {
                 return true;
             }

@@ -65,8 +65,10 @@ namespace GameClass.GameObj
             this.ap = ap;
             this.hasSpear = player.HasSpear;
         }
+        public Bullet(XYPosition initPos, Bullet bullet) : base(initPos, bullet.Radius, PlaceType.Null) { }
         public override bool IsRigid => true;	// 默认为true
         public override ShapeType Shape => ShapeType.Circle;	// 默认为圆形
+        public abstract Bullet Clone();  //深复制子弹
     }
 
     internal sealed class AtomBomb : Bullet
@@ -81,6 +83,10 @@ namespace GameClass.GameObj
         {
             // 圆形攻击范围
             return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
+        }
+        public override AtomBomb Clone()
+        {
+            return new AtomBomb(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
         }
     }
 }

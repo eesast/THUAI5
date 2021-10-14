@@ -4,146 +4,103 @@ package Protobuf;
 option csharp_namespace = "Communication.Proto";
 
 import "MessageType.proto";
-enum GameObjType
+
+/*---------------------------------2021-10-1重写.proto---------------------------------------*/
+/*---------------------------------2021-10-2更改 by TCL---------------------------------------*/
+
+message ChangeableCharacterProperty
 {
-    Character = 0;
-    Wall = 1;
-    Prop = 2;
-    Bullet = 3;
-    BirthPoint = 4;
-    OutOfBoundBlock = 5;
-    Grass=6;
+    int32 x = 1;//可见
+    int32 y = 2;//可见
+    int32 attackRange = 3;//可见
+    int32 bulletNum = 4;
+    int32 speed = 5;//可见
+    int32 life = 6;//可见
+    double timeUntilCommonSkillAvailable = 7; //可见  
+    double timeUntilUltimateSkillAvailable = 8;//底层未实现
+    int32 gemNum = 9;//可见
+    BuffType buff = 10;//可见
+    PropType prop = 11;//可见
+    PlaceType place = 12;//人物背景框颜色
 }
 
-//角色可见属性的枚举，包括：Ground（外围）0，Grass1、2、3，以及角色技能带来的隐身4
-enum PlaceType
+message BasicalCharacterProperty
 {
-    Ground=0;
-    Grass1=1;
-    Grass2=2;
-    Grass3=3;
-    Invisible=4;
+    int32 guid = 1;     //操作方法：Client和Server互相约定guid。非负整数中，1-8这8个guid预留给8个人物，其余在子弹或道具被创造/破坏时分发和回收。Client端用向量[guid]储存物体信息和对应的控件实例。
+                        //0号guid存储单播模式中每人Client对应的GUID。
+    int32 PassiveSkillType = 2;//可见 (职1)
+    int32 ActiveSkillType = 3;//可见（职2)
 }
 
-//道具类型，此为编写时的临时名称，具体道具名称可以待主题确定后更改
-enum PropType
+message MessageOfProp
 {
-    Null = 0;
-    Accelerate = 1;
-    plusAP = 2;
-    minusCD = 3;
-    addHP = 4;
-    Shield = 5;
-    addLIFE = 6;
-    Spear = 7;
-    Decelerate = 8;
-    minusAP = 9;
-    addCD = 10;
-}      //暂且不加更改。前6个信息重用为THUAI5的道具，后几个保留以备日后增加道具类型。
-
-enum ShapeType
-{
-	Circle = 0;       //仍然，子弹和人物为圆形，格子为方形
-	Square = 1;
+    PropType type = 1;
+    int32 x = 2;
+    int32 y = 3;
 }
 
-enum PassiveSkillType
+message MessageOfBullet
 {
-    PSkill0 = 0;
-    PSkill1 = 1;
-    PSkill2 = 2;
-    PSkill3 = 3;
-    PSkill4 = 4;
-    PSkill5 = 5;
+    BulletType type = 1;
+    int32 bulletAP = 2;
+    int32 boomRange = 3;
 }
 
-enum ActiveSkillType
+message MessageToInitialize //初始化信息，只在Server接收Client的开始游戏信息后发送，内容是在整局游戏里不变的数据
 {
-    ASkill0 = 0;
-    ASkill1 = 1;
-    ASkill2 = 2;
-    ASkill3 = 3;
-    ASkill4 = 4;
-    ASkill5 = 5;
+    int32 MapSerial = 1;
+    int32 NumberOfValidPlayer = 2;
+    repeated BasicalCharacterProperty property = 3;
+}
+//全设成int32了，麻烦逻辑组其他二位指正
+message MessageToAddInstance
+{
+    GameObjType instanceType= 1; //这里逻辑上只能写道具和子弹,Client也只准备了这两个实例的创建函数。
+                                 //人物在开始时通过BasicalCharacterProperty中的信息添加，无法手动添加。如果需要有添加草丛的操作，请联系我。
+    int32 guid = 2;            //要分配的guid。为防止重复分配，建议Server也写一个对应的vector。
+    oneof messageOfInstance    //根据instanceType决定消息类型
+    {
+        MessageOfProp messageOfProp= 3;
+        MessageOfBullet messageOfBullet= 4;
+    }
 }
 
-
-enum BulletType //现在好像变成射手的专属枚举了（
+message MessageToDestroyInstance
 {
-    Bullet0 = 0;     //普通子弹
-    Bullet1 = 1;     //爆弾
+    int32 guid = 1;
 }
+//拿到要销毁物体的guid后，Client端vector释放掉该guid位置的物体信息，并置为null回收该地址，同时删除该物品的对应控件句柄。
+//人物的guid无法被回收，死亡时颜色变为透明。任何试图将guid0和1-8删除的操作应被认定为非法。
+//子弹被销毁的同时会显示一个爆炸效果。饼：画圆
 
-
-message GameObjInfo
+message MessageToOperate
+{
+    bool operateKind = 1;
+    oneof messageOfOperation
+    {
+        MessageToAddInstance messageToAddInstance= 2;
+        MessageToDestroyInstance messageToDestroyInstance = 3;
+    }
+}
+//操作指令
+message MessageToRefresh
 {
     GameObjType gameObjType = 1;
-    
-    //以下当gameObjType为任意值时均时有效
-    int64 guid = 2;			//每个游戏对象有一个全局ID，即guid
-    int32 x = 3;
-    int32 y = 4;
-    double facingDirection = 5;
-    int32 moveSpeed = 6;
-    bool canMove = 7;
-    bool isMoving = 8;
-    ShapeType shapeType = 9;	//形状
-    int32 radius = 10;		//圆形物体的半径或正方形内切圆半径
-    
-    //以下当gameObjType为Character、Prop和Bullet时才有效
-    int64 teamID = 11;		//人物所属队伍ID或子弹、道具的发射主人所属队伍ID，其他情况为无效ID
+    oneof gameObjMessage
+    {
+        MessageOfBullet messageOfBullet = 2;
+        ChangeableCharacterProperty messageOfCharacter = 3;
+    }
+}//这个函数只包含了用于刷新人物的部分。在Client端，当接到这个消息后，Client会将消息内的人物信息存入vector，并将vector中的所有信息读入屏幕显示。
+//更改之后，Client读取信息的逻辑和THUAI4不同了，现在是用proto信息将游戏信息读入缓存，定时从缓存刷新屏幕。
+//采用这个方法是因为我比较菜，缓存法容易维护，如果有更好的方法也可以更改。
 
-    //以下当gameObjType为Bullet时才有效
-    int32 bap = 12;			//子弹攻击力（改名了）
-    int32 boomRange = 13;	//子弹爆炸范围
-    
-    //以下当gameObjType为Character和Prop时有效
-    PropType propType = 14;	//当前人物持有的道具类型或道具的类型
-    
-    //以下仅当gameObjType为Prop时有效
-    bool isLaid = 15;		//是否已经被放置
-    
-    //以下仅当gameObjType为Character时有效
-    bool isDying = 16;		//正在死亡复活中……
-    int32 CD = 17;                     //回复子弹速度，并非技能CD
-    int32 maxBulletNum = 18;
-    int32 bulletNum = 19;
-    int32 maxHp = 20;
-    int32 hp = 21;
-    int32 lifeNum = 22;		//第几条命
-    PassiveSkillType pSkill = 23;   //被动技能池
-    ActiveSkillType aSkill1 = 24;  //主动1
-    ActiveSkillType aSkill2 = 25;  //主动2
-    PlaceType place = 26;            //角色位置状态，是否可见
-}
-
-//发送单个信息时
 message MessageToOneClient
 {
-    int64 playerID = 1;			//指明发送给谁
-    int64 teamID = 2;			//指明发送给谁
-    
+    int32 playerID = 1;			//指明发送给谁
+    int32 teamID = 2;			//指明发送给谁 
     MessageType messageType = 3;
-    int64 guid = 4;             //自己的guid
+    int32 guid = 4;             //自己的guid
     string message = 5;         //如果 messageType 为 Send，则为要发送的消息
-    //注意：这里尚未决定是否要改。突然发现只发送字符串比现在的THUAI5机制更自由。。。
-}
-
-//发送全局信息时
-message MessageToClient
-{
-    int64 playerID = 1;			//指明发送给谁
-    int64 teamID = 2;			//指明发送给谁
-    
-    MessageType messageType = 3;
-    GameObjInfo selfInfo = 4;	//自己的个人信息
-    int32 teamScore = 5;                //本队伍的分数
-    repeated GameObjInfo gameObjs = 6;		//当前地图上的所有对象
-
-    message OneTeamGUIDs
-    {
-        repeated int64 teammateGUIDs = 1;
-    }
-
-    repeated OneTeamGUIDs PlayerGUIDs = 7;  //所有玩家的GUID，第一维的 0、1、2…… 分别为队伍编号，每个队伍的0、1、2、……元素分别为playerID为0、1、2、……的玩家的GUID，若不存在该玩家，则为Constant::Constant::InvalidGUID
-}
+} //继承自THUIAI4
+//注：转换函数还没写好
