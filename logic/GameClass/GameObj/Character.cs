@@ -4,7 +4,7 @@ using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
-    public partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...该文件下抽象部分类已基本完工，剩下的在buffmanager里写
+    public abstract partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...
     {
         public readonly object propLock = new object();
         private object beAttackedLock = new object();
@@ -22,7 +22,7 @@ namespace GameClass.GameObj
                 lock (gameObjLock)
                 {
                     cd = value;
-                    //Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
+                    Debugger.Output(this, string.Format("'s CD has been set to: {0}.", value));
                 }
             }
         }
@@ -54,7 +54,7 @@ namespace GameClass.GameObj
                 lock (gameObjLock)
                 {
                     ap = value;
-                    //Debugger.Output(this, "'s AP has been set to: " + value.ToString());
+                    Debugger.Output(this, "'s AP has been set to: " + value.ToString());
                 }
             }
         }
@@ -117,7 +117,7 @@ namespace GameClass.GameObj
                 lock (gameObjLock)
                 {
                     propInventory = value;
-                    //Debugger.Output(this, " picked the prop: " + (holdProp == null ? "null" : holdProp.ToString()));
+                    Debugger.Output(this, " picked the prop: " + (PropInventory == null ? "null" : PropInventory.ToString()));
                 }
             }
         }
@@ -362,9 +362,7 @@ namespace GameClass.GameObj
 
         public void AddAP(double add, int buffTime) => buffManeger.AddAP(add, buffTime, newVal => { AP = newVal; }, OrgAp);
 
-        //public void ChangeCD1(double discount, int buffTime) => buffManeger.ChangeCD1(discount, buffTime, newVal => { CD1 = newVal; }, OrgCD1);
-        //public void ChangeCD2(double discount, int buffTime) => buffManeger.ChangeCD2(discount, buffTime, newVal => { CD2 = newVal; }, OrgCD2);
-        //public void ChangeCD3(double discount, int buffTime) => buffManeger.ChangeCD3(discount, buffTime, newVal => { CD3 = newVal; }, OrgCD3);
+        public void ChangeCD(double discount, int buffTime) => buffManeger.ChangeCD(discount, buffTime, newVal => { CD = newVal; }, OrgCD);
 
         public void AddShield(int shieldTime) => buffManeger.AddShield(shieldTime);
         public bool HasShield => buffManeger.HasShield;
@@ -402,7 +400,7 @@ namespace GameClass.GameObj
             {
                 return true;
             }
-            else if (targetObj is Mine && ((Mine)targetObj).Parent?.TeamID == TeamID)   // 自己队的炸弹忽略碰撞
+            else if (targetObj is DebuffMine && ((DebuffMine)targetObj).Parent?.TeamID == TeamID)   // 自己队的地雷忽略碰撞
             {
                 return true;
             }
