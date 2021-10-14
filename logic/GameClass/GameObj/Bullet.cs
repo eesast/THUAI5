@@ -4,7 +4,7 @@ using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
-    public abstract class Bullet : ObjOfCharacter  // LHR摸鱼中...已写完抽象类及一个派生类
+    public abstract class Bullet : ObjOfCharacter   // LHR摸鱼中...
     {
         private int ap;
         /// <summary>
@@ -71,24 +71,6 @@ namespace GameClass.GameObj
         public abstract Bullet Clone();  //深复制子弹
     }
 
-    internal sealed class Bullet0 : Bullet
-    {
-        public Bullet0(XYPosition initPos, int radius, int initSpeed, int ap, bool hasSpear) : base(initPos, radius, initSpeed, ap, hasSpear) { }
-        public Bullet0(Character player, int radius, int initSpeed, int ap) : base(player, radius, initSpeed, ap) { }
-        public override bool IsRigid => true;
-        public override ShapeType Shape => ShapeType.Circle;
-        public override double BulletBombRange => GameData.basicBulletBombRange;
-
-        public override bool CanAttack(GameObj target)
-        {
-            // 圆形攻击范围
-            return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
-        }
-        public override Bullet0 Clone()
-        {
-            return new Bullet0(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
-        }
-    }
     internal sealed class AtomBomb : Bullet
     {
         public AtomBomb(XYPosition initPos, int radius, int initSpeed, int ap, bool hasSpear) : base(initPos, radius, initSpeed, ap, hasSpear) { }
