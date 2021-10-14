@@ -60,13 +60,13 @@ namespace GameClass.GameObj
         }
         public int OrgAp { get; protected set; }    // 原初攻击力
 
-        private int score;
+        private int score = 0;
         public int Score => score;  // 当前分数
 
-        private int attackRange;
-        public int AttackRange => attackRange;
+        private double attackRange;
+        public double AttackRange => attackRange;
 
-        private double vampire; // 回血率：0-1之间
+        private double vampire = 0; // 回血率：0-1之间
         public double Vampire
         {
             get => vampire;
@@ -95,6 +95,8 @@ namespace GameClass.GameObj
                     level = value;
             }
         }
+
+        //可能要改，改成存type比较好吧? 也不一定，先看看吧（自言自语
         private Bullet bulletOfPlayer;
         public Bullet BulletOfPlayer
         {
@@ -105,6 +107,7 @@ namespace GameClass.GameObj
                     bulletOfPlayer = value;
             }
         }
+
         private Prop? propInventory;
         public Prop? PropInventory  //持有的道具
         {
@@ -115,6 +118,18 @@ namespace GameClass.GameObj
                 {
                     propInventory = value;
                     //Debugger.Output(this, " picked the prop: " + (holdProp == null ? "null" : holdProp.ToString()));
+                }
+            }
+        }
+        private int gemNum = 0;
+        public int GemNum
+        {
+            get => gemNum;
+            set
+            {
+                lock(gameObjLock)
+                {
+                    gemNum = value;
                 }
             }
         }
@@ -347,9 +362,9 @@ namespace GameClass.GameObj
 
         public void AddAP(double add, int buffTime) => buffManeger.AddAP(add, buffTime, newVal => { AP = newVal; }, OrgAp);
 
-        public void ChangeCD1(double discount, int buffTime) => buffManeger.ChangeCD1(discount, buffTime, newVal => { CD1 = newVal; }, OrgCD1);
-        public void ChangeCD2(double discount, int buffTime) => buffManeger.ChangeCD2(discount, buffTime, newVal => { CD2 = newVal; }, OrgCD2);
-        public void ChangeCD3(double discount, int buffTime) => buffManeger.ChangeCD3(discount, buffTime, newVal => { CD3 = newVal; }, OrgCD3);
+        //public void ChangeCD1(double discount, int buffTime) => buffManeger.ChangeCD1(discount, buffTime, newVal => { CD1 = newVal; }, OrgCD1);
+        //public void ChangeCD2(double discount, int buffTime) => buffManeger.ChangeCD2(discount, buffTime, newVal => { CD2 = newVal; }, OrgCD2);
+        //public void ChangeCD3(double discount, int buffTime) => buffManeger.ChangeCD3(discount, buffTime, newVal => { CD3 = newVal; }, OrgCD3);
 
         public void AddShield(int shieldTime) => buffManeger.AddShield(shieldTime);
         public bool HasShield => buffManeger.HasShield;
@@ -392,12 +407,6 @@ namespace GameClass.GameObj
                 return true;
             }
             return false;
-        }
-        public Character(XYPosition initPos, int initRadius, PlaceType initPlace,int initSpeed) :base(initPos,initRadius,initPlace)
-        {
-            this.CanMove = true;
-            this.Type = GameObjType.Character;
-            this.MoveSpeed = initSpeed;
         }
     }
 }
