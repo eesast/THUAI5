@@ -9,6 +9,9 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
 {
     public class RecoverAfterBattle:PassiveSkill  //脱战回血
     {
+        private readonly Bullet initBullet = new Bullet0(new XYPosition(0, 0), GameData.bulletRadius, GameData.basicBulletMoveSpeed, GameData.basicAp, false);
+        public override Bullet InitBullet => initBullet;
+        //以上参数以后再改
         public override void SkillEffect(Character player)
         {
             const int recoverDegree = 1;  //每帧回复血量
@@ -65,6 +68,9 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
     }
     public class SpeedUpWhenLeavingGrass:PassiveSkill //出草丛时加速并免疫减速，但隐身时出草丛不会有该效果
     {
+        private readonly Bullet initBullet = new Bullet0(new XYPosition(0, 0), GameData.bulletRadius, GameData.basicBulletMoveSpeed, GameData.basicAp, false);
+        public override Bullet InitBullet => initBullet;
+        //以上参数以后再改
         public override void SkillEffect(Character player)
         {
             PlaceType nowPlace = player.Place;
@@ -129,9 +135,23 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
     }
     public class Vampire:PassiveSkill  //被动就是吸血
     {
+        private readonly Bullet initBullet = new Bullet0(new XYPosition(0, 0), GameData.bulletRadius, GameData.basicBulletMoveSpeed, GameData.basicAp, false);
+        public override Bullet InitBullet => initBullet;
+        //以上参数以后再改
         public override void SkillEffect(Character player)
         {
             player.oriVampire = 0.1;
+        }
+    }
+
+    public class NoPassiveSkill : PassiveSkill  //没技能，这种情况不应该发生，先定义着以防意外
+    {
+        private readonly Bullet initBullet = new Bullet0(new XYPosition(0, 0), GameData.bulletRadius, GameData.basicBulletMoveSpeed, GameData.basicAp, false);
+        public override Bullet InitBullet => initBullet;
+        //以上参数以后再改
+        public override void SkillEffect(Character player)
+        {
+            
         }
     }
 }

@@ -8,9 +8,11 @@ namespace Preparation.Interface
     {
         ITimer Timer { get; }
         List<ICharacter> PlayerList { get; }
-        List<IObjOfCharacter> ObjList { get; }
+        List<IObjOfCharacter> BulletList { get; }
+        List<IObjOfCharacter> PropList { get; }
         ReaderWriterLockSlim PlayerListLock { get; }
-        ReaderWriterLockSlim ObjListLock { get; }
+        ReaderWriterLockSlim BulletListLock { get; }
+        ReaderWriterLockSlim PropListLock { get; }
         public bool IsWall(XYPosition pos);
         public bool IsOutOfBound(IGameObj obj);
         public IOutOfBound GetOutOfBound(XYPosition pos); //返回新建的一个OutOfBound对象

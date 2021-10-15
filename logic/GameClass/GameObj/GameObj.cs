@@ -28,6 +28,9 @@ namespace GameClass.GameObj
                 }
             }
         }
+        private static long currentMaxID = 0;           //目前游戏对象的最大ID
+        public const long invalidID = long.MaxValue;            //无效的ID
+        public const long noneID = long.MinValue;
         public long ID { get; }
 
         private XYPosition position;
