@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -196,6 +197,7 @@ namespace GameClass.GameObj
             this.birthPos = initPos;
             this.Radius = initRadius;
             this.place = initPlace;
+            ID = Interlocked.Increment(ref currentMaxID);
         }
     }
 }

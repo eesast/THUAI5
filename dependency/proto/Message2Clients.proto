@@ -7,29 +7,33 @@ import "MessageType.proto";
 
 /*---------------------------------2021-10-1重写.proto---------------------------------------*/
 /*---------------------------------2021-10-2更改 by TCL---------------------------------------*/
+/*---------------------------------2021-10-15更改 by TCL---------------------------------------*/
 
-message ChangeableCharacterProperty
+message MessageOfCharacter
 {
     int32 x = 1;//可见
     int32 y = 2;//可见
-    int32 attackRange = 3;//可见
+    double attackRange = 3;//可见
     int32 bulletNum = 4;
     int32 speed = 5;//可见
     int32 life = 6;//可见
     double timeUntilCommonSkillAvailable = 7; //可见  
-    double timeUntilUltimateSkillAvailable = 8;//底层未实现
+    double timeUntilUltimateSkillAvailable = 8;//这个可能用不到，因为可能只会有一个主动技能
     int32 gemNum = 9;//可见
     BuffType buff = 10;//可见
     PropType prop = 11;//可见
     PlaceType place = 12;//人物背景框颜色
-}
-
-message BasicalCharacterProperty
-{
-    int32 guid = 1;     //操作方法：Client和Server互相约定guid。非负整数中，1-8这8个guid预留给8个人物，其余在子弹或道具被创造/破坏时分发和回收。Client端用向量[guid]储存物体信息和对应的控件实例。
+    double vampire=13;//吸血率
+    BulletType bulletType = 14;//子弹类型
+    bool isResetting=15;//是否在复活中
+    PassiveSkillType PassiveSkillType = 16;//可见 
+    ActiveSkillType ActiveSkillType = 17;//可见
+    int32 guid = 18;     //操作方法：Client和Server互相约定guid。非负整数中，1-8这8个guid预留给8个人物，其余在子弹或道具被创造/破坏时分发和回收。Client端用向量[guid]储存物体信息和对应的控件实例。
                         //0号guid存储单播模式中每人Client对应的GUID。
-    int32 PassiveSkillType = 2;//可见 (职1)
-    int32 ActiveSkillType = 3;//可见（职2)
+    bool canMove=19;
+    int32 radius=20;
+    int32 CD=21;
+    int32 lifeNum = 23;		//第几次复活
 }
 
 message MessageOfProp
@@ -37,63 +41,45 @@ message MessageOfProp
     PropType type = 1;
     int32 x = 2;
     int32 y = 3;
+    double facingDirection=4;
+    int32 guid=5;
 }
 
 message MessageOfBullet
 {
     BulletType type = 1;
-    int32 bulletAP = 2;
-    int32 boomRange = 3;
+    int32 x=2;
+    int32 y=3;
+    double facingDirection=4;
+    int32 guid=5;
+}
+
+message MessageWhileClientConnecting
+{
+    bool isValid=1; //is ID valid?
+    bool isExist=2; //has player existed?
 }
 
 message MessageToInitialize //初始化信息，只在Server接收Client的开始游戏信息后发送，内容是在整局游戏里不变的数据
 {
-    int32 MapSerial = 1;
+    int32 MapSerial = 1; //应该是地图的编号
     int32 NumberOfValidPlayer = 2;
-    repeated BasicalCharacterProperty property = 3;
-}
-//全设成int32了，麻烦逻辑组其他二位指正
-message MessageToAddInstance
-{
-    GameObjType instanceType= 1; //这里逻辑上只能写道具和子弹,Client也只准备了这两个实例的创建函数。
-                                 //人物在开始时通过BasicalCharacterProperty中的信息添加，无法手动添加。如果需要有添加草丛的操作，请联系我。
-    int32 guid = 2;            //要分配的guid。为防止重复分配，建议Server也写一个对应的vector。
-    oneof messageOfInstance    //根据instanceType决定消息类型
-    {
-        MessageOfProp messageOfProp= 3;
-        MessageOfBullet messageOfBullet= 4;
-    }
 }
 
-message MessageToDestroyInstance
+//每帧server发给client的信息
+message MessageToRefreshBullet
 {
-    int32 guid = 1;
+    repeated MessageOfBullet messageOfBullet = 1;
 }
-//拿到要销毁物体的guid后，Client端vector释放掉该guid位置的物体信息，并置为null回收该地址，同时删除该物品的对应控件句柄。
-//人物的guid无法被回收，死亡时颜色变为透明。任何试图将guid0和1-8删除的操作应被认定为非法。
-//子弹被销毁的同时会显示一个爆炸效果。饼：画圆
 
-message MessageToOperate
+message MessageToRefreshCharacter
 {
-    bool operateKind = 1;
-    oneof messageOfOperation
-    {
-        MessageToAddInstance messageToAddInstance= 2;
-        MessageToDestroyInstance messageToDestroyInstance = 3;
-    }
+    repeated MessageOfCharacter messageOfCharacter = 1;
 }
-//操作指令
-message MessageToRefresh
+message MessageToRefreshProp
 {
-    GameObjType gameObjType = 1;
-    oneof gameObjMessage
-    {
-        MessageOfBullet messageOfBullet = 2;
-        ChangeableCharacterProperty messageOfCharacter = 3;
-    }
-}//这个函数只包含了用于刷新人物的部分。在Client端，当接到这个消息后，Client会将消息内的人物信息存入vector，并将vector中的所有信息读入屏幕显示。
-//更改之后，Client读取信息的逻辑和THUAI4不同了，现在是用proto信息将游戏信息读入缓存，定时从缓存刷新屏幕。
-//采用这个方法是因为我比较菜，缓存法容易维护，如果有更好的方法也可以更改。
+    repeated MessageOfProp messageOfProp = 1;
+}
 
 message MessageToOneClient
 {
@@ -104,3 +90,38 @@ message MessageToOneClient
     string message = 5;         //如果 messageType 为 Send，则为要发送的消息
 } //继承自THUIAI4
 //注：转换函数还没写好
+
+
+//这些先弃用了↓
+
+
+// //全设成int32了，麻烦逻辑组其他二位指正
+// message MessageToAddInstance
+// {
+//     GameObjType instanceType= 1; //这里逻辑上只能写道具和子弹,Client也只准备了这两个实例的创建函数。
+//                                  //人物在开始时通过BasicalCharacterProperty中的信息添加，无法手动添加。如果需要有添加草丛的操作，请联系我。
+//     int32 guid = 2;            //要分配的guid。为防止重复分配，建议Server也写一个对应的vector。
+//     oneof messageOfInstance    //根据instanceType决定消息类型
+//     {
+//         MessageOfProp messageOfProp= 3;
+//         MessageOfBullet messageOfBullet= 4;
+//     }
+// }
+
+// message MessageToDestroyInstance
+// {
+//     int32 guid = 1;
+// }
+// //拿到要销毁物体的guid后，Client端vector释放掉该guid位置的物体信息，并置为null回收该地址，同时删除该物品的对应控件句柄。
+// //人物的guid无法被回收，死亡时颜色变为透明。任何试图将guid0和1-8删除的操作应被认定为非法。
+// //子弹被销毁的同时会显示一个爆炸效果。饼：画圆
+
+// message MessageToOperate
+// {
+//     bool operateKind = 1;
+//     oneof messageOfOperation
+//     {
+//         MessageToAddInstance messageToAddInstance= 2;
+//         MessageToDestroyInstance messageToDestroyInstance = 3;
+//     }
+// }

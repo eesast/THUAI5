@@ -48,9 +48,11 @@ namespace Communication.Proto {
             "dWNsZWFyV2VhcG9uEAMSDQoJU3VwZXJGYXN0EAQSCwoHQVNraWxsNBAFEgsK",
             "B0FTa2lsbDUQBipnCghCdWZmVHlwZRIQCgxOdWxsQnVmZlR5cGUQABINCglN",
             "b3ZlU3BlZWQQARIGCgJBUBACEgYKAkNEEAMSCwoHQWRkTElGRRAEEg4KClNo",
-            "aWVsZEJ1ZmYQBRINCglTcGVhckJ1ZmYQBiouCgpCdWxsZXRUeXBlEhIKDk51",
-            "bGxCdWxsZXRUeXBlEAASDAoIQXRvbUJvbWIQAUIWqgITQ29tbXVuaWNhdGlv",
-            "bi5Qcm90b2IGcHJvdG8z"));
+            "aWVsZEJ1ZmYQBRINCglTcGVhckJ1ZmYQBip6CgpCdWxsZXRUeXBlEhIKDk51",
+            "bGxCdWxsZXRUeXBlEAASEQoNQ29tbW9uQnVsbGV0MRABEhEKDUNvbW1vbkJ1",
+            "bGxldDIQAhIRCg1Db21tb25CdWxsZXQzEAMSEQoNQ29tbW9uQnVsbGV0NBAE",
+            "EgwKCEF0b21Cb21iEAVCFqoCE0NvbW11bmljYXRpb24uUHJvdG9iBnByb3Rv",
+            "Mw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Communication.Proto.MessageType), typeof(global::Communication.Proto.GameObjType), typeof(global::Communication.Proto.ShapeType), typeof(global::Communication.Proto.PlaceType), typeof(global::Communication.Proto.PropType), typeof(global::Communication.Proto.PassiveSkillType), typeof(global::Communication.Proto.ActiveSkillType), typeof(global::Communication.Proto.BuffType), typeof(global::Communication.Proto.BulletType), }, null, null));
@@ -168,12 +170,11 @@ namespace Communication.Proto {
 
   public enum BulletType {
     [pbr::OriginalName("NullBulletType")] NullBulletType = 0,
-    /// <summary>
-    /// ...
-    /// ...
-    /// ...
-    /// </summary>
-    [pbr::OriginalName("AtomBomb")] AtomBomb = 1,
+    [pbr::OriginalName("CommonBullet1")] CommonBullet1 = 1,
+    [pbr::OriginalName("CommonBullet2")] CommonBullet2 = 2,
+    [pbr::OriginalName("CommonBullet3")] CommonBullet3 = 3,
+    [pbr::OriginalName("CommonBullet4")] CommonBullet4 = 4,
+    [pbr::OriginalName("AtomBomb")] AtomBomb = 5,
   }
 
   #endregion

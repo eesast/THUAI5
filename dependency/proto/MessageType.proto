@@ -96,9 +96,10 @@ enum BuffType    //buff
 enum BulletType  //会有不同类型的子弹，现在只实现了“原子弹”
 {
     NullBulletType = 0;
-    AtomBomb = 1;
-    // ...
-    // ...
-    // ...
+    CommonBullet1=1;
+    CommonBullet2=2;
+    CommonBullet3=3;
+    CommonBullet4=4;
+    AtomBomb=5;
 }
 //先偷懒把枚举类型粘在这里

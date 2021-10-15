@@ -41,7 +41,7 @@ namespace Server
 		[Option('u', "url", Required = false, HelpText = "Web url")]
 		public string Url { get; set; } = DefaultArgumentOptions.Url;
 
-		[Option("requestOnly", Required = false, HelpText = "Only send  web requests")]
+		[Option("requestOnly", Required = false, HelpText = "Only send web requests")]
 		public bool RequestOnly { get; set; } = false;
 
 		[Option("finalGame", Required = false, HelpText = "Whether it is the final game")]
