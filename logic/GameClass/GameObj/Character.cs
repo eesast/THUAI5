@@ -4,7 +4,7 @@ using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
-    public abstract partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...
+    public partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...
     {
         public readonly object propLock = new object();
         private object beAttackedLock = new object();
