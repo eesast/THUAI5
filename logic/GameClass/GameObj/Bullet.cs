@@ -68,6 +68,7 @@ namespace GameClass.GameObj
         public Bullet(XYPosition initPos, Bullet bullet) : base(initPos, bullet.Radius, PlaceType.Null) { }
         public override bool IsRigid => true;	// 默认为true
         public override ShapeType Shape => ShapeType.Circle;	// 默认为圆形
+        public abstract BulletType TypeOfBullet { get; }
         public abstract Bullet Clone();  //深复制子弹
     }
 
@@ -88,5 +89,26 @@ namespace GameClass.GameObj
         {
             return new AtomBomb(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
         }
+        public override BulletType TypeOfBullet => BulletType.AtomBomb;
+    }
+
+    internal sealed class Bullet0 : Bullet
+    {
+        public Bullet0(XYPosition initPos, int radius, int initSpeed, int ap, bool hasSpear) : base(initPos, radius, initSpeed, ap, hasSpear) { }
+        public Bullet0(Character player, int radius, int initSpeed, int ap) : base(player, radius, initSpeed, ap) { }
+        public override bool IsRigid => true;
+        public override ShapeType Shape => ShapeType.Circle;
+        public override double BulletBombRange => GameData.basicBulletBombRange;
+
+        public override bool CanAttack(GameObj target)
+        {
+            // 圆形攻击范围
+            return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
+        }
+        public override Bullet0 Clone()
+        {
+            return new Bullet0(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
+        }
+        public override BulletType TypeOfBullet => BulletType.Bullet0;
     }
 }

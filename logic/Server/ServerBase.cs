@@ -36,12 +36,12 @@ namespace Server
 
             Console.WriteLine("Server begins to listen!");
 
-            serverCommunicator.OnConnect += delegate ()
+            serverCommunicator.OnConnect += ()=>
             {
                 Console.WriteLine("Successfully connected!");
             };
 
-            serverCommunicator.OnReceive += delegate ()
+            serverCommunicator.OnReceive += ()=>
             {
                 if (serverCommunicator.TryTake(out IGameMessage msg) && msg.PacketType == PacketType.MessageToServer)
                 {

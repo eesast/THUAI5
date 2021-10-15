@@ -110,7 +110,7 @@ namespace Gaming
             }
             finally { gameMap.PlayerListLock.ExitReadLock(); }
 
-            //propManager.StartProducing();
+            propManager.StartProducing();
 
 
             //开始游戏
@@ -202,9 +202,6 @@ namespace Gaming
             }
             finally { gameMap.PropListLock.ExitReadLock(); }
 
-            //未捡道具有列表吗？
-            //propList?
-
             return gameObjList;
         }
         public Game(uint[,] mapResource, int numOfTeam)
@@ -224,6 +221,8 @@ namespace Gaming
             skillManager = new SkillManager();
             attackManager = new AttackManager(gameMap);
             moveManager = new MoveManager(gameMap);
+            propManager = new PropManager(gameMap);
+            gemManager = new GemManager(gameMap);
         }
     }
 }
