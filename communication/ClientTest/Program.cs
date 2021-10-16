@@ -43,19 +43,14 @@ namespace ClientTest
                 Console.WriteLine(m2one);
             };
 
-            if (client.Connect(ip,port))
-            {
-                Console.WriteLine("success to connect to the server.");
-            }
-            else
-            {
-                Console.WriteLine("fail to connect to the server.");
-            }
+            // 这里的逻辑是这样的：不会因为说client的命令行参数不合法就不去连了，而是先连上，再通过server的反馈来知晓自己是否合法
+            client.Connect(ip, port);
 
             // 解析命令行并发送信息
             MessageToServer m2s = new MessageToServer();
             m2s.TeamID = int.Parse(args[0]);
             m2s.PlayerID = int.Parse(args[1]);
+            m2s.MessageType = MessageType.AddPlayer; // !!初始化时必须指定!!否则将无法加入游戏!!
             client.SendMessage(m2s);
 
             Console.ReadLine();
