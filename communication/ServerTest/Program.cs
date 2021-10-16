@@ -32,7 +32,7 @@ namespace ServerTest
                 if(server.TryTake(out msg))
                 {
                     MessageToServer m2s = msg.Content as MessageToServer; // 强制类型转换
-                    Console.WriteLine($"Receive a message from {m2s.PlayerID}");
+                    Console.WriteLine($"Receive a message from {m2s.TeamID} {m2s.PlayerID}");
                     Console.WriteLine($"Message type::{m2s.MessageType}");
                     if (m2s.MessageType == MessageType.Send) // 有大量需要send枚举值的操作，因此这里需要判断一下
                     {
@@ -64,62 +64,47 @@ namespace ServerTest
             MessageToInitialize m2i = new MessageToInitialize();
             m2i.MapSerial = 2;
             m2i.NumberOfValidPlayer = 2;
-            // 比较麻烦的一个操作：构造每一个人物的属性
-            BasicalCharacterProperty p1 = new BasicalCharacterProperty();
-            BasicalCharacterProperty p2 = new BasicalCharacterProperty();
-            p1.Guid = 1;
-            p1.ActiveSkillType = 1;
-            p1.PassiveSkillType = 1;
-
-            p2.Guid = 2;
-            p2.ActiveSkillType = 2;
-            p2.PassiveSkillType = 2;
-
-            m2i.Property.Add(p1);
-            m2i.Property.Add(p2);
+            
             server.SendToClient(m2i);
             Console.WriteLine("StartGame");
             Console.ReadLine();
 
-            // 2.操作指令
-            // 添加子弹属性
-            MessageToOperate m2o = new MessageToOperate();
-            // ??不太理解operateKind是做什么的
-            m2o.OperateKind = true;
-            m2o.MessageToAddInstance = new MessageToAddInstance();
-            m2o.MessageToAddInstance.InstanceType = GameObjType.Bullet;
-            m2o.MessageToAddInstance.Guid = 200; // 这个是我随便写的，后续GUID的协议还是要交给逻辑组决定吧
-            m2o.MessageToAddInstance.MessageOfBullet = new MessageOfBullet();
-            m2o.MessageToAddInstance.MessageOfBullet.Type = BulletType.AtomBomb;
-            m2o.MessageToAddInstance.MessageOfBullet.BulletAP = 200;
-            m2o.MessageToAddInstance.MessageOfBullet.BoomRange = 20;
-            server.SendToClient(m2o);
-            Console.WriteLine("Add a bullet");
+            // 2.人物设置（这里我默认人物也应该在初始化的类型中）
+            MessageToRefreshCharacter m2rc = new MessageToRefreshCharacter();
+            for (int i = 0; i < m2i.NumberOfValidPlayer; i++)
+            {
+                MessageOfCharacter mc = new MessageOfCharacter();
+                mc.ActiveSkillType = ActiveSkillType.SuperFast;
+                // 人物属性需要自己加
+                m2rc.MessageOfCharacter.Add(mc);
+            }
+            server.SendToClient(m2i);
+            Console.WriteLine("AddPlayers");
             Console.ReadLine();
 
-            // 3.刷新指令
-            // 更新人物属性
-            MessageToRefresh m2r0 = new MessageToRefresh();
-            m2r0.GameObjType = GameObjType.Character;
-            m2r0.MessageOfCharacter = new ChangeableCharacterProperty();
-            m2r0.MessageOfCharacter.AttackRange = 1;
-            m2r0.MessageOfCharacter.Buff = BuffType.AddLife;
-            m2r0.MessageOfCharacter.BulletNum = 10;
-            m2r0.MessageOfCharacter.GemNum = 5;
-            m2r0.MessageOfCharacter.Life = 2;
-            m2r0.MessageOfCharacter.X = 500;
-            m2r0.MessageOfCharacter.Y = 500;
-            server.SendToClient(m2r0);
-            Console.WriteLine("Set changeable character property");
+            // 3.子弹与道具设置
+            MessageToRefreshBullet m2rb = new MessageToRefreshBullet();
+            for(int i = 0;i<10;i++)
+            {
+                MessageOfBullet mb = new MessageOfBullet();
+                mb.FacingDirection = 100;
+                // 子弹属性需要自己加
+                m2rb.MessageOfBullet.Add(mb);
+            }
+            server.SendToClient(m2rb);
+            Console.WriteLine("AddBullets");
             Console.ReadLine();
-            // 更新子弹属性
-            MessageToRefresh m2r = new MessageToRefresh();
-            m2r.GameObjType = GameObjType.Bullet;
-            m2r.MessageOfBullet = new MessageOfBullet();
-            m2r.MessageOfBullet.BulletAP = 100;
-            m2r.MessageOfBullet.BoomRange = 10;
-            server.SendToClient(m2r);
-            Console.WriteLine("Change a bullet");
+
+            MessageToRefreshProp m2rp= new MessageToRefreshProp();
+            for (int i = 0; i < 10; i++)
+            {
+                MessageOfProp mp = new MessageOfProp();
+                mp.Type = PropType.AddAp;
+                // 子弹属性需要自己加
+                m2rp.MessageOfProp.Add(mp);
+            }
+            server.SendToClient(m2rp);
+            Console.WriteLine("AddProps");
             Console.ReadLine();
 
             // 4.单播测试
@@ -144,58 +129,5 @@ namespace ServerTest
             server.Dispose();
             server.Stop();
         }
-
-        //static private MessageToClient BasicMessage(long guid, MessageType msgType)
-        //{
-        //    // 地图信息记录（这里暂时没有好的测试对象）
-
-        //    // GUID信息记录（注意是以“组”加入GUID的）
-        //    // 把RepeatedField看成STL中的vector即可
-        //    RepeatedField<MessageToClient.Types.OneTeamGUIDs> playerGUIDs = new RepeatedField<MessageToClient.Types.OneTeamGUIDs>();
-        //    for(int x = 0; x < 2; x++)
-        //    {
-        //        playerGUIDs.Add(new MessageToClient.Types.OneTeamGUIDs());
-        //        for(int y = 0; y < 4; y++)
-        //        {
-        //            playerGUIDs[x].TeammateGUIDs.Add(x * 100 + y);
-        //        }
-        //    }
-
-        //    // 玩家初始属性构造
-        //    MessageToClient msg = new MessageToClient();
-        //    msg.PlayerID = 0;
-        //    msg.TeamID = 0;
-        //    msg.MessageType = msgType;
-        //    msg.SelfInfo = new GameObjInfo();
-        //    msg.SelfInfo.ASkill1 = ActiveSkillType.Askill0;
-        //    msg.SelfInfo.ASkill2 = ActiveSkillType.Askill1;
-        //    msg.SelfInfo.Bap = 100;
-        //    msg.SelfInfo.BoomRange = 20;
-        //    msg.SelfInfo.BulletNum = 12;
-        //    msg.SelfInfo.CanMove = true;
-        //    msg.SelfInfo.CD = 5;
-        //    msg.SelfInfo.FacingDirection = 0.0;
-        //    msg.SelfInfo.GameObjType = GameObjType.Character;
-        //    msg.SelfInfo.Hp = 1000;
-        //    msg.SelfInfo.Guid = guid;
-        //    msg.SelfInfo.IsDying = false;
-        //    msg.SelfInfo.IsMoving = true;
-        //    msg.SelfInfo.LifeNum = 10;
-        //    msg.SelfInfo.MaxBulletNum = 50;
-        //    msg.SelfInfo.MaxHp = 2500;
-        //    msg.SelfInfo.MoveSpeed = 10;
-        //    msg.SelfInfo.PropType = PropType.Null;
-        //    msg.SelfInfo.Radius = 250;
-        //    msg.SelfInfo.ShapeType = ShapeType.Circle;
-        //    msg.SelfInfo.TeamID = 0;
-        //    msg.SelfInfo.X = 5000;
-        //    msg.SelfInfo.Y = 5000;
-
-        //    msg.SelfInfo.IsLaid = true;
-        //    msg.SelfInfo.Place = PlaceType.Ground;
-        //    msg.SelfInfo.PSkill = PassiveSkillType.Pskill0;
-
-        //    return msg;
-        //}
     }
 }
