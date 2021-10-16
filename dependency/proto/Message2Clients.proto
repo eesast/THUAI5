@@ -34,7 +34,7 @@ message MessageOfCharacter
     bool canMove=19;
     int32 radius=20;
     int32 CD=21;
-    int32 lifeNum = 23;		//第几次复活
+    int32 lifeNum = 22;		//第几次复活
 }
 
 message MessageOfProp
@@ -44,6 +44,7 @@ message MessageOfProp
     int32 y = 3;
     double facingDirection=4;
     int64 guid=5;
+    int64 parentID=6;
 }
 
 message MessageOfBullet
@@ -53,12 +54,13 @@ message MessageOfBullet
     int32 y=3;
     double facingDirection=4;
     int64 guid=5;
+    int64 parentID=6;
 }
 
 message MessageToInitialize //初始化信息，只在Server接收Client的开始游戏信息后发送，内容是在整局游戏里不变的数据
 {
     int32 MapSerial = 1; //应该是地图的编号
-    int32 NumberOfValidPlayer = 2;
+    MessageType messageType = 2;
 }
 
 //每帧server发给client的信息
@@ -74,6 +76,7 @@ message MessageToClient
         }    
     }    
     repeated GameObjMessage gameObjMessage=1;
+    MessageType messageType = 2;
 }
 
 message MessageToOneClient
