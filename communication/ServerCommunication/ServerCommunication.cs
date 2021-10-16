@@ -14,7 +14,8 @@ namespace Communication.ServerCommunication
     public sealed class ServerCommunication:IDisposable // 提供释放资源的接口
     {
         private static readonly ConcurrentDictionary<uint, IntPtr> playerDict = new ConcurrentDictionary<uint, IntPtr>(); // 储存当前所有玩家的id
-        private static readonly ConcurrentDictionary<int, GameObjType> instanceDict = new ConcurrentDictionary<int, GameObjType>(); // 储存所有的子弹和道具信息
+        // 本来加这个字典的目的是为了防止子弹和道具的重复构造，但了解了guid的机制后，感觉没什么必要...
+        // private static readonly ConcurrentDictionary<int, GameObjType> instanceDict = new ConcurrentDictionary<int, GameObjType>(); // 储存所有的子弹和道具信息
         private static AutoResetEvent allConnectionClosed = new AutoResetEvent(false); // 是否所有玩家都已经断开了连接
 
         private BlockingCollection<IGameMessage> msgQueue; // 储存信息的线程安全队列 
@@ -31,7 +32,9 @@ namespace Communication.ServerCommunication
             server.OnAccept += delegate (IServer sender, IntPtr connId, IntPtr client)
             {
                 OnConnect?.Invoke();
+#if DEBUG
                 Console.WriteLine($"Now the connect number is {server.ConnectionCount} (Maybe there are repeated clients.)");
+#endif 
                 return HandleResult.Ok;
             };
 
@@ -104,7 +107,9 @@ namespace Communication.ServerCommunication
                     }
                 }
                 // 虽然有着重复队伍名称和玩家编号的client确实收不到信息，但还是会连在server上，这里的ConnectionCount也有谜之bug...
+#if DEBUG
                 Console.WriteLine($"Now the connect number is { server.ConnectionCount }");
+#endif
                 if (playerDict.IsEmpty)
                 {
                     allConnectionClosed.Set();
@@ -162,7 +167,6 @@ namespace Communication.ServerCommunication
         /// <param name="m21c"></param>
         public void SendToClient(MessageToOneClient m21c, IntPtr connId)
         {
-            Console.WriteLine(connId);
             Message message = new Message();
             message.Content = m21c;
             message.PacketType = PacketType.MessageToOneClient;
@@ -188,49 +192,61 @@ namespace Communication.ServerCommunication
             SendOperationBroadCast(bytes);
         }
 
+        public void SendToClient(MessageToClient m2c)
+        {
+            Message message = new Message();
+            message.Content = m2c;
+            message.PacketType = PacketType.MessageToClient;
+
+            // 此处我希望可以看到oneof所包裹的信息(利用枚举值)，但似乎做不到？这点和之前使用oneof有不一样
+            byte[] bytes;
+            message.Serialize(out bytes);
+            SendOperationBroadCast(bytes);
+        }
+
         /// <summary>
         /// 需要发送的更新子弹的信息
         /// </summary>
         /// <param name="m2rb">子弹信息</param>
-        public void SendToClient(MessageToRefreshBullet m2rb)
-        {
-            Message message = new Message();
-            message.Content = m2rb;
-            message.PacketType = PacketType.MessageToRefreshBullet;
-            byte[] bytes;
-            message.Serialize(out bytes);
-            SendOperationBroadCast(bytes);
-        }
+        //public void SendToClient(MessageToRefreshBullet m2rb)
+        //{
+        //    Message message = new Message();
+        //    message.Content = m2rb;
+        //    message.PacketType = PacketType.MessageToRefreshBullet;
+        //    byte[] bytes;
+        //    message.Serialize(out bytes);
+        //    SendOperationBroadCast(bytes);
+        //}
 
-        /// <summary>
-        /// 需要发送的更新人物的信息
-        /// </summary>
-        /// <param name="m2rc">更新信息</param>
-        public void SendToClient(MessageToRefreshCharacter m2rc)
-        {
-            Message message = new Message();
-            message.Content = m2rc;
-            message.PacketType = PacketType.MessgaeToRefreshCharacter;
+        ///// <summary>
+        ///// 需要发送的更新人物的信息
+        ///// </summary>
+        ///// <param name="m2rc">更新信息</param>
+        //public void SendToClient(MessageToRefreshCharacter m2rc)
+        //{
+        //    Message message = new Message();
+        //    message.Content = m2rc;
+        //    message.PacketType = PacketType.MessgaeToRefreshCharacter;
 
-            byte[] bytes;
-            message.Serialize(out bytes);
-            SendOperationBroadCast(bytes);
-        }
+        //    byte[] bytes;
+        //    message.Serialize(out bytes);
+        //    SendOperationBroadCast(bytes);
+        //}
 
-        /// <summary>
-        /// 需要发送的更新道具的信息
-        /// </summary>
-        /// <param name="m2rp"></param>
-        public void SendToClient(MessageToRefreshProp m2rp)
-        {
-            Message message = new Message();
-            message.Content = m2rp;
-            message.PacketType = PacketType.MessageToRefreshProp;
+        ///// <summary>
+        ///// 需要发送的更新道具的信息
+        ///// </summary>
+        ///// <param name="m2rp"></param>
+        //public void SendToClient(MessageToRefreshProp m2rp)
+        //{
+        //    Message message = new Message();
+        //    message.Content = m2rp;
+        //    message.PacketType = PacketType.MessageToRefreshProp;
 
-            byte[] bytes;
-            message.Serialize(out bytes);
-            SendOperationBroadCast(bytes);
-        }
+        //    byte[] bytes;
+        //    message.Serialize(out bytes);
+        //    SendOperationBroadCast(bytes);
+        //}
 
         // 解释一下：此处是我的锅，之前没有很好地理解THUAI4中单播和广播的机制，现在才发现THUAI4中的server貌似是不区分单播和广播的
         // 在agent端才会根据消息的枚举类型确定单播还是广播
