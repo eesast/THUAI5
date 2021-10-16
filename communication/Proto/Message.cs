@@ -11,11 +11,11 @@ namespace Communication.Proto
     {
         MessageToServer = 0,
         MessageToOneClient = 1, // 单人信息
-        MessageWhileClientConnecting = 2, // 检测是否连接成功的一个小信息
         // 更新游戏中的可变属性。采用每帧发送所有对象信息的方式，因此储存的是一个数组
-        MessageToRefreshBullet = 3,
-        MessgaeToRefreshCharacter = 4,
-        MessageToRefreshProp = 5
+        MessageToRefreshBullet = 2,
+        MessgaeToRefreshCharacter = 3,
+        MessageToRefreshProp = 4,
+        MessageToInitialize = 5
     }
     /// <summary>
     /// 信息的通用接口，包含信息类型和内容

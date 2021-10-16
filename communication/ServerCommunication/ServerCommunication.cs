@@ -13,7 +13,7 @@ namespace Communication.ServerCommunication
 
     public sealed class ServerCommunication:IDisposable // 提供释放资源的接口
     {
-        private static readonly ConcurrentDictionary<ulong, IntPtr> playerDict = new ConcurrentDictionary<ulong, IntPtr>(); // 储存当前所有玩家的id
+        private static readonly ConcurrentDictionary<uint, IntPtr> playerDict = new ConcurrentDictionary<uint, IntPtr>(); // 储存当前所有玩家的id
         private static readonly ConcurrentDictionary<int, GameObjType> instanceDict = new ConcurrentDictionary<int, GameObjType>(); // 储存所有的子弹和道具信息
         private static AutoResetEvent allConnectionClosed = new AutoResetEvent(false); // 是否所有玩家都已经断开了连接
 
@@ -47,14 +47,34 @@ namespace Communication.ServerCommunication
 
                 // 信息判断是否有重合
                 MessageToServer m2s = message.Content as MessageToServer;
-                ulong key = ((ulong)m2s.PlayerID | (ulong)m2s.TeamID << 32);
-
-                if (playerDict.ContainsKey(key))
+                // 为避免重复构造，以下的操作均在初始化条件下进行（消息类型需要在client端手动指定）。AddPlayer的操作每局游戏每个玩家仅进行一次
+                if (m2s.MessageType == MessageType.AddPlayer)
                 {
-                    Console.WriteLine($"More than one client claims to have the same ID {m2s.TeamID} {m2s.PlayerID}. And this client won't be able to receive message from server."); // 这种情况可以强制退出游戏吗...
-                    return HandleResult.Error;
+                    // 添加的过程可能需要加锁
+                    lock (this)
+                    {
+                        // 不太理解原来为什么是<<32.感觉<<16就够用了。可能和dotnet版本有关，之前的写法会报警告
+                        uint key = ((uint)m2s.PlayerID | (uint)m2s.TeamID << 16);
+                        MessageToOneClient messageToOneClient = new MessageToOneClient();
+                        messageToOneClient.PlayerID = (int)m2s.PlayerID;
+                        messageToOneClient.TeamID = (int)m2s.TeamID;
+
+                        if (playerDict.ContainsKey(key))
+                        {
+                            messageToOneClient.MessageType = MessageType.InvalidPlayer;
+                            Console.WriteLine($"More than one client claims to have the same ID {m2s.TeamID} {m2s.PlayerID} with connId {connId}. And this client won't be able to receive message from server."); // 这种情况可以强制退出游戏吗...
+                            SendToClient(messageToOneClient, connId);
+                            return HandleResult.Ok;
+                        }
+                        else
+                        {
+                            playerDict.TryAdd(key, connId);
+                            messageToOneClient.MessageType = MessageType.ValidPlayer;
+                            SendToClient(messageToOneClient);
+                        }
+                    }
                 }
-                playerDict.TryAdd(key, connId); // 此处有多次发送的问题
+
                 try
                 {
                     msgQueue.Add(message); 
@@ -70,7 +90,7 @@ namespace Communication.ServerCommunication
             // 有玩家退出时的操作(不知道这个原先在Agent中的功能迁移到Server中是否还有必要)
             server.OnClose += delegate (IServer sender, IntPtr connId, SocketOperation socketOperation, int errorCode)
             {
-                foreach(ulong id in playerDict.Keys)
+                foreach(uint id in playerDict.Keys)
                 {
                     if (playerDict[id] == connId)
                     {
@@ -79,7 +99,7 @@ namespace Communication.ServerCommunication
                             return HandleResult.Error;
                         }
                         // 关于此处连接数（上文也一样的问题），实际上此处应该加一个mutex，但不加也无伤大雅
-                        Console.WriteLine($"Player {id >> 32} {id & 0xffffffff} closed the connection");
+                        Console.WriteLine($"Player {id >> 16} {id & 0xffff} closed the connection");
                         break;
                     }
                 }
@@ -115,6 +135,7 @@ namespace Communication.ServerCommunication
         // 当然，以下代码可能有一些不精简的地方，以后可能会稍作改动
         // 我的见解是这样的：server中的SendToClient应该不需要指定oneof中的内容（应该是在游戏逻辑中指定，指定完毕以后就没有另一种选项的存储空间了），实际上server只需要做两件事情：1.发送信息 2.视情况适时报出警告或错误
         // 此处需要说明一下protobuf中的oneof语法在C#中的使用：proto编译生成的cs文件会自动生成一个枚举值（除了oneof中的不同类型还有一个None），以供使用者随时判断
+        // 10-16 更改：去掉oneof机制后感觉语句简单了很多，甚至感觉重载也没什么意义...可以直接搞一个接口统一所有操作
 
         /// <summary>
         /// 发送单人信息
@@ -128,17 +149,27 @@ namespace Communication.ServerCommunication
             message.PacketType = PacketType.MessageToOneClient;
 
             // 判断对应的玩家编号是否存在，不存在就报错
-            // 关于这里为什么要使用ulong?
-            ulong key = ((ulong)m21c.PlayerID | ((ulong)m21c.TeamID << 32));
-            if (!playerDict.ContainsKey(key))
-            {
-                Console.WriteLine($"Error: No such player corresponding to ID {m21c.TeamID} {m21c.PlayerID}");
-                // 这里需不需要return??
-                return;
-            }
+            // 关于THUAI4这里为什么要使用ulong?
+            uint key = (uint)m21c.PlayerID | ((uint)m21c.TeamID << 16);
             byte[] bytes;
             message.Serialize(out bytes); // 生成字节流
-            SendOperation(bytes);
+            SendOperationUniCast(bytes, key);
+        }
+
+        /// <summary>
+        /// 发送单人信息（这是针对不合法玩家的，因为不合法玩家在字典中没有键值对，所以只能通过connId发送）
+        /// </summary>
+        /// <param name="m21c"></param>
+        public void SendToClient(MessageToOneClient m21c, IntPtr connId)
+        {
+            Console.WriteLine(connId);
+            Message message = new Message();
+            message.Content = m21c;
+            message.PacketType = PacketType.MessageToOneClient;
+
+            byte[] bytes;
+            message.Serialize(out bytes); // 生成字节流
+            SendOperationUniCast(bytes, connId);
         }
 
         /// <summary>
@@ -154,113 +185,102 @@ namespace Communication.ServerCommunication
             // 初始化应该不需要加太多判断的信息，即使加也应该在逻辑内容中加，所以我就直接发送了...
             byte[] bytes;
             message.Serialize(out bytes);
-            SendOperation(bytes);
+            SendOperationBroadCast(bytes);
         }
 
         /// <summary>
-        /// 当MessageToOperate被指定为"AddInstance"时，server所需要进行的判断和终端显示操作（注意这是个private函数，没有必要暴露给玩家）
+        /// 需要发送的更新子弹的信息
         /// </summary>
-        /// <param name="m2o">操作信息</param>
-        private void OperationOfAddInstance(ref MessageToOperate m2o)
-        {
-            var m2a = m2o.MessageToAddInstance;
-            int key = m2a.Guid;
-            if (instanceDict.ContainsKey(key))
-            {
-                Console.WriteLine($"Repeated construction with guid:{key} and type:{m2a.MessageOfInstanceCase}");
-                return;
-            }
-            switch (m2a.MessageOfInstanceCase)
-            {
-                case MessageToAddInstance.MessageOfInstanceOneofCase.MessageOfBullet:
-                    instanceDict.TryAdd(m2a.Guid, GameObjType.Bullet);
-                    break;
-                case MessageToAddInstance.MessageOfInstanceOneofCase.MessageOfProp:
-                    instanceDict.TryAdd(m2a.Guid, GameObjType.Prop);
-                    break;
-                default: // 此时的枚举类型为MessageToAddInstance.MessageOfInstanceOneofCase.None，也就是说，此时的oneof信息没有被成功指定
-                    Console.WriteLine("Instance type hasn't been assigned");
-                    return;
-            }
-        }
-
-        /// <summary>
-        /// 当MessageToOperate被指定为"DestroyInstance"时，server所需要进行的判断和终端显示操作（注意这是个private函数，没有必要暴露给玩家）
-        /// </summary>
-        /// <param name="m2o">操作信息</param>
-        private void OperationOfDestroyInstance(ref MessageToOperate m2o)
-        {
-            var m2d = m2o.MessageToDestroyInstance;
-            foreach (int id in instanceDict.Keys)
-            {
-                if (id == m2d.Guid)
-                {
-                    instanceDict.TryRemove(id, out GameObjType tmp);
-                    Console.WriteLine($"Instance with guid:{id} and type:{tmp} has been destroyed.");
-                    return;
-                }
-            }
-            Console.WriteLine($"No instance with guid:{m2d.Guid}");
-        }
-
-        /// <summary>
-        /// 需要发送的操作信息（需要调用前述的两个private函数进行信息的进一步判断与显示）
-        /// </summary>
-        /// <param name="m2o">操作信息</param>
-        public void SendToClient(MessageToOperate m2o)
+        /// <param name="m2rb">子弹信息</param>
+        public void SendToClient(MessageToRefreshBullet m2rb)
         {
             Message message = new Message();
-            message.Content = m2o;
-            message.PacketType = PacketType.MessageToOperate;
+            message.Content = m2rb;
+            message.PacketType = PacketType.MessageToRefreshBullet;
+            byte[] bytes;
+            message.Serialize(out bytes);
+            SendOperationBroadCast(bytes);
+        }
 
-            switch (m2o.MessageOfOperationCase)
-            {
-                case MessageToOperate.MessageOfOperationOneofCase.MessageToAddInstance:
-                    OperationOfAddInstance(ref m2o);
-                    break;
-                case MessageToOperate.MessageOfOperationOneofCase.MessageToDestroyInstance:
-                    OperationOfDestroyInstance(ref m2o);
-                    break;
-                default:
-                    Console.WriteLine("Operation type hasn't been assigned");
-                    return;
-            }
+        /// <summary>
+        /// 需要发送的更新人物的信息
+        /// </summary>
+        /// <param name="m2rc">更新信息</param>
+        public void SendToClient(MessageToRefreshCharacter m2rc)
+        {
+            Message message = new Message();
+            message.Content = m2rc;
+            message.PacketType = PacketType.MessgaeToRefreshCharacter;
 
             byte[] bytes;
             message.Serialize(out bytes);
-            SendOperation(bytes);
+            SendOperationBroadCast(bytes);
         }
 
         /// <summary>
-        /// 需要发送的更新信息
+        /// 需要发送的更新道具的信息
         /// </summary>
-        /// <param name="m2r">更新信息</param>
-        public void SendToClient(MessageToRefresh m2r)
+        /// <param name="m2rp"></param>
+        public void SendToClient(MessageToRefreshProp m2rp)
         {
             Message message = new Message();
-            message.Content = m2r;
-            message.PacketType = PacketType.MessageToRefresh;
+            message.Content = m2rp;
+            message.PacketType = PacketType.MessageToRefreshProp;
 
             byte[] bytes;
             message.Serialize(out bytes);
-            SendOperation(bytes);
+            SendOperationBroadCast(bytes);
         }
 
+        // 解释一下：此处是我的锅，之前没有很好地理解THUAI4中单播和广播的机制，现在才发现THUAI4中的server貌似是不区分单播和广播的
+        // 在agent端才会根据消息的枚举类型确定单播还是广播
+        // 因此在THUAI5中我们在server端就需要把这些事做好
 
         /// <summary>
-        /// 上面的多个函数只是给用户调用发送的接口，这里才是真正的发送操作
+        /// 上面的多个函数只是给用户调用发送的接口，这里才是真正的发送操作（广播）
         /// </summary>
         /// <param name="bytes">由对象信息转化而来的字节流</param>
-        private void SendOperation(byte[] bytes)
+        private void SendOperationBroadCast(byte[] bytes)
         {
-            List<IntPtr> IDs = server.GetAllConnectionIds();
-            foreach (var connId in IDs)
+            foreach (var connId in playerDict.Values)
             {
                 if (!server.Send(connId, bytes, bytes.Length))
                 {
                     Console.WriteLine($"failed to send to: {connId}");
                     // TODO     
                 }
+            }
+        }
+
+        /// <summary>
+        /// 真正的发送操作（单播）
+        /// </summary>
+        /// <param name="bytes">由对象信息转化而来的字节流</param>
+        /// <param name="key">某玩家在字典中对应的键</param>
+        private void SendOperationUniCast(byte[] bytes,uint key)
+        {
+            IntPtr connId;
+            playerDict.TryGetValue(key, out connId);
+            if (server.Send(connId, bytes, bytes.Length))
+            {
+                Console.WriteLine($"Only send to {key >> 16} {key & 0xffff} with connId {connId}");    
+            }
+            else
+            {
+                Console.WriteLine($"failed to send to: {connId}");
+            }
+        }
+
+        /// <summary>
+        /// 一个非常愚蠢的重载...直接通过connId发送信息
+        /// </summary>
+        /// <param name="bytes">要发送的字节流信息</param>
+        /// <param name="connId">client的连接Id</param>
+        private void SendOperationUniCast(byte[] bytes,IntPtr connId)
+        {
+            if (!server.Send(connId, bytes, bytes.Length))
+            {
+                Console.WriteLine($"failed to send to: {connId}");
             }
         }
 
