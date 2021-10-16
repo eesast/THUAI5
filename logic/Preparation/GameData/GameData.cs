@@ -4,6 +4,7 @@ namespace Preparation.GameData
 {
     public static class GameData
     {
+        #region 基本常数与常方法
         public const int numOfPosGridPerCell = 1000;            // 每格的【坐标单位】数
         public const int numOfStepPerSecond = 20;               // 每秒行走的步数
         public const int lengthOfMap = 50000;                   // 地图长度
@@ -27,9 +28,8 @@ namespace Preparation.GameData
         {
             return pos.y / numOfPosGridPerCell;
         }
-        /// <summary>
-        /// 玩家相关
-        /// </summary>
+        #endregion
+        #region 角色相关
         public const int basicAp = 1000;	// 初始攻击力
         public const int basicHp = 6000;	// 初始血量
         public const int basicCD = 1000;    // 初始子弹冷却
@@ -42,15 +42,16 @@ namespace Preparation.GameData
         public const int basicBulletMoveSpeed = 10;             // 基本子弹移动速度，单位：ms-1
         public const int addScoreWhenKillOneLevelPlayer = 10;   // 击杀一级角色获得的加分
         public const int scoreInrease = 2;                      // 每高一级，击杀该角色多的加分
-        public const int commonSkillCD = 30000;    //普通技能标准冷却时间
-        public const int commonSkillTime = 10000;  //普通技能标准持续时间
-        public const int bulletRadius = 200;       //默认子弹半径
-        public const int reviveTime = 30000;       //复活时间
-        public const int shieldTimeAtBirth = 3000;  //复活时的护盾时间
-        /// <summary>
-        /// 道具相关
-        /// </summary>
+        public const int commonSkillCD = 30000;    // 普通技能标准冷却时间
+        public const int commonSkillTime = 10000;  // 普通技能标准持续时间
+        public const int bulletRadius = 200;       // 默认子弹半径
+        public const int reviveTime = 30000;       // 复活时间
+        public const int shieldTimeAtBirth = 3000; // 复活时的护盾时间
+        public const int BuffTypeNum = 7;   // buff的种类个数，即enum BuffType的成员个数
+        #endregion
+        #region 道具相关
         public const int MinPropTypeNum = 1;
         public const int MaxPropTypeNum = 10;
+        #endregion
     }
 }
