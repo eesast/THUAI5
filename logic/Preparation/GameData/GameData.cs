@@ -30,6 +30,7 @@ namespace Preparation.GameData
         /// <summary>
         /// 玩家相关
         /// </summary>
+        public const int characterRadius = numOfPosGridPerCell / 2;  //人物半径
         public const int basicAp = 1000;	// 初始攻击力
         public const int basicHp = 6000;	// 初始血量
         public const int basicCD = 1000;    // 初始子弹冷却
@@ -52,5 +53,9 @@ namespace Preparation.GameData
         /// </summary>
         public const int MinPropTypeNum = 1;
         public const int MaxPropTypeNum = 10;
+        /// <summary>
+        /// 游戏帧相关
+        /// </summary>
+        public const long checkInterval = 50;  //检查位置标志、补充子弹的帧时长
     }
 }

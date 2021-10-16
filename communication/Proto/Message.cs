@@ -11,10 +11,9 @@ namespace Communication.Proto
     {
         MessageToServer = 0,
         MessageToOneClient = 1, // 单人信息
-        // 以下的枚举全部由原来的（指THUAI4和THUAI5的上一个版本）的MessageToClient拆分而来，一方面降低了广播带来的信息耦合程度，另一方面也增强了代码的可读性
-        MessageToInitialize = 2,
-        MessageToOperate = 3,
-        MessageToRefresh = 4,
+        // 更新游戏中的可变属性。采用每帧发送所有对象信息的方式，因此储存的是一个数组
+        MessageToClient = 2,
+        MessageToInitialize = 3
     }
     /// <summary>
     /// 信息的通用接口，包含信息类型和内容

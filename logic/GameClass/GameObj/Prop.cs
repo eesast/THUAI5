@@ -3,7 +3,7 @@ using Preparation.Utility;
 
 namespace GameClass.GameObj
 {
-    public abstract class Prop : ObjOfCharacter //LHR摆烂中...抽象类及所有增益道具已写完
+    public abstract class Prop : ObjOfCharacter
     {
         protected bool laid = false;
         public bool Laid => laid;   // 道具是否放置在地图上
@@ -29,6 +29,14 @@ namespace GameClass.GameObj
     {
         public BuffProp(XYPosition initPos, int radius) : base(initPos, radius) { }
     }
+    /// <summary>
+    /// 坑人地雷
+    /// </summary>
+    public abstract class DebuffMine : Prop
+    {
+        public DebuffMine(XYPosition initPos, int radius) : base(initPos, radius) { }
+    }
+    #region 所有增益道具
     /// <summary>
     /// 增加HP
     /// </summary>
@@ -93,4 +101,31 @@ namespace GameClass.GameObj
         public Spear(XYPosition initPos, int radius) : base(initPos, radius) { }
         public override PropType GetPropType() => PropType.Spear;
     }
+    #endregion
+    #region 所有坑人地雷
+    /// <summary>
+    /// 减速
+    /// </summary>
+    public sealed class MinusSpeed : DebuffMine
+    {
+        public MinusSpeed(XYPosition initPos, int radius) : base(initPos, radius) { }
+        public override PropType GetPropType() => PropType.minusSpeed;
+    }
+    /// <summary>
+    /// 减少攻击力
+    /// </summary>
+    public sealed class MinusAP : DebuffMine
+    {
+        public MinusAP(XYPosition initPos, int radius) : base(initPos, radius) { }
+        public override PropType GetPropType() => PropType.minusAP;
+    }
+    /// <summary>
+    /// 增加冷却
+    /// </summary>
+    public sealed class AddCD : DebuffMine
+    {
+        public AddCD(XYPosition initPos, int radius) : base(initPos, radius) { }
+        public override PropType GetPropType() => PropType.addCD;
+    }
+    #endregion
 }

@@ -30,12 +30,12 @@ namespace Preparation.Utility
         Grass3 = 4,
         Invisible = 5
     }
-    /*public enum BulletType //子弹的类型，废弃
+    public enum BulletType //工厂方式
     {
         Null = 0,
         Bullet0 = 1,    //普通子弹
-        Bullet1 = 2     //爆弾
-    }*/
+        AtomBomb = 2     //原子弹
+    }
     public enum PropType    // 道具的类型
     {
         Null = 0,
