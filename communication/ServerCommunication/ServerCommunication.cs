@@ -27,10 +27,11 @@ namespace Communication.ServerCommunication
             server = new TcpPackServer();
             msgQueue = new BlockingCollection<IGameMessage>();
 
+            // 第一步连接时，server还收不到任何关于client的信息，因此只有先让client连接上以后并发送一条信息，才能反馈client
             server.OnAccept += delegate (IServer sender, IntPtr connId, IntPtr client)
             {
                 OnConnect?.Invoke();
-                Console.WriteLine($"Now the connect number is {server.ConnectionCount}");
+                Console.WriteLine($"Now the connect number is {server.ConnectionCount} (Maybe there are repeated clients.)");
                 return HandleResult.Ok;
             };
 
