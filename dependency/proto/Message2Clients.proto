@@ -8,6 +8,7 @@ import "MessageType.proto";
 /*---------------------------------2021-10-1重写.proto---------------------------------------*/
 /*---------------------------------2021-10-2更改 by TCL---------------------------------------*/
 /*---------------------------------2021-10-15更改 by TCL---------------------------------------*/
+/*---------------------------------2021-10-16更改 by TCL---------------------------------------*/
 
 message MessageOfCharacter
 {
@@ -28,7 +29,7 @@ message MessageOfCharacter
     bool isResetting=15;//是否在复活中
     PassiveSkillType PassiveSkillType = 16;//可见 
     ActiveSkillType ActiveSkillType = 17;//可见
-    int32 guid = 18;     //操作方法：Client和Server互相约定guid。非负整数中，1-8这8个guid预留给8个人物，其余在子弹或道具被创造/破坏时分发和回收。Client端用向量[guid]储存物体信息和对应的控件实例。
+    int64 guid = 18;     //操作方法：Client和Server互相约定guid。非负整数中，1-8这8个guid预留给8个人物，其余在子弹或道具被创造/破坏时分发和回收。Client端用向量[guid]储存物体信息和对应的控件实例。
                         //0号guid存储单播模式中每人Client对应的GUID。
     bool canMove=19;
     int32 radius=20;
@@ -42,7 +43,7 @@ message MessageOfProp
     int32 x = 2;
     int32 y = 3;
     double facingDirection=4;
-    int32 guid=5;
+    int64 guid=5;
 }
 
 message MessageOfBullet
@@ -51,13 +52,7 @@ message MessageOfBullet
     int32 x=2;
     int32 y=3;
     double facingDirection=4;
-    int32 guid=5;
-}
-
-message MessageWhileClientConnecting
-{
-    bool isValid=1; //is ID valid?
-    bool isExist=2; //has player existed?
+    int64 guid=5;
 }
 
 message MessageToInitialize //初始化信息，只在Server接收Client的开始游戏信息后发送，内容是在整局游戏里不变的数据
@@ -67,26 +62,26 @@ message MessageToInitialize //初始化信息，只在Server接收Client的开�
 }
 
 //每帧server发给client的信息
-message MessageToRefreshBullet
+message MessageToClient 
 {
-    repeated MessageOfBullet messageOfBullet = 1;
-}
-
-message MessageToRefreshCharacter
-{
-    repeated MessageOfCharacter messageOfCharacter = 1;
-}
-message MessageToRefreshProp
-{
-    repeated MessageOfProp messageOfProp = 1;
+    message GameObjMessage
+    {
+        oneof obj
+        {
+            MessageOfCharacter messageOfCharacter = 1;
+            MessageOfBullet messageOfBullet = 2;
+            MessageOfProp messageOfProp = 3;
+        }    
+    }    
+    repeated GameObjMessage gameObjMessage=1;
 }
 
 message MessageToOneClient
 {
-    int32 playerID = 1;			//指明发送给谁
-    int32 teamID = 2;			//指明发送给谁 
+    int64 playerID = 1;			//指明发送给谁
+    int64 teamID = 2;			//指明发送给谁 
     MessageType messageType = 3;
-    int32 guid = 4;             //自己的guid
+    int64 guid = 4;             //自己的guid
     string message = 5;         //如果 messageType 为 Send，则为要发送的消息
 } //继承自THUIAI4
 //注：转换函数还没写好
