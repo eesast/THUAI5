@@ -1,0 +1,4 @@
+- [ ] 你的代码是否能够编译通过？
+- [ ] 你是否检查了目前在 [pull requests](https://github.com/eesast/THUAI5/pulls) 中是否有与你的贡献功能相同的更改？
+- [ ] 你的贡献是否符合[贡献者代码协议](https://github.com/eesast/THUAI5/blob/dev/CODE_OF_CONDUCT.md)？
+- [ ] 你的贡献是否符合[开发规则](https://github.com/eesast/THUAI5#%E5%BC%80%E5%8F%91%E8%A7%84%E5%88%99)？  
