@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FrameRateTask\FrameRateTask.csproj" />
+    <ProjectReference Include="..\GameClass\GameClass.csproj" />
+    <ProjectReference Include="..\GameEngine\GameEngine.csproj" />
+    <ProjectReference Include="..\Preparation\Preparation.csproj" />
+  </ItemGroup>
+
+</Project>
