@@ -37,9 +37,8 @@ namespace Client
                 }
 
                 using StreamWriter sw = new("ConnectInfo.txt");
-                sw.WriteLine(IDBox.Text + " " + PortBox.Text);
-                State.Text = "Info Registered.";
-                
+                sw.WriteLine(IPBox.Text + " " + PortBox.Text+" "+PlayerIDBox.Text+" "+TeamIDBox.Text);
+                State.Text = "Info Registered.";   
             }
             catch(Exception exc)
             {

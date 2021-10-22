@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\communication\ClientCommunication\ClientCommunication.csproj" />
+    <ProjectReference Include="..\..\communication\Proto\Proto.csproj" />
     <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>
 

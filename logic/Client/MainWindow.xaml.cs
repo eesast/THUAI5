@@ -14,8 +14,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
 using System.IO;
 using Communication.ClientCommunication;
+using Communication.Proto;
 
 namespace Client
 {
@@ -26,17 +28,25 @@ namespace Client
     {
         public MainWindow()
         {
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(1000000 / 60);
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            timer = new DispatcherTimer
+            {
+                Interval = new TimeSpan(20000)//每20ms刷新一次
+            };
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
             timer.Start();
             communicator = new ClientCommunication();
             isConnected = false;
+            isGameRunning = false;
+            isClientStocked = false;
+            isInitialized = false;
+            using StreamReader sr = new("ConnectInfo.txt");
+            string[] comInfo = sr.ReadLine().Split(' ');
+            playerID = Convert.ToInt64(comInfo[2]);
+            teamID = Convert.ToInt64(comInfo[3]);
             try
             {
-                using StreamReader sr = new("ConnectInfo.txt");
-                string[] comInfo = sr.ReadLine().Split(' ');
                 if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//后一个参数处，注意系统...提示
                 {
                     Exception exc = new("TimeOut");
@@ -49,14 +59,12 @@ namespace Client
                 ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.Message);
                 error.Show();
             }
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
             //绘制地图
                       //设想用配置文件加载地图。但要做好配置文件加密。。。
                             //注：队伍用边框区分，人物编号以背景颜色区分
                             //角色死亡则对应信息框变灰
                             //被动技能和buff在人物编号后用彩色文字注明
-                            //饼：允许玩家自定义人物名称
-            
+                            //饼：允许玩家自定义人物名称      
         }
 
         //基础窗口函数
@@ -77,12 +85,29 @@ namespace Client
         //Client控制函数
         private void ClickToBegin(object sender, RoutedEventArgs e)
         {
-
+            if(isConnected&&(!isGameRunning))
+            {
+                MessageToServer msg = new();
+                msg.MessageType = MessageType.StartGame;
+                msg.PlayerID = playerID;
+                msg.TeamID = teamID;
+                communicator.SendMessage(msg);
+                Begin.Background = Brushes.Gray;//未完成初始化但已按下按钮，显示为灰色。完成后显示为黄色。
+            }
         }
 
-        private void ClickToPause(object sender, RoutedEventArgs e)
+        private void ClickToPauseOrContinue(object sender, RoutedEventArgs e)
         {
-
+            if (!isClientStocked)
+            {
+                isClientStocked = true;
+                PorC.Content = "▶";
+            }
+            else
+            {
+                isClientStocked = false;
+                PorC.Content = "⏸";
+            }
         }
 
         private void ClickToSetMode(object sender, RoutedEventArgs e)
@@ -96,8 +121,7 @@ namespace Client
         private void ClickToSetConnect(object sender, RoutedEventArgs e)
         {
             ConnectRegister crg = new();
-            crg.Show();
-            
+            crg.Show();       
         }
 
         //以下两个函数可能需要网站协助
@@ -151,12 +175,29 @@ namespace Client
             //for debug
             if (isConnected)
             {
-               
+                if (!isInitialized)
+                {
+                    if (communicator.TryTake(out _))
+                    {
+                        //怎样拿到信息？
+                        //若收到初始化信息，发送“已收到”并将IsGameRunning置为真。
+                    }
+                }
+                else if(!isClientStocked)
+                {
+                    //接收信息
+                }
             }
         }
         //以下为Mainwindow自定义属性
         private readonly DispatcherTimer timer;//定时器
         private readonly ClientCommunication communicator;
         private readonly bool isConnected;
+        private bool isGameRunning;
+        private bool isClientStocked;
+        private bool isInitialized;
+
+        private readonly Int64 playerID;
+        private readonly Int64 teamID;
     }
 }
