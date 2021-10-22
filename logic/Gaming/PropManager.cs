@@ -12,7 +12,7 @@ namespace Gaming
             readonly Map gameMap;
             private readonly bool isProducingProp = false;
             public void StartProducing()
-            { 
+            {
                 if (isProducingProp)
                     return;
 

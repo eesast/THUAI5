@@ -9,7 +9,7 @@ namespace GameClass.GameObj
     /// </summary>
     public class BirthPoint : ObjOfCharacter
     {
-        public BirthPoint(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell, PlaceType.Land) 
+        public BirthPoint(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell, PlaceType.Land)
         {
             this.CanMove = false;
             this.Type = GameObjType.BirthPoint;

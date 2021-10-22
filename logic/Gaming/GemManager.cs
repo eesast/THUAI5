@@ -15,7 +15,7 @@ namespace Gaming
             {
                 if (isProducing)
                     return;
-                
+
                 /*
                  自动生成宝石。
                 宝石的生成应该分为两类：

@@ -3,7 +3,7 @@ using System.IO;
 using Google.Protobuf;
 
 namespace Communication.Proto
-{ 
+{
     /// <summary>
     /// 游戏信息类型。此处的类型完全根据proto文件的信息决定，实际上可以自行删减——把所有的"MessageToxx"类的名称都列举在这里就可以了
     /// </summary>
@@ -21,18 +21,18 @@ namespace Communication.Proto
     public interface IGameMessage
     {
         PacketType PacketType { get; set; }
-        IMessage Content { get; set; } 
+        IMessage Content { get; set; }
     }
 
     /// <summary>
     /// 信息类，定义了信息的两个重要操作方法：序列化和反序列化
     /// </summary>
-    public class Message:IGameMessage
+    public class Message : IGameMessage
     {
         private PacketType type;
         public PacketType PacketType { get => type; set => type = value; }
 
-        private IMessage content; 
+        private IMessage content;
         public IMessage Content { get => content; set => content = value; }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Communication.Proto
                 content = (IMessage)Activator.CreateInstance(Type.GetType(typename)); // 这里按照原来的写法写会报错，难道和版本有关?
                 content.MergeFrom(codedInputStream); // 这一步才是真正的反序列化过程
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine($"Unhandled exception while trying to deserialize packet: {e}");
             }

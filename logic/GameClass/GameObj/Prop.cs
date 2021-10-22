@@ -16,7 +16,7 @@ namespace GameClass.GameObj
 
         public abstract PropType GetPropType();
 
-        public Prop(XYPosition initPos, int radius) : base(initPos, radius, PlaceType.Land) 
+        public Prop(XYPosition initPos, int radius) : base(initPos, radius, PlaceType.Land)
         {
             this.CanMove = false;
             this.Type = GameObjType.Prop;

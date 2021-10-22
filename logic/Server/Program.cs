@@ -27,7 +27,7 @@ namespace Server
 
             try
             {
-                server = new GameServer(options); 
+                server = new GameServer(options);
             }
             catch (Exception e)
             {

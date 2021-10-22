@@ -98,7 +98,7 @@ namespace Gaming
                     if (objBeingShot is Character)
                     {
                         BombOnePlayer(bullet, (Character)objBeingShot);
-                        bullet.Parent.HP = (int)(bullet.Parent.HP + bullet.Parent.Vampire * bullet.AP);  //造成伤害根据吸血率来吸血
+                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * bullet.AP));  //造成伤害根据吸血率来吸血
                     }
                     /*else if (objBeingShot is Bullet)        //子弹不能相互引爆，若要更改这一设定，取消注释即可。
                     {

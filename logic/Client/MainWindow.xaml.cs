@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using Communication.ClientCommunication;
 
 namespace Client
 {
@@ -28,10 +29,12 @@ namespace Client
             textBox = new TextBox[52, 52];
             gameObject = new TextBox();
             timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(1000000/60);
+            timer.Interval = new TimeSpan(1000000 / 60);
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
             timer.Start();
+            communicator = new ClientCommunication();
+            communicator.Connect();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             //绘制地图
             try
@@ -42,7 +45,7 @@ namespace Client
                     {
                         textBox[x, y] = new TextBox();
                         textBox[x, y].Text = "";
-                        if (x==51||y==51||x==0||y==0)
+                        if (x == 51 || y == 51 || x == 0 || y == 0)
                         {
                             textBox[x, y].Background = Brushes.Gray;
                             textBox[x, y].BorderBrush = Brushes.Gray;
@@ -162,7 +165,7 @@ namespace Client
         private void Refresh(object sender, EventArgs e)
         {
             //for debug
-            gameObject.Margin = new Thickness(300 + 50 * Math.Cos(i * 3.14 / 180), 300 + 50 * Math.Sin(i * 3.14 / 180),0,0);
+            gameObject.Margin = new Thickness(300 + (50 * Math.Cos(i * 3.14 / 180)), 300 + (50 * Math.Sin(i * 3.14 / 180)), 0, 0);
             i++;
         }
         //以下为Mainwindow自定义属性
@@ -170,5 +173,6 @@ namespace Client
         private readonly DispatcherTimer timer;//定时器
         private static int i;//for debug
         private readonly TextBox gameObject;
+        private readonly ClientCommunication communicator;
     }
 }

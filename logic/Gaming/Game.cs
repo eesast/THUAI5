@@ -11,7 +11,7 @@ namespace Gaming
 {
     public partial class Game
     {
-        public struct PlayerInitInfo  
+        public struct PlayerInitInfo
         {
             public uint birthPointIndex;
             public long teamID;
@@ -33,22 +33,22 @@ namespace Gaming
         private readonly int numOfTeam;
         public long AddPlayer(PlayerInitInfo playerInitInfo)
         {
-            if(!Team.teamExists(playerInitInfo.teamID))
-              /*  || !MapInfo.ValidBirthPointIdx(playerInitInfo.birthPointIdx)
-                || gameMap.BirthPointList[playerInitInfo.birthPointIdx].Parent != null)*/
+            if (!Team.teamExists(playerInitInfo.teamID))
+                /*  || !MapInfo.ValidBirthPointIdx(playerInitInfo.birthPointIdx)
+                  || gameMap.BirthPointList[playerInitInfo.birthPointIdx].Parent != null)*/
                 return GameObj.invalidID;
 
             XYPosition pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex].Position;
             Character newPlayer = new(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.passiveSkill, playerInitInfo.commonSkill);
             gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
-            gameMap.PlayerListLock.EnterWriteLock(); 
-            try 
-            { 
-                gameMap.PlayerList.Add(newPlayer); 
-            } 
-            finally 
-            { 
-                gameMap.PlayerListLock.ExitWriteLock(); 
+            gameMap.PlayerListLock.EnterWriteLock();
+            try
+            {
+                gameMap.PlayerList.Add(newPlayer);
+            }
+            finally
+            {
+                gameMap.PlayerListLock.ExitWriteLock();
             }
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
             newPlayer.TeamID = playerInitInfo.teamID;
@@ -102,7 +102,7 @@ namespace Gaming
             gameMap.PlayerListLock.EnterReadLock();
             try
             {
-                foreach(Character player in gameMap.PlayerList)
+                foreach (Character player in gameMap.PlayerList)
                 {
                     player.CanMove = true;
                     player.AddShield(GameData.shieldTimeAtBirth);
@@ -142,12 +142,12 @@ namespace Gaming
             finally { gameMap.PropListLock.ExitWriteLock(); }
             return true;
         }
-        public void MovePlayer(long playerID,int moveTimeInMilliseconds,double angle)
+        public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
         {
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
-            if(player!=null)
+            if (player != null)
             {
                 moveManager.MovePlayer(player, moveTimeInMilliseconds, angle);
             }
@@ -157,7 +157,7 @@ namespace Gaming
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
-            if(player!=null)
+            if (player != null)
             {
                 _ = attackManager.Attack(player, angle);
             }

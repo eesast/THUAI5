@@ -4,8 +4,8 @@ namespace GameClass.Skill
 {
     public abstract class PassiveSkill
     {
-         public abstract Bullet InitBullet { get; }
-         public abstract void SkillEffect(Character player);
+        public abstract Bullet InitBullet { get; }
+        public abstract void SkillEffect(Character player);
     }
     public abstract class CommonSkill
     {

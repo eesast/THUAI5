@@ -57,7 +57,7 @@ namespace GameClass.GameObj
             this.ap = ap;
             this.hasSpear = hasSpear;
         }
-        public Bullet(Character player,int radius,int initSpeed,int ap):base(player.Position,radius,PlaceType.Null)
+        public Bullet(Character player, int radius, int initSpeed, int ap) : base(player.Position, radius, PlaceType.Null)
         {
             this.CanMove = true;
             this.Type = GameObjType.Bullet;
