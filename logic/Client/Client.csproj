@@ -9,12 +9,16 @@
 
   <ItemGroup>
     <None Remove="Logo.png" />
+    <None Remove="Map.png" />
     <None Remove="Player.png" />
     <None Remove="Team.png" />
     <None Remove="Warning.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Map.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Player.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

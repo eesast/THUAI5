@@ -24,7 +24,7 @@
         <Button Content="⚙" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Width="25" RenderTransformOrigin="0.597,-2.532" Margin="157,0,0,575" Background="BlueViolet" BorderBrush="BlueViolet" FontFamily="Microsoft YaHei" Click="ClickToSetMode">
         </Button>
         <Button Content="关&#xD;&#xA;于&#xD;&#xA;我&#xD;&#xA;们&#xD;&#xA;(F)" HorizontalAlignment="Left" Height="84" Margin="859,424,0,0" VerticalAlignment="Top" Width="42" Background="Ivory" Click="ClickToVisitEESAST"/>
-        <Grid Name="BottomLayerOfMap" HorizontalAlignment="Left" Height="676" Margin="182,45,0,0" VerticalAlignment="Top" Width="676" />
+
         <Image Margin="0,1,874,681" Stretch="Fill" Source="pack://siteoforigin:,,,/Logo.png" RenderTransformOrigin="0.511,1.002"/>
         <ToolBarTray HorizontalAlignment="Left" Height="39" Margin="313,0,0,0" VerticalAlignment="Top" Width="459" Grid.ColumnSpan="2" Background="White">
             <ToolBar HorizontalAlignment="Left" Height="38" VerticalAlignment="Center" Width="469" Background="White" ToolBarTray.IsLocked="True">
@@ -101,6 +101,10 @@
             </Border.RenderTransform>
         </Border>
         <Button Content=" 帮&#xA; 助&#xA;(H)" HorizontalAlignment="Left" Height="84" Margin="859,170,0,0" VerticalAlignment="Top" Width="42" Background="Ivory" Click="ClickToVisitEESAST"/>
-        <Grid Name="UpperLayerOfMap" HorizontalAlignment="Left" Height="676" Margin="182,45,0,0" VerticalAlignment="Top" Width="676"/>
+        <Grid Name="UpperLayerOfMap" HorizontalAlignment="Left" Height="676" Margin="182,45,0,0" VerticalAlignment="Top" Width="676">
+
+        </Grid>
+        <Button Content="⚔" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Width="26" RenderTransformOrigin="0.597,-2.532" Margin="156,0,0,636" Background="Crimson" BorderBrush="Crimson" FontFamily="Microsoft YaHei" Click="ClickToBegin"/>
+        <Image Margin="182,45,52,0" Stretch="Fill" Source="Map.png"/>
     </Grid>
 </Window>

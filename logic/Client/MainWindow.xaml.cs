@@ -26,59 +26,37 @@ namespace Client
     {
         public MainWindow()
         {
-            textBox = new TextBox[52, 52];
-            gameObject = new TextBox();
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(1000000 / 60);
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
             timer.Start();
             communicator = new ClientCommunication();
-            communicator.Connect();
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            //绘制地图
+            isConnected = false;
             try
             {
-                for (int x = 0; x < 52; x++)
+                using StreamReader sr = new("ConnectInfo.txt");
+                string[] comInfo = sr.ReadLine().Split(' ');
+                if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//后一个参数处，注意系统...提示
                 {
-                    for (int y = 0; y < 52; y++)
-                    {
-                        textBox[x, y] = new TextBox();
-                        textBox[x, y].Text = "";
-                        if (x == 51 || y == 51 || x == 0 || y == 0)
-                        {
-                            textBox[x, y].Background = Brushes.Gray;
-                            textBox[x, y].BorderBrush = Brushes.Gray;
-                        }//不然就什么也不做，节省时间。如果有密集恐惧症患者，加一句边框赋值白色。
-                        textBox[x, y].Height = 13;
-                        textBox[x, y].Width = 13;
-                        textBox[x, y].HorizontalAlignment = HorizontalAlignment.Left;
-                        textBox[x, y].VerticalAlignment = VerticalAlignment.Top;
-                        textBox[x, y].Margin = new Thickness(13 * x, 13 * y, 0, 0);
-                        textBox[x, y].IsReadOnly = true;
-                        //textBox[x, y].IsEnabled = true;
-                        _ = BottomLayerOfMap.Children.Add(textBox[x, y]);
-                    }
-                }           //设想用配置文件加载地图。但要做好配置文件加密。。。
+                    Exception exc = new("TimeOut");
+                    throw exc;
+                }
+                else isConnected = true;
+            }
+            catch(Exception exc)
+            {
+                ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.Message);
+                error.Show();
+            }
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            //绘制地图
+                      //设想用配置文件加载地图。但要做好配置文件加密。。。
                             //注：队伍用边框区分，人物编号以背景颜色区分
                             //角色死亡则对应信息框变灰
                             //被动技能和buff在人物编号后用彩色文字注明
                             //饼：允许玩家自定义人物名称
-            }
-            catch (Exception exc)
-            {
-                ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.Message);
-                error.Show();
-            }
-            gameObject.Height = 13;
-            gameObject.Width = 13;
-            gameObject.BorderBrush = Brushes.Orange;
-            gameObject.Background = Brushes.Orange;
-            gameObject.HorizontalAlignment = HorizontalAlignment.Left;
-            gameObject.VerticalAlignment = VerticalAlignment.Top;
-            gameObject.IsReadOnly = true;
-            gameObject.IsEnabled = true;
-            _ = UpperLayerOfMap.Children.Add(gameObject);
+            
         }
 
         //基础窗口函数
@@ -117,7 +95,9 @@ namespace Client
         //可能需要通信协助
         private void ClickToSetConnect(object sender, RoutedEventArgs e)
         {
-
+            ConnectRegister crg = new();
+            crg.Show();
+            
         }
 
         //以下两个函数可能需要网站协助
@@ -136,10 +116,14 @@ namespace Client
         {
             try
             {
-                FileStream route = new("VSRoute.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);//创建路径文件 
-                StreamReader Route = new(route);
-                string s = Route.ReadLine();
-                _ = Process.Start(s);
+                if (!File.Exists("VSRoute.txt"))
+                {
+                    File.Create("VSRoute.txt");
+                    Exception ex = new("没有路径存储文件，已为您创建。请将VS路径输入该文件，并重新操作。");
+                    throw ex;
+                }//创建路径文件 
+                using StreamReader sr = new("VSRoute.txt");
+                _ = Process.Start(sr.ReadLine());
             }
             catch (Exception exc)
             {
@@ -165,14 +149,14 @@ namespace Client
         private void Refresh(object sender, EventArgs e)
         {
             //for debug
-            gameObject.Margin = new Thickness(300 + (50 * Math.Cos(i * 3.14 / 180)), 300 + (50 * Math.Sin(i * 3.14 / 180)), 0, 0);
-            i++;
+            if (isConnected)
+            {
+               
+            }
         }
         //以下为Mainwindow自定义属性
-        private readonly TextBox[,] textBox;
         private readonly DispatcherTimer timer;//定时器
-        private static int i;//for debug
-        private readonly TextBox gameObject;
         private readonly ClientCommunication communicator;
+        private readonly bool isConnected;
     }
 }
