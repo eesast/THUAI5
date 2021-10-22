@@ -9,7 +9,7 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
-        private BuffManeger buffManeger;
+        private readonly BuffManeger buffManeger;
         /// <summary>
         /// buff管理器，目前为全抄THUAI4（佐以修改部分变量名，变uint为int）
         /// </summary>
@@ -29,8 +29,8 @@ namespace GameClass.GameObj
                 public BuffValue(double longFloatValue) { this.iValue = 0; this.lfValue = longFloatValue; }
             }
 
-            private LinkedList<BuffValue>[] buffList;
-            private object[] buffListLock;
+            private readonly LinkedList<BuffValue>[] buffList;
+            private readonly object[] buffListLock;
 
             private void AddBuff(BuffValue bf, int buffTime, BuffType buffType, Action ReCalculateFunc)
             {

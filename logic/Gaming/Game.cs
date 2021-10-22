@@ -26,9 +26,9 @@ namespace Gaming
             }
         }
 
-        private List<Team> teamList;
+        private readonly List<Team> teamList;
         public List<Team> TeamList => teamList;
-        private Map gameMap;
+        private readonly Map gameMap;
         public Map GameMap => gameMap;
         private readonly int numOfTeam;
         public long AddPlayer(PlayerInitInfo playerInitInfo)
@@ -39,7 +39,7 @@ namespace Gaming
                 return GameObj.invalidID;
 
             XYPosition pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex].Position;
-            Character newPlayer = new Character(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.passiveSkill, playerInitInfo.commonSkill);
+            Character newPlayer = new(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.passiveSkill, playerInitInfo.commonSkill);
             gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
             gameMap.PlayerListLock.EnterWriteLock(); 
             try 
@@ -73,7 +73,7 @@ namespace Gaming
                                 long nowTime = Environment.TickCount64;
                                 if (nowTime - lastTime >= newPlayer.CD)
                                 {
-                                    newPlayer.TryAddBulletNum();
+                                    _ = newPlayer.TryAddBulletNum();
                                     lastTime = nowTime;
                                 }
                             }
@@ -159,7 +159,7 @@ namespace Gaming
             Character? player = gameMap.FindPlayer(playerID);
             if(player!=null)
             {
-                attackManager.Attack(player, angle);
+                _ = attackManager.Attack(player, angle);
             }
         }
 

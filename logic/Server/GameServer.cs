@@ -13,22 +13,22 @@ namespace Server
         protected readonly Game game;
         public override int TeamCount => options.TeamCount;
         protected long[,] communicationToGameID; //通信用的ID映射到游戏内的ID,[i,j]表示team：i，player：j的id。
-        private readonly object messageToAllClientsLock = new object();
-        private long SendMessageToClientIntervalInMilliseconds = 50;
-        private Semaphore endGameInfoSema = new Semaphore(0, 1);
+        private readonly object messageToAllClientsLock = new();
+        private readonly long SendMessageToClientIntervalInMilliseconds = 50;
+        private readonly Semaphore endGameInfoSema = new(0, 1);
         public override int GetTeamScore(long teamID)
         {
             return game.GetTeamScore(teamID);
         }
         public override void WaitForGame()
         {
-            endGameInfoSema.WaitOne();  //开始等待游戏开始
+            _ = endGameInfoSema.WaitOne();  //开始等待游戏开始
         }
         private uint GetBirthPointIdx(long teamID, long playerID)       //获取出生点位置
         {
             return (uint)(teamID * options.PlayerCountPerTeam + playerID);
         }
-        protected readonly object addPlayerLock = new object();
+        protected readonly object addPlayerLock = new();
         private bool AddPlayer(MessageToServer msg)
         {
             if (game.GameMap.Timer.IsGaming)  //游戏运行中，不能添加玩家
@@ -75,7 +75,7 @@ namespace Server
             }
             lock (addPlayerLock)
             {
-                Game.PlayerInitInfo playerInitInfo = new Game.PlayerInitInfo(GetBirthPointIdx(msg.TeamID, msg.PlayerID), msg.TeamID, passiveSkill, commonSkill);
+                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(msg.TeamID, msg.PlayerID), msg.TeamID, passiveSkill, commonSkill);
                 long newPlayerID = game.AddPlayer(playerInitInfo);
                 if (newPlayerID == GameObj.invalidID)
                     return false;
@@ -89,7 +89,7 @@ namespace Server
             //{
             //    //观战模式
             //}
-            MessageToOneClient msgSend = new MessageToOneClient();
+            MessageToOneClient msgSend = new();
             
             msgSend.PlayerID = msgRecieve.PlayerID;
             msgSend.TeamID = msgRecieve.TeamID;
@@ -179,7 +179,7 @@ namespace Server
                     case MessageType.Gaming: 
                     case MessageType.StartGame:  
                     case MessageType.EndGame:   
-                        MessageToClient messageToClient = new MessageToClient();
+                        MessageToClient messageToClient = new();
                         foreach (GameObj gameObj in gameObjList)
                         {
                             messageToClient.GameObjMessage.Add(CopyInfo.Auto(gameObj));
@@ -188,7 +188,7 @@ namespace Server
                         serverCommunicator.SendToClient(messageToClient);
                         break;
                     case MessageType.InitialLized:
-                        MessageToInitialize messageToInitialize = new MessageToInitialize();
+                        MessageToInitialize messageToInitialize = new();
                         messageToInitialize.MessageType = MessageType.InitialLized;
                         messageToInitialize.MapSerial = 1; //地图编号，应该是随机数，这里先设为1
                         serverCommunicator.SendToClient(messageToInitialize);
@@ -206,7 +206,7 @@ namespace Server
 #if DEBUG
                 Console.WriteLine("Message string is too long!");
 #endif
-            MessageToOneClient msg = new MessageToOneClient();
+            MessageToOneClient msg = new();
             msg.PlayerID = msgToServer.ToPlayerID;
             msg.TeamID = msgToServer.TeamID;
             msg.Message = msgToServer.Message;
@@ -260,8 +260,7 @@ namespace Server
                 () =>
                 {
                     //用一次frameratetask膜一次 ↓
-                    FrameRateTaskExecutor<int> xfgg = new FrameRateTaskExecutor<int>
-                    (
+                    FrameRateTaskExecutor<int> xfgg = new                    (
                         () => game.GameMap.Timer.IsGaming,
                         () => SendMessageToAllClients(MessageType.Gaming),
                         SendMessageToClientIntervalInMilliseconds,

@@ -6,7 +6,7 @@ namespace GameClass.GameObj
 {
     public abstract class Bullet : ObjOfCharacter   // LHR摸鱼中...
     {
-        private int ap;
+        private readonly int ap;
         /// <summary>
         /// //攻击力
         /// </summary>
@@ -32,7 +32,7 @@ namespace GameClass.GameObj
             return XYPosition.GetSquareRange(AttackRangeEdgeLength);
         }*/
 
-        private int bulletBombRange;
+        private readonly int bulletBombRange;
         /// <summary>
         /// 爆炸区域半径
         /// </summary>

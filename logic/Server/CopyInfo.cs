@@ -20,7 +20,7 @@ namespace Server
         }
         private static MessageToClient.Types.GameObjMessage Player(Character player)
         {
-            MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
+            MessageToClient.Types.GameObjMessage msg = new();
 
             
             switch(player.Place)
@@ -130,7 +130,7 @@ namespace Server
 
         private static MessageToClient.Types.GameObjMessage Bullet(Bullet bullet)
         {
-            MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
+            MessageToClient.Types.GameObjMessage msg = new();
             msg.MessageOfBullet.FacingDirection = bullet.FacingDirection;
             msg.MessageOfBullet.Guid = bullet.ID;
             switch (bullet.TypeOfBullet)
@@ -152,7 +152,7 @@ namespace Server
         }
         private static MessageToClient.Types.GameObjMessage Prop(Prop prop)
         {
-            MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
+            MessageToClient.Types.GameObjMessage msg = new();
             msg.MessageOfBullet.FacingDirection = prop.FacingDirection;
             msg.MessageOfBullet.Guid = prop.ID;
             switch (prop.GetPropType())

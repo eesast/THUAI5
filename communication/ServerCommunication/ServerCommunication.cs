@@ -13,13 +13,13 @@ namespace Communication.ServerCommunication
 
     public sealed class ServerCommunication:IDisposable // 提供释放资源的接口
     {
-        private static readonly ConcurrentDictionary<long, IntPtr> playerDict = new ConcurrentDictionary<long, IntPtr>(); // 储存当前所有玩家的id
+        private static readonly ConcurrentDictionary<long, IntPtr> playerDict = new(); // 储存当前所有玩家的id
         // 本来加这个字典的目的是为了防止子弹和道具的重复构造，但了解了guid的机制后，感觉没什么必要...
         // private static readonly ConcurrentDictionary<int, GameObjType> instanceDict = new ConcurrentDictionary<int, GameObjType>(); // 储存所有的子弹和道具信息
-        private static AutoResetEvent allConnectionClosed = new AutoResetEvent(false); // 是否所有玩家都已经断开了连接
+        private static readonly AutoResetEvent allConnectionClosed = new(false); // 是否所有玩家都已经断开了连接
 
-        private BlockingCollection<IGameMessage> msgQueue; // 储存信息的线程安全队列 
-        private TcpPackServer server;
+        private readonly BlockingCollection<IGameMessage> msgQueue; // 储存信息的线程安全队列 
+        private readonly TcpPackServer server;
         public event OnReceiveCallback OnReceive;      // 用于赋给server的事件 发送信息时
         public event OnConnectCallback OnConnect;      // 收到client的请求连接信息时
 
@@ -44,7 +44,7 @@ namespace Communication.ServerCommunication
 
             server.OnReceive += delegate (IServer sender, IntPtr connId, byte[] bytes)
             {
-                Message message = new Message();
+                Message message = new();
                 // 信息解析
                 message.Deserialize(bytes);
 
@@ -58,7 +58,7 @@ namespace Communication.ServerCommunication
                     {
                         // 不太理解原来为什么是<<32.感觉<<16就够用了。可能和dotnet版本有关，之前的写法会报警告
                         long key = (m2s.PlayerID | m2s.TeamID << 16);
-                        MessageToOneClient messageToOneClient = new MessageToOneClient();
+                        MessageToOneClient messageToOneClient = new();
                         messageToOneClient.PlayerID = m2s.PlayerID;
                         messageToOneClient.TeamID = m2s.TeamID;
 
@@ -149,7 +149,7 @@ namespace Communication.ServerCommunication
         /// <returns></returns>
         public void SendToClient(MessageToOneClient m21c)
         {
-            Message message = new Message();
+            Message message = new();
             message.Content = m21c;
             message.PacketType = PacketType.MessageToOneClient;
 
@@ -167,7 +167,7 @@ namespace Communication.ServerCommunication
         /// <param name="m21c"></param>
         public void SendToClient(MessageToOneClient m21c, IntPtr connId)
         {
-            Message message = new Message();
+            Message message = new();
             message.Content = m21c;
             message.PacketType = PacketType.MessageToOneClient;
 
@@ -182,7 +182,7 @@ namespace Communication.ServerCommunication
         /// <param name="m2i">初始化信息</param>
         public void SendToClient(MessageToInitialize m2i)
         {
-            Message message = new Message();
+            Message message = new();
             message.Content = m2i;
             message.PacketType = PacketType.MessageToInitialize;
 
@@ -194,7 +194,7 @@ namespace Communication.ServerCommunication
 
         public void SendToClient(MessageToClient m2c)
         {
-            Message message = new Message();
+            Message message = new();
             message.Content = m2c;
             message.PacketType = PacketType.MessageToClient;
 
@@ -276,7 +276,7 @@ namespace Communication.ServerCommunication
         private void SendOperationUniCast(byte[] bytes,long key)
         {
             IntPtr connId;
-            playerDict.TryGetValue(key, out connId);
+            _ = playerDict.TryGetValue(key, out connId);
             if (server.Send(connId, bytes, bytes.Length))
             {
                 Console.WriteLine($"Only send to {key >> 16} {key & 0xffff} with connId {connId}");    

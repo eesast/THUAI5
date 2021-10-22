@@ -6,11 +6,11 @@ namespace Gaming
 {
     public partial class Game
     {
-        private PropManager propManager;
+        private readonly PropManager propManager;
         private class PropManager
         {
-            Map gameMap;
-            private bool isProducingProp = false;
+            readonly Map gameMap;
+            private readonly bool isProducingProp = false;
             public void StartProducing()
             { 
                 if (isProducingProp)

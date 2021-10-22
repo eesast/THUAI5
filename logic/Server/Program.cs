@@ -14,7 +14,7 @@ namespace Server
             Console.WriteLine();
 
             ArgumentOptions? options = null;
-            Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o => { options = o; });
+            _ = Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o => { options = o; });
             if (options == null)
             {
                 Console.WriteLine("Argument parsing failed!");

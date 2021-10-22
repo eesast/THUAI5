@@ -10,11 +10,11 @@ namespace Gaming
 {
     public partial class Game
     {
-        private AttackManager attackManager;
+        private readonly AttackManager attackManager;
         private class AttackManager
         {
-            Map gameMap;
-            MoveEngine moveEngine;
+            readonly Map gameMap;
+            readonly MoveEngine moveEngine;
             public AttackManager(Map gameMap)
             {
                 this.gameMap = gameMap;
@@ -42,7 +42,7 @@ namespace Gaming
                     gameMap.PlayerListLock.EnterWriteLock();
                     try
                     {
-                        gameMap.PlayerList.Remove(playerBeingShot);
+                        _ = gameMap.PlayerList.Remove(playerBeingShot);
                     }
                     finally
                     {
@@ -87,7 +87,7 @@ namespace Gaming
                     {
                         if (_bullet.ID == bullet.ID)
                         {
-                            gameMap.BulletList.Remove(_bullet);
+                            _ = gameMap.BulletList.Remove(_bullet);
                             break;
                         }
                     }

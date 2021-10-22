@@ -10,7 +10,7 @@ namespace GameClass.GameObj
         public long TeamID => teamID;
         public const long invalidTeamID = long.MaxValue;
         public const long noneTeamID = long.MinValue;
-        private List<Character> playerList;
+        private readonly List<Character> playerList;
         public int Score
         {
             get

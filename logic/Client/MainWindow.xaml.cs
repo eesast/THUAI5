@@ -54,7 +54,7 @@ namespace Client
                         textBox[x, y].Margin = new Thickness(13 * x, 13 * y, 0, 0);
                         textBox[x, y].IsReadOnly = true;
                         //textBox[x, y].IsEnabled = true;
-                        BottomLayerOfMap.Children.Add(textBox[x, y]);
+                        _ = BottomLayerOfMap.Children.Add(textBox[x, y]);
                     }
                 }           //设想用配置文件加载地图。但要做好配置文件加密。。。
                             //注：队伍用边框区分，人物编号以背景颜色区分
@@ -64,7 +64,7 @@ namespace Client
             }
             catch (Exception exc)
             {
-                ErrorDisplayer error = new ErrorDisplayer("发生错误。以下是系统报告\n" + exc.Message);
+                ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.Message);
                 error.Show();
             }
             gameObject.Height = 13;
@@ -75,7 +75,7 @@ namespace Client
             gameObject.VerticalAlignment = VerticalAlignment.Top;
             gameObject.IsReadOnly = true;
             gameObject.IsEnabled = true;
-            UpperLayerOfMap.Children.Add(gameObject);
+            _ = UpperLayerOfMap.Children.Add(gameObject);
         }
 
         //基础窗口函数
@@ -133,14 +133,14 @@ namespace Client
         {
             try
             {
-                FileStream route = new FileStream("VSRoute.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);//创建路径文件 
-                StreamReader Route = new StreamReader(route);
+                FileStream route = new("VSRoute.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);//创建路径文件 
+                StreamReader Route = new(route);
                 string s = Route.ReadLine();
-                Process.Start(s);
+                _ = Process.Start(s);
             }
             catch (Exception exc)
             {
-                ErrorDisplayer error = new ErrorDisplayer("发生错误。以下是系统报告:\n" + exc.Message);
+                ErrorDisplayer error = new("发生错误。以下是系统报告:\n" + exc.Message);
                 error.Show();
             }
         }
@@ -149,11 +149,11 @@ namespace Client
         {
             try
             {
-                Process.Start("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "https://eesast.com");
+                _ = Process.Start("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe", "https://eesast.com");
             }
             catch (Exception exc)
             {
-                ErrorDisplayer error = new ErrorDisplayer("发生错误。以下是系统报告\n" + exc.Message);
+                ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.Message);
                 error.Show();
             }
         }
@@ -166,9 +166,9 @@ namespace Client
             i++;
         }
         //以下为Mainwindow自定义属性
-        private TextBox[,] textBox;
-        private DispatcherTimer timer;//定时器
+        private readonly TextBox[,] textBox;
+        private readonly DispatcherTimer timer;//定时器
         private static int i;//for debug
-        private TextBox gameObject;
+        private readonly TextBox gameObject;
     }
 }

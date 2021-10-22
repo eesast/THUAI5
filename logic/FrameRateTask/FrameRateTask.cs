@@ -45,7 +45,7 @@ namespace Timothy.FrameRateTask
 		/// true if the task has started; otherwise, false.
 		/// </returns>
 		public bool HasExecuted { get; private set; } = false;
-		private object hasExecutedLock = new object();
+		private readonly object hasExecutedLock = new();
 		private bool TrySetExecute()
 		{
 			lock (hasExecutedLock)
@@ -132,7 +132,7 @@ namespace Timothy.FrameRateTask
 			return true;
 		}
 
-		private Action loopFunc;
+		private readonly Action loopFunc;
 
 		/// <summary>
 		/// Constructor

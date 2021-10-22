@@ -41,8 +41,8 @@ namespace Communication.Proto
         /// <param name="bytes"></param>
         public void Deserialize(byte[] bytes)
         {
-            MemoryStream istream = new MemoryStream(bytes);
-            BinaryReader br = new BinaryReader(istream);
+            MemoryStream istream = new(bytes);
+            BinaryReader br = new(istream);
 
             type = (PacketType)br.ReadInt32();
             string typename = null;
@@ -51,7 +51,7 @@ namespace Communication.Proto
 
             try
             {
-                CodedInputStream codedInputStream = new CodedInputStream(istream);
+                CodedInputStream codedInputStream = new(istream);
                 content = (IMessage)Activator.CreateInstance(Type.GetType(typename)); // 这里按照原来的写法写会报错，难道和版本有关?
                 content.MergeFrom(codedInputStream); // 这一步才是真正的反序列化过程
             }
@@ -67,12 +67,12 @@ namespace Communication.Proto
         /// <param name="bytes"></param>
         public void Serialize(out byte[] bytes)
         {
-            MemoryStream ostream = new MemoryStream();
-            BinaryWriter bw = new BinaryWriter(ostream);
+            MemoryStream ostream = new();
+            BinaryWriter bw = new(ostream);
             bw.Write((int)type);
             bw.Flush();
 
-            using (CodedOutputStream output = new CodedOutputStream(ostream, true))
+            using (CodedOutputStream output = new(ostream, true))
             {
                 Content.WriteTo(output);
                 // 使用此方法将所有信息从基础缓冲区移动到其目标或清除缓冲区

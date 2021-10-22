@@ -15,8 +15,8 @@ namespace Communication.ClientCommunication
     /// </summary>
     public class ClientCommunication : IDisposable
     {
-        private TcpPackClient client;
-        private BlockingCollection<IGameMessage> msgQueue;
+        private readonly TcpPackClient client;
+        private readonly BlockingCollection<IGameMessage> msgQueue;
         public event OnReceiveCallback OnReceive;
         private readonly int maxtimeout = 30000; // 超时界定时间
         
@@ -26,7 +26,7 @@ namespace Communication.ClientCommunication
             msgQueue = new BlockingCollection<IGameMessage>();
             client.OnReceive += delegate (IClient sender, byte[] bytes)
             {
-                Message message = new Message();
+                Message message = new();
                 message.Deserialize(bytes); // 解码信息
 
                 // 欢迎补充
@@ -93,7 +93,7 @@ namespace Communication.ClientCommunication
         /// <param name="msg"></param>
         public void SendMessage(MessageToServer msg)
         {
-            Message message = new Message();
+            Message message = new();
             message.Content = msg;
             message.PacketType = PacketType.MessageToServer;
             byte[] bytes;

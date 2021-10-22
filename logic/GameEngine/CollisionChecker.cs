@@ -172,8 +172,8 @@ namespace GameEngine
             return maxLen;
         }
 
-        IMap gameMap;
-        private Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>[] lists;
+        readonly IMap gameMap;
+        private readonly Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>[] lists;
 
         public CollisionChecker(IMap gameMap)
         {

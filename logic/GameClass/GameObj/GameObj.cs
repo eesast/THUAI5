@@ -9,7 +9,7 @@ namespace GameClass.GameObj
     /// </summary>
     public abstract class GameObj : IMoveable
     {   
-        protected readonly object gameObjLock = new object();
+        protected readonly object gameObjLock = new();
         /// <summary>
         /// 可移动物体专用锁
         /// </summary>

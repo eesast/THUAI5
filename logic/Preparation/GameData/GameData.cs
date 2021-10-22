@@ -15,7 +15,7 @@ namespace Preparation.GameData
 
         public static XYPosition GetCellCenterPos(int x, int y)   // 求格子的中心坐标
         {
-            XYPosition ret = new XYPosition(x * numOfPosGridPerCell + numOfPosGridPerCell / 2,
+            XYPosition ret = new(x * numOfPosGridPerCell + numOfPosGridPerCell / 2,
                 y * numOfPosGridPerCell + numOfPosGridPerCell / 2);
             return ret;
         }

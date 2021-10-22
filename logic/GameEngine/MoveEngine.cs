@@ -19,10 +19,10 @@ namespace GameEngine
 			Destroyed = 2           // 物体已经毁坏
 		}
 
-		private ITimer gameTimer;
-		private Action<IMoveable> EndMove;
-		private CollisionChecker collisionChecker;
-		private Func<IMoveable, IGameObj, Vector, AfterCollision> OnCollision;
+		private readonly ITimer gameTimer;
+		private readonly Action<IMoveable> EndMove;
+		private readonly CollisionChecker collisionChecker;
+		private readonly Func<IMoveable, IGameObj, Vector, AfterCollision> OnCollision;
 		/// <summary>
 		/// Constrctor
 		/// </summary>
@@ -54,7 +54,7 @@ namespace GameEngine
 			XYPosition nextPos = obj.Position + Vector.Vector2XY(moveVec);
 			double maxLen = collisionChecker.FindMax(obj, nextPos, moveVec);
 			maxLen = Math.Min(maxLen, obj.MoveSpeed / GameData.numOfStepPerSecond);
-			obj.Move(new Vector(moveVec.angle, maxLen));
+            _ = obj.Move(new Vector(moveVec.angle, maxLen));
 		}
 
 		public void MoveObj(IMoveable obj,int moveTime,double direction)
@@ -70,7 +70,7 @@ namespace GameEngine
 						obj.IsMoving = true;
 					}
 
-					Vector moveVec = new Vector(obj.FacingDirection, 0.0);
+					Vector moveVec = new(obj.FacingDirection, 0.0);
 					double deltaLen = moveVec.length - Math.Sqrt(obj.Move(moveVec));  //转向，并用deltaLen存储行走的误差
 					IGameObj? collisionObj = null;
 					bool isDestroyed = false;

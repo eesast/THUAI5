@@ -6,7 +6,7 @@ namespace Gaming
 {
 	public partial class Game
 	{
-		private MoveManager moveManager;
+		private readonly MoveManager moveManager;
 		private class MoveManager
 		{
 
@@ -39,8 +39,8 @@ namespace Gaming
 			}
 			*/
 
-			private Map gameMap;
-			private MoveEngine moveEngine;
+			private readonly Map gameMap;
+			private readonly MoveEngine moveEngine;
 			public MoveManager(Map gameMap)
 			{
 				this.gameMap = gameMap;

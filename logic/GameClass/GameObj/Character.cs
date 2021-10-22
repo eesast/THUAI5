@@ -6,8 +6,8 @@ namespace GameClass.GameObj
 {
     public partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...
     {
-        public readonly object propLock = new object();
-        private object beAttackedLock = new object();
+        public readonly object propLock = new();
+        private readonly object beAttackedLock = new();
         public object PropLock => propLock;
         #region 角色的基本属性及方法，包括与道具、子弹的交互方法
         /// <summary>
@@ -63,7 +63,7 @@ namespace GameClass.GameObj
         private int score = 0;
         public int Score => score;  // 当前分数
 
-        private double attackRange;
+        private readonly double attackRange;
         public double AttackRange => attackRange;
 
         private double vampire = 0; // 回血率：0-1之间
@@ -295,7 +295,7 @@ namespace GameClass.GameObj
                 {
                     if (HasShield)
                         if (bullet.HasSpear)
-                            TrySubHp(bullet.AP);
+                            _ = TrySubHp(bullet.AP);
                         else return false;
 
                     if (hp <= 0) TryActivatingLIFE();  //如果有复活甲
@@ -317,7 +317,7 @@ namespace GameClass.GameObj
                 if (hp <= 0) return false;
                 if (!(bouncer?.TeamID == this.TeamID))
                 {
-                    if (hasSpear || !HasShield) TrySubHp(subHP);
+                    if (hasSpear || !HasShield) _ = TrySubHp(subHP);
                     if (hp <= 0) TryActivatingLIFE();
                 }
                 return hp <= 0;
@@ -383,7 +383,7 @@ namespace GameClass.GameObj
         #endregion
         public override void Reset()
         {
-            AddDeathCount();
+            _ = AddDeathCount();
             base.Reset();
             this.moveSpeed = OrgMoveSpeed;
             hp = MaxHp;

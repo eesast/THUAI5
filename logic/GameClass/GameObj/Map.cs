@@ -8,19 +8,19 @@ namespace GameClass.GameObj
 {
     public partial class Map:IMap
     {
-        private List<ICharacter> playerList;
+        private readonly List<ICharacter> playerList;
         public List<ICharacter> PlayerList => playerList;
         
         private readonly ReaderWriterLockSlim playerListLock;
         public ReaderWriterLockSlim PlayerListLock => playerListLock;
 
-        private List<IObjOfCharacter> bulletList;
+        private readonly List<IObjOfCharacter> bulletList;
         public List<IObjOfCharacter> BulletList => bulletList;
 
         private readonly ReaderWriterLockSlim bulletListLock;
         public ReaderWriterLockSlim BulletListLock => bulletListLock;
 
-        private List<IObjOfCharacter> propList;
+        private readonly List<IObjOfCharacter> propList;
         public List<IObjOfCharacter> PropList => propList;
 
         private readonly ReaderWriterLockSlim propListLock;
