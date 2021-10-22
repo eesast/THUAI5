@@ -21,8 +21,31 @@ namespace Server
         private static MessageToClient.Types.GameObjMessage Player(Character player)
         {
             MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
+            msg.MessageOfCharacter = new MessageOfCharacter();
 
+            msg.MessageOfCharacter.X = player.Position.x;
+            msg.MessageOfCharacter.Y = player.Position.y;
+            msg.MessageOfCharacter.AttackRange = player.AttackRange;
+            msg.MessageOfCharacter.Buff = 0; //没有buff这个属性，是否要加？
+            msg.MessageOfCharacter.BulletNum = player.BulletNum;  
+            msg.MessageOfCharacter.CanMove = player.CanMove;
+            msg.MessageOfCharacter.CD = player.CD;
+            msg.MessageOfCharacter.GemNum = player.GemNum;
+            msg.MessageOfCharacter.Guid = player.ID;
+            msg.MessageOfCharacter.IsResetting = player.IsResetting;
+            msg.MessageOfCharacter.Life = player.HP;
+            msg.MessageOfCharacter.LifeNum = player.DeathCount + 1;
+            msg.MessageOfCharacter.Radius = player.Radius;
+            msg.MessageOfCharacter.Speed = player.MoveSpeed;
+            msg.MessageOfCharacter.TimeUntilCommonSkillAvailable = player.TimeUntilCommonSkillAvailable;
             
+            //应该要发队伍分数，这里先发个人分数
+            msg.MessageOfCharacter.Score = player.Score;
+
+            //这条暂时没啥用
+            msg.MessageOfCharacter.TimeUntilUltimateSkillAvailable = 0;
+            msg.MessageOfCharacter.Vampire = player.Vampire;
+
             switch(player.Place)
             {
                 case Preparation.Utility.PlaceType.Land:
@@ -103,34 +126,13 @@ namespace Server
                     break;
             }
 
-            
-
-            msg.MessageOfCharacter.X = player.Position.x;
-            msg.MessageOfCharacter.Y = player.Position.y;
-            msg.MessageOfCharacter.AttackRange = player.AttackRange;
-            msg.MessageOfCharacter.Buff = 0; //没有buff这个属性，是否要加？
-            msg.MessageOfCharacter.BulletNum = player.BulletNum;  
-            msg.MessageOfCharacter.CanMove = player.CanMove;
-            msg.MessageOfCharacter.CD = player.CD;
-            msg.MessageOfCharacter.GemNum = player.GemNum;
-            msg.MessageOfCharacter.Guid = player.ID;
-            msg.MessageOfCharacter.IsResetting = player.IsResetting;
-            msg.MessageOfCharacter.Life = player.HP;
-            msg.MessageOfCharacter.LifeNum = player.DeathCount + 1;
-            msg.MessageOfCharacter.Radius = player.Radius;
-            msg.MessageOfCharacter.Speed = player.MoveSpeed;
-            msg.MessageOfCharacter.TimeUntilCommonSkillAvailable = player.TimeUntilCommonSkillAvailable;
-
-            //这条暂时没啥用
-            msg.MessageOfCharacter.TimeUntilUltimateSkillAvailable = 0;
-            msg.MessageOfCharacter.Vampire = player.Vampire;
-
             return msg;
         }
 
         private static MessageToClient.Types.GameObjMessage Bullet(Bullet bullet)
         {
             MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
+            msg.MessageOfBullet = new MessageOfBullet();
             msg.MessageOfBullet.FacingDirection = bullet.FacingDirection;
             msg.MessageOfBullet.Guid = bullet.ID;
             switch (bullet.TypeOfBullet)
@@ -147,12 +149,13 @@ namespace Server
             }
             msg.MessageOfBullet.X = bullet.Position.x;
             msg.MessageOfBullet.Y = bullet.Position.y;
-            //msg.MessageOfBullet.ParentID = bullet.Parent.Id;
+            msg.MessageOfBullet.ParentID = bullet.Parent.ID;
             return msg;
         }
         private static MessageToClient.Types.GameObjMessage Prop(Prop prop)
         {
             MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
+            msg.MessageOfProp = new MessageOfProp();
             msg.MessageOfBullet.FacingDirection = prop.FacingDirection;
             msg.MessageOfBullet.Guid = prop.ID;
             switch (prop.GetPropType())
