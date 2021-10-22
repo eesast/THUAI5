@@ -153,7 +153,9 @@ namespace Server
                         bool isSuccess = game.UseCommonSkill(communicationToGameID[msg.TeamID, msg.PlayerID]);
                     }
                     break;
-
+                case MessageType.Send:
+                    SendMessageToTeammate(msg);
+                    break;
                 //可能还有很多类型，只是我不知道该怎么写，先写着这些先
                 //等其他功能写好再加
                 default:
@@ -195,6 +197,25 @@ namespace Server
                         break;
                 }
             }
+        }
+        private void SendMessageToTeammate(MessageToServer msgToServer)
+        {
+            if (!ValidTeamIDAndPlayerID(msgToServer.TeamID, msgToServer.PlayerID))
+                return;
+            if (msgToServer.Message.Length > 64)
+#if DEBUG
+                Console.WriteLine("Message string is too long!");
+#endif
+            MessageToOneClient msg = new MessageToOneClient();
+            msg.PlayerID = msgToServer.ToPlayerID;
+            msg.TeamID = msgToServer.TeamID;
+            msg.Message = msgToServer.Message;
+            msg.MessageType = MessageType.Send;
+            serverCommunicator.SendToClient(msg);
+            
+            //game也要sendMessage吗？
+
+            return;
         }
         private void OnGameEnd()
         {
@@ -288,9 +309,9 @@ namespace Server
             this.game = new Game(MapInfo.defaultMap, options.TeamCount);
             communicationToGameID = new long[options.TeamCount, options.PlayerCountPerTeam];
             //创建server时先设定待加入人物都是invalid
-            for(int i=0;i<communicationToGameID.GetLength(0);i++)
+            for (int i = 0; i < communicationToGameID.GetLength(0); i++)
             {
-                for(int j=0;j<communicationToGameID.GetLength(j);j++)
+                for (int j = 0; j < communicationToGameID.GetLength(1); j++)
                 {
                     communicationToGameID[i, j] = GameObj.invalidID;
                 }

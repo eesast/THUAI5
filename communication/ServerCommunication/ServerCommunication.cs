@@ -123,7 +123,7 @@ namespace Communication.ServerCommunication
             bool isListenning = server.Start();
             if(isListenning)
             {
-                Console.WriteLine($"The Csharp server starts to listenning to port {port}");
+                Console.WriteLine($"The Csharp server starts to listen to port {port}");
             }
             else
             {

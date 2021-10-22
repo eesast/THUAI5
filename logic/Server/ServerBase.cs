@@ -30,7 +30,7 @@ namespace Server
             this.serverCommunicator = new ServerCommunication();
             while (!serverCommunicator.Listen(options.ServerPort))
             {
-                Console.WriteLine("Server listen failed!");
+                Console.WriteLine("Server listens failed!");
                 Thread.Sleep(1000);
             }
 
