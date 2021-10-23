@@ -9,7 +9,7 @@ namespace GameClass.GameObj
     /// </summary>
     public abstract class Grass : GameObj
     {
-        public Grass(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell, PlaceType.Land) 
+        public Grass(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell, PlaceType.Land)
         {
             this.CanMove = false;
             this.Type = GameObjType.Grass;
@@ -18,9 +18,9 @@ namespace GameClass.GameObj
         protected override bool IgnoreCollideExecutor(IGameObj targetObj) => true;	//草丛不与任何东西碰撞
         public override ShapeType Shape => ShapeType.Square;
     }
-    public class Grass1:Grass
+    public class Grass1 : Grass
     {
-        public Grass1(XYPosition initPos) : base(initPos) 
+        public Grass1(XYPosition initPos) : base(initPos)
         {
             this.Place = PlaceType.Grass1;
         }

@@ -2,7 +2,7 @@
 
 namespace Preparation.Interface
 {
-    public interface IObjOfCharacter:IGameObj  
+    public interface IObjOfCharacter : IGameObj
     {
         ICharacter? Parent { get; set; }
     }

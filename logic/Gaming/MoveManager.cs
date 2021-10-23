@@ -4,19 +4,19 @@ using GameEngine;
 
 namespace Gaming
 {
-	public partial class Game
-	{
-		private MoveManager moveManager;
-		private class MoveManager
-		{
+    public partial class Game
+    {
+        private readonly MoveManager moveManager;
+        private class MoveManager
+        {
 
-			//人物移动
-			public void MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
-			{
-				moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
-			}
+            //人物移动
+            public void MovePlayer(Character playerToMove, int moveTimeInMilliseconds, double moveDirection)
+            {
+                moveEngine.MoveObj(playerToMove, moveTimeInMilliseconds, moveDirection);
+            }
 
-			/*
+            /*
 			private void ActivateMine(Character player, Mine mine)
 			{
 				gameMap.ObjListLock.EnterWriteLock();
@@ -39,29 +39,29 @@ namespace Gaming
 			}
 			*/
 
-			private Map gameMap;
-			private MoveEngine moveEngine;
-			public MoveManager(Map gameMap)
-			{
-				this.gameMap = gameMap;
-				this.moveEngine = new MoveEngine
-				(
-					gameMap: gameMap,
-					OnCollision: (obj, collisionObj, moveVec) =>
-					{
-					/*if (collisionObj is Mine)
-					{
-						ActivateMine((Character)obj, (Mine)collisionObj);
-						return MoveEngine.AfterCollision.ContinueCheck;
-					}*/
-						return MoveEngine.AfterCollision.MoveMax;
-					},
-					EndMove: obj =>
-					{
-					//Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
-				}
-				);
-			}
-		}
-	}
+            private readonly Map gameMap;
+            private readonly MoveEngine moveEngine;
+            public MoveManager(Map gameMap)
+            {
+                this.gameMap = gameMap;
+                this.moveEngine = new MoveEngine
+                (
+                    gameMap: gameMap,
+                    OnCollision: (obj, collisionObj, moveVec) =>
+                    {
+                        /*if (collisionObj is Mine)
+                        {
+                            ActivateMine((Character)obj, (Mine)collisionObj);
+                            return MoveEngine.AfterCollision.ContinueCheck;
+                        }*/
+                        return MoveEngine.AfterCollision.MoveMax;
+                    },
+                    EndMove: obj =>
+                    {
+                        //Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
+                    }
+                );
+            }
+        }
+    }
 }
