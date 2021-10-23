@@ -32,9 +32,6 @@ namespace Communication.ServerCommunication
             server.OnAccept += delegate (IServer sender, IntPtr connId, IntPtr client)
             {
                 OnConnect?.Invoke();
-#if DEBUG
-                Console.WriteLine($"Now the connect number is {server.ConnectionCount} (Maybe there are repeated clients.)");
-#endif 
                 return HandleResult.Ok;
             };
 
@@ -72,6 +69,7 @@ namespace Communication.ServerCommunication
                         else
                         {
                             playerDict.TryAdd(key, connId);
+                            Console.WriteLine($"Now the connect number is {playerDict.Count}");
                             messageToOneClient.MessageType = MessageType.ValidPlayer;
                             SendToClient(messageToOneClient);
                         }
@@ -101,15 +99,13 @@ namespace Communication.ServerCommunication
                         {
                             return HandleResult.Error;
                         }
-                        // 关于此处连接数（上文也一样的问题），实际上此处应该加一个mutex，但不加也无伤大雅
                         Console.WriteLine($"Player {id >> 16} {id & 0xffff} closed the connection");
                         break;
                     }
                 }
-                // 虽然有着重复队伍名称和玩家编号的client确实收不到信息，但还是会连在server上，这里的ConnectionCount也有谜之bug...
-#if DEBUG
-                Console.WriteLine($"Now the connect number is { server.ConnectionCount }");
-#endif
+
+                Console.WriteLine($"Now the connect number is { playerDict.Count }");
+
                 if (playerDict.IsEmpty)
                 {
                     allConnectionClosed.Set();
@@ -127,7 +123,7 @@ namespace Communication.ServerCommunication
             bool isListenning = server.Start();
             if(isListenning)
             {
-                Console.WriteLine($"The Csharp server starts to listenning to port {port}");
+                Console.WriteLine($"The Csharp server starts to listen to port {port}");
             }
             else
             {

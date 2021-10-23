@@ -93,7 +93,7 @@ namespace Gaming
             )
             { IsBackground = true }.Start();
 
-            return newPlayer.TeamID;
+            return newPlayer.ID;
         }
         public bool StartGame(int milliSeconds)
         {
@@ -105,7 +105,9 @@ namespace Gaming
                 foreach(Character player in gameMap.PlayerList)
                 {
                     player.CanMove = true;
-                    player.AddShield(GameData.shieldTimeAtBirth);
+                    
+                    //这里bug了，不信可以取消注释试试看0.0
+                    //player.AddShield(GameData.shieldTimeAtBirth);
                 }
             }
             finally { gameMap.PlayerListLock.ExitReadLock(); }
@@ -150,6 +152,15 @@ namespace Gaming
             if(player!=null)
             {
                 moveManager.MovePlayer(player, moveTimeInMilliseconds, angle);
+#if DEBUG
+                Console.WriteLine($"PlayerID:{playerID} move to ({player.Position.x},{player.Position.y})!");
+#endif
+            }
+            else
+            {
+#if DEBUG
+                Console.WriteLine($"PlayerID:{playerID} player does not exists!");
+#endif
             }
         }
         public void Attack(long playerID, double angle)
