@@ -25,26 +25,70 @@ namespace Test
             messageToServer.PSkill = PassiveSkillType.Vampire;
             clientCommunication.SendMessage(messageToServer);
             Thread.Sleep(1000);
-            new FrameRateTaskExecutor<int>
-            (
-                () => true,
-                () =>
-                {
-                    MessageToServer msg = new MessageToServer();
-                    msg.MessageType = MessageType.Move;
-                    msg.PlayerID = playerID;
-                    msg.TeamID = teamID;
-                    msg.TimeInMilliseconds = 50;
-                    msg.Angle = 0;
-                    clientCommunication.SendMessage(msg);
-                },
-                50,
-                () => 0,
-                1000
-            )
+            var k = Console.ReadKey().Key;
+            while (k != ConsoleKey.Escape)
             {
-                AllowTimeExceed = true
-            }.Start();
+                switch(k)
+                {
+                    case ConsoleKey.A:
+                        MessageToServer msgA = new MessageToServer();
+                        msgA.MessageType = MessageType.Move;
+                        msgA.PlayerID = playerID;
+                        msgA.TeamID = teamID;
+                        msgA.TimeInMilliseconds = 50;
+                        msgA.Angle = Math.PI;
+                        clientCommunication.SendMessage(msgA);
+                        break;
+                    case ConsoleKey.D:
+                        MessageToServer msgD = new MessageToServer();
+                        msgD.MessageType = MessageType.Move;
+                        msgD.PlayerID = playerID;
+                        msgD.TeamID = teamID;
+                        msgD.TimeInMilliseconds = 50;
+                        msgD.Angle = 0;
+                        clientCommunication.SendMessage(msgD);
+                        break;
+                    case ConsoleKey.W:
+                        MessageToServer msgW = new MessageToServer();
+                        msgW.MessageType = MessageType.Move;
+                        msgW.PlayerID = playerID;
+                        msgW.TeamID = teamID;
+                        msgW.TimeInMilliseconds = 50;
+                        msgW.Angle = Math.PI/2;
+                        clientCommunication.SendMessage(msgW);
+                        break;
+                    case ConsoleKey.S:
+                        MessageToServer msgS = new MessageToServer();
+                        msgS.MessageType = MessageType.Move;
+                        msgS.PlayerID = playerID;
+                        msgS.TeamID = teamID;
+                        msgS.TimeInMilliseconds = 50;
+                        msgS.Angle = 3*Math.PI/2;
+                        clientCommunication.SendMessage(msgS);
+                        break;
+                }
+                k = Console.ReadKey().Key;
+            }
+            //new FrameRateTaskExecutor<int>
+            //(
+            //    () => true,
+            //    () =>
+            //    {
+            //        MessageToServer msg = new MessageToServer();
+            //        msg.MessageType = MessageType.Move;
+            //        msg.PlayerID = playerID;
+            //        msg.TeamID = teamID;
+            //        msg.TimeInMilliseconds = 50;
+            //        msg.Angle = 0;
+            //        clientCommunication.SendMessage(msg);
+            //    },
+            //    50,
+            //    () => 0,
+            //    1000
+            //)
+            //{
+            //    AllowTimeExceed = true
+            //}.Start();
 
             Console.ReadKey();
         }

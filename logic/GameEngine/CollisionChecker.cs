@@ -72,8 +72,8 @@ namespace GameEngine
             if (obj.WillCollideWith(square, obj.Position))
                 tmpMax = 0;
             else tmpMax =
-                XYPosition.Distance(obj.Position, square.Position) - obj.Radius -
-                (square.Radius / Math.Min(Math.Abs(Math.Cos(angle)), Math.Abs(Math.Sin(angle))));
+                Math.Abs(XYPosition.Distance(obj.Position, square.Position) - obj.Radius -
+                (square.Radius / Math.Min(Math.Abs(Math.Cos(angle)), Math.Abs(Math.Sin(angle)))));
             return tmpMax;
         }
 
@@ -165,7 +165,7 @@ namespace GameEngine
                 }
                 finally
                 {
-                    maxLen = Math.Max(maxOnlyConsiderWall, maxIgnoringWall);
+                    maxLen = Math.Min(maxOnlyConsiderWall, maxIgnoringWall);
                     listLock.ExitReadLock();
                 }
             }

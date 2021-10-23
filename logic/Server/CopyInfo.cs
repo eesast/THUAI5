@@ -8,7 +8,7 @@ namespace Server
 {
     public static class CopyInfo
     {
-        public static MessageToClient.Types.GameObjMessage Auto(GameObj gameObj)
+        public static MessageToClient.Types.GameObjMessage? Auto(GameObj gameObj)
         {
             if (gameObj.Type == Preparation.Utility.GameObjType.Character)
                 return Player((Character)gameObj);
@@ -149,7 +149,8 @@ namespace Server
             }
             msg.MessageOfBullet.X = bullet.Position.x;
             msg.MessageOfBullet.Y = bullet.Position.y;
-            msg.MessageOfBullet.ParentID = bullet.Parent.ID;
+            if(bullet.Parent!=null)
+                msg.MessageOfBullet.ParentID = bullet.Parent.ID;
             return msg;
         }
         private static MessageToClient.Types.GameObjMessage Prop(Prop prop)
@@ -170,7 +171,7 @@ namespace Server
             msg.MessageOfBullet.X = prop.Position.x;
             msg.MessageOfBullet.Y = prop.Position.y;
             //msg.MessageOfBullet.ParentID = bullet.Parent.Id;
-            return null;
+            return msg;
         }
     }
 }

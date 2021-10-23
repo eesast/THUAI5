@@ -70,7 +70,7 @@ namespace GameEngine
 						obj.IsMoving = true;
 					}
 
-                    Vector moveVec = new(obj.FacingDirection, 0.0);
+                    Vector moveVec = new(direction, 0.0);
                     double deltaLen = moveVec.length - Math.Sqrt(obj.Move(moveVec));  //转向，并用deltaLen存储行走的误差
                     IGameObj? collisionObj = null;
                     bool isDestroyed = false;
