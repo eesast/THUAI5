@@ -16,6 +16,7 @@ namespace Communication.ClientCommunication
     public class ClientCommunication : IDisposable
     {
         private readonly TcpPackClient client;
+        public TcpPackClient Client { get => client; }
         private readonly BlockingCollection<IGameMessage> msgQueue;
         public event OnReceiveCallback OnReceive;
         private readonly int maxtimeout = 30000; // 超时界定时间
@@ -35,26 +36,19 @@ namespace Communication.ClientCommunication
                     MessageToOneClient m21c = message.Content as MessageToOneClient;
                     if (m21c.MessageType == MessageType.ValidPlayer)
                     {
-                        Console.WriteLine("Successfully connect to server.");
+                        Console.WriteLine("Successfully connected.");
                     }
                     else if (m21c.MessageType == MessageType.InvalidPlayer)
                     {
-                        Console.WriteLine("Invalid IDs! Check your input, or contact developers.");
+                        Exception exc = new("Invalid IDs! Check your input, or contact developers.");
+                        throw exc;
                     }
                     else if (m21c.MessageType == MessageType.Send)
                     {
                         Console.WriteLine(m21c.Message);
                     }
                 }
-
-                try
-                {
-                    msgQueue.Add(message);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Exception occured when adding an item to the msgQueue:" + e.Message);
-                }
+                msgQueue.Add(message);
                 OnReceive?.Invoke();
                 return HandleResult.Ok;
             };
@@ -108,7 +102,8 @@ namespace Communication.ClientCommunication
         {
             if (!client.Send(bytes, bytes.Length))
             {
-                Console.WriteLine("failed to send to server.");
+                Exception exc = new("failed to send to server.");
+                throw exc;
             }
         }
 

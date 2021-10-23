@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ConnectRegister" Height="224" Width="350" ResizeMode="NoResize" >
     <Grid>
-        <Label Content="Input your Message below." HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="184"/>
+        <Label Content="Input your Message below." HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="184" />
         <Label Content="IP:" HorizontalAlignment="Left" Height="24" Margin="0,31,0,0" VerticalAlignment="Top" Width="53"/>
         <Label Content="Port:" HorizontalAlignment="Left" Height="24" Margin="0,103,0,0" VerticalAlignment="Top" Width="53"/>
         <TextBox Name="IPBox" HorizontalAlignment="Left" Height="20" Margin="2,55,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" BorderBrush="Black"/>
