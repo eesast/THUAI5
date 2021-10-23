@@ -63,49 +63,38 @@ namespace ServerTest
             // 1.初始化信息，包括：地图形状、玩家数和每个玩家的属性
             MessageToInitialize m2i = new MessageToInitialize();
             m2i.MapSerial = 2;
-            m2i.NumberOfValidPlayer = 2;
             
             server.SendToClient(m2i);
             Console.WriteLine("StartGame");
             Console.ReadLine();
 
-            // 2.人物设置（这里我默认人物也应该在初始化的类型中）
-            MessageToRefreshCharacter m2rc = new MessageToRefreshCharacter();
-            for (int i = 0; i < m2i.NumberOfValidPlayer; i++)
+            // 2.人物子弹道具设置（这里我默认人物也应该在初始化的类型中）
+            MessageToClient m2c = new MessageToClient();
+            MessageToClient.Types.GameObjMessage gameObjMessage = new MessageToClient.Types.GameObjMessage();
+            
+            // 将三个操作储存到同一个列表中!
+            for (int i = 0; i < 30; i++)
             {
-                MessageOfCharacter mc = new MessageOfCharacter();
-                mc.ActiveSkillType = ActiveSkillType.SuperFast;
-                // 人物属性需要自己加
-                m2rc.MessageOfCharacter.Add(mc);
+                switch (i % 3)
+                {
+                    case 0:
+                        MessageOfCharacter mc = new MessageOfCharacter();
+                        mc.ActiveSkillType = ActiveSkillType.Askill4;
+                        gameObjMessage.MessageOfCharacter = mc;
+                        break;
+                    case 1:
+                        MessageOfBullet mb = new MessageOfBullet();
+                        mb.FacingDirection = 100;
+                        gameObjMessage.MessageOfBullet = mb;
+                        break;
+                    default:
+                        MessageOfProp mp = new MessageOfProp();
+                        mp.FacingDirection = 100;
+                        gameObjMessage.MessageOfProp = mp;
+                        break;
+                }
+                m2c.GameObjMessage.Add(gameObjMessage);
             }
-            server.SendToClient(m2i);
-            Console.WriteLine("AddPlayers");
-            Console.ReadLine();
-
-            // 3.子弹与道具设置
-            MessageToRefreshBullet m2rb = new MessageToRefreshBullet();
-            for(int i = 0;i<10;i++)
-            {
-                MessageOfBullet mb = new MessageOfBullet();
-                mb.FacingDirection = 100;
-                // 子弹属性需要自己加
-                m2rb.MessageOfBullet.Add(mb);
-            }
-            server.SendToClient(m2rb);
-            Console.WriteLine("AddBullets");
-            Console.ReadLine();
-
-            MessageToRefreshProp m2rp= new MessageToRefreshProp();
-            for (int i = 0; i < 10; i++)
-            {
-                MessageOfProp mp = new MessageOfProp();
-                mp.Type = PropType.AddAp;
-                // 子弹属性需要自己加
-                m2rp.MessageOfProp.Add(mp);
-            }
-            server.SendToClient(m2rp);
-            Console.WriteLine("AddProps");
-            Console.ReadLine();
 
             // 4.单播测试
             m21c = new MessageToOneClient();
