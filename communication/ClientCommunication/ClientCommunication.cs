@@ -28,6 +28,25 @@ namespace Communication.ClientCommunication
             {
                 Message message = new Message();
                 message.Deserialize(bytes); // 解码信息
+
+                // 欢迎补充
+                if(message.PacketType==PacketType.MessageToOneClient)
+                {
+                    MessageToOneClient m21c = message.Content as MessageToOneClient;
+                    if(m21c.MessageType==MessageType.ValidPlayer)
+                    {
+                        Console.WriteLine("Successfully connect to server.");
+                    }
+                    else if(m21c.MessageType==MessageType.InvalidPlayer)
+                    {
+                        Console.WriteLine("Invalid IDs! You will not receive the message from server.");
+                    }
+                    else if(m21c.MessageType==MessageType.Send)
+                    {
+                        Console.WriteLine(m21c.Message);
+                    }
+                }
+
                 try
                 {
                     msgQueue.Add(message);

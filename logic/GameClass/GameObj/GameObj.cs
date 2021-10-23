@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
@@ -28,6 +29,9 @@ namespace GameClass.GameObj
                 }
             }
         }
+        private static long currentMaxID = 0;           //目前游戏对象的最大ID
+        public const long invalidID = long.MaxValue;            //无效的ID
+        public const long noneID = long.MinValue;
         public long ID { get; }
 
         private XYPosition position;
@@ -193,6 +197,7 @@ namespace GameClass.GameObj
             this.birthPos = initPos;
             this.Radius = initRadius;
             this.place = initPlace;
+            ID = Interlocked.Increment(ref currentMaxID);
         }
     }
 }

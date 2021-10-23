@@ -13,4 +13,16 @@
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\communication\ClientCommunication\ClientCommunication.csproj" />
+    <ProjectReference Include="..\..\communication\Proto\Proto.csproj" />
+    <ProjectReference Include="..\..\communication\ServerCommunication\ServerCommunication.csproj" />
+    <ProjectReference Include="..\GameClass\GameClass.csproj" />
+    <ProjectReference Include="..\Gaming\Gaming.csproj" />
+  </ItemGroup>
+
 </Project>

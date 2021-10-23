@@ -22,7 +22,22 @@ namespace GameClass.GameObj
 			else
 				return PlaceType.Land;  //其他情况均返回land
 		}
-		
+		public enum MapInfoObjType
+        {
+			Null=0,
+			Wall=1,
+			Grass1=2,
+			Grass2=3,
+			Grass3=4,
+			BirthPoint1=5,
+			BirthPoint2 = 6,
+			BirthPoint3 = 7,
+			BirthPoint4 = 8,
+			BirthPoint5 = 9,
+			BirthPoint6 = 10,
+			BirthPoint7 = 11,
+			BirthPoint8 = 12,
+		}
 		/// <summary>
 		/// 50*50
 		/// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3 
