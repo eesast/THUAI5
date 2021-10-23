@@ -10,11 +10,11 @@ namespace Gaming
 {
     public partial class Game
     {
-        private AttackManager attackManager;
+        private readonly AttackManager attackManager;
         private class AttackManager
         {
-            Map gameMap;
-            MoveEngine moveEngine;
+            readonly Map gameMap;
+            readonly MoveEngine moveEngine;
             public AttackManager(Map gameMap)
             {
                 this.gameMap = gameMap;
@@ -42,7 +42,7 @@ namespace Gaming
                     gameMap.PlayerListLock.EnterWriteLock();
                     try
                     {
-                        gameMap.PlayerList.Remove(playerBeingShot);
+                        _ = gameMap.PlayerList.Remove(playerBeingShot);
                     }
                     finally
                     {
@@ -87,7 +87,7 @@ namespace Gaming
                     {
                         if (_bullet.ID == bullet.ID)
                         {
-                            gameMap.BulletList.Remove(_bullet);
+                            _ = gameMap.BulletList.Remove(_bullet);
                             break;
                         }
                     }
@@ -98,7 +98,7 @@ namespace Gaming
                     if (objBeingShot is Character)
                     {
                         BombOnePlayer(bullet, (Character)objBeingShot);
-                        bullet.Parent.HP = (int)(bullet.Parent.HP + bullet.Parent.Vampire * bullet.AP);  //造成伤害根据吸血率来吸血
+                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * bullet.AP));  //造成伤害根据吸血率来吸血
                     }
                     /*else if (objBeingShot is Bullet)        //子弹不能相互引爆，若要更改这一设定，取消注释即可。
                     {

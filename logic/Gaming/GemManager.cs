@@ -7,16 +7,16 @@ namespace Gaming
 {
     public partial class Game
     {
-        private GemManager gemManager;
+        private readonly GemManager gemManager;
         private class GemManager  //单独用GemManager处理宝石
         {
-            private Map gameMap;
-            private bool isProducing = false;
+            private readonly Map gameMap;
+            private readonly bool isProducing = false;
             public void StartProducingGem()
             {
                 if (isProducing)
                     return;
-                
+
                 /*
                  自动生成宝石。
                 宝石的生成应该分为两类：

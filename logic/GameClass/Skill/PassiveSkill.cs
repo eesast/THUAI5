@@ -7,7 +7,7 @@ using Timothy.FrameRateTask;
 
 namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结束
 {
-    public class RecoverAfterBattle:PassiveSkill  //脱战回血
+    public class RecoverAfterBattle : PassiveSkill  //脱战回血
     {
         private readonly Bullet initBullet = new Bullet0(new XYPosition(0, 0), GameData.bulletRadius, GameData.basicBulletMoveSpeed, GameData.basicAp, false);
         public override Bullet InitBullet => initBullet;
@@ -26,7 +26,7 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
                     new FrameRateTaskExecutor<int>
                     (
                         () => true,
-                        ()=>
+                        () =>
                         {
                             lastHP = nowHP;  //lastHP等于上一帧的HP
                             nowHP = player.HP;  //nowHP更新为这一帧的HP
@@ -63,10 +63,10 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
                     }.Start();
                 }
             )
-            { IsBackground=true }.Start();
+            { IsBackground = true }.Start();
         }
     }
-    public class SpeedUpWhenLeavingGrass:PassiveSkill //出草丛时加速并免疫减速，但隐身时出草丛不会有该效果
+    public class SpeedUpWhenLeavingGrass : PassiveSkill //出草丛时加速并免疫减速，但隐身时出草丛不会有该效果
     {
         private readonly Bullet initBullet = new Bullet0(new XYPosition(0, 0), GameData.bulletRadius, GameData.basicBulletMoveSpeed, GameData.basicAp, false);
         public override Bullet InitBullet => initBullet;
@@ -94,7 +94,7 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
                                 beginSpeedUp = true;
                                 speedUpTimes = 0;
                             }
-                            if(beginSpeedUp)
+                            if (beginSpeedUp)
                             {
                                 if (speedUpTimes <= maxSpeedUpTimes)
                                 {
@@ -133,7 +133,7 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
             { IsBackground = true }.Start();
         }
     }
-    public class Vampire:PassiveSkill  //被动就是吸血
+    public class Vampire : PassiveSkill  //被动就是吸血
     {
         private readonly Bullet initBullet = new Bullet0(new XYPosition(0, 0), GameData.bulletRadius, GameData.basicBulletMoveSpeed, GameData.basicAp, false);
         public override Bullet InitBullet => initBullet;
@@ -151,7 +151,7 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
         //以上参数以后再改
         public override void SkillEffect(Character player)
         {
-            
+
         }
     }
 }

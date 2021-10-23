@@ -15,46 +15,40 @@ namespace Communication.ClientCommunication
     /// </summary>
     public class ClientCommunication : IDisposable
     {
-        private TcpPackClient client;
-        private BlockingCollection<IGameMessage> msgQueue;
+        private readonly TcpPackClient client;
+        public TcpPackClient Client { get => client; }
+        private readonly BlockingCollection<IGameMessage> msgQueue;
         public event OnReceiveCallback OnReceive;
         private readonly int maxtimeout = 30000; // 超时界定时间
-        
+
         public ClientCommunication()
         {
             client = new TcpPackClient();
             msgQueue = new BlockingCollection<IGameMessage>();
             client.OnReceive += delegate (IClient sender, byte[] bytes)
             {
-                Message message = new Message();
+                Message message = new();
                 message.Deserialize(bytes); // 解码信息
 
                 // 欢迎补充
-                if(message.PacketType==PacketType.MessageToOneClient)
+                if (message.PacketType == PacketType.MessageToOneClient)
                 {
                     MessageToOneClient m21c = message.Content as MessageToOneClient;
-                    if(m21c.MessageType==MessageType.ValidPlayer)
+                    if (m21c.MessageType == MessageType.ValidPlayer)
                     {
-                        Console.WriteLine("Successfully connect to server.");
+                        Console.WriteLine("Successfully connected.");
                     }
-                    else if(m21c.MessageType==MessageType.InvalidPlayer)
+                    else if (m21c.MessageType == MessageType.InvalidPlayer)
                     {
-                        Console.WriteLine("Invalid IDs! You will not receive the message from server.");
+                        Exception exc = new("Invalid IDs! Check your input, or contact developers.");
+                        throw exc;
                     }
-                    else if(m21c.MessageType==MessageType.Send)
+                    else if (m21c.MessageType == MessageType.Send)
                     {
                         Console.WriteLine(m21c.Message);
                     }
                 }
-
-                try
-                {
-                    msgQueue.Add(message);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Exception occured when adding an item to the msgQueue:" + e.Message);
-                }
+                msgQueue.Add(message);
                 OnReceive?.Invoke();
                 return HandleResult.Ok;
             };
@@ -93,7 +87,7 @@ namespace Communication.ClientCommunication
         /// <param name="msg"></param>
         public void SendMessage(MessageToServer msg)
         {
-            Message message = new Message();
+            Message message = new();
             message.Content = msg;
             message.PacketType = PacketType.MessageToServer;
             byte[] bytes;
@@ -108,7 +102,8 @@ namespace Communication.ClientCommunication
         {
             if (!client.Send(bytes, bytes.Length))
             {
-                Console.WriteLine("failed to send to server.");
+                Exception exc = new("failed to send to server.");
+                throw exc;
             }
         }
 
