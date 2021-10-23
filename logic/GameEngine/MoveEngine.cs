@@ -59,16 +59,16 @@ namespace GameEngine
 
         public void MoveObj(IMoveable obj, int moveTime, double direction)
         {
-            new Thread
-            (
-                () =>
-                {
-                    lock (obj.MoveLock)
-                    {
-                        if (!obj.IsAvailable && gameTimer.IsGaming) //不能动就直接return，后面都是能动的情况
-                            return;
-                        obj.IsMoving = true;
-                    }
+			new Thread
+			(
+				()=>
+				{
+					if (!obj.IsAvailable&&gameTimer.IsGaming) //不能动就直接return，后面都是能动的情况
+							return;
+					lock (obj.MoveLock)
+					{	
+						obj.IsMoving = true;
+					}
 
                     Vector moveVec = new(obj.FacingDirection, 0.0);
                     double deltaLen = moveVec.length - Math.Sqrt(obj.Move(moveVec));  //转向，并用deltaLen存储行走的误差

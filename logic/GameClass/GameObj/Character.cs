@@ -61,7 +61,14 @@ namespace GameClass.GameObj
         public int OrgAp { get; protected set; }    // 原初攻击力
 
         private int score = 0;
-        public int Score => score;  // 当前分数
+        public int Score
+        {
+            get => score;
+            set
+            {
+                score = value > 0 ? value : 0;
+            }
+        }
 
         private readonly double attackRange;
         public double AttackRange => attackRange;

@@ -54,6 +54,8 @@ namespace GameClass.GameObj
                 return new Grass2(pos);
             else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 4)
                 return new Grass3(pos);
+            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] < 13)
+                return new BirthPoint(pos);
             else return new OutOfBoundBlock(pos);
         }
         public PlaceType GetPlaceType(XYPosition pos)
@@ -61,6 +63,14 @@ namespace GameClass.GameObj
             switch (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell])
             {
                 case 0:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                case 12:
                     return PlaceType.Land;
                 case 1:
                     return PlaceType.Null;
@@ -71,21 +81,25 @@ namespace GameClass.GameObj
                 case 4:
                     return PlaceType.Grass3;
                 default:
-                    return PlaceType.Null;
+                    return PlaceType.Null; 
             }
         }
         public Character? FindPlayer(long playerID)
         {
             Character? player = null;
             playerListLock.EnterReadLock();
-            foreach (Character person in playerList)
+            try
             {
-                if (playerID == person.ID)
+                foreach (Character person in playerList)
                 {
-                    player = person;
-                    break;
+                    if (playerID == person.ID)
+                    {
+                        player = person;
+                        break;
+                    }
                 }
             }
+            finally { playerListLock.ExitReadLock(); }
             return player;
         }
         public Map(uint[,] mapResource)
@@ -98,31 +112,31 @@ namespace GameClass.GameObj
             playerListLock = new ReaderWriterLockSlim();
             propListLock = new ReaderWriterLockSlim();
 
-            //birthPointList = new Dictionary<uint, BirthPoint>(MapInfo.numOfBirthPoint);
+            birthPointList = new Dictionary<uint, BirthPoint>(MapInfo.numOfBirthPoint);
 
-            ////将墙等游戏对象插入到游戏中
-            //for (int i = 0; i < rows; ++i)
-            //{
-            //    for (int j = 0; j < cols; ++j)
-            //    {
-            //        switch (mapResource[i, j])
-            //        {
-            //            case (uint)MapInfo.MapInfoObjType.BirthPoint1:
-            //            case (uint)MapInfo.MapInfoObjType.BirthPoint2:
-            //            case (uint)MapInfo.MapInfoObjType.BirthPoint3:
-            //            case (uint)MapInfo.MapInfoObjType.BirthPoint4:
-            //            case (uint)MapInfo.MapInfoObjType.BirthPoint5:
-            //            case (uint)MapInfo.MapInfoObjType.BirthPoint6:
-            //            case (uint)MapInfo.MapInfoObjType.BirthPoint7:
-            //            case (uint)MapInfo.MapInfoObjType.BirthPoint8:
-            //                {
-            //                    BirthPoint newBirthPoint = new BirthPoint(GameData.GetCellCenterPos(i, j));
-            //                    birthPointList.Add(MapInfo.BirthPointEnumToIdx((MapInfo.MapInfoObjType)mapResource[i, j]), newBirthPoint);
-            //                    break;
-            //                }
-            //        }
-            //    }
-            //}
+            //将墙等游戏对象插入到游戏中
+            for (int i = 0; i < GameData.rows; ++i)
+            {
+                for (int j = 0; j < GameData.cols; ++j)
+                {
+                    switch (mapResource[i, j])
+                    {
+                        case (uint)MapInfo.MapInfoObjType.BirthPoint1:
+                        case (uint)MapInfo.MapInfoObjType.BirthPoint2:
+                        case (uint)MapInfo.MapInfoObjType.BirthPoint3:
+                        case (uint)MapInfo.MapInfoObjType.BirthPoint4:
+                        case (uint)MapInfo.MapInfoObjType.BirthPoint5:
+                        case (uint)MapInfo.MapInfoObjType.BirthPoint6:
+                        case (uint)MapInfo.MapInfoObjType.BirthPoint7:
+                        case (uint)MapInfo.MapInfoObjType.BirthPoint8:
+                            {
+                                BirthPoint newBirthPoint = new BirthPoint(GameData.GetCellCenterPos(i, j));
+                                birthPointList.Add(MapInfo.BirthPointEnumToIdx((MapInfo.MapInfoObjType)mapResource[i, j]), newBirthPoint);
+                                break;
+                            }
+                    }
+                }
+            }
         }
     }
 }
