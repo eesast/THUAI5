@@ -40,6 +40,11 @@ THUAI5：清华大学第五届人工智能挑战赛电子系赛道（原电子�
 
 ## 开发规则
 
+### 关于社区开发者
+
++ 社区开发者开发时请遵循 [THUAI5 社区开发者贡献指南](./**CONTRIBUTING.md**)  
++ 社区开发者贡献的代码请遵循 [Contributor Covenant Code of Conduct](./**CODE_OF_CONDUCT.md**)  
+
 ### 使用 Git 与 Github 进行开发的流程
 
 使用 Git 与 GitHub 进行协作开发的过程中，各个开发组成员应当遵守下面的流程：  
