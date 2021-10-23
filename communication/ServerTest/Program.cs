@@ -63,7 +63,6 @@ namespace ServerTest
             // 1.初始化信息，包括：地图形状、玩家数和每个玩家的属性
             MessageToInitialize m2i = new MessageToInitialize();
             m2i.MapSerial = 2;
-            m2i.NumberOfValidPlayer = 2;
             
             server.SendToClient(m2i);
             Console.WriteLine("StartGame");

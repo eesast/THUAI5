@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GameClass.GameObj;
+using Preparation.GameData;
 
 namespace Gaming
 {
@@ -36,6 +37,34 @@ namespace Gaming
 
             use宝石是将一定数量的宝石直接转化为得分。
              */
+
+            public void ExchangeGemForScore(Character character, int num)
+            {
+                if (num > character.GemNum)
+                    num = character.GemNum;
+
+                if(num > 0)
+                {
+                    character.GemNum -= num;
+                    character.Score += GemToScore(num);
+                }
+            }
+
+
+            /// <summary>
+            /// 宝石转化为积分，有没有更好的函数？
+            /// </summary>
+            /// <param name="num"></param>
+            /// <returns></returns>
+            private int GemToScore(int num)
+            {
+                //先用分段线性
+                if (num < 10)
+                    return num * GameData.gemToScore;
+                else if (num < 20)
+                    return 2 * num * GameData.gemToScore;
+                else return 3 * num * GameData.gemToScore;
+            }
 
             public GemManager(Map gameMap)
             {

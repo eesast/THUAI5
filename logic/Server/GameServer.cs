@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using System.Collections.Generic;
+using Preparation.GameData;
 using Timothy.FrameRateTask;
 using Gaming;
 using Communication.Proto;
@@ -83,33 +83,12 @@ namespace Server
             }
             return true;
         }
-        private void SendAddPlayerResponse(MessageToServer msgRecieve, bool isValid)
+        private void ReadyToStart(MessageToServer msgRecieve, bool isValid)
         {
             //if(msgRecieve.PlayerID==2021&&msgRecieve.TeamID==2021)
             //{
             //    //观战模式
             //}
-
-            
-
-            MessageToOneClient msgSend = new MessageToOneClient();
-            
-            //这里应该是long，怎么成int了？
-            msgSend.PlayerID = (int)msgRecieve.PlayerID;
-            msgSend.TeamID = (int)msgRecieve.TeamID;
-
-            msgSend.MessageType = MessageType.InitialLized;  //应该要发个信息回去告诉client连上了吗,proto没写好，要改
-            //这里proto没写好，得改
-            serverCommunicator.SendToClient(msgSend);
-            
-            if (isValid)
-            {
-                Console.WriteLine("A new player with teamID {0} and playerID {1} joined the game.", msgRecieve.TeamID, msgRecieve.PlayerID);
-            }
-            else
-            {
-                Console.WriteLine("The request of a player declaring to have teamID {0} and playerID {1} to join the game has been rejected.", msgRecieve.TeamID, msgRecieve.PlayerID);
-            }
 
             lock (addPlayerLock)
             {
@@ -131,15 +110,15 @@ namespace Server
             if (double.IsNaN(msg.Angle) || double.IsInfinity(msg.Angle))
                 msg.Angle = 0.0;
 
-            switch(msg.MessageType)
+            switch (msg.MessageType)
             {
                 case MessageType.AddPlayer:
-                    SendAddPlayerResponse(msg, AddPlayer(msg));
+                    ReadyToStart(msg, AddPlayer(msg));
                     break;
                 case MessageType.Move:
                     if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
                     {
-                        game.MovePlayer(communicationToGameID[msg.TeamID, msg.PlayerID], msg.TimeInMilliseconds, msg.Angle);
+                        game.MovePlayer(communicationToGameID[msg.TeamID, msg.PlayerID], (int)msg.TimeInMilliseconds, msg.Angle);
                     }
                     break;
                 case MessageType.Attack:
@@ -155,8 +134,11 @@ namespace Server
                         bool isSuccess = game.UseCommonSkill(communicationToGameID[msg.TeamID, msg.PlayerID]);
                     }
                     break;
-
-                //可能还有很多类型，只是我不知道该怎么写，先写着这一点先
+                case MessageType.Send:
+                    SendMessageToTeammate(msg);
+                    break;
+                //可能还有很多类型，只是我不知道该怎么写，先写着这些先
+                //等其他功能写好再加
                 default:
                     break;
             }
@@ -165,22 +147,61 @@ namespace Server
         {
             return teamID >= 0 && teamID < options.TeamCount && playerID >= 0 && playerID < options.PlayerCountPerTeam;
         }
-        private void SendMessageToAllClients(MessageType msgType, bool requiredGaming=true)
+        private void SendMessageToAllClients(MessageType msgType, bool requiredGaming = true)
         {
-            var gameObjList=game.GetGameObj();
-            Google.Protobuf.Collections.RepeatedField<MessageToRefresh> messageToRefresh = new Google.Protobuf.Collections.RepeatedField<MessageToRefresh>();
+            if (requiredGaming && !game.GameMap.Timer.IsGaming)
+                return;
+            var gameObjList = game.GetGameObj();
 
-            /*
-            proto要改，这部分先放着，proto改好才能写。
-            其他的大致已经写好了
-            */
+            lock (messageToAllClientsLock)
+            {
+                switch (msgType)
+                {
+                    case MessageType.Gaming: 
+                    case MessageType.StartGame:  
+                    case MessageType.EndGame:   
+                        MessageToClient messageToClient = new MessageToClient();
+                        foreach (GameObj gameObj in gameObjList)
+                        {
+                            messageToClient.GameObjMessage.Add(CopyInfo.Auto(gameObj));
+                        }
+                        messageToClient.MessageType = msgType;
+                        serverCommunicator.SendToClient(messageToClient);
+                        break;
+                    case MessageType.InitialLized:
+                        MessageToInitialize messageToInitialize = new MessageToInitialize();
+                        messageToInitialize.MessageType = MessageType.InitialLized;
+                        messageToInitialize.MapSerial = 1; //地图编号，应该是随机数，这里先设为1
+                        serverCommunicator.SendToClient(messageToInitialize);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        private void SendMessageToTeammate(MessageToServer msgToServer)
+        {
+            if (!ValidTeamIDAndPlayerID(msgToServer.TeamID, msgToServer.PlayerID))
+                return;
+            if (msgToServer.Message.Length > 64)
+            {
+#if DEBUG
+                Console.WriteLine("Message string is too long!");
+#endif
+            }
+            else 
+            { 
+                MessageToOneClient msg = new MessageToOneClient();
+                msg.PlayerID = msgToServer.ToPlayerID;
+                msg.TeamID = msgToServer.TeamID;
+                msg.Message = msgToServer.Message;
+                msg.MessageType = MessageType.Send;
+                serverCommunicator.SendToClient(msg);
+            }
+            
+            //game也要sendMessage吗？
 
-
-
-
-
-
-
+            return;
         }
         private void OnGameEnd()
         {
@@ -200,10 +221,17 @@ namespace Server
             {
                 if (id == GameObj.invalidID) return;     //如果有未初始化的玩家，不开始游戏
             }
-            new Thread
+            
+            SendMessageToAllClients(MessageType.InitialLized); //发送初始化信息
+            Thread.Sleep((int)GameData.frameDuration); //发送信息后，暂停一帧时间
+
+            new Thread 
             (
                 () =>
                 {
+#if DEBUG
+                    Console.WriteLine("Game Start!");
+#endif
                     game.StartGame((int)options.GameTimeInSecond * 1000);
                     OnGameEnd();
                 }
@@ -212,6 +240,7 @@ namespace Server
 
             while (!game.GameMap.Timer.IsGaming) 
                 Thread.Sleep(1); //游戏未开始，等待
+
             SendMessageToAllClients(MessageType.StartGame);     //发送开始游戏信息
 
             //定时向client发送游戏情况
@@ -223,7 +252,10 @@ namespace Server
                     FrameRateTaskExecutor<int> xfgg = new FrameRateTaskExecutor<int>
                     (
                         () => game.GameMap.Timer.IsGaming,
-                        () => SendMessageToAllClients(MessageType.Gaming),
+                        () =>
+                        {
+                            SendMessageToAllClients(MessageType.Gaming);
+                        },
                         SendMessageToClientIntervalInMilliseconds,
                         () => 0
                     )
@@ -269,9 +301,9 @@ namespace Server
             this.game = new Game(MapInfo.defaultMap, options.TeamCount);
             communicationToGameID = new long[options.TeamCount, options.PlayerCountPerTeam];
             //创建server时先设定待加入人物都是invalid
-            for(int i=0;i<communicationToGameID.GetLength(0);i++)
+            for (int i = 0; i < communicationToGameID.GetLength(0); i++)
             {
-                for(int j=0;j<communicationToGameID.GetLength(j);j++)
+                for (int j = 0; j < communicationToGameID.GetLength(1); j++)
                 {
                     communicationToGameID[i, j] = GameObj.invalidID;
                 }
