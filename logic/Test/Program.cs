@@ -66,6 +66,14 @@ namespace Test
                         msgS.Angle = 3*Math.PI/2;
                         clientCommunication.SendMessage(msgS);
                         break;
+                    case ConsoleKey.J:
+                        MessageToServer msgJ = new MessageToServer();
+                        msgJ.MessageType = MessageType.Attack;
+                        msgJ.PlayerID = playerID;
+                        msgJ.TeamID = teamID;
+                        msgJ.Angle = Math.PI / 4;
+                        clientCommunication.SendMessage(msgJ);
+                        break;
                 }
                 k = Console.ReadKey().Key;
             }

@@ -138,13 +138,13 @@ namespace Server
             switch (bullet.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.AtomBomb:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.AtomBomb;
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.AtomBomb;
                     break;
                 case Preparation.Utility.BulletType.Bullet0:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.CommonBullet1;
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.CommonBullet1;
                     break;
                 default:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.NullBulletType;
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.NullBulletType;
                     break;
             }
             msg.MessageOfBullet.X = bullet.Position.x;
@@ -165,7 +165,7 @@ namespace Server
                 //    msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddAp;
                 //    break;
                 default:
-                    msg.MessageOfCharacter.Prop = Communication.Proto.PropType.NullPropType;
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.NullPropType;
                     break;
             }
             msg.MessageOfBullet.X = prop.Position.x;

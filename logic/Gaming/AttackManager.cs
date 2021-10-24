@@ -28,7 +28,10 @@ namespace Gaming
                      },
                     EndMove: obj =>
                      {
+#if DEBUG
                          Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
+
+#endif
                          BulletBomb((Bullet)obj, null);
                      }
                 );
@@ -78,7 +81,9 @@ namespace Gaming
             }
             private void BulletBomb(Bullet bullet, GameObj? objBeingShot)
             {
+#if DEBUG
                 Debugger.Output(bullet, "bombed!");
+#endif
                 bullet.CanMove = false;
                 gameMap.BulletListLock.EnterWriteLock();
                 try
@@ -109,7 +114,7 @@ namespace Gaming
 
                 //子弹爆炸会发生的事↓↓↓
                 var beAttackedList = new List<Character>();
-                gameMap.PlayerListLock.EnterWriteLock();
+                gameMap.PlayerListLock.EnterReadLock();
                 try
                 {
                     foreach (Character player in gameMap.PlayerList)
@@ -127,11 +132,19 @@ namespace Gaming
                 }
                 beAttackedList.Clear();
             }
-            public bool Attack(Character player, double angle)  //射出去的子弹泼出去的水（狗头）
+            public bool Attack(Character? player, double angle)  //射出去的子弹泼出去的水（狗头）
             {                                                   //子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
+                if(player==null)
+                {
+#if DEBUG
+                    Console.WriteLine("the player who will attack is NULL!");
+#endif
+                    return false;
+                }
+
                 if (player.IsResetting)
                     return false;
-                Bullet bullet = player.RemoteAttack
+                Bullet? bullet = player.RemoteAttack
                     (
                         new XYPosition  //子弹紧贴人物生成。
                         (
@@ -148,10 +161,19 @@ namespace Gaming
                         gameMap.BulletList.Add(bullet);
                     }
                     finally { gameMap.BulletListLock.ExitReadLock(); }
-                    moveEngine.MoveObj(bullet, (int)((player.AttackRange - player.Radius - player.BulletOfPlayer.Radius) / bullet.MoveSpeed), angle);  //这里时间参数除出来的单位要是ms
+                    moveEngine.MoveObj(bullet, (int)((player.AttackRange - player.Radius - player.BulletOfPlayer.Radius) * 1000 / bullet.MoveSpeed), angle);  //这里时间参数除出来的单位要是ms
+#if DEBUG
+                    Console.WriteLine($"playerID:{player.ID} successfully attacked!");
+#endif
                     return true;
                 }
-                else return false;
+                else
+                {
+#if DEBUG
+                    Console.WriteLine($"playerID:{player.ID} has no bullets so that he cant attack!");
+#endif
+                    return false;
+                }
             }
         }
     }

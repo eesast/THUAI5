@@ -108,7 +108,6 @@ namespace Gaming
                 {
                     player.CanMove = true;
 
-                    //这里bug了，不信可以取消注释试试看0.0
                     player.AddShield(GameData.shieldTimeAtBirth);
                 }
             }
