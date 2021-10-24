@@ -21,7 +21,7 @@ namespace Test
             messageToServer.MessageType = MessageType.AddPlayer;
             messageToServer.PlayerID = playerID;
             messageToServer.TeamID = teamID;
-            messageToServer.ASkill1 = ActiveSkillType.BecomeAssassin;
+            messageToServer.ASkill1 = ActiveSkillType.SuperFast;
             messageToServer.PSkill = PassiveSkillType.Vampire;
             clientCommunication.SendMessage(messageToServer);
             Thread.Sleep(1000);

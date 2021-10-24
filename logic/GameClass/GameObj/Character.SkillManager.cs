@@ -78,6 +78,7 @@ namespace GameClass.GameObj
             }
             this.attackRange = cSkill.AttackRange;
             this.hp = cSkill.MaxHp;
+            this.OrgMoveSpeed = cSkill.MoveSpeed;
             this.moveSpeed = cSkill.MoveSpeed;
             this.cd = cSkill.CD;
             this.maxBulletNum = cSkill.MaxBulletNum;

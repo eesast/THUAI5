@@ -132,7 +132,7 @@ namespace GameClass.Skill
                     }.Start();
 
                     player.Place = MapInfo.GetPlaceType(player);
-                    Debugger.Output(player, "return to normal.");
+                    Debugger.Output(player, "returns to normal.");
 
                     new FrameRateTaskExecutor<int>
                      (

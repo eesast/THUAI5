@@ -1,6 +1,7 @@
 ﻿using Preparation.GameData;
 using Preparation.Interface;
 using Preparation.Utility;
+using System;
 
 namespace GameClass.GameObj
 {
@@ -295,16 +296,26 @@ namespace GameClass.GameObj
         /// <returns>人物在受到攻击后死了吗</returns>
         public bool BeAttack(Bullet bullet)
         {
+
             lock (beAttackedLock)
             {
                 if (hp <= 0) return false;  //原来已经死了
                 if (bullet.Parent.TeamID != this.TeamID)
                 {
+
                     if (HasShield)
+                    {
                         if (bullet.HasSpear)
                             _ = TrySubHp(bullet.AP);
                         else return false;
-
+                    }
+                    else
+                    {
+                        TrySubHp(bullet.AP);
+                    }
+#if DEBUG
+                    Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");
+#endif
                     if (hp <= 0) TryActivatingLIFE();  //如果有复活甲
                 }
                 return hp <= 0;

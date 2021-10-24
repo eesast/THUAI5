@@ -132,9 +132,6 @@ namespace Server
                     {
                         //这里返回了是否成功使用技能的值，应该需要发给client
                         bool isSuccess = game.UseCommonSkill(communicationToGameID[msg.TeamID, msg.PlayerID]);
-                        if (isSuccess)
-                            Console.WriteLine("Use commonSkill!");
-                        else Console.WriteLine("Failed to use commonSkill!");
                     }
                     break;
                 case MessageType.Send:
