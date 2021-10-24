@@ -39,6 +39,9 @@ namespace GameClass.GameObj
         {
             this.CanMove = true;
             this.Type = GameObjType.Character;
+            this.score = 0;
+            this.propInventory = null;
+            this.buffManeger = new BuffManeger();
             PassiveSkill pSkill;
             CommonSkill cSkill;
             switch (passiveSkillType)
@@ -88,6 +91,8 @@ namespace GameClass.GameObj
 
             //UsePassiveSkill();  //创建player时开始被动技能，这一过程也可以放到gamestart时进行
             //这可以放在AddPlayer中做
+
+            Debugger.Output(this, "constructed!");
         }
     }
 }
