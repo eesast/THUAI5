@@ -3,6 +3,7 @@ using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
 using Preparation.GameData;
+using System;
 
 namespace GameClass.GameObj
 {
@@ -114,7 +115,7 @@ namespace GameClass.GameObj
 
             birthPointList = new Dictionary<uint, BirthPoint>(MapInfo.numOfBirthPoint);
 
-            //将墙等游戏对象插入到游戏中
+            //将出生点插入
             for (int i = 0; i < GameData.rows; ++i)
             {
                 for (int j = 0; j < GameData.cols; ++j)
@@ -130,7 +131,7 @@ namespace GameClass.GameObj
                         case (uint)MapInfo.MapInfoObjType.BirthPoint7:
                         case (uint)MapInfo.MapInfoObjType.BirthPoint8:
                             {
-                                BirthPoint newBirthPoint = new BirthPoint(GameData.GetCellCenterPos(i, j));
+                                BirthPoint newBirthPoint = new BirthPoint(new XYPosition(i * 1000, j * 1000));
                                 birthPointList.Add(MapInfo.BirthPointEnumToIdx((MapInfo.MapInfoObjType)mapResource[i, j]), newBirthPoint);
                                 break;
                             }

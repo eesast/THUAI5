@@ -181,7 +181,7 @@ namespace GameClass.GameObj
         }
         protected Bullet ProduceOneBullet(XYPosition initPos)
         {
-            var newBullet = this.bulletOfPlayer.Clone();
+            var newBullet = this.bulletOfPlayer.Clone(this);
             newBullet.SetPosition(initPos);
             return newBullet;
         }

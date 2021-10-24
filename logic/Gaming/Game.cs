@@ -39,6 +39,7 @@ namespace Gaming
                 return GameObj.invalidID;
 
             XYPosition pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex].Position;
+            //Console.WriteLine($"x,y: {pos.x},{pos.y}");
             Character newPlayer = new(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.passiveSkill, playerInitInfo.commonSkill);
             gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
             gameMap.PlayerListLock.EnterWriteLock();
@@ -50,6 +51,7 @@ namespace Gaming
             {
                 gameMap.PlayerListLock.ExitWriteLock();
             }
+            //Console.WriteLine($"Playerlist length:{gameMap.PlayerList.Count}");
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
             newPlayer.TeamID = playerInitInfo.teamID;
 
@@ -106,7 +108,6 @@ namespace Gaming
                 {
                     player.CanMove = true;
 
-                    //这里bug了，不信可以取消注释试试看0.0
                     player.AddShield(GameData.shieldTimeAtBirth);
                 }
             }

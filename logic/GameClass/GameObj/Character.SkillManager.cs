@@ -82,6 +82,7 @@ namespace GameClass.GameObj
             this.moveSpeed = cSkill.MoveSpeed;
             this.cd = cSkill.CD;
             this.maxBulletNum = cSkill.MaxBulletNum;
+            this.bulletNum = maxBulletNum;
             this.bulletOfPlayer = pSkill.InitBullet;
             this.passiveSkill = pSkill.SkillEffect;
             this.commonSkill = cSkill.SkillEffect;
