@@ -71,8 +71,15 @@ namespace Test
                         msgJ.MessageType = MessageType.Attack;
                         msgJ.PlayerID = playerID;
                         msgJ.TeamID = teamID;
-                        msgJ.Angle = Math.PI / 4;
+                        msgJ.Angle = Math.PI;
                         clientCommunication.SendMessage(msgJ);
+                        break;
+                    case ConsoleKey.U:
+                        MessageToServer msgU = new MessageToServer();
+                        msgU.MessageType = MessageType.UseCommonSkill;
+                        msgU.PlayerID = playerID;
+                        msgU.TeamID = teamID;
+                        clientCommunication.SendMessage(msgU);
                         break;
                 }
                 k = Console.ReadKey().Key;
@@ -97,7 +104,7 @@ namespace Test
             //{
             //    AllowTimeExceed = true
             //}.Start();
-
+            
             Console.ReadKey();
         }
     }
