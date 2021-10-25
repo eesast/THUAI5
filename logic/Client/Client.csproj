@@ -5,16 +5,21 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>EESAST.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Logo.png" />
+    <None Remove="Map.png" />
     <None Remove="Player.png" />
     <None Remove="Team.png" />
     <None Remove="Warning.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Map.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Player.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -34,6 +39,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\communication\ClientCommunication\ClientCommunication.csproj" />
+    <ProjectReference Include="..\..\communication\Proto\Proto.csproj" />
+    <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>
 
 </Project>

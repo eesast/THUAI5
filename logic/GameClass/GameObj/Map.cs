@@ -3,24 +3,25 @@ using System.Threading;
 using Preparation.Interface;
 using Preparation.Utility;
 using Preparation.GameData;
+using System;
 
 namespace GameClass.GameObj
 {
-    public partial class Map:IMap
+    public partial class Map : IMap
     {
-        private List<ICharacter> playerList;
+        private readonly List<ICharacter> playerList;
         public List<ICharacter> PlayerList => playerList;
-        
+
         private readonly ReaderWriterLockSlim playerListLock;
         public ReaderWriterLockSlim PlayerListLock => playerListLock;
 
-        private List<IObjOfCharacter> bulletList;
+        private readonly List<IObjOfCharacter> bulletList;
         public List<IObjOfCharacter> BulletList => bulletList;
 
         private readonly ReaderWriterLockSlim bulletListLock;
         public ReaderWriterLockSlim BulletListLock => bulletListLock;
 
-        private List<IObjOfCharacter> propList;
+        private readonly List<IObjOfCharacter> propList;
         public List<IObjOfCharacter> PropList => propList;
 
         private readonly ReaderWriterLockSlim propListLock;
@@ -60,7 +61,7 @@ namespace GameClass.GameObj
         }
         public PlaceType GetPlaceType(XYPosition pos)
         {
-            switch(MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell])
+            switch (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell])
             {
                 case 0:
                 case 5:
@@ -114,7 +115,7 @@ namespace GameClass.GameObj
 
             birthPointList = new Dictionary<uint, BirthPoint>(MapInfo.numOfBirthPoint);
 
-            //将墙等游戏对象插入到游戏中
+            //将出生点插入
             for (int i = 0; i < GameData.rows; ++i)
             {
                 for (int j = 0; j < GameData.cols; ++j)
@@ -130,7 +131,7 @@ namespace GameClass.GameObj
                         case (uint)MapInfo.MapInfoObjType.BirthPoint7:
                         case (uint)MapInfo.MapInfoObjType.BirthPoint8:
                             {
-                                BirthPoint newBirthPoint = new BirthPoint(GameData.GetCellCenterPos(i, j));
+                                BirthPoint newBirthPoint = new BirthPoint(new XYPosition(i * 1000, j * 1000));
                                 birthPointList.Add(MapInfo.BirthPointEnumToIdx((MapInfo.MapInfoObjType)mapResource[i, j]), newBirthPoint);
                                 break;
                             }

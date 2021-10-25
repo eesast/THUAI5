@@ -8,7 +8,7 @@ namespace Server
 {
     public static class CopyInfo
     {
-        public static MessageToClient.Types.GameObjMessage Auto(GameObj gameObj)
+        public static MessageToClient.Types.GameObjMessage? Auto(GameObj gameObj)
         {
             if (gameObj.Type == Preparation.Utility.GameObjType.Character)
                 return Player((Character)gameObj);
@@ -68,9 +68,9 @@ namespace Server
                     break;
             }
 
-           //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
-           //现在懒得改了，有时间再重整一波
-           switch(player.PropInventory)
+            //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
+            //现在懒得改了，有时间再重整一波
+            switch (player.PropInventory)
             {
                 //case Preparation.Utility.PropType.addAP:
                 //    msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddAp;
@@ -79,7 +79,7 @@ namespace Server
                     msg.MessageOfCharacter.Prop = Communication.Proto.PropType.NullPropType;
                     break;
             }
-            switch(player.PassiveSkillType)
+            switch (player.PassiveSkillType)
             {
                 case Preparation.Utility.PassiveSkillType.RecoverAfterBattle:
                     msg.MessageOfCharacter.PassiveSkillType = Communication.Proto.PassiveSkillType.RecoverAfterBattle;
@@ -94,7 +94,7 @@ namespace Server
                     msg.MessageOfCharacter.PassiveSkillType = Communication.Proto.PassiveSkillType.NullPassiveSkillType;
                     break;
             }
-            switch(player.CommonSkillType)
+            switch (player.CommonSkillType)
             {
                 case Preparation.Utility.ActiveSkillType.BecomeAssassin:
                     msg.MessageOfCharacter.ActiveSkillType = Communication.Proto.ActiveSkillType.BecomeAssassin;
@@ -113,7 +113,7 @@ namespace Server
                     break;
             }
 
-            switch(player.BulletOfPlayer.TypeOfBullet)
+            switch (player.BulletOfPlayer.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.AtomBomb:
                     msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.AtomBomb;
@@ -138,18 +138,19 @@ namespace Server
             switch (bullet.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.AtomBomb:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.AtomBomb;
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.AtomBomb;
                     break;
                 case Preparation.Utility.BulletType.Bullet0:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.CommonBullet1;
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.CommonBullet1;
                     break;
                 default:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.NullBulletType;
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.NullBulletType;
                     break;
             }
             msg.MessageOfBullet.X = bullet.Position.x;
             msg.MessageOfBullet.Y = bullet.Position.y;
-            msg.MessageOfBullet.ParentID = bullet.Parent.ID;
+            if(bullet.Parent!=null)
+                msg.MessageOfBullet.ParentID = bullet.Parent.ID;
             return msg;
         }
         private static MessageToClient.Types.GameObjMessage Prop(Prop prop)
@@ -164,13 +165,13 @@ namespace Server
                 //    msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddAp;
                 //    break;
                 default:
-                    msg.MessageOfCharacter.Prop = Communication.Proto.PropType.NullPropType;
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.NullPropType;
                     break;
             }
             msg.MessageOfBullet.X = prop.Position.x;
             msg.MessageOfBullet.Y = prop.Position.y;
             //msg.MessageOfBullet.ParentID = bullet.Parent.Id;
-            return null;
+            return msg;
         }
     }
 }

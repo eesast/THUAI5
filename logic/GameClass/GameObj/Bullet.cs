@@ -6,7 +6,7 @@ namespace GameClass.GameObj
 {
     public abstract class Bullet : ObjOfCharacter   // LHR摸鱼中...
     {
-        private int ap;
+        private readonly int ap;
         /// <summary>
         /// //攻击力
         /// </summary>
@@ -32,7 +32,7 @@ namespace GameClass.GameObj
             return XYPosition.GetSquareRange(AttackRangeEdgeLength);
         }*/
 
-        private int bulletBombRange;
+        private readonly int bulletBombRange;
         /// <summary>
         /// 爆炸区域半径
         /// </summary>
@@ -57,7 +57,7 @@ namespace GameClass.GameObj
             this.ap = ap;
             this.hasSpear = hasSpear;
         }
-        public Bullet(Character player,int radius,int initSpeed,int ap):base(player.Position,radius,PlaceType.Null)
+        public Bullet(Character player, int radius, int initSpeed, int ap) : base(player.Position, radius, PlaceType.Null)
         {
             this.CanMove = true;
             this.Type = GameObjType.Bullet;
@@ -69,7 +69,7 @@ namespace GameClass.GameObj
         public override bool IsRigid => true;	// 默认为true
         public override ShapeType Shape => ShapeType.Circle;	// 默认为圆形
         public abstract BulletType TypeOfBullet { get; }
-        public abstract Bullet Clone();  //深复制子弹
+        public abstract Bullet Clone(Character parent);  //深复制子弹
     }
 
     internal sealed class AtomBomb : Bullet
@@ -85,9 +85,11 @@ namespace GameClass.GameObj
             // 圆形攻击范围
             return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
         }
-        public override AtomBomb Clone()
+        public override AtomBomb Clone(Character parent)
         {
-            return new AtomBomb(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
+            AtomBomb a = new AtomBomb(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
+            a.Parent = parent;
+            return a;
         }
         public override BulletType TypeOfBullet => BulletType.AtomBomb;
     }
@@ -105,9 +107,11 @@ namespace GameClass.GameObj
             // 圆形攻击范围
             return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
         }
-        public override Bullet0 Clone()
+        public override Bullet0 Clone(Character parent)
         {
-            return new Bullet0(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
+            Bullet0 a= new Bullet0(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
+            a.Parent = parent;
+            return a;
         }
         public override BulletType TypeOfBullet => BulletType.Bullet0;
     }

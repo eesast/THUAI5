@@ -6,8 +6,8 @@ namespace GameClass.GameObj
 {
     public partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...
     {
-        public readonly object propLock = new object();
-        private object beAttackedLock = new object();
+        public readonly object propLock = new();
+        private readonly object beAttackedLock = new();
         public object PropLock => propLock;
         #region 角色的基本属性及方法，包括与道具、子弹的交互方法
         /// <summary>
@@ -29,7 +29,7 @@ namespace GameClass.GameObj
         public int OrgCD { get; protected set; }
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;	// 人物最大子弹数
-        protected int bulletNum;	
+        protected int bulletNum;
         public int BulletNum => bulletNum;  // 目前持有的子弹数
         public int MaxHp { get; protected set; }    // 最大血量
         protected int hp;
@@ -42,7 +42,7 @@ namespace GameClass.GameObj
                     hp = value;
             }
         }
-        private int deathCount = 0;       
+        private int deathCount = 0;
         public int DeathCount => deathCount;  // 玩家的死亡次数
 
         protected int ap;   // 当前攻击力
@@ -70,7 +70,7 @@ namespace GameClass.GameObj
             }
         }
 
-        private double attackRange;
+        private readonly double attackRange;
         public double AttackRange => attackRange;
 
         private double vampire = 0; // 回血率：0-1之间
@@ -80,7 +80,7 @@ namespace GameClass.GameObj
             set
             {
                 if (value > 1)
-                    lock(gameObjLock)
+                    lock (gameObjLock)
                         vampire = 1;
                 else if (value < 0)
                     lock (gameObjLock)
@@ -98,7 +98,7 @@ namespace GameClass.GameObj
             get => level;
             set
             {
-                lock(gameObjLock)
+                lock (gameObjLock)
                     level = value;
             }
         }
@@ -134,7 +134,7 @@ namespace GameClass.GameObj
             get => gemNum;
             set
             {
-                lock(gameObjLock)
+                lock (gameObjLock)
                 {
                     gemNum = value;
                 }
@@ -181,7 +181,7 @@ namespace GameClass.GameObj
         }
         protected Bullet ProduceOneBullet(XYPosition initPos)
         {
-            var newBullet = this.bulletOfPlayer.Clone();
+            var newBullet = this.bulletOfPlayer.Clone(this);
             newBullet.SetPosition(initPos);
             return newBullet;
         }
@@ -190,7 +190,7 @@ namespace GameClass.GameObj
         /// 尝试将子弹数量减1
         /// </summary>
         /// <returns>减操作是否成功</returns>
-        private bool TrySubBulletNum()	
+        private bool TrySubBulletNum()
         {
             lock (gameObjLock)
             {
@@ -225,7 +225,7 @@ namespace GameClass.GameObj
         /// <returns>加操作是否成功</returns>
         public bool TryAddHp(int add)
         {
-            if(hp < MaxHp)
+            if (hp < MaxHp)
             {
                 lock (gameObjLock)
                     hp = MaxHp > hp + add ? hp + add : MaxHp;
@@ -240,10 +240,10 @@ namespace GameClass.GameObj
         /// <param name="sub">减血量</param>
         /// <returns>减操作是否成功</returns>
         public bool TrySubHp(int sub)
-        {            
+        {
             if (hp > 0)
             {
-                lock(gameObjLock)
+                lock (gameObjLock)
                     hp = 0 >= hp - sub ? 0 : hp - sub;
                 Debugger.Output(this, " hp has subed to: " + hp.ToString());
                 return true;
@@ -302,7 +302,7 @@ namespace GameClass.GameObj
                 {
                     if (HasShield)
                         if (bullet.HasSpear)
-                            TrySubHp(bullet.AP);
+                            _ = TrySubHp(bullet.AP);
                         else return false;
 
                     if (hp <= 0) TryActivatingLIFE();  //如果有复活甲
@@ -324,7 +324,7 @@ namespace GameClass.GameObj
                 if (hp <= 0) return false;
                 if (!(bouncer?.TeamID == this.TeamID))
                 {
-                    if (hasSpear || !HasShield) TrySubHp(subHP);
+                    if (hasSpear || !HasShield) _ = TrySubHp(subHP);
                     if (hp <= 0) TryActivatingLIFE();
                 }
                 return hp <= 0;
@@ -390,7 +390,7 @@ namespace GameClass.GameObj
         #endregion
         public override void Reset()
         {
-            AddDeathCount();
+            _ = AddDeathCount();
             base.Reset();
             this.moveSpeed = OrgMoveSpeed;
             hp = MaxHp;
