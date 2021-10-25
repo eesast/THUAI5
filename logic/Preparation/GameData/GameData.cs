@@ -4,6 +4,7 @@ namespace Preparation.GameData
 {
     public static class GameData
     {
+        #region 基本常数与常方法
         public const int numOfPosGridPerCell = 1000;            // 每格的【坐标单位】数
         public const int numOfStepPerSecond = 20;               // 每秒行走的步数
         public const int lengthOfMap = 50000;                   // 地图长度
@@ -29,13 +30,15 @@ namespace Preparation.GameData
         {
             return pos.y / numOfPosGridPerCell;
         }
+        #endregion
+        #region 角色相关
         /// <summary>
         /// 玩家相关
         /// </summary>
         public const int characterRadius = numOfPosGridPerCell / 2;  //人物半径
         public const int basicAp = 1000;	// 初始攻击力
         public const int basicHp = 6000;	// 初始血量
-        public const int basicCD = 1000;    // 初始子弹冷却
+        public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicBulletNum = 5;   // 初始子弹量
         public const int MinAP = 0; // 最小攻击力
         public const int MaxAP = int.MaxValue;  //最大攻击力
@@ -56,9 +59,10 @@ namespace Preparation.GameData
         /// </summary>
         public const int MinPropTypeNum = 1;
         public const int MaxPropTypeNum = 10;
-        /// <summary>
-        /// 游戏帧相关
-        /// </summary>
+        public const int BuffTypeNum = 7;
+        #endregion
+        #region 游戏帧相关
         public const long checkInterval = 50;  //检查位置标志、补充子弹的帧时长
+        #endregion
     }
 }

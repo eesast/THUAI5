@@ -299,6 +299,7 @@ namespace Client
                             communicator.SendMessage(messageToServers.Dequeue());
                         }
                         //对于MyMessage，进栈和出栈都在API中完成。
+
                     }
                 }
             }

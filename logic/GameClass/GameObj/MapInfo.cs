@@ -24,7 +24,6 @@ namespace GameClass.GameObj
         }
         public enum MapInfoObjType
         {
-
 			Null=0,
 			Wall=1,
 			Grass1=2,
