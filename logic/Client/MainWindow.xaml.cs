@@ -38,33 +38,7 @@ namespace Client
             timer.Start();
             isGameRunning = false;
             isClientStocked = false;
-            isInitialized = false;
-            try
-            {
-                using StreamReader sr = new("ConnectInfo.txt");
-                string[] comInfo = sr.ReadLine().Split(' ');
-                communicator = new ClientCommunication();
-                playerID = Convert.ToInt64(comInfo[2]);
-                teamID = Convert.ToInt64(comInfo[3]);
-                if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
-                {
-                    Exception exc = new("TimeOut");
-                    throw exc;
-                }
-                else if(communicator.Client.IsConnected)
-                {
-                    MessageToServer msg = new();
-                    msg.MessageType = MessageType.AddPlayer;
-                    msg.PlayerID = playerID;
-                    msg.TeamID = teamID;
-                    communicator.SendMessage(msg);
-                }//建立连接的同时加入人物
-            }
-            catch (Exception exc)
-            {
-                ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.Message);
-                error.Show();
-            }
+            isInitialized = false;//注：这里连接之后才会开窗口，不是一个好的设计（
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             //注：队伍用边框区分，人物编号以背景颜色区分
             //角色死亡则对应信息框变灰
@@ -172,6 +146,43 @@ namespace Client
                 ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.Message);
                 error.Show();
             }
+        }
+
+        private void SetServer(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (var sr = new StreamReader("ConnectInfo.txt"))
+                {
+                    string[] comInfo = sr.ReadLine().Split(' ');
+                    communicator = new ClientCommunication();
+                    playerID = Convert.ToInt64(comInfo[2]);
+                    teamID = Convert.ToInt64(comInfo[3]);
+                    if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
+                    {
+                        Exception exc = new("TimeOut");
+                        throw exc;
+                    }
+                    else if (communicator.Client.IsConnected)
+                    {
+                        MessageToServer msg = new();
+                        msg.MessageType = MessageType.AddPlayer;
+                        msg.PlayerID = playerID;
+                        msg.TeamID = teamID;
+                        communicator.SendMessage(msg);
+                    }//建立连接的同时加入人物
+                }
+            }
+            catch (Exception exc)
+            {
+                ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.Message);
+                error.Show();
+            }
+        }
+
+        private void ClickToConnect(object sender, RoutedEventArgs e)
+        {
+
         }
 
         //定时器事件，刷新地图
@@ -298,14 +309,14 @@ namespace Client
             }
         }
         //以下为Mainwindow自定义属性
-        private readonly DispatcherTimer timer;//定时器
-        private readonly ClientCommunication communicator;
+        private DispatcherTimer timer;//定时器
+        private ClientCommunication communicator;
         private bool isGameRunning;
         private bool isClientStocked;
-        private readonly bool isInitialized;
+        private bool isInitialized;
 
-        private readonly Int64 playerID;
-        private readonly Int64 teamID;
+        private Int64 playerID;
+        private Int64 teamID;
 
         private List<MessageOfCharacter> playerData;
         private List<MessageOfBullet> bulletData;
@@ -314,6 +325,7 @@ namespace Client
         private Queue<MessageToServer> messageToServers;
 
         private List<Ellipse> items;
+
     }
 }
 //2021-10-23

@@ -28,11 +28,11 @@
 
         <Image Margin="0,1,874,681" Stretch="Fill" Source="pack://siteoforigin:,,,/Logo.png" RenderTransformOrigin="0.511,1.002"/>
         <ToolBarTray HorizontalAlignment="Left" Height="39" Margin="313,0,0,0" VerticalAlignment="Top" Width="459" Grid.ColumnSpan="2" Background="White">
-            <ToolBar HorizontalAlignment="Left" Height="38" VerticalAlignment="Center" Width="469" Background="White" ToolBarTray.IsLocked="True">
-                <Button Content="连接(C)" Height="35" VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToSetConnect"/>
+            <ToolBar HorizontalAlignment="Left" Height="38" VerticalAlignment="Top" Width="469" Background="White" ToolBarTray.IsLocked="True" Margin="0,1,0,0">
+                <Button Content="配置连接(C)" Height="35" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToSetConnect"/>
                 <Button Content="我的AI(M)" Height="34" VerticalAlignment="Top" Width="82" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToEnterVS"/>
-                <Button Content="获取更新(U)" Height="36" VerticalAlignment="Top" Width="94" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickForUpdate"/>
-                <Button Content="天梯信息(L)" Height="36" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToCheckLadder"/>
+                <Button Content="获取更新(U)" Height="36" VerticalAlignment="Top" Width="95" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickForUpdate" HorizontalAlignment="Left"/>
+                <Button Content="天梯信息(L)" Height="36" VerticalAlignment="Top" Width="93" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToCheckLadder" HorizontalAlignment="Left"/>
             </ToolBar>
         </ToolBarTray>
         <Canvas Background="Ivory" Margin="2,40,841,513" >
@@ -104,5 +104,7 @@
         <Button Content=" 帮&#xA; 助&#xA;(H)" HorizontalAlignment="Left" Height="84" Margin="859,170,0,0" VerticalAlignment="Top" Width="42" Background="Ivory" Click="ClickToVisitEESAST"/>
         <Grid x:Name="UpperLayerOfMap" HorizontalAlignment="Left" Height="676" Margin="182,45,0,0" VerticalAlignment="Top" Width="676">
         </Grid>
+        <Button Content="📡" HorizontalAlignment="Left" Margin="858,62,0,0" VerticalAlignment="Top" Width="20" Click="SetServer"/>
+        <Button Content="🔗" HorizontalAlignment="Left" Margin="858,101,0,0" VerticalAlignment="Top" Width="20" Click="ClickToConnect"/>
     </Grid>
 </Window>

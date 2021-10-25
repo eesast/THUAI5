@@ -36,9 +36,11 @@ namespace Client
                     State.Text = "Created File";
                 }
 
-                using StreamWriter sw = new("ConnectInfo.txt");
-                sw.WriteLine(IPBox.Text + " " + PortBox.Text + " " + PlayerIDBox.Text + " " + TeamIDBox.Text);
-                State.Text = "Info Registered.";
+                using (var sw = new StreamWriter("ConnectInfo.txt"))
+                {
+                    sw.WriteLine(IPBox.Text + " " + PortBox.Text + " " + PlayerIDBox.Text + " " + TeamIDBox.Text);
+                    State.Text = "Info Registered.";
+                }
             }
             catch (Exception exc)
             {
