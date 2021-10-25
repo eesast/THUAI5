@@ -374,6 +374,7 @@ namespace Client
             {
                 ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.Message);
                 error.Show();
+                isGameRunning = false;
             }
         }
         //以下为Mainwindow自定义属性
@@ -396,6 +397,6 @@ namespace Client
     }
 }
 //2021-10-23
-//目前没有画图。并且，Client端能够开始游戏，但不能停止游戏，也不会收到游戏停止的消息。加上该功能后记得游戏停止时把Begin钮变红
+//目前没有画图。并且，Client端能够开始游戏，但不能停止游戏，也不会收到游戏停止的消息。加上该功能后记得游戏停止时把Begin钮变红,isGameRunning置false.
 //2021-10-25
 //调整了一些提示出现的逻辑，并且修改了计时器，使得Error弹窗不再频繁弹出。
