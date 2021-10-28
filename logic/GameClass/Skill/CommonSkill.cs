@@ -204,7 +204,7 @@ namespace GameClass.Skill
                 new Thread
                 (() =>
                 {
-                    Bullet b = player.BulletOfPlayer.Clone();
+                    Bullet b = player.BulletOfPlayer.Clone(player);
                     lock (player.SkillLock)
                     {
                         player.BulletOfPlayer = new AtomBomb(player, GameData.bulletRadius, b.MoveSpeed, (int)(1.5 * b.AP));

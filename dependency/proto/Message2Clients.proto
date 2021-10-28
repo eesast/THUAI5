@@ -35,6 +35,7 @@ message MessageOfCharacter
     int32 radius=20;
     int32 CD=21;
     int32 lifeNum = 22;		//第几次复活
+    int32 score=23;
 }
 
 message MessageOfProp
@@ -57,7 +58,7 @@ message MessageOfBullet
     int64 parentID=6;
 }
 
-message MessageToInitialize //初始化信息，只在Server接收Client的开始游戏信息后发送，内容是在整局游戏里不变的数据
+message MessageToInitialize 
 {
     int32 MapSerial = 1; //应该是地图的编号
     MessageType messageType = 2;
@@ -88,7 +89,7 @@ message MessageToOneClient
     string message = 5;         //如果 messageType 为 Send，则为要发送的消息
 } //继承自THUIAI4
 //注：转换函数还没写好
-//! fix by wyj: server 和 client中的playerID、TeamID类型应该一样吧！
+
 
 //这些先弃用了↓
 

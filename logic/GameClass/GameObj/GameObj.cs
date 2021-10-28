@@ -8,8 +8,8 @@ namespace GameClass.GameObj
     /// 一切游戏元素的总基类，与THUAI4不同，继承IMoveable接口（出于一切物体其实都是可运动的指导思想）——LHR
     /// </summary>
     public abstract class GameObj : IMoveable
-    {   
-        protected readonly object gameObjLock = new object();
+    {
+        protected readonly object gameObjLock = new();
         /// <summary>
         /// 可移动物体专用锁
         /// </summary>
@@ -192,11 +192,15 @@ namespace GameClass.GameObj
         /// <returns> 依具体类及该方法参数而定，默认为false </returns> 
         protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
         bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
-        public GameObj(XYPosition initPos,int initRadius,PlaceType initPlace)
+        public GameObj(XYPosition initPos, int initRadius, PlaceType initPlace)
         {
-            this.birthPos = initPos;
-            this.Radius = initRadius;
-            this.place = initPlace;
+            lock (gameObjLock)
+            {
+                this.birthPos = initPos;
+                this.Position = initPos;
+                this.Radius = initRadius;
+                this.place = initPlace;
+            }
             ID = Interlocked.Increment(ref currentMaxID);
         }
     }

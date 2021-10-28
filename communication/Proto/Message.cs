@@ -3,7 +3,7 @@ using System.IO;
 using Google.Protobuf;
 
 namespace Communication.Proto
-{ 
+{
     /// <summary>
     /// 游戏信息类型。此处的类型完全根据proto文件的信息决定，实际上可以自行删减——把所有的"MessageToxx"类的名称都列举在这里就可以了
     /// </summary>
@@ -21,17 +21,21 @@ namespace Communication.Proto
     public interface IGameMessage
     {
         PacketType PacketType { get; set; }
-        IMessage? Content { get; set; } 
+        IMessage? Content { get; set; }
+
     }
 
     /// <summary>
     /// 信息类，定义了信息的两个重要操作方法：序列化和反序列化
     /// </summary>
-    public class Message:IGameMessage
+    public class Message : IGameMessage
     {
         private PacketType type;
         public PacketType PacketType { get => type; set => type = value; }
-        public IMessage? Content { get; set; }
+
+
+        private IMessage? content;
+        public IMessage? Content { get => content; set => content = value; }
 
         /// <summary>
         /// 反序列化字节流
@@ -39,8 +43,8 @@ namespace Communication.Proto
         /// <param name="bytes"></param>
         public void Deserialize(byte[] bytes)
         {
-            MemoryStream istream = new MemoryStream(bytes);
-            BinaryReader br = new BinaryReader(istream);
+            MemoryStream istream = new(bytes);
+            BinaryReader br = new(istream);
 
             type = (PacketType)br.ReadInt32();
             string? typename = null;
@@ -53,7 +57,7 @@ namespace Communication.Proto
                 Content = (IMessage?)Activator.CreateInstance(Type.GetType(typename)); // 这里按照原来的写法写会报错，难道和版本有关?
                 Content?.MergeFrom(codedInputStream); // 这一步才是真正的反序列化过程
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine($"Unhandled exception while trying to deserialize packet: {e}");
             }
@@ -65,12 +69,12 @@ namespace Communication.Proto
         /// <param name="bytes"></param>
         public void Serialize(out byte[] bytes)
         {
-            MemoryStream ostream = new MemoryStream();
-            BinaryWriter bw = new BinaryWriter(ostream);
+            MemoryStream ostream = new();
+            BinaryWriter bw = new(ostream);
             bw.Write((int)type);
             bw.Flush();
 
-            using (CodedOutputStream output = new CodedOutputStream(ostream, true))
+            using (CodedOutputStream output = new(ostream, true))
             {
                 Content?.WriteTo(output);
                 // 使用此方法将所有信息从基础缓冲区移动到其目标或清除缓冲区

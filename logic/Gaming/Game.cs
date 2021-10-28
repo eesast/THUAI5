@@ -11,7 +11,7 @@ namespace Gaming
 {
     public partial class Game
     {
-        public struct PlayerInitInfo  
+        public struct PlayerInitInfo
         {
             public uint birthPointIndex;
             public long teamID;
@@ -26,30 +26,32 @@ namespace Gaming
             }
         }
 
-        private List<Team> teamList;
+        private readonly List<Team> teamList;
         public List<Team> TeamList => teamList;
-        private Map gameMap;
+        private readonly Map gameMap;
         public Map GameMap => gameMap;
         private readonly int numOfTeam;
         public long AddPlayer(PlayerInitInfo playerInitInfo)
         {
-            if(!Team.teamExists(playerInitInfo.teamID))
-              /*  || !MapInfo.ValidBirthPointIdx(playerInitInfo.birthPointIdx)
-                || gameMap.BirthPointList[playerInitInfo.birthPointIdx].Parent != null)*/
+            if (!Team.teamExists(playerInitInfo.teamID))
+                /*  || !MapInfo.ValidBirthPointIdx(playerInitInfo.birthPointIdx)
+                  || gameMap.BirthPointList[playerInitInfo.birthPointIdx].Parent != null)*/
                 return GameObj.invalidID;
 
             XYPosition pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex].Position;
-            Character newPlayer = new Character(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.passiveSkill, playerInitInfo.commonSkill);
+            //Console.WriteLine($"x,y: {pos.x},{pos.y}");
+            Character newPlayer = new(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.passiveSkill, playerInitInfo.commonSkill);
             gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
-            gameMap.PlayerListLock.EnterWriteLock(); 
-            try 
-            { 
-                gameMap.PlayerList.Add(newPlayer); 
-            } 
-            finally 
-            { 
-                gameMap.PlayerListLock.ExitWriteLock(); 
+            gameMap.PlayerListLock.EnterWriteLock();
+            try
+            {
+                gameMap.PlayerList.Add(newPlayer);
             }
+            finally
+            {
+                gameMap.PlayerListLock.ExitWriteLock();
+            }
+            //Console.WriteLine($"Playerlist length:{gameMap.PlayerList.Count}");
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
             newPlayer.TeamID = playerInitInfo.teamID;
 
@@ -73,7 +75,7 @@ namespace Gaming
                                 long nowTime = Environment.TickCount64;
                                 if (nowTime - lastTime >= newPlayer.CD)
                                 {
-                                    newPlayer.TryAddBulletNum();
+                                    _ = newPlayer.TryAddBulletNum();
                                     lastTime = nowTime;
                                 }
                             }
@@ -93,7 +95,7 @@ namespace Gaming
             )
             { IsBackground = true }.Start();
 
-            return newPlayer.TeamID;
+            return newPlayer.ID;
         }
         public bool StartGame(int milliSeconds)
         {
@@ -102,9 +104,10 @@ namespace Gaming
             gameMap.PlayerListLock.EnterReadLock();
             try
             {
-                foreach(Character player in gameMap.PlayerList)
+                foreach (Character player in gameMap.PlayerList)
                 {
                     player.CanMove = true;
+
                     player.AddShield(GameData.shieldTimeAtBirth);
                 }
             }
@@ -142,14 +145,23 @@ namespace Gaming
             finally { gameMap.PropListLock.ExitWriteLock(); }
             return true;
         }
-        public void MovePlayer(long playerID,int moveTimeInMilliseconds,double angle)
+        public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
         {
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
-            if(player!=null)
+            if (player != null)
             {
                 moveManager.MovePlayer(player, moveTimeInMilliseconds, angle);
+#if DEBUG
+                Console.WriteLine($"PlayerID:{playerID} move to ({player.Position.x},{player.Position.y})!");
+#endif
+            }
+            else
+            {
+#if DEBUG
+                Console.WriteLine($"PlayerID:{playerID} player does not exists!");
+#endif
             }
         }
         public void Attack(long playerID, double angle)
@@ -157,9 +169,9 @@ namespace Gaming
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
-            if(player!=null)
+            if (player != null)
             {
-                attackManager.Attack(player, angle);
+                _ = attackManager.Attack(player, angle);
             }
         }
 

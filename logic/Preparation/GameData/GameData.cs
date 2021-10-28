@@ -4,9 +4,12 @@ namespace Preparation.GameData
 {
     public static class GameData
     {
+        #region 基本常数与常方法
         public const int numOfPosGridPerCell = 1000;            // 每格的【坐标单位】数
         public const int numOfStepPerSecond = 20;               // 每秒行走的步数
         public const int lengthOfMap = 50000;                   // 地图长度
+        public const int rows = 50;                             // 行数
+        public const int cols = 50;                             // 列数
         public const long gameDuration = 600000;                // 游戏时长600000ms = 10min 
         public const long frameDuration = 50;                   // 每帧时长
 
@@ -15,8 +18,8 @@ namespace Preparation.GameData
 
         public static XYPosition GetCellCenterPos(int x, int y)   // 求格子的中心坐标
         {
-            XYPosition ret = new XYPosition(x * numOfPosGridPerCell + numOfPosGridPerCell / 2,
-                y * numOfPosGridPerCell + numOfPosGridPerCell / 2);
+            XYPosition ret = new((x * numOfPosGridPerCell) + (numOfPosGridPerCell / 2),
+                (y * numOfPosGridPerCell) + (numOfPosGridPerCell / 2));
             return ret;
         }
         public static int PosGridToCellX(XYPosition pos)       // 求坐标所在的格子的x坐标
@@ -27,35 +30,39 @@ namespace Preparation.GameData
         {
             return pos.y / numOfPosGridPerCell;
         }
+        #endregion
+        #region 角色相关
         /// <summary>
         /// 玩家相关
         /// </summary>
         public const int characterRadius = numOfPosGridPerCell / 2;  //人物半径
         public const int basicAp = 1000;	// 初始攻击力
         public const int basicHp = 6000;	// 初始血量
-        public const int basicCD = 1000;    // 初始子弹冷却
+        public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicBulletNum = 5;   // 初始子弹量
         public const int MinAP = 0; // 最小攻击力
         public const int MaxAP = int.MaxValue;  //最大攻击力
         public const double basicAttackRange = 4000;               // 基本攻击范围
         public const double basicBulletBombRange = 5000;           // 基本子弹爆炸范围
-        public const int basicMoveSpeed = 10;                   // 基本移动速度，单位：ms-1
-        public const int basicBulletMoveSpeed = 10;             // 基本子弹移动速度，单位：ms-1
-        public const int addScoreWhenKillOneLevelPlayer = 10;   // 击杀一级角色获得的加分
-        public const int scoreInrease = 2;                      // 每高一级，击杀该角色多的加分
+        public const int basicMoveSpeed = 1000;                   // 基本移动速度，单位：s-1
+        public const int basicBulletMoveSpeed = 3000;             // 基本子弹移动速度，单位：s-1
+        public const int addScoreWhenKillOneLevelPlayer = 100;   // 击杀一级角色获得的加分
+        public const int scoreInrease = 20;                      // 每高一级，击杀该角色多的加分
         public const int commonSkillCD = 30000;    //普通技能标准冷却时间
         public const int commonSkillTime = 10000;  //普通技能标准持续时间
         public const int bulletRadius = 200;       //默认子弹半径
         public const int reviveTime = 30000;       //复活时间
         public const int shieldTimeAtBirth = 3000;  //复活时的护盾时间
+        public const int gemToScore = 40; //初始时，一个宝石的加分
         /// <summary>
         /// 道具相关
         /// </summary>
         public const int MinPropTypeNum = 1;
         public const int MaxPropTypeNum = 10;
-        /// <summary>
-        /// 游戏帧相关
-        /// </summary>
+        public const int BuffTypeNum = 7;
+        #endregion
+        #region 游戏帧相关
         public const long checkInterval = 50;  //检查位置标志、补充子弹的帧时长
+        #endregion
     }
 }

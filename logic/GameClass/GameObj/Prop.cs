@@ -16,7 +16,7 @@ namespace GameClass.GameObj
 
         public abstract PropType GetPropType();
 
-        public Prop(XYPosition initPos, int radius) : base(initPos, radius, PlaceType.Land) 
+        public Prop(XYPosition initPos, int radius) : base(initPos, radius, PlaceType.Land)
         {
             this.CanMove = false;
             this.Type = GameObjType.Prop;
@@ -78,14 +78,6 @@ namespace GameClass.GameObj
         public override PropType GetPropType() => PropType.minusCD;
     }
     /// <summary>
-    /// 宝石
-    /// </summary>
-    public sealed class Gem : BuffProp
-    {
-        public Gem(XYPosition initPos, int radius) : base(initPos, radius) { }
-        public override PropType GetPropType() => PropType.Gem;
-    }
-    /// <summary>
     /// 护盾
     /// </summary>
     public sealed class Shield : BuffProp
@@ -126,6 +118,27 @@ namespace GameClass.GameObj
     {
         public AddCD(XYPosition initPos, int radius) : base(initPos, radius) { }
         public override PropType GetPropType() => PropType.addCD;
+    }
+    /// <summary>
+    /// 宝石块
+    /// </summary>
+    public sealed class GemBlock : BuffProp
+    {
+        public GemBlock(XYPosition initPos, int radius, int size = 1) : base(initPos, radius)
+        {
+            this.size = size;
+        }
+        public override PropType GetPropType() => PropType.Gem;
+
+        private int size; //宝石块大小
+        public int Size
+        {
+            get => size;
+            set
+            {
+                size = value >= 1 ? value : 1;
+            }
+        }
     }
     #endregion
 }
