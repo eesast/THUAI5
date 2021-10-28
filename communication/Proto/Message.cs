@@ -21,7 +21,7 @@ namespace Communication.Proto
     public interface IGameMessage
     {
         PacketType PacketType { get; set; }
-        IMessage Content { get; set; } 
+        IMessage? Content { get; set; } 
     }
 
     /// <summary>
@@ -31,9 +31,7 @@ namespace Communication.Proto
     {
         private PacketType type;
         public PacketType PacketType { get => type; set => type = value; }
-
-        private IMessage content; 
-        public IMessage Content { get => content; set => content = value; }
+        public IMessage? Content { get; set; }
 
         /// <summary>
         /// 反序列化字节流
@@ -45,15 +43,15 @@ namespace Communication.Proto
             BinaryReader br = new BinaryReader(istream);
 
             type = (PacketType)br.ReadInt32();
-            string typename = null;
+            string? typename = null;
             // 由于枚举值增多，这里将“枚举转类型名称”改写成一种更加简洁的方式
             typename = "Communication.Proto." + Enum.GetName(typeof(PacketType), type);
 
             try
             {
                 CodedInputStream codedInputStream = new CodedInputStream(istream);
-                content = (IMessage)Activator.CreateInstance(Type.GetType(typename)); // 这里按照原来的写法写会报错，难道和版本有关?
-                content.MergeFrom(codedInputStream); // 这一步才是真正的反序列化过程
+                Content = (IMessage?)Activator.CreateInstance(Type.GetType(typename)); // 这里按照原来的写法写会报错，难道和版本有关?
+                Content?.MergeFrom(codedInputStream); // 这一步才是真正的反序列化过程
             }
             catch(Exception e)
             {
@@ -74,7 +72,7 @@ namespace Communication.Proto
 
             using (CodedOutputStream output = new CodedOutputStream(ostream, true))
             {
-                Content.WriteTo(output);
+                Content?.WriteTo(output);
                 // 使用此方法将所有信息从基础缓冲区移动到其目标或清除缓冲区
                 output.Flush();
             }

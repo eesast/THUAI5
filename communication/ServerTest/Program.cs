@@ -28,13 +28,13 @@ namespace ServerTest
             };
             server.OnReceive += delegate ()
             {
-                IGameMessage msg;
+                IGameMessage? msg;
                 if(server.TryTake(out msg))
                 {
-                    MessageToServer m2s = msg.Content as MessageToServer; // 强制类型转换
-                    Console.WriteLine($"Receive a message from {m2s.TeamID} {m2s.PlayerID}");
-                    Console.WriteLine($"Message type::{m2s.MessageType}");
-                    if (m2s.MessageType == MessageType.Send) // 有大量需要send枚举值的操作，因此这里需要判断一下
+                    MessageToServer? m2s = msg?.Content as MessageToServer; // 强制类型转换
+                    Console.WriteLine($"Receive a message from {m2s?.TeamID} {m2s?.PlayerID}");
+                    Console.WriteLine($"Message type::{m2s?.MessageType}");
+                    if (m2s?.MessageType == MessageType.Send) // 有大量需要send枚举值的操作，因此这里需要判断一下
                     {
                         Console.WriteLine(m2s.Message);
                     }

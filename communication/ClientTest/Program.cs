@@ -20,7 +20,7 @@ namespace ClientTest
             }
             catch(Exception e)
             {
-                Console.WriteLine("team id and player id are required!");
+                Console.WriteLine($"{e.Message}: team id and player id are required!");
                 Environment.Exit(0); // 我也不知道这样做合适不合适...
             }
 
@@ -37,9 +37,9 @@ namespace ClientTest
             ClientCommunication client = new ClientCommunication();
             client.OnReceive += delegate ()
             { 
-                IGameMessage msg = client.Take();
-                MessageToOneClient m2one = msg.Content as MessageToOneClient; // 强制转换消息类型，但如果无法转换也不会报错，会返回null
-                Console.WriteLine($"Message type: {msg.PacketType}");
+                IGameMessage? msg = client.Take();
+                MessageToOneClient? m2one = msg?.Content as MessageToOneClient; // 强制转换消息类型，但如果无法转换也不会报错，会返回null
+                Console.WriteLine($"Message type: {msg?.PacketType}");
                 Console.WriteLine(m2one);
             };
 
