@@ -1,5 +1,6 @@
 ﻿using Preparation.Interface;
 using Preparation.Utility;
+using Preparation.GameData;
 
 namespace GameClass.GameObj
 {
@@ -8,7 +9,7 @@ namespace GameClass.GameObj
         protected bool laid = false;
         public bool Laid => laid;   // 道具是否放置在地图上
 
-        public override bool IsRigid => true;
+        public override bool IsRigid => false;
 
         protected override bool IgnoreCollideExecutor(IGameObj targetObj) => true;	//道具不与任何东西碰撞
 
@@ -16,7 +17,7 @@ namespace GameClass.GameObj
 
         public abstract PropType GetPropType();
 
-        public Prop(XYPosition initPos, int radius) : base(initPos, radius, PlaceType.Land)
+        public Prop(XYPosition initPos, int radius = GameData.PropRadius) : base(initPos, radius, PlaceType.Land)
         {
             this.CanMove = false;
             this.Type = GameObjType.Prop;

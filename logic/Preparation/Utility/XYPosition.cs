@@ -23,7 +23,6 @@ namespace Preparation.Utility
         {
             return new XYPosition(p1.x - p2.x, p1.y - p2.y);
         }
-
         public static double Distance(XYPosition p1, XYPosition p2)
         {
             return Math.Sqrt(((p1.x - p2.x) * (p1.x - p2.x)) + ((p1.y - p2.y) * (p1.y - p2.y)));

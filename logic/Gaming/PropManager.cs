@@ -35,6 +35,13 @@ namespace Gaming
                 ).Start();
             }
 
+            public void UseProp(Character player)
+            {
+                if (!player.IsAvailable)
+                    return;
+
+            }
+
             private void ProduceOneProp()
             {
                 //随机产生道具

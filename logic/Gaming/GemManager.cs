@@ -1,7 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using GameEngine;
+using Preparation.Utility;
 using GameClass.GameObj;
 using Preparation.GameData;
+using System;
+using System.Collections.Generic;
+using Timothy.FrameRateTask;
+using System.Threading;
 
 namespace Gaming
 {
@@ -11,35 +15,139 @@ namespace Gaming
         private class GemManager  //单独用GemManager处理宝石
         {
             private readonly Map gameMap;
-            private readonly bool isProducing = false;
+            private bool isProducingGem = false;
+            private MoveEngine moveEngine;
+            private List<XYPosition> gemWellList;
+            private List<Gem> unpickedGemList;
             public void StartProducingGem()
             {
-                if (isProducing)
+                if (isProducingGem)
                     return;
 
+                isProducingGem = true;
+#if DEBUG
+                Console.WriteLine("Start producing gems!");
+#endif
+                ProduceGemsInWell();
                 /*
                  自动生成宝石。
                 宝石的生成应该分为两类：
                 1、宝石井附近生成。
                 2、地图上随机生成。
+                地图上随机生成还没写。
                  */
+            }
+            private void ProduceGemsInWell()
+            {
+                int len = gemWellList.Count - 1;
+                Random r = new Random((int)Environment.TickCount64);
+                new Thread
+                (
+                    () =>
+                    {
+                        new FrameRateTaskExecutor<int>
+                        (
+                            () => gameMap.Timer.IsGaming,
+                            () =>
+                            {
+                                int rand = r.Next(0, len);
+                                XYPosition randPos = gemWellList[rand];
+                                bool flag = false;
+                                foreach (Gem gem in unpickedGemList)
+                                {
+                                    if (gem.Position.x == randPos.x && gem.Position.y == randPos.y)
+                                    {
+                                        gem.TryAddGemSize();
+                                        flag = true;
+                                        break;
+                                    }
+                                }
+                                if (flag)
+                                {
+                                    Gem newGem = new Gem(randPos);
+                                    unpickedGemList.Add(newGem);
+                                    gameMap.PropListLock.EnterWriteLock();
+                                    try
+                                    {
+                                        gameMap.PropList.Add(newGem);
+                                    }
+                                    finally { gameMap.PropListLock.ExitWriteLock(); }
+                                }
+                            },
+                            GameData.GemProduceTime,
+                            () => 0
+                        )
+                        {
+                            AllowTimeExceed = true
+                        }.Start();
+                    }
+                )
+                { IsBackground = true }.Start();
+                
+            }
+            public void RemoveGem(Gem? gem)
+            {
+                if (gem != null)
+                {
+                    gameMap.PropListLock.EnterWriteLock();
+                    try
+                    {
+                        gameMap.PropList.Remove(gem);
+                    }
+                    finally { gameMap.PropListLock.ExitWriteLock(); }
+                    unpickedGemList.Remove(gem);
+                }
+            }
+            public bool PickGem(Character player)
+            {
+                if (!player.IsAvailable)
+                    return false;
+                Gem? gem = null;
+                gameMap.PropListLock.EnterReadLock();
+                try
+                {
+                    foreach (Prop prop in gameMap.PropList)
+                    {
+                        if (prop.GetPropType() == PropType.Gem)
+                        {
+                            gem = (Gem)prop;
+                            break;
+                        }
+                    }
+                }
+                finally { gameMap.PropListLock.ExitReadLock(); }
 
+                RemoveGem(gem);
 
-
+                if (gem != null)
+                {
+                    player.GemNum += gem.Size;
+                    return true;
+                }
+                return false;
             }
 
-            /*
-             还应该有throw宝石，pick宝石，use宝石的操作。
-
-            throw宝石：可以指定throw出的宝石个数，扔出去的是一个“宝石块”。“n-宝石块”——即人物捡起后，宝石数量会增加n，而不只是增加1。
-            宝石块可以在宝石类中定义。宝石类可以这样设计，设置一个属性：人物捡起后增加多少宝石。普通的宝石人物捡起后只增加1宝石，而宝石块可以增加指定数目的宝石。
-
-
-            use宝石是将一定数量的宝石直接转化为得分。
-             */
-
-            public void ExchangeGemForScore(Character character, int num)
+            public void ThrowGem(Character player, int moveMillisecondTime, double angle, int size=1)
             {
+                if (!player.IsAvailable)
+                    return;
+                if (size > player.GemNum || size <= 0)
+                    return;
+                Gem gem = new Gem(player.Position, size);
+                unpickedGemList.Add(gem);
+                gameMap.PropListLock.EnterWriteLock();
+                try
+                {
+                    gameMap.PropList.Add(gem);
+                }
+                finally { gameMap.PropListLock.ExitWriteLock(); }
+                moveEngine.MoveObj(gem, moveMillisecondTime, angle);
+            }
+
+            public void UseGem(Character character, int num)
+            {
+                if (!character.IsAvailable)
+                    return;
                 if (num > character.GemNum)
                     num = character.GemNum;
 
@@ -69,6 +177,32 @@ namespace Gaming
             public GemManager(Map gameMap)
             {
                 this.gameMap = gameMap;
+                this.moveEngine = new MoveEngine
+                (
+                    gameMap: gameMap,
+                    OnCollision: (obj, collision, moveVec) =>
+                    {
+                        RemoveGem((Gem)obj);
+                        return MoveEngine.AfterCollision.Destroyed;
+                    },
+                    EndMove: obj =>
+                     {
+                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
+                     }
+                );
+
+                gemWellList = new List<XYPosition>();
+                unpickedGemList = new List<Gem>();
+                for(int i=0; i<MapInfo.defaultMap.GetLength(0);i++)
+                {
+                    for(int j=0;j<MapInfo.defaultMap.GetLength(1);j++)
+                    {
+                        if(MapInfo.defaultMap[i,j]==(int)MapInfo.MapInfoObjType.GemWell)
+                        {
+                            gemWellList.Add(GameData.GetCellCenterPos(i, j));
+                        }
+                    }
+                }
             }
         }
     }

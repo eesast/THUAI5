@@ -13,7 +13,8 @@ namespace Preparation.Utility
         Bullet = 4,
         BirthPoint = 5,
         OutOfBoundBlock = 6,
-        Grass = 7
+        Grass = 7,
+        GemWell=8
     }
     public enum ShapeType
     {
