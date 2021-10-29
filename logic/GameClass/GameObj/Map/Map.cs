@@ -32,6 +32,9 @@ namespace GameClass.GameObj
         // 出生点列表暂不需要锁
         public bool IsWall(XYPosition pos)
         {
+            if (pos.x / GameData.numOfPosGridPerCell >= GameData.rows || pos.x / GameData.numOfPosGridPerCell < 0
+                || pos.y / GameData.numOfPosGridPerCell >= GameData.cols || pos.y / GameData.numOfPosGridPerCell < 0)
+                return true;
             return MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 1;
         }
         public bool IsOutOfBound(IGameObj obj)
@@ -45,9 +48,20 @@ namespace GameClass.GameObj
         {
             return new OutOfBoundBlock(pos);
         }
-        public IGameObj GetCell(XYPosition pos)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns>若为null，则是空地</returns>
+        public IGameObj? GetCell(XYPosition pos)
         {
-            if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 1)
+            if (pos.x / GameData.numOfPosGridPerCell >= GameData.rows || pos.x / GameData.numOfPosGridPerCell < 0
+                || pos.y / GameData.numOfPosGridPerCell >= GameData.cols || pos.y / GameData.numOfPosGridPerCell < 0)
+                return new OutOfBoundBlock(pos);
+            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 0)
+                return null; //这可能有问题，但是还没想好怎么写
+            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 1)
                 return new Wall(pos);
             else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 2)
                 return new Grass1(pos);
@@ -57,6 +71,8 @@ namespace GameClass.GameObj
                 return new Grass3(pos);
             else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] < 13)
                 return new BirthPoint(pos);
+            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 13)
+                return new GemWell(pos);
             else return new OutOfBoundBlock(pos);
         }
         public PlaceType GetPlaceType(XYPosition pos)
@@ -64,6 +80,7 @@ namespace GameClass.GameObj
             switch (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell])
             {
                 case 0:
+                case 1:
                 case 5:
                 case 6:
                 case 7:
@@ -72,9 +89,8 @@ namespace GameClass.GameObj
                 case 10:
                 case 11:
                 case 12:
+                case 13:
                     return PlaceType.Land;
-                case 1:
-                    return PlaceType.Null;
                 case 2:
                     return PlaceType.Grass1;
                 case 3:

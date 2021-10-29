@@ -21,7 +21,7 @@ namespace Test
             messageToServer.MessageType = MessageType.AddPlayer;
             messageToServer.PlayerID = playerID;
             messageToServer.TeamID = teamID;
-            messageToServer.ASkill1 = ActiveSkillType.BecomeAssassin;
+            messageToServer.ASkill1 = ActiveSkillType.SuperFast;
             messageToServer.PSkill = PassiveSkillType.Vampire;
             clientCommunication.SendMessage(messageToServer);
             Thread.Sleep(1000);
@@ -71,8 +71,15 @@ namespace Test
                         msgJ.MessageType = MessageType.Attack;
                         msgJ.PlayerID = playerID;
                         msgJ.TeamID = teamID;
-                        msgJ.Angle = Math.PI / 4;
+                        msgJ.Angle = Math.PI;
                         clientCommunication.SendMessage(msgJ);
+                        break;
+                    case ConsoleKey.U:
+                        MessageToServer msgU = new MessageToServer();
+                        msgU.MessageType = MessageType.UseCommonSkill;
+                        msgU.PlayerID = playerID;
+                        msgU.TeamID = teamID;
+                        clientCommunication.SendMessage(msgU);
                         break;
                 }
                 k = Console.ReadKey().Key;
@@ -97,7 +104,7 @@ namespace Test
             //{
             //    AllowTimeExceed = true
             //}.Start();
-
+            
             Console.ReadKey();
         }
     }
