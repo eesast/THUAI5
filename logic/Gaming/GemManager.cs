@@ -18,7 +18,6 @@ namespace Gaming
             private bool isProducingGem = false;
             private MoveEngine moveEngine;
             private List<XYPosition> gemWellList;
-            private List<Gem> unpickedGemList;
             public void StartProducingGem()
             {
                 if (isProducingGem)
@@ -52,26 +51,31 @@ namespace Gaming
                             {
                                 int rand = r.Next(0, len);
                                 XYPosition randPos = gemWellList[rand];
-                                bool flag = false;
-                                foreach (Gem gem in unpickedGemList)
+                                bool flag = false;  //是否已经有宝石在指定位置了？
+                                gameMap.GemListLock.EnterReadLock();
+                                try
                                 {
-                                    if (gem.Position.x == randPos.x && gem.Position.y == randPos.y)
+                                    foreach (Gem gem in gameMap.GemList)
                                     {
-                                        gem.TryAddGemSize();
-                                        flag = true;
-                                        break;
+                                        if (gem.Position.x == randPos.x && gem.Position.y == randPos.y)
+                                        {
+                                            gem.TryAddGemSize();
+                                            flag = true;
+                                            break;
+                                        }
                                     }
                                 }
-                                if (flag)
+                                finally { gameMap.GemListLock.ExitReadLock(); }
+
+                                if (!flag)
                                 {
                                     Gem newGem = new Gem(randPos);
-                                    unpickedGemList.Add(newGem);
-                                    gameMap.PropListLock.EnterWriteLock();
+                                    gameMap.GemListLock.EnterWriteLock();
                                     try
                                     {
-                                        gameMap.PropList.Add(newGem);
+                                        gameMap.GemList.Add(newGem);
                                     }
-                                    finally { gameMap.PropListLock.ExitWriteLock(); }
+                                    finally { gameMap.GemListLock.ExitWriteLock(); }
                                 }
                             },
                             GameData.GemProduceTime,
@@ -89,13 +93,12 @@ namespace Gaming
             {
                 if (gem != null)
                 {
-                    gameMap.PropListLock.EnterWriteLock();
+                    gameMap.GemListLock.EnterWriteLock();
                     try
                     {
-                        gameMap.PropList.Remove(gem);
+                        gameMap.GemList.Remove(gem);
                     }
-                    finally { gameMap.PropListLock.ExitWriteLock(); }
-                    unpickedGemList.Remove(gem);
+                    finally { gameMap.GemListLock.ExitWriteLock(); }
                 }
             }
             public bool PickGem(Character player)
@@ -103,10 +106,10 @@ namespace Gaming
                 if (!player.IsAvailable)
                     return false;
                 Gem? gem = null;
-                gameMap.PropListLock.EnterReadLock();
+                gameMap.GemListLock.EnterReadLock();
                 try
                 {
-                    foreach (Prop prop in gameMap.PropList)
+                    foreach (Prop prop in gameMap.GemList)
                     {
                         if (prop.GetPropType() == PropType.Gem)
                         {
@@ -115,7 +118,7 @@ namespace Gaming
                         }
                     }
                 }
-                finally { gameMap.PropListLock.ExitReadLock(); }
+                finally { gameMap.GemListLock.ExitReadLock(); }
 
                 RemoveGem(gem);
 
@@ -134,13 +137,12 @@ namespace Gaming
                 if (size > player.GemNum || size <= 0)
                     return;
                 Gem gem = new Gem(player.Position, size);
-                unpickedGemList.Add(gem);
-                gameMap.PropListLock.EnterWriteLock();
+                gameMap.GemListLock.EnterWriteLock();
                 try
                 {
-                    gameMap.PropList.Add(gem);
+                    gameMap.GemList.Add(gem);
                 }
-                finally { gameMap.PropListLock.ExitWriteLock(); }
+                finally { gameMap.GemListLock.ExitWriteLock(); }
                 moveEngine.MoveObj(gem, moveMillisecondTime, angle);
             }
 
@@ -192,7 +194,6 @@ namespace Gaming
                 );
 
                 gemWellList = new List<XYPosition>();
-                unpickedGemList = new List<Gem>();
                 for(int i=0; i<MapInfo.defaultMap.GetLength(0);i++)
                 {
                     for(int j=0;j<MapInfo.defaultMap.GetLength(1);j++)

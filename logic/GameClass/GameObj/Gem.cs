@@ -4,7 +4,7 @@ using Preparation.GameData;
 
 namespace GameClass.GameObj
 {
-    public sealed class Gem:Prop
+    public sealed class Gem:Prop  //宝石算作一种特殊的道具
     {
         public override PropType GetPropType()
         {
