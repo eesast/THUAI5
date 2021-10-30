@@ -17,7 +17,7 @@ namespace Gaming
             private readonly Map gameMap;
             private bool isProducingGem = false;
             private MoveEngine moveEngine;
-            private List<XYPosition> gemWellList;
+            private readonly List<XYPosition> gemWellList;
             public void StartProducingGem()
             {
                 if (isProducingGem)
@@ -38,8 +38,8 @@ namespace Gaming
             }
             private void ProduceGemsInWell()
             {
-                int len = gemWellList.Count - 1;
-                Random r = new Random((int)Environment.TickCount64);
+                int len = gemWellList.Count;
+                Random r = new Random(Environment.TickCount);
                 new Thread
                 (
                     () =>
@@ -109,11 +109,11 @@ namespace Gaming
                 gameMap.GemListLock.EnterReadLock();
                 try
                 {
-                    foreach (Prop prop in gameMap.GemList)
+                    foreach (Gem g in gameMap.GemList)
                     {
-                        if (prop.GetPropType() == PropType.Gem)
+                        if (GameData.IsInTheSameCell(g.Position,player.Position))
                         {
-                            gem = (Gem)prop;
+                            gem = g;
                             break;
                         }
                     }
