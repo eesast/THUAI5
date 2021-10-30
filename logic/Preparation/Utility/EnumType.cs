@@ -45,12 +45,12 @@ namespace Preparation.Utility
         addSpeed = 3,
         addLIFE = 4,
         minusCD = 5,
-        Gem = 6,    // 新增：宝石
-        Shield = 7,
-        Spear = 8,
-        minusSpeed = 9,
-        minusAP = 10,
-        addCD = 11,
+        Shield = 6,
+        Spear = 7,
+        minusSpeed = 8,
+        minusAP = 9,
+        addCD = 10,
+        Gem = 11,    // 新增：宝石
     }
     public enum PassiveSkillType   // 被动技能
     {

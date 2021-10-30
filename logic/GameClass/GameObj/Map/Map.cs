@@ -27,6 +27,12 @@ namespace GameClass.GameObj
         private readonly ReaderWriterLockSlim propListLock;
         public ReaderWriterLockSlim PropListLock => propListLock;
 
+        private readonly List<IObjOfCharacter> gemList;
+        public List<IObjOfCharacter> GemList => gemList;
+
+        private readonly ReaderWriterLockSlim gemListLock;
+        public ReaderWriterLockSlim GemListLock => gemListLock;
+
         private readonly Dictionary<uint, BirthPoint> birthPointList;   // 出生点列表
         public Dictionary<uint, BirthPoint> BirthPointList => birthPointList;
         // 出生点列表暂不需要锁
@@ -125,9 +131,11 @@ namespace GameClass.GameObj
             bulletList = new List<IObjOfCharacter>();
             playerList = new List<ICharacter>();
             propList = new List<IObjOfCharacter>();
+            gemList = new List<IObjOfCharacter>();
             bulletListLock = new ReaderWriterLockSlim();
             playerListLock = new ReaderWriterLockSlim();
             propListLock = new ReaderWriterLockSlim();
+            gemListLock = new ReaderWriterLockSlim();
 
             birthPointList = new Dictionary<uint, BirthPoint>(MapInfo.numOfBirthPoint);
 

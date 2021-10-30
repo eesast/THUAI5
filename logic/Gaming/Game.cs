@@ -143,8 +143,13 @@ namespace Gaming
                 gameMap.PropList.Clear();
             }
             finally { gameMap.PropListLock.ExitWriteLock(); }
-            
-            
+            gameMap.GemListLock.EnterWriteLock();
+            try
+            {
+                gameMap.GemList.Clear();
+            }
+            finally { gameMap.GemListLock.ExitWriteLock(); }
+
             return true;
         }
         public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
@@ -236,6 +241,13 @@ namespace Gaming
                 gameObjList.AddRange(gameMap.PropList);
             }
             finally { gameMap.PropListLock.ExitReadLock(); }
+
+            gameMap.GemListLock.EnterReadLock();
+            try
+            {
+                gameObjList.AddRange(gameMap.GemList);
+            }
+            finally { gameMap.GemListLock.ExitReadLock(); }
 
             return gameObjList;
         }
