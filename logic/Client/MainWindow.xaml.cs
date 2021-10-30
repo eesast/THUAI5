@@ -209,7 +209,6 @@ namespace Client
                     }
                     else if (communicator.Client.IsConnected)
                     {
-                        Connect.Background = Brushes.Green;
                         MessageToServer msg = new();
                         msg.MessageType = MessageType.AddPlayer;
                         msg.PlayerID = playerID;
@@ -393,10 +392,14 @@ namespace Client
         private Stack<string>? myMessages;
         private Queue<MessageToServer>? messageToServers;
 
-
     }
 }
 //2021-10-23
 //目前没有画图。并且，Client端能够开始游戏，但不能停止游戏，也不会收到游戏停止的消息。加上该功能后记得游戏停止时把Begin钮变红,isGameRunning置false.
 //2021-10-25
-//调整了一些提示出现的逻辑，并且修改了计时器，使得Error弹窗不再频繁弹出。
+//调整了一些提示出现的逻辑，并且修改了计时器，使得Error弹窗不再频繁弹出
+//服务器逻辑：
+//开始时Client发送一个装有技能和人物编号的信息给Server(AddPlayer)（注1）。
+//Server已经指定了应该连接的玩家人数，当发送以上信息的人数达到指定人数后，Server将【自动开始游戏】并给每个玩家发送一个MessageToInitialize信息。
+//发送initialize信息后Server持续发送MessageToRefresh。第一帧的MessageToRefresh.MessageType为StartGame,最后一帧为EndGame,中间为Gaming。
+//注1：Client发送信息后，若ID不合法，仍能连接上Server。但会接到一个MessageToOneClient,信息类型为InvalidPlayer。相反，若ID合法，信息类型为ValidPlayer.
