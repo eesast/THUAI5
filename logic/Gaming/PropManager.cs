@@ -5,6 +5,7 @@ using Preparation.GameData;
 using Preparation.Utility;
 using System;
 using Timothy.FrameRateTask;
+using GameEngine;
 
 namespace Gaming
 {
@@ -14,6 +15,8 @@ namespace Gaming
         private class PropManager
         {
             private readonly Map gameMap;
+
+            private MoveEngine moveEngine;
 
             private bool isProducingProp = false;
 
@@ -89,6 +92,23 @@ namespace Gaming
                 }
                 else return false;
             }
+
+            public void ThrowProp(Character player,int timeInMilliseconds,double angle)
+            {
+                if (!gameMap.Timer.IsGaming)
+                    return;
+                if (player.PropInventory == null)
+                    return;
+                Prop prop = player.PropInventory;
+                player.PropInventory = null;
+                gameMap.PropListLock.EnterWriteLock();
+                try
+                {
+                    gameMap.PropList.Add(prop);
+                }
+                finally { gameMap.PropListLock.ExitWriteLock(); }
+                moveEngine.MoveObj(prop, timeInMilliseconds, angle);
+            }
             private void ProduceProp()
             {
                 int len = availableCellForGenerateProp.Count;
@@ -153,9 +173,21 @@ namespace Gaming
                 )
                 { IsBackground = true }.Start();
             }
-            public PropManager(Map gameMap)
+            public PropManager(Map gameMap)  //道具不能扔过墙
             {
                 this.gameMap = gameMap;
+                this.moveEngine = new MoveEngine
+                (
+                    gameMap: gameMap,
+                    OnCollision: (obj, collision, moveVec) =>
+                    {
+                        return MoveEngine.AfterCollision.MoveMax;
+                    },
+                    EndMove: obj =>
+                    {
+                        Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
+                    }
+                );
                 availableCellForGenerateProp = new List<XYPosition>();
                 for (int i = 0; i < MapInfo.defaultMap.GetLength(0); i++)
                 {

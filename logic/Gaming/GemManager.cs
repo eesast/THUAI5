@@ -176,7 +176,7 @@ namespace Gaming
                 else return 3 * num * GameData.gemToScore;
             }
 
-            public GemManager(Map gameMap)
+            public GemManager(Map gameMap)  //宝石不能扔过墙
             {
                 this.gameMap = gameMap;
                 this.moveEngine = new MoveEngine
@@ -184,8 +184,7 @@ namespace Gaming
                     gameMap: gameMap,
                     OnCollision: (obj, collision, moveVec) =>
                     {
-                        RemoveGem((Gem)obj);
-                        return MoveEngine.AfterCollision.Destroyed;
+                        return MoveEngine.AfterCollision.MoveMax;
                     },
                     EndMove: obj =>
                      {
