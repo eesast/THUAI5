@@ -17,11 +17,11 @@ namespace Communication.ServerCommunication
         // 本来加这个字典的目的是为了防止子弹和道具的重复构造，但了解了guid的机制后，感觉没什么必要...
         // private static readonly ConcurrentDictionary<int, GameObjType> instanceDict = new ConcurrentDictionary<int, GameObjType>(); // 储存所有的子弹和道具信息
         private static readonly AutoResetEvent allConnectionClosed = new(false); // 是否所有玩家都已经断开了连接
-
         private readonly BlockingCollection<IGameMessage> msgQueue; // 储存信息的线程安全队列 
         private readonly TcpPackServer server;
-        public event OnReceiveCallback? OnReceive;      // 用于赋给server的事件 发送信息时
-        public event OnConnectCallback? OnConnect;      // 收到client的请求连接信息时
+        public event OnReceiveCallback OnReceive;      // 用于赋给server的事件 发送信息时
+        public event OnConnectCallback OnConnect;      // 收到client的请求连接信息时
+
 
         public ServerCommunication(string endpoint = "127.0.0.1")
         {
@@ -46,9 +46,9 @@ namespace Communication.ServerCommunication
                 message.Deserialize(bytes);
 
                 // 信息判断是否有重合
-                MessageToServer? m2s = message.Content as MessageToServer;
+                MessageToServer m2s = message.Content as MessageToServer;
                 // 为避免重复构造，以下的操作均在初始化条件下进行（消息类型需要在client端手动指定）。AddPlayer的操作每局游戏每个玩家仅进行一次
-                if (m2s?.MessageType == MessageType.AddPlayer)
+                if (m2s.MessageType == MessageType.AddPlayer)
                 {
                     // 添加的过程可能需要加锁
                     lock (this)
@@ -301,7 +301,7 @@ namespace Communication.ServerCommunication
         /// </summary>
         /// <param name="msg">需要使用的单条信息</param>
         /// <returns>是否提取成功</returns>
-        public bool TryTake(out IGameMessage? msg)
+        public bool TryTake(out IGameMessage msg)
         {
             try
             {
@@ -319,7 +319,7 @@ namespace Communication.ServerCommunication
         /// 以返回值形式返回信息
         /// </summary>
         /// <returns>返回的信息</returns>
-        public IGameMessage? Take()
+        public IGameMessage Take()
         {
             try
             {

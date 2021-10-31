@@ -18,7 +18,7 @@ namespace Communication.ClientCommunication
 
         private TcpPackClient client;
         private BlockingCollection<IGameMessage> msgQueue;
-        public event OnReceiveCallback? OnReceive;
+        public event OnReceiveCallback OnReceive;
 
         private readonly int maxtimeout = 30000; // 超时界定时间
 
@@ -34,19 +34,17 @@ namespace Communication.ClientCommunication
                 // 欢迎补充
                 if (message.PacketType == PacketType.MessageToOneClient)
                 {
-
-                    MessageToOneClient? m21c = message.Content as MessageToOneClient;
-                    if (m21c?.MessageType == MessageType.ValidPlayer)
+                    MessageToOneClient m21c = message.Content as MessageToOneClient;
+                    if(m21c.MessageType==MessageType.ValidPlayer)
                     {
                         Console.WriteLine("Successfully connected.");
                     }
-                    else if (m21c?.MessageType == MessageType.InvalidPlayer)
+                    else if(m21c.MessageType==MessageType.InvalidPlayer)
                     {
                         Exception exc = new("Invalid IDs! Check your input, or contact developers.");
                         throw exc;
                     }
-
-                    else if (m21c?.MessageType == MessageType.Send)
+                    else if(m21c.MessageType==MessageType.Send)
                     {
                         Console.WriteLine(m21c.Message);
                     }
@@ -116,7 +114,7 @@ namespace Communication.ClientCommunication
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool TryTake(out IGameMessage? msg)
+        public bool TryTake(out IGameMessage msg)
         {
             try
             {
@@ -134,7 +132,7 @@ namespace Communication.ClientCommunication
         /// 以返回值形式返回信息
         /// </summary>
         /// <returns></returns>
-        public IGameMessage? Take()
+        public IGameMessage Take()
         {
             try
             {
