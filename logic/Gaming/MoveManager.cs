@@ -1,6 +1,7 @@
 ﻿using System;
 using GameClass.GameObj;
 using GameEngine;
+using Preparation.Utility;
 
 namespace Gaming
 {
@@ -17,27 +18,27 @@ namespace Gaming
             }
 
             /*
-			private void ActivateMine(Character player, Mine mine)
-			{
-				gameMap.ObjListLock.EnterWriteLock();
-				try { gameMap.ObjList.Remove(mine); }
-				catch { }
-				finally { gameMap.ObjListLock.ExitWriteLock(); }
+            private void ActivateMine(Character player, Mine mine)
+            {
+                gameMap.ObjListLock.EnterWriteLock();
+                try { gameMap.ObjList.Remove(mine); }
+                catch { }
+                finally { gameMap.ObjListLock.ExitWriteLock(); }
 
-				switch (mine.GetPropType())
-				{
-					case PropType.Dirt:
-						player.AddMoveSpeed(Constant.dirtMoveSpeedDebuff, Constant.buffPropTime);
-						break;
-					case PropType.Attenuator:
-						player.AddAP(Constant.attenuatorAtkDebuff, Constant.buffPropTime);
-						break;
-					case PropType.Divider:
-						player.ChangeCD(Constant.dividerCdDiscount, Constant.buffPropTime);
-						break;
-				}
-			}
-			*/
+                switch (mine.GetPropType())
+                {
+                    case PropType.Dirt:
+                        player.AddMoveSpeed(Constant.dirtMoveSpeedDebuff, Constant.buffPropTime);
+                        break;
+                    case PropType.Attenuator:
+                        player.AddAP(Constant.attenuatorAtkDebuff, Constant.buffPropTime);
+                        break;
+                    case PropType.Divider:
+                        player.ChangeCD(Constant.dividerCdDiscount, Constant.buffPropTime);
+                        break;
+                }
+            }
+            */
 
             private readonly Map gameMap;
             private readonly MoveEngine moveEngine;
@@ -49,11 +50,11 @@ namespace Gaming
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
                     {
-                        /*if (collisionObj is Mine)
-                        {
-                            ActivateMine((Character)obj, (Mine)collisionObj);
-                            return MoveEngine.AfterCollision.ContinueCheck;
-                        }*/
+                        //if (collisionObj is Mine)
+                        //{
+                        //    ActivateMine((Character)obj, (Mine)collisionObj);
+                        //    return MoveEngine.AfterCollision.ContinueCheck;
+                        //}
                         return MoveEngine.AfterCollision.MoveMax;
                     },
                     EndMove: obj =>

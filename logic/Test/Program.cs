@@ -81,6 +81,30 @@ namespace Test
                         msgU.TeamID = teamID;
                         clientCommunication.SendMessage(msgU);
                         break;
+                    case ConsoleKey.K:
+                        MessageToServer msgK = new MessageToServer();
+                        msgK.MessageType = MessageType.UseGem;
+                        msgK.PlayerID = playerID;
+                        msgK.TeamID = teamID;
+                        clientCommunication.SendMessage(msgK);
+                        break;
+                    case ConsoleKey.L:
+                        MessageToServer msgL = new MessageToServer();
+                        msgL.MessageType = MessageType.ThrowGem;
+                        msgL.PlayerID = playerID;
+                        msgL.TeamID = teamID;
+                        msgL.GemSize = 1;
+                        msgL.TimeInMilliseconds = 3000;
+                        msgL.Angle = Math.PI;
+                        clientCommunication.SendMessage(msgL);
+                        break;
+                    case ConsoleKey.P:
+                        MessageToServer msgP = new MessageToServer();
+                        msgP.MessageType = MessageType.Pick;
+                        msgP.PlayerID = playerID;
+                        msgP.TeamID = teamID;
+                        clientCommunication.SendMessage(msgP);
+                        break;
                 }
                 k = Console.ReadKey().Key;
             }

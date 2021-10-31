@@ -192,7 +192,7 @@ namespace Gaming
                 return;
             }
         }
-        public void ThrowGem(long playerID,int moveMilliTime,double angle ,int size = 1)
+        public void ThrowGem(long playerID, int moveMilliTime,double angle ,int size = 1)
         {
             if (!gameMap.Timer.IsGaming)
                 return;
@@ -203,6 +203,49 @@ namespace Gaming
                 return;
             }
         }
+        public bool PickGem(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if(player!=null)
+            {
+                return gemManager.PickGem(player);
+            }
+            return false;
+        }
+        public void UseProp(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            Character? player = gameMap.FindPlayer(playerID);
+            if(player!=null)
+            {
+                propManager.UseProp(player);
+            }
+        }
+        public void ThrowProp(long playerID,int timeInmillionSeconds,double angle)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                propManager.ThrowProp(player, timeInmillionSeconds, angle);
+            }
+        }
+        public bool PickProp(long playerID,PropType propType=PropType.Null)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return propManager.PickProp(player, propType);
+            }
+            return false;
+        }
+
         public bool UseCommonSkill(long playerID)
         {
             if (!gameMap.Timer.IsGaming)
