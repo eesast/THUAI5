@@ -94,13 +94,12 @@ namespace GameEngine
             double maxOnlyConsiderWall = maxLen;
             while (desination.length > 0)
             {
-                if (gameMap.IsWall(Vector.Vector2XY(desination) + obj.Position))
+                if (gameMap.IsWall(Vector.Vector2XY(desination) + obj.Position)) //先加了判断，下面的getcell不会为null
                 {
                     maxOnlyConsiderWall = MaxMoveToSquare(obj, gameMap.GetCell(Vector.Vector2XY(desination) + obj.Position));
                 }
                 desination.length -= GameData.numOfPosGridPerCell / (Math.Abs(Math.Cos(desination.angle)));
             }
-
             tmpMax = maxLen;
             double maxIgnoringWall = maxLen;
             foreach (var listWithLock in lists)

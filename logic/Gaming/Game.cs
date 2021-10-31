@@ -113,9 +113,9 @@ namespace Gaming
             }
             finally { gameMap.PlayerListLock.ExitReadLock(); }
 
+
             propManager.StartProducing();
-
-
+            gemManager.StartProducingGem();
             //开始游戏
             if (!gameMap.Timer.StartGame(milliSeconds))
                 return false;
@@ -143,6 +143,13 @@ namespace Gaming
                 gameMap.PropList.Clear();
             }
             finally { gameMap.PropListLock.ExitWriteLock(); }
+            gameMap.GemListLock.EnterWriteLock();
+            try
+            {
+                gameMap.GemList.Clear();
+            }
+            finally { gameMap.GemListLock.ExitWriteLock(); }
+
             return true;
         }
         public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
@@ -174,7 +181,28 @@ namespace Gaming
                 _ = attackManager.Attack(player, angle);
             }
         }
-
+        public void UseGem(long playerID, int num)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            Character? player = gameMap.FindPlayer(playerID);
+            if(player!=null)
+            {
+                gemManager.UseGem(player, num);
+                return;
+            }
+        }
+        public void ThrowGem(long playerID,int moveMilliTime,double angle ,int size = 1)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                gemManager.ThrowGem(player,moveMilliTime,angle,size);
+                return;
+            }
+        }
         public bool UseCommonSkill(long playerID)
         {
             if (!gameMap.Timer.IsGaming)
@@ -213,6 +241,13 @@ namespace Gaming
                 gameObjList.AddRange(gameMap.PropList);
             }
             finally { gameMap.PropListLock.ExitReadLock(); }
+
+            gameMap.GemListLock.EnterReadLock();
+            try
+            {
+                gameObjList.AddRange(gameMap.GemList);
+            }
+            finally { gameMap.GemListLock.ExitReadLock(); }
 
             return gameObjList;
         }
