@@ -1,0 +1,3 @@
+[submodule "CAPI/protobuf"]
+	path = CAPI/protobuf
+	url = git@github.com:protocolbuffers/protobuf.git
