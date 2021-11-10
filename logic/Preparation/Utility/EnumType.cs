@@ -34,8 +34,9 @@ namespace Preparation.Utility
     public enum BulletType //工厂方式
     {
         Null = 0,
-        Bullet0 = 1,    //普通子弹
-        AtomBomb = 2     //原子弹
+        OrdinaryBullet = 1,    //普通子弹
+        AtomBomb = 2,     //原子弹
+        FastBullet=3      //快速子弹
     }
     public enum PropType    // 道具的类型
     {
