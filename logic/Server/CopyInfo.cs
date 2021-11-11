@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Communication.Proto;
+﻿using Communication.Proto;
 using GameClass.GameObj;
-using Preparation.Utility;
 
 namespace Server
 {
@@ -153,8 +150,11 @@ namespace Server
                 case Preparation.Utility.BulletType.AtomBomb:
                     msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.AtomBomb;
                     break;
-                case Preparation.Utility.BulletType.Bullet0:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.CommonBullet1;
+                case Preparation.Utility.BulletType.OrdinaryBullet:
+                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.OrdinaryBullet;
+                    break;
+                case Preparation.Utility.BulletType.FastBullet:
+                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.FastBullet;
                     break;
                 default:
                     msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.NullBulletType;
@@ -175,8 +175,11 @@ namespace Server
                 case Preparation.Utility.BulletType.AtomBomb:
                     msg.MessageOfBullet.Type = Communication.Proto.BulletType.AtomBomb;
                     break;
-                case Preparation.Utility.BulletType.Bullet0:
-                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.CommonBullet1;
+                case Preparation.Utility.BulletType.OrdinaryBullet:
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.OrdinaryBullet;
+                    break;
+                case Preparation.Utility.BulletType.FastBullet:
+                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.FastBullet;
                     break;
                 default:
                     msg.MessageOfBullet.Type = Communication.Proto.BulletType.NullBulletType;
