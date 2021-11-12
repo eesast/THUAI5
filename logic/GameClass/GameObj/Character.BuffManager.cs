@@ -7,7 +7,7 @@ using Preparation.GameData;
 
 namespace GameClass.GameObj
 {
-    public 
+    public
         partial class Character
     {
         private readonly BuffManeger buffManeger;

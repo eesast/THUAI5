@@ -109,7 +109,7 @@ namespace GameClass.GameObj
         }
         public override Bullet0 Clone(Character parent)
         {
-            Bullet0 a= new Bullet0(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
+            Bullet0 a = new Bullet0(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
             a.Parent = parent;
             return a;
         }

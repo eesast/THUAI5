@@ -5,7 +5,7 @@ using Timothy.FrameRateTask;
 using System.Threading;
 
 namespace Test
-    
+
 {
     class Program
     {
@@ -28,7 +28,7 @@ namespace Test
             var k = Console.ReadKey().Key;
             while (k != ConsoleKey.Escape)
             {
-                switch(k)
+                switch (k)
                 {
                     case ConsoleKey.A:
                         MessageToServer msgA = new MessageToServer();
@@ -54,7 +54,7 @@ namespace Test
                         msgW.PlayerID = playerID;
                         msgW.TeamID = teamID;
                         msgW.TimeInMilliseconds = 50;
-                        msgW.Angle = Math.PI/2;
+                        msgW.Angle = Math.PI / 2;
                         clientCommunication.SendMessage(msgW);
                         break;
                     case ConsoleKey.S:
@@ -63,7 +63,7 @@ namespace Test
                         msgS.PlayerID = playerID;
                         msgS.TeamID = teamID;
                         msgS.TimeInMilliseconds = 50;
-                        msgS.Angle = 3*Math.PI/2;
+                        msgS.Angle = 3 * Math.PI / 2;
                         clientCommunication.SendMessage(msgS);
                         break;
                     case ConsoleKey.J:

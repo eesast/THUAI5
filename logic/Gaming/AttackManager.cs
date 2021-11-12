@@ -134,7 +134,7 @@ namespace Gaming
             }
             public bool Attack(Character? player, double angle)  //射出去的子弹泼出去的水（狗头）
             {                                                   //子弹如果没有和其他物体碰撞，将会一直向前直到超出人物的attackRange
-                if(player==null)
+                if (player == null)
                 {
 #if DEBUG
                     Console.WriteLine("the player who will attack is NULL!");
@@ -170,7 +170,7 @@ namespace Gaming
                 else
                 {
 #if DEBUG
-                    Console.WriteLine($"playerID:{player.ID} has no bullets so that he cant attack!");
+                    Console.WriteLine($"playerID:{player.ID} has no bullets so that he can't attack!");
 #endif
                     return false;
                 }
