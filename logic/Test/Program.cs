@@ -30,6 +30,7 @@ namespace Test
                     }
                     break;
                 case MessageType.EndGame:
+                    Console.WriteLine("Game Ended! Press ESC to quit.");
                     break;
             }
         }
