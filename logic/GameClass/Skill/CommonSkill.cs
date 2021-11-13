@@ -193,7 +193,7 @@ namespace GameClass.Skill
                 (() =>
                 {
                     Bullet b = player.BulletOfPlayer.Clone(player);
-                    player.BulletOfPlayer = new AtomBomb(player, GameData.bulletRadius, b.MoveSpeed, (int)(1.5 * b.AP));
+                    player.BulletOfPlayer = new AtomBomb(player);
                     Debugger.Output(player, "uses atombomb!");
                     new FrameRateTaskExecutor<int>
                     (

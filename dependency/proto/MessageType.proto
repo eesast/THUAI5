@@ -34,6 +34,7 @@ enum GameObjType
     BirthPoint = 5;
     OutOfBoundBlock = 6;
     Grass = 7;
+    GemWell=8;
 }
 enum ShapeType
 {
@@ -100,8 +101,8 @@ enum BulletType  //会有不同类型的子弹，现在只实现了“原子弹�
     NullBulletType = 0;
     CommonBullet1=1;
     CommonBullet2=2;
-    CommonBullet3=3;
-    CommonBullet4=4;
+    FastBullet=3;
+    OrdinaryBullet=4;
     AtomBomb=5;
 }
 //先偷懒把枚举类型粘在这里
