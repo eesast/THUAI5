@@ -5,7 +5,7 @@ namespace Gaming
 {
     public partial class Game
     {
-        SkillManager skillManager;
+        readonly SkillManager skillManager;
         private class SkillManager
         {
             public bool UseCommonSkill(Character character)

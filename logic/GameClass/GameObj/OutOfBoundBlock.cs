@@ -6,9 +6,9 @@ namespace GameClass.GameObj
     /// <summary>
     /// 逻辑墙
     /// </summary>
-    public class OutOfBoundBlock: GameObj, IOutOfBound
+    public class OutOfBoundBlock : GameObj, IOutOfBound
     {
-        public OutOfBoundBlock(XYPosition initPos) : base(initPos, int.MaxValue, PlaceType.Land) 
+        public OutOfBoundBlock(XYPosition initPos) : base(initPos, int.MaxValue, PlaceType.Land)
         {
             this.CanMove = false;
             this.Type = GameObjType.OutOfBoundBlock;

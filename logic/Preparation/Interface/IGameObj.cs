@@ -15,7 +15,7 @@ namespace Preparation.Interface
         public bool IsResetting { get; set; } // reviving
         public bool IsAvailable { get; }
         public int Radius { get; } // if Square, Radius equals half length of one side
-        public PlaceType Place { get; set; }  
+        public PlaceType Place { get; set; }
 
     }
 }

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Communication.Proto;
+﻿using Communication.Proto;
 using GameClass.GameObj;
-using Preparation.Utility;
 
 namespace Server
 {
     public static class CopyInfo
     {
-        public static MessageToClient.Types.GameObjMessage Auto(GameObj gameObj)
+        public static MessageToClient.Types.GameObjMessage? Auto(GameObj gameObj)
         {
             if (gameObj.Type == Preparation.Utility.GameObjType.Character)
                 return Player((Character)gameObj);
@@ -68,18 +65,53 @@ namespace Server
                     break;
             }
 
-           //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
-           //现在懒得改了，有时间再重整一波
-           switch(player.PropInventory)
+            //Character的储存方式可能得改，用enum type存道具和子弹，不应该用对象
+            //现在懒得改了，有时间再重整一波
+            if (player.PropInventory == null)
+                msg.MessageOfCharacter.Prop = Communication.Proto.PropType.NullPropType;
+            else
             {
-                //case Preparation.Utility.PropType.addAP:
-                //    msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddAp;
-                //    break;
-                default:
-                    msg.MessageOfCharacter.Prop = Communication.Proto.PropType.NullPropType;
-                    break;
+                switch (player.PropInventory.GetPropType())
+                {
+                    case Preparation.Utility.PropType.addAP:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddAp;
+                        break;
+                    case Preparation.Utility.PropType.Gem:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.Gem;
+                        break;
+                    case Preparation.Utility.PropType.addCD:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddCd;
+                        break;
+                    case Preparation.Utility.PropType.addHP:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddHp;
+                        break;
+                    case Preparation.Utility.PropType.addLIFE:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddLife;
+                        break;
+                    case Preparation.Utility.PropType.addSpeed:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddSpeed;
+                        break;
+                    case Preparation.Utility.PropType.minusAP:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.MinusAp;
+                        break;
+                    case Preparation.Utility.PropType.minusCD:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.MinusCd;
+                        break;
+                    case Preparation.Utility.PropType.minusSpeed:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.MinusSpeed;
+                        break;
+                    case Preparation.Utility.PropType.Shield:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.Shield;
+                        break;
+                    case Preparation.Utility.PropType.Spear:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.Spear;
+                        break;
+                    default:
+                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.NullPropType;
+                        break;
+                }
             }
-            switch(player.PassiveSkillType)
+            switch (player.PassiveSkillType)
             {
                 case Preparation.Utility.PassiveSkillType.RecoverAfterBattle:
                     msg.MessageOfCharacter.PassiveSkillType = Communication.Proto.PassiveSkillType.RecoverAfterBattle;
@@ -94,7 +126,7 @@ namespace Server
                     msg.MessageOfCharacter.PassiveSkillType = Communication.Proto.PassiveSkillType.NullPassiveSkillType;
                     break;
             }
-            switch(player.CommonSkillType)
+            switch (player.CommonSkillType)
             {
                 case Preparation.Utility.ActiveSkillType.BecomeAssassin:
                     msg.MessageOfCharacter.ActiveSkillType = Communication.Proto.ActiveSkillType.BecomeAssassin;
@@ -113,13 +145,16 @@ namespace Server
                     break;
             }
 
-            switch(player.BulletOfPlayer.TypeOfBullet)
+            switch (player.BulletOfPlayer.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.AtomBomb:
                     msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.AtomBomb;
                     break;
-                case Preparation.Utility.BulletType.Bullet0:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.CommonBullet1;
+                case Preparation.Utility.BulletType.OrdinaryBullet:
+                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.OrdinaryBullet;
+                    break;
+                case Preparation.Utility.BulletType.FastBullet:
+                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.FastBullet;
                     break;
                 default:
                     msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.NullBulletType;
@@ -138,39 +173,80 @@ namespace Server
             switch (bullet.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.AtomBomb:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.AtomBomb;
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.AtomBomb;
                     break;
-                case Preparation.Utility.BulletType.Bullet0:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.CommonBullet1;
+                case Preparation.Utility.BulletType.OrdinaryBullet:
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.OrdinaryBullet;
+                    break;
+                case Preparation.Utility.BulletType.FastBullet:
+                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.FastBullet;
                     break;
                 default:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.NullBulletType;
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.NullBulletType;
                     break;
             }
             msg.MessageOfBullet.X = bullet.Position.x;
             msg.MessageOfBullet.Y = bullet.Position.y;
-            msg.MessageOfBullet.ParentID = bullet.Parent.ID;
+            if(bullet.Parent!=null)
+                msg.MessageOfBullet.ParentID = bullet.Parent.ID;
             return msg;
         }
         private static MessageToClient.Types.GameObjMessage Prop(Prop prop)
         {
             MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
             msg.MessageOfProp = new MessageOfProp();
-            msg.MessageOfBullet.FacingDirection = prop.FacingDirection;
-            msg.MessageOfBullet.Guid = prop.ID;
+            msg.MessageOfProp.FacingDirection = prop.FacingDirection;
+            msg.MessageOfProp.Guid = prop.ID;
             switch (prop.GetPropType())
             {
-                //case Preparation.Utility.PropType.addAP:
-                //    msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddAp;
-                //    break;
+                case Preparation.Utility.PropType.addAP:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddAp;
+                    break;
+                case Preparation.Utility.PropType.Gem:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.Gem;
+                    break;
+                case Preparation.Utility.PropType.addCD:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddCd;
+                    break;
+                case Preparation.Utility.PropType.addHP:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddHp;
+                    break;
+                case Preparation.Utility.PropType.addLIFE:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddLife;
+                    break;
+                case Preparation.Utility.PropType.addSpeed:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddSpeed;
+                    break;
+                case Preparation.Utility.PropType.minusAP:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.MinusAp;
+                    break;
+                case Preparation.Utility.PropType.minusCD:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.MinusCd;
+                    break;
+                case Preparation.Utility.PropType.minusSpeed:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.MinusSpeed;
+                    break;
+                case Preparation.Utility.PropType.Shield:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.Shield;
+                    break;
+                case Preparation.Utility.PropType.Spear:
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.Spear;
+                    break;
                 default:
-                    msg.MessageOfCharacter.Prop = Communication.Proto.PropType.NullPropType;
+                    msg.MessageOfProp.Type = Communication.Proto.PropType.NullPropType;
                     break;
             }
-            msg.MessageOfBullet.X = prop.Position.x;
-            msg.MessageOfBullet.Y = prop.Position.y;
-            //msg.MessageOfBullet.ParentID = bullet.Parent.Id;
-            return null;
+            msg.MessageOfProp.X = prop.Position.x;
+            msg.MessageOfProp.Y = prop.Position.y;
+            if(prop is Gem)
+            {
+                msg.MessageOfProp.Size = ((Gem)prop).Size;
+            }
+            else
+            {
+                msg.MessageOfProp.Size = 1;
+            }
+            return msg;
         }
     }
 }

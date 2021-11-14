@@ -33,10 +33,7 @@ namespace GameClass.Skill
                 new Thread
                 (() =>
                 {
-                    lock (player.SkillLock)
-                    {
-                        player.Vampire = 1.0;
-                    }
+                    player.Vampire = 1.0;
                     Debugger.Output(player, "becomes vampire!");
 
                     new FrameRateTaskExecutor<int>
@@ -55,10 +52,7 @@ namespace GameClass.Skill
                         MaxTolerantTimeExceedCount = ulong.MaxValue,
                     }.Start();
 
-                    lock (player.SkillLock)
-                    {
-                        player.Vampire = player.oriVampire;
-                    }
+                    player.Vampire = player.oriVampire;
                     Debugger.Output(player, "return to normal.");
 
                     new FrameRateTaskExecutor<int>
@@ -119,10 +113,7 @@ namespace GameClass.Skill
                 new Thread
                 (() =>
                 {
-                    lock (player.SkillLock)
-                    {
-                        player.Place = PlaceType.Invisible;
-                    }
+                    player.Place = PlaceType.Invisible;
                     Debugger.Output(player, "becomes assassin!");
                     new FrameRateTaskExecutor<int>
                     (
@@ -140,11 +131,8 @@ namespace GameClass.Skill
                         MaxTolerantTimeExceedCount = ulong.MaxValue,
                     }.Start();
 
-                    lock (player.SkillLock)
-                    {
-                        player.Place = MapInfo.GetPlaceType(player);
-                    }
-                    Debugger.Output(player, "return to normal.");
+                    player.Place = MapInfo.GetPlaceType(player);
+                    Debugger.Output(player, "returns to normal.");
 
                     new FrameRateTaskExecutor<int>
                      (
@@ -204,11 +192,8 @@ namespace GameClass.Skill
                 new Thread
                 (() =>
                 {
-                    Bullet b = player.BulletOfPlayer.Clone();
-                    lock (player.SkillLock)
-                    {
-                        player.BulletOfPlayer = new AtomBomb(player, GameData.bulletRadius, b.MoveSpeed, (int)(1.5 * b.AP));
-                    }
+                    Bullet b = player.BulletOfPlayer.Clone(player);
+                    player.BulletOfPlayer = new AtomBomb(player);
                     Debugger.Output(player, "uses atombomb!");
                     new FrameRateTaskExecutor<int>
                     (
@@ -226,10 +211,7 @@ namespace GameClass.Skill
                         MaxTolerantTimeExceedCount = ulong.MaxValue,
                     }.Start();
 
-                    lock (player.SkillLock)
-                    {
-                        player.BulletOfPlayer = b;
-                    }
+                    player.BulletOfPlayer = b;
                     Debugger.Output(player, "return to normal.");
 
                     new FrameRateTaskExecutor<int>
@@ -291,10 +273,7 @@ namespace GameClass.Skill
                 new Thread
                 (() =>
                 {
-                    lock (player.SkillLock)
-                    {
-                        player.SetMoveSpeed(3 * player.OrgMoveSpeed);
-                    }
+                    player.SetMoveSpeed(3 * player.OrgMoveSpeed);
                     Debugger.Output(player, "moves very fast!");
                     new FrameRateTaskExecutor<int>
                     (
@@ -312,10 +291,7 @@ namespace GameClass.Skill
                         MaxTolerantTimeExceedCount = ulong.MaxValue,
                     }.Start();
 
-                    lock (player.SkillLock)
-                    {
-                        player.SetMoveSpeed(player.OrgMoveSpeed);
-                    }
+                    player.SetMoveSpeed(player.OrgMoveSpeed);
                     Debugger.Output(player, "return to normal.");
 
                     new FrameRateTaskExecutor<int>

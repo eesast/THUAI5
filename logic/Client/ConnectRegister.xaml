@@ -1,0 +1,23 @@
+﻿<Window x:Class="Client.ConnectRegister"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        mc:Ignorable="d"
+        Title="ConnectRegister" Height="315" Width="350" ResizeMode="NoResize" >
+    <Grid>
+        <Label Content="Input your Message below." HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="184" />
+        <Label Content="IP:" HorizontalAlignment="Left" Height="24" Margin="0,31,0,0" VerticalAlignment="Top" Width="53"/>
+        <Label Content="Port:" HorizontalAlignment="Left" Height="24" Margin="0,103,0,0" VerticalAlignment="Top" Width="53"/>
+        <TextBox Name="IPBox" HorizontalAlignment="Left" Height="20" Margin="2,55,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" BorderBrush="Black"/>
+        <TextBox Name="PortBox" HorizontalAlignment="Left" Height="20" Margin="2,127,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" BorderBrush="Black"/>
+        <Button Content="Save" HorizontalAlignment="Left" Margin="261,246,0,0" VerticalAlignment="Top" Click="Save" Width="62" Background="Ivory"/>
+        <TextBox x:Name="State" HorizontalAlignment="Left" Height="100" Margin="2,165,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="254" BorderBrush="White" IsReadOnly="True"/>
+        <TextBox x:Name="PlayerIDBox" HorizontalAlignment="Left" Height="20" Margin="183,55,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" BorderBrush="Black"/>
+        <TextBox x:Name="TeamIDBox" HorizontalAlignment="Left" Height="20" Margin="183,127,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" BorderBrush="Black"/>
+        <Label Content="PlayerID:" HorizontalAlignment="Left" Height="24" Margin="183,31,0,0" VerticalAlignment="Top" Width="68"/>
+        <Label Content="TeamID:" HorizontalAlignment="Left" Height="24" Margin="183,104,0,0" VerticalAlignment="Top" Width="68"/>
+
+    </Grid>
+</Window>

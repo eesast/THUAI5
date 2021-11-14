@@ -4,6 +4,7 @@ namespace Preparation.GameData
 {
     public static class GameData
     {
+        #region 基本常数与常方法
         public const int numOfPosGridPerCell = 1000;            // 每格的【坐标单位】数
         public const int numOfStepPerSecond = 20;               // 每秒行走的步数
         public const int lengthOfMap = 50000;                   // 地图长度
@@ -17,8 +18,8 @@ namespace Preparation.GameData
 
         public static XYPosition GetCellCenterPos(int x, int y)   // 求格子的中心坐标
         {
-            XYPosition ret = new XYPosition(x * numOfPosGridPerCell + numOfPosGridPerCell / 2,
-                y * numOfPosGridPerCell + numOfPosGridPerCell / 2);
+            XYPosition ret = new((x * numOfPosGridPerCell) + (numOfPosGridPerCell / 2),
+                (y * numOfPosGridPerCell) + (numOfPosGridPerCell / 2));
             return ret;
         }
         public static int PosGridToCellX(XYPosition pos)       // 求坐标所在的格子的x坐标
@@ -29,13 +30,19 @@ namespace Preparation.GameData
         {
             return pos.y / numOfPosGridPerCell;
         }
+        public static bool IsInTheSameCell(XYPosition pos1,XYPosition pos2)
+        {
+            return PosGridToCellX(pos1) == PosGridToCellX(pos2) && PosGridToCellY(pos1) == PosGridToCellY(pos2);
+        }
+        #endregion
+        #region 角色相关
         /// <summary>
         /// 玩家相关
         /// </summary>
         public const int characterRadius = numOfPosGridPerCell / 2;  //人物半径
         public const int basicAp = 1000;	// 初始攻击力
         public const int basicHp = 6000;	// 初始血量
-        public const int basicCD = 1000;    // 初始子弹冷却
+        public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicBulletNum = 5;   // 初始子弹量
         public const int MinAP = 0; // 最小攻击力
         public const int MaxAP = int.MaxValue;  //最大攻击力
@@ -56,9 +63,15 @@ namespace Preparation.GameData
         /// </summary>
         public const int MinPropTypeNum = 1;
         public const int MaxPropTypeNum = 10;
-        /// <summary>
-        /// 游戏帧相关
-        /// </summary>
+        public const int BuffTypeNum = 7;
+        public const int PropRadius = numOfPosGridPerCell / 2;
+        public const int PropMoveSpeed = 3000;
+        public const int MaxGemSize = 5; //随机生成的宝石最大size
+        public const long GemProduceTime = 10000;
+        public const long PropProduceTime = 10000;
+        #endregion
+        #region 游戏帧相关
         public const long checkInterval = 50;  //检查位置标志、补充子弹的帧时长
+        #endregion
     }
 }
