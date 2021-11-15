@@ -2,8 +2,8 @@
 #ifndef MESSAGE_HPP
 #define MESSAGE_HPP
 
-#include "proto/Message2Clients.pb.h"
-#include "proto/Message2Server.pb.h"
+#include "Message2Clients.pb.h"
+#include "Message2Server.pb.h"
 
 #include <google/protobuf/message.h>
 

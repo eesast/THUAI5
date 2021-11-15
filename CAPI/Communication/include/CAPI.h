@@ -2,8 +2,8 @@
 #ifndef CAPI_H
 
 // proto files
-#include "proto/Message2Clients.pb.h"
-#include "proto/Message2Server.pb.h"
+#include "Message2Clients.pb.h"
+#include "Message2Server.pb.h"
 #include "concurrent_queue.hpp"
 #include "message.hpp"
 
