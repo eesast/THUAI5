@@ -9,6 +9,30 @@ namespace Test
 {
     class Program
     {
+        static void MessageProcessing(MessageToClient msgToClient)
+        {
+            switch(msgToClient.MessageType)
+            {
+                case MessageType.StartGame:
+                case MessageType.Gaming:
+                
+                    foreach(MessageToClient.Types.GameObjMessage obj in msgToClient.GameObjMessage)
+                    {
+                        switch(obj.ObjCase)
+                        {
+                            //case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
+                            //    Console.WriteLine($"GUID:{obj.MessageOfCharacter.Guid} Character is at ({obj.MessageOfCharacter.X},{obj.MessageOfCharacter.Y}).");
+                            //    break;
+                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
+                                Console.WriteLine($"GUID:{obj.MessageOfBullet.Guid} is at ({obj.MessageOfBullet.X},{obj.MessageOfBullet.Y})");
+                                break;
+                        }
+                    }
+                    break;
+                case MessageType.EndGame:
+                    break;
+            }
+        }
         static void Main(string[] args)
         {
             long playerID, teamID;
@@ -23,8 +47,18 @@ namespace Test
             messageToServer.TeamID = teamID;
             messageToServer.ASkill1 = ActiveSkillType.SuperFast;
             messageToServer.PSkill = PassiveSkillType.Vampire;
+             
+            clientCommunication.OnReceive += () =>
+            {
+                if (clientCommunication.TryTake(out IGameMessage msg) && msg.PacketType == PacketType.MessageToClient)
+                {
+                    MessageProcessing((MessageToClient)msg.Content);
+                }
+            };
             clientCommunication.SendMessage(messageToServer);
+
             Thread.Sleep(1000);
+
             var k = Console.ReadKey().Key;
             while (k != ConsoleKey.Escape)
             {
