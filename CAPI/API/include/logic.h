@@ -11,86 +11,103 @@
 #include<atomic>
 
 #include"base.h"
+#include"state.h"
 #include"CAPI.h"
-#include"proto/Message2Clients.pb.h"
+#include"Message2Clients.pb.h"
 #include"concurrent_queue.hpp"
 
-
-
 /// <summary>
-/// ·â×°ÁËÍ¨ĞÅ×é¼şºÍAI¶ÔÏó½øĞĞ²Ù×÷
+/// å°è£…äº†é€šä¿¡ç»„ä»¶å’ŒAIå¯¹è±¡è¿›è¡Œæ“ä½œ
 /// </summary>
 class Logic
 {
 private:
-    std::unique_ptr<ClientCommunication> pComm; // Í¨ĞÅ×é¼şÖ¸Õë
-    std::unique_ptr<AIBase> pAI; // Íæ¼ÒÖ¸Õë
-    std::shared_ptr<int> xx; // Íæ¼Ò×´Ì¬
+    std::unique_ptr<ClientCommunication> pComm; // é€šä¿¡ç»„ä»¶æŒ‡é’ˆ
+    std::unique_ptr<AIBase> pAI; // ç©å®¶æŒ‡é’ˆ
+    std::shared_ptr<int> xx; // ç©å®¶çŠ¶æ€
 
-    std::thread tAI; // ĞèÒª¶ÔÍæ¼Òµ¥¿ªÏß³Ì
+    std::thread tAI; // éœ€è¦å¯¹ç©å®¶å•å¼€çº¿ç¨‹
 
-    // »¥³âËø
+    // äº’æ–¥é”
     std::mutex mtx_ai;
-    std::mutex mtx_state; 
+    std::mutex mtx_state;
     std::mutex mtx_buffer;
 
-    // Ìõ¼ş±äÁ¿
+    // æ¡ä»¶å˜é‡
     std::condition_variable cv_buffer;
     std::condition_variable cv_ai;
-    
-    // ĞÅÏ¢¶ÓÁĞ
+
+    // ä¿¡æ¯é˜Ÿåˆ—
     concurrency::concurrent_queue<std::string> MessageStorage;
 
-    // ¼ÇÂ¼×´Ì¬ºÍĞÅÏ¢Êı(¿ÉÄÜºÍÏß³ÌÓĞ¹Ø)
-    std::atomic<int> counter_state = 0;
-    std::atomic<int> counter_buffer = 0;
+    // è®°å½•çŠ¶æ€å’Œç¼“å†²åŒºæ•°(å¯èƒ½å’Œçº¿ç¨‹æœ‰å…³)
+    volatile int counter_state = 0;
+    volatile int counter_buffer = 0;
+
+    // æ­¤æ—¶æ˜¯å¦åº”è¯¥å¾ªç¯æ‰§è¡Œplayer()
+    std::atomic_bool AI_loop = true;
+
+    // bufferæ›´æ–°æ˜¯å¦å®Œæ¯•
+    std::atomic_bool buffer_updated = true;
+
+    // å‚¨å­˜çŠ¶æ€ï¼šç°è¡ŒçŠ¶æ€å’Œç¼“å†²åŒº
+    State state[2];
+
+    // æ“ä½œå‚¨å­˜çŠ¶æ€çš„æŒ‡é’ˆï¼ˆä¸æ˜¯åŠ¨æ€å†…å­˜ï¼Œä¸éœ€è¦å¼€æ™ºèƒ½æŒ‡é’ˆï¼‰
+    State* pState;
+    State* pBuffer;
+
+    // æ˜¯å¦åº”è¯¥å¯åŠ¨AI
+    bool AI_start = false;
 
     /// <summary>
-    /// Ö´ĞĞAIÏß³Ì
+    /// æ‰§è¡ŒAIçº¿ç¨‹
     /// </summary>
     /// <param name="player"></param>
     void PlayerWrapper(std::function<void()> player);
 
     /// <summary>
-    /// ´¦ÀíĞÅÏ¢
+    /// å¤„ç†ä¿¡æ¯
     /// </summary>
     /// <param name=""></param>
     void ProcessMessage(pointer_m2c);
 
     /// <summary>
-    /// ´¦ÀíĞÅÏ¢Part1 ¹ã²¥
+    /// å¤„ç†ä¿¡æ¯Part1 å¹¿æ’­
     /// </summary>
     /// <param name=""></param>
     void ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient>);
 
     /// <summary>
-    /// ´¦ÀíĞÅÏ¢Part2 µ¥²¥
+    /// å¤„ç†ä¿¡æ¯Part2 å•æ’­
     /// </summary>
     /// <param name=""></param>
     void ProcessMessageToOneClient(std::shared_ptr<Protobuf::MessageToOneClient>);
 
     /// <summary>
-    /// ´¦ÀíĞÅÏ¢Part3 ³õÊ¼»¯
+    /// å¤„ç†ä¿¡æ¯Part3 åˆå§‹åŒ–
     /// </summary>
     /// <param name=""></param>
     void ProcessMessageToInitialize(std::shared_ptr<Protobuf::MessageToInitialize>);
 
     /// <summary>
-    /// ¼ÓÔØµ½buffer
+    /// åŠ è½½åˆ°buffer
     /// </summary>
     /// <param name=""></param>
     void LoadBuffer(std::shared_ptr<Protobuf::MessageToClient>);
 
     /// <summary>
-    /// ½âËø×´Ì¬
+    /// å¼ºåˆ¶è§£é”çŠ¶æ€æ›´æ–°çº¿ç¨‹
     /// </summary>
     void UnBlockBuffer();
-    
+
     /// <summary>
-    /// ½âËøAIÏß³Ì
+    /// å¼ºåˆ¶è§£é”AIçº¿ç¨‹
     /// </summary>
     void UnBlockAI();
-    
+
+    void Update();
+   
 public:
     Logic();
     ~Logic() = default;

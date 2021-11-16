@@ -2,7 +2,7 @@
 #ifndef CAPI_H
 
 // proto files
-#include "Message2Clients.pb.h"
+#include "Message2Clients.pb.h" 
 #include "Message2Server.pb.h"
 #include "concurrent_queue.hpp"
 #include "message.hpp"
@@ -47,9 +47,9 @@ private:
     /// <summary>
     /// event
     /// </summary>
-    virtual EnHandleResult OnConnect(ITcpClient* pSender, CONNID dwConnID);
-    virtual EnHandleResult OnClose(ITcpClient* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode);
-    virtual EnHandleResult OnReceive(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength);
+    virtual EnHandleResult OnConnect(ITcpClient* pSender, CONNID dwConnID) override;
+    virtual EnHandleResult OnClose(ITcpClient* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode) override;
+    virtual EnHandleResult OnReceive(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength) override;
 
 public:
     /// <summary>

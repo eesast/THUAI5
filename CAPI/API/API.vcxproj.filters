@@ -15,21 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Communication\include\concurrent_queue.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="include\base.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\logic.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Communication\include\concurrent_queue.hpp">
+    <ClInclude Include="include\state.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\logic.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
+    <ClCompile Include="src\logic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

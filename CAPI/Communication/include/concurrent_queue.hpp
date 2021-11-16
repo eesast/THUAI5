@@ -19,9 +19,9 @@ class concurrent_queue
 {
 public:
 
-    void clear()
+    void clear() 
     {
-        ::std::lock_guard<::std::mutex> lg(mtx);
+        ::std::lock_guard<::std::mutex> lg(mtx); 
         while (!q.empty()) q.pop();
     }
 

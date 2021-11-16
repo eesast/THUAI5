@@ -8,7 +8,7 @@ CAPI::CAPI(std::function<void()> onconnect, std::function<void()> onclose, std::
 EnHandleResult CAPI::OnConnect(ITcpClient* pSender, CONNID dwConnID)
 {
     __OnConnect();
-    return HR_OK;
+    return HR_OK; 
 }
 
 /// <summary>
