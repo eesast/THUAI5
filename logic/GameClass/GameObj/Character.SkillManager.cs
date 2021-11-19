@@ -5,7 +5,6 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
-        public object SkillLock => gameObjLock;
         private delegate bool CharacterActiveSkill(Character player); //返回值：是否成功释放了技能
         private delegate void CharacterPassiveSkill(Character player);
         private readonly CharacterActiveSkill commonSkill;
@@ -18,14 +17,14 @@ namespace GameClass.GameObj
         {
             return commonSkill(this);
         }
-        private readonly int timeUntilCommonSkillAvailable = 0; //还剩多少时间可以使用普通技能
+        private int timeUntilCommonSkillAvailable = 0; //还剩多少时间可以使用普通技能
         public int TimeUntilCommonSkillAvailable
         {
             get => timeUntilCommonSkillAvailable;
             set
             {
-                lock (SkillLock)
-                    TimeUntilCommonSkillAvailable = value < 0 ? 0 : value;
+                lock(gameObjLock)
+                    timeUntilCommonSkillAvailable = value < 0 ? 0 : value;
             }
         }
 
@@ -79,6 +78,7 @@ namespace GameClass.GameObj
             }
             this.attackRange = cSkill.AttackRange;
             this.hp = cSkill.MaxHp;
+            this.OrgMoveSpeed = cSkill.MoveSpeed;
             this.moveSpeed = cSkill.MoveSpeed;
             this.cd = cSkill.CD;
             this.maxBulletNum = cSkill.MaxBulletNum;
