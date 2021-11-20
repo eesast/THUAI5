@@ -1,4 +1,4 @@
-#include "logic.h"
+#include "../include/logic.h"
 
 void Logic::ProcessMessage(pointer_m2c p2m)
 {

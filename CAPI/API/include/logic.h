@@ -3,18 +3,20 @@
 #ifndef LOGIC_H
 #define LOGIC_H
 
-#include<iostream>
-#include<thread>
-#include<memory>
-#include<condition_variable>
-#include<tuple>
-#include<atomic>
+#include <iostream>
+#include <thread>
+#include <memory>
+#include <condition_variable>
+#include <tuple>
+#include <atomic>
 
-#include"base.h"
-#include"state.h"
-#include"CAPI.h"
-#include"Message2Clients.pb.h"
-#include"concurrent_queue.hpp"
+#include <Message2Clients.pb.h>
+#include <Message2Server.pb.h>
+
+#include "base.h"
+#include "state.h"
+#include "CAPI.h"
+#include "concurrent_queue.hpp"
 
 /// <summary>
 /// 封装了通信组件和AI对象进行操作
