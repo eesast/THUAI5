@@ -30,6 +30,7 @@ namespace Test
                     }
                     break;
                 case MessageType.EndGame:
+                    Console.WriteLine("Game Ended! Press ESC to quit.");
                     break;
             }
         }
@@ -64,7 +65,7 @@ namespace Test
             {
                 switch(k)
                 {
-                    case ConsoleKey.A:
+                    case ConsoleKey.W:
                         MessageToServer msgA = new MessageToServer();
                         msgA.MessageType = MessageType.Move;
                         msgA.PlayerID = playerID;
@@ -73,7 +74,7 @@ namespace Test
                         msgA.Angle = Math.PI;
                         clientCommunication.SendMessage(msgA);
                         break;
-                    case ConsoleKey.D:
+                    case ConsoleKey.S:
                         MessageToServer msgD = new MessageToServer();
                         msgD.MessageType = MessageType.Move;
                         msgD.PlayerID = playerID;
@@ -82,7 +83,7 @@ namespace Test
                         msgD.Angle = 0;
                         clientCommunication.SendMessage(msgD);
                         break;
-                    case ConsoleKey.W:
+                    case ConsoleKey.D:
                         MessageToServer msgW = new MessageToServer();
                         msgW.MessageType = MessageType.Move;
                         msgW.PlayerID = playerID;
@@ -91,7 +92,7 @@ namespace Test
                         msgW.Angle = Math.PI/2;
                         clientCommunication.SendMessage(msgW);
                         break;
-                    case ConsoleKey.S:
+                    case ConsoleKey.A:
                         MessageToServer msgS = new MessageToServer();
                         msgS.MessageType = MessageType.Move;
                         msgS.PlayerID = playerID;
@@ -137,6 +138,7 @@ namespace Test
                         msgP.MessageType = MessageType.Pick;
                         msgP.PlayerID = playerID;
                         msgP.TeamID = teamID;
+                        msgP.PropType = Communication.Proto.PropType.Gem;
                         clientCommunication.SendMessage(msgP);
                         break;
                 }
