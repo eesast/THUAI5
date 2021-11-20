@@ -38,9 +38,9 @@ namespace Client
             timer.Start();
             isClientStocked = false;
             isInitialized = false;
-            playerData = new();
-            bulletData = new();
-            propData = new();
+            playerData = new List<MessageToClient.Types.GameObjMessage>();
+            bulletData = new List<MessageToClient.Types.GameObjMessage>();
+            propData = new List<MessageToClient.Types.GameObjMessage>();
             myMessages = new();
             messageToServers = new();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -53,7 +53,14 @@ namespace Client
         //基础窗口函数
         private void ClickToClose(object sender, RoutedEventArgs e)
         {
-            
+            if (communicator != null)
+            {
+                if (communicator.Client.IsConnected)
+                {
+                    _ = communicator.Stop();
+                }
+                communicator.Dispose();
+            }
             Application.Current.Shutdown();
         }
 
@@ -67,6 +74,32 @@ namespace Client
         }
 
         //Client控制函数
+        private void ClickToBegin(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if(communicator == null)
+                { 
+                    throw new Exception("Error:communicator is unexpectedly null");
+                }
+                else if (communicator.Client.IsConnected && (!isGameRunning))
+                {
+                    MessageToServer msg = new();
+                    msg.MessageType = MessageType.StartGame;
+                    msg.PlayerID = playerID;
+                    msg.TeamID = teamID;
+                    communicator.SendMessage(msg);
+                    //isGameRunning = true; 开始游戏应在收到消息后才开始
+                    Begin.Background = Brushes.Gray;//未完成初始化但已按下按钮，显示为灰色。完成后显示为黄色。
+                }
+            }
+            catch (Exception exc)
+            {
+                ErrorDisplayer error = new(exc.ToString());
+                error.Show();
+                Begin.Background = Brushes.Crimson;
+            }
+        }
 
         private void ClickToPauseOrContinue(object sender, RoutedEventArgs e)
         {
@@ -124,7 +157,7 @@ namespace Client
             }
             catch (Exception exc)
             {
-                ErrorDisplayer error = new("发生错误。以下是系统报告:\n" + exc.Message);
+                ErrorDisplayer error = new("发生错误。以下是系统报告:\n" + exc.ToString());
                 error.Show();
             }
         }
@@ -137,7 +170,7 @@ namespace Client
             }
             catch (Exception exc)
             {
-                ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.Message);
+                ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
                 error.Show();
             }
         }
@@ -154,17 +187,314 @@ namespace Client
 
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
+            Connect.Background = Brushes.Gray;
             try
             {
-                long playerID, teamID;
-                playerID = 0; // Convert.ToInt64(args[1]);
-                teamID = 0;// Convert.ToInt64(args[2]);
-                communicator = new ClientCommunication();
-                communicator.OnReceive += () =>
+                using (var sr = new StreamReader("ConnectInfo.txt"))
                 {
-                    if (communicator.TryTake(out IGameMessage msg) && msg.PacketType == PacketType.MessageToClient)
+#pragma warning disable CS8602 // 解引用可能出现空引用。
+                    string[] comInfo = sr.ReadLine().Split(' ');
+#pragma warning restore CS8602 // 解引用可能出现空引用。
+                    if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == "")
                     {
-                        MessageProcedure((MessageToClient)msg.Content);
+                        throw new Exception("Length<4");
+                    }
+                    communicator = new ClientCommunication();
+                    communicator.OnReceive += OnReceive;
+                    playerID = Convert.ToInt64(comInfo[2]);
+                    teamID = Convert.ToInt64(comInfo[3]);
+                    if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
+                    {
+                        Exception exc = new("TimeOut");
+                        throw exc;
+                    }
+                    else if (communicator.Client.IsConnected)
+                    {
+                        Connect.Background = Brushes.Green;
+                        MessageToServer msg = new();
+                        msg.MessageType = MessageType.AddPlayer;
+                        msg.PlayerID = playerID;
+                        msg.TeamID = teamID;
+                        communicator.SendMessage(msg);
+                        Connect.Background = Brushes.Green;
+                    }//建立连接的同时加入人物
+                }
+            }
+            catch (Exception exc)
+            {
+                if(exc.Message== "Length<4")
+                {
+                    ConnectRegister crg = new();
+                    crg.State.Text = "配置非法，请重新输入或检查配置文件。";
+                    crg.Show();
+                }
+                else
+                {
+                    ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
+                    error.Show();
+                    Connect.Background = Brushes.Aqua;
+                    if (communicator != null)
+                    {
+                        if (communicator.Client.IsConnected)
+                        {
+                            _ = communicator.Stop();
+                        }
+                        communicator.Dispose();
+                        communicator = null;
+                    }
+                }
+            }
+        }
+
+        private void OnReceive()
+        {
+            if (communicator.TryTake(out IGameMessage msg) && msg.PacketType == PacketType.MessageToClient)
+            {
+                lock (drawPicLock)
+                {
+                    playerData.Clear();
+                    propData.Clear();
+                    bulletData.Clear();
+                    MessageToClient content = (MessageToClient)msg.Content;
+                    switch (content.MessageType)
+                    {
+                        case MessageType.InitialLized:
+                            //这里要设置地图类型
+                            //可地图还没写呢...
+                            break;
+                        case MessageType.StartGame:
+                            isGameRunning = true;
+                            foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
+                            {
+                                switch (obj.ObjCase)
+                                {
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
+                                        playerData.Add(obj);
+                                        break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
+                                        bulletData.Add(obj);
+                                        break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
+                                        propData.Add(obj);
+                                        break;
+                                }
+                            }
+                            break;
+                        case MessageType.Gaming:
+
+                            foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
+                            {
+                                switch (obj.ObjCase)
+                                {
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
+                                        playerData.Add(obj);
+                                        break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
+                                        bulletData.Add(obj);
+                                        break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
+                                        propData.Add(obj);
+                                        break;
+                                }
+                            }
+                            break;
+                        case MessageType.EndGame:
+                            foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
+                            {
+                                switch (obj.ObjCase)
+                                {
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
+                                        playerData.Add(obj);
+                                        break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
+                                        bulletData.Add(obj);
+                                        break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
+                                        propData.Add(obj);
+                                        break;
+                                }
+                            }
+                            isGameRunning = false;
+                            break;
+                    }
+                }
+            }
+        }
+        //定时器事件，刷新地图
+        private void Refresh(object? sender, EventArgs e)
+        {
+            try
+            {
+                if(isGameRunning)
+                {
+                    UpperLayerOfMap.Children.Clear();
+                    if (communicator==null)
+                    {
+                        throw new Exception("Error: communicator is unexpectly null during a running game");
+                    }
+                    else if (communicator.Client.IsConnected)
+                    {
+                        lock(drawPicLock)
+                        { 
+                            foreach (var data in playerData)
+                            {
+                                Ellipse icon = new Ellipse();
+                                icon.Width = 13;
+                                icon.Height = 13;
+                                icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                icon.VerticalAlignment = VerticalAlignment.Top;
+                                icon.Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0, data.MessageOfCharacter.X * 13.0 / 1000.0, 0, 0);
+                                icon.Fill = Brushes.Black;
+                                UpperLayerOfMap.Children.Add(icon);
+                            }
+                            foreach (var data in bulletData)
+                            {
+                                Ellipse icon = new Ellipse();
+                                icon.Width = 10;
+                                icon.Height = 10;
+                                icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                icon.VerticalAlignment = VerticalAlignment.Top;
+                                icon.Margin = new Thickness(data.MessageOfBullet.Y * 13.0 / 1000.0, data.MessageOfBullet.X * 13.0 / 1000.0, 0, 0);
+                                icon.Fill = Brushes.Red;
+                                UpperLayerOfMap.Children.Add(icon);
+                            }
+                            foreach (var data in propData)
+                            {
+                                if (data.MessageOfProp.Type == PropType.Gem)
+                                {
+                                    Ellipse icon = new Ellipse();
+                                    icon.Width = 10;
+                                    icon.Height = 10;
+                                    icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                    icon.VerticalAlignment = VerticalAlignment.Top;
+                                    icon.Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0);
+                                    icon.Fill = Brushes.Purple;
+                                    UpperLayerOfMap.Children.Add(icon);
+                                }
+                                else
+                                {
+                                    Ellipse icon = new Ellipse();
+                                    icon.Width = 10;
+                                    icon.Height = 10;
+                                    icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                    icon.VerticalAlignment = VerticalAlignment.Top;
+                                    icon.Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0);
+                                    icon.Fill = Brushes.Gray;
+                                    UpperLayerOfMap.Children.Add(icon);
+                                }
+                            }
+                        }
+                        {
+                            //if (!isInitialized)
+                            //{
+                            //    //一般来说new不会失败，所以下面的警告忽略。
+                            //    IGameMessage msg = communicator.Take();
+                            //    if (msg.PacketType == PacketType.MessageToInitialize)
+                            //    {
+                            //        MessageToInitialize? messageToInitialize = msg.Content as MessageToInitialize;
+                            //        if (messageToInitialize == null)
+                            //        {
+                            //            throw new Exception("Error:Null Map Serial");
+                            //        }
+                            //        Map.Source = new BitmapImage(new Uri(Convert.ToString(messageToInitialize.MapSerial) + ".png", UriKind.Relative));
+                            //        MessageToServer reply = new();
+                            //        reply.MessageType = MessageType.InitialLized;
+                            //        reply.PlayerID = playerID;
+                            //        reply.TeamID = teamID;
+                            //        communicator.SendMessage(reply);
+                            //        Begin.Background = Brushes.Yellow;
+                            //        Begin.Content = "⚪";
+                            //    }
+                            //    //若收到初始化信息，初始化，发送“已收到”并将IsGameRunning置为真,按钮置黄,标志变成⚪。
+                            //}
+                            //else if (!isClientStocked)
+                            //{
+                            //    IGameMessage msg = communicator.Take();
+                            //    switch (msg.PacketType)
+                            //    {
+                            //        case PacketType.MessageToOneClient:
+                            //            {
+                            //                MessageToOneClient? messageToOneClient = msg.Content as MessageToOneClient;
+                            //                if (messageToOneClient != null && messageToOneClient.PlayerID == playerID && messageToOneClient.TeamID == teamID)
+                            //                {
+                            //                    myMessages.Push(messageToOneClient.Message);
+                            //                }
+                            //            }
+                            //            break;
+                            //        case PacketType.MessageToClient:
+                            //            {
+                            //                bulletData.Clear();
+                            //                propData.Clear();
+                            //                playerData.Clear();
+                            //                while (UpperLayerOfMap.Children.Count != 0)
+                            //                {
+                            //                    UpperLayerOfMap.Children.RemoveAt(0);
+                            //                }
+                            //                MessageToClient? messageToClient = msg.Content as MessageToClient;
+                            //                if (messageToClient != null)
+                            //                {
+                            //                    foreach (MessageToClient.Types.GameObjMessage i in messageToClient.GameObjMessage)
+                            //                    {
+                            //                        switch (i.ObjCase)
+                            //                        {
+                            //                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
+                            //                                {
+                            //                                    bulletData.Add(i.MessageOfBullet);
+                            //                                    Ellipse item = new Ellipse();
+                            //                                    item.Stroke = Brushes.Black;
+                            //                                    item.Fill = Brushes.DarkBlue;
+                            //                                    item.HorizontalAlignment = HorizontalAlignment.Left;
+                            //                                    item.VerticalAlignment = VerticalAlignment.Top;
+                            //                                    item.Margin = new((i.MessageOfBullet.Y * 13 / 1000) - 4, (i.MessageOfBullet.X * 13 / 1000) - 4, 0, 0);//确认坐标轴方向
+                            //                                    item.Width = 8;
+                            //                                    item.Height = 8;
+                            //                                    UpperLayerOfMap.Children.Add(item);
+                            //                                    break;
+                            //                                }
+                            //                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
+                            //                                {
+                            //                                    playerData.Add(i.MessageOfCharacter);
+                            //                                    Ellipse item = new Ellipse();
+                            //                                    item.Stroke = Brushes.Orange;
+                            //                                    item.Fill = Brushes.Orange;//目前同种游戏实例的颜色都是一样的。
+                            //                                    item.HorizontalAlignment = HorizontalAlignment.Left;
+                            //                                    item.VerticalAlignment = VerticalAlignment.Top;
+                            //                                    item.Margin = new((i.MessageOfBullet.Y * 13 / 1000) - 6.5, (i.MessageOfBullet.X * 13 / 1000) - 6.5, 0, 0);
+                            //                                    item.Width = 13;
+                            //                                    item.Height = 13;
+                            //                                    UpperLayerOfMap.Children.Add(item);
+                            //                                    break;
+                            //                                }
+                            //                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
+                            //                                {
+                            //                                    propData.Add(i.MessageOfProp);
+                            //                                    Ellipse item = new Ellipse();
+                            //                                    item.Stroke = Brushes.Blue;
+                            //                                    item.Fill = Brushes.Blue;
+                            //                                    item.HorizontalAlignment = HorizontalAlignment.Left;
+                            //                                    item.VerticalAlignment = VerticalAlignment.Top;
+                            //                                    item.Margin = new((i.MessageOfBullet.Y * 13 / 1000) - 4, (i.MessageOfBullet.X * 13 / 1000) - 4, 0, 0);
+                            //                                    item.Width = 8;
+                            //                                    item.Height = 8;
+                            //                                    UpperLayerOfMap.Children.Add(item);
+                            //                                    break;
+                            //                                }
+                            //                            default: break;//目前不会对侧边栏的人物信息做出改动。
+                            //                        }
+                            //                    }
+                            //                }
+                            //            }
+                            //            break;
+                            //        default:
+                            //            break;
+                            //    }
+                            //    while (messageToServers.Count != 0)
+                            //    {
+                            //        communicator.SendMessage(messageToServers.Dequeue());
+                            //    }
+                            //    //对于MyMessage，进栈和出栈都在API中完成。
+                            //}
+                        }
                     }
                 };
                 communicator.Connect("127.0.0.1", 7777);
@@ -178,8 +508,9 @@ namespace Client
             }
             catch (Exception exc)
             {
-                ErrorDisplayer error = new("发生错误。以下是系统报告\n"+exc.Message);
+                ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
                 error.Show();
+                isGameRunning = false;
             }
         }
         //定时器事件，刷新地图
@@ -232,29 +563,26 @@ namespace Client
         //以下为Mainwindow自定义属性
         private DispatcherTimer timer;//定时器
         private ClientCommunication? communicator;
-        String[] args;
-        UInt64 t = 0;
-        static int onetime = 0;
+
+        private bool isGameRunning;
         private bool isClientStocked;
         private bool isInitialized;
 
         private Int64 playerID;
         private Int64 teamID;
 
-        private List<MessageOfCharacter>? playerData;
-        private List<MessageOfBullet>? bulletData;
-        private List<MessageOfProp>? propData;
+        private List<MessageToClient.Types.GameObjMessage> playerData;
+        private List<MessageToClient.Types.GameObjMessage> bulletData;
+        private List<MessageToClient.Types.GameObjMessage> propData;
+        private object drawPicLock = new object();
+
         private Stack<string>? myMessages;
         private Queue<MessageToServer>? messageToServers;
+
 
     }
 }
 //2021-10-23
 //目前没有画图。并且，Client端能够开始游戏，但不能停止游戏，也不会收到游戏停止的消息。加上该功能后记得游戏停止时把Begin钮变红,isGameRunning置false.
 //2021-10-25
-//调整了一些提示出现的逻辑，并且修改了计时器，使得Error弹窗不再频繁弹出
-//服务器逻辑：
-//开始时Client发送一个装有技能和人物编号的信息给Server(AddPlayer)（注1）。
-//Server已经指定了应该连接的玩家人数，当发送以上信息的人数达到指定人数后，Server将【自动开始游戏】并给每个玩家发送一个MessageToInitialize信息。
-//发送initialize信息后Server持续发送MessageToRefresh。第一帧的MessageToRefresh.MessageType为StartGame,最后一帧为EndGame,中间为Gaming。
-//注1：Client发送信息后，若ID不合法，仍能连接上Server。但会接到一个MessageToOneClient,信息类型为InvalidPlayer。相反，若ID合法，信息类型为ValidPlayer.
+//调整了一些提示出现的逻辑，并且修改了计时器，使得Error弹窗不再频繁弹出。

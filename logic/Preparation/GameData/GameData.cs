@@ -30,6 +30,10 @@ namespace Preparation.GameData
         {
             return pos.y / numOfPosGridPerCell;
         }
+        public static bool IsInTheSameCell(XYPosition pos1,XYPosition pos2)
+        {
+            return PosGridToCellX(pos1) == PosGridToCellX(pos2) && PosGridToCellY(pos1) == PosGridToCellY(pos2);
+        }
         #endregion
         #region 角色相关
         /// <summary>
@@ -60,6 +64,11 @@ namespace Preparation.GameData
         public const int MinPropTypeNum = 1;
         public const int MaxPropTypeNum = 10;
         public const int BuffTypeNum = 7;
+        public const int PropRadius = numOfPosGridPerCell / 2;
+        public const int PropMoveSpeed = 3000;
+        public const int MaxGemSize = 5; //随机生成的宝石最大size
+        public const long GemProduceTime = 10000;
+        public const long PropProduceTime = 10000;
         #endregion
         #region 游戏帧相关
         public const long checkInterval = 50;  //检查位置标志、补充子弹的帧时长

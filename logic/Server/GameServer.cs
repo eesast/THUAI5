@@ -137,8 +137,41 @@ namespace Server
                 case MessageType.Send:
                     SendMessageToTeammate(msg);
                     break;
-                //可能还有很多类型，只是我不知道该怎么写，先写着这些先
-                //等其他功能写好再加
+                case MessageType.Pick:
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
+                    {
+                        if (msg.PropType == Communication.Proto.PropType.Gem)
+                            game.PickGem(communicationToGameID[msg.TeamID, msg.PlayerID]);
+                        else
+                        {
+                            game.PickProp(communicationToGameID[msg.TeamID, msg.PlayerID], ProtoProp2UtilityProp(msg.PropType));
+                        }
+                    }
+                    break;
+                case MessageType.UseGem:
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
+                    {
+                        game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID], msg.GemSize);
+                    }
+                    break;
+                case MessageType.UseProp:
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
+                    {
+                        game.UseProp(communicationToGameID[msg.TeamID, msg.PlayerID]);
+                    }
+                    break;
+                case MessageType.ThrowGem:
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
+                    {
+                        game.ThrowGem(communicationToGameID[msg.TeamID, msg.PlayerID],(int)msg.TimeInMilliseconds ,msg.Angle, msg.GemSize);
+                    }
+                    break;
+                case MessageType.ThrowProp:
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
+                    {
+                        game.ThrowProp(communicationToGameID[msg.TeamID, msg.PlayerID], (int)msg.TimeInMilliseconds, msg.Angle);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -198,8 +231,6 @@ namespace Server
                 msg.MessageType = MessageType.Send;
                 serverCommunicator.SendToClient(msg);
             }
-
-            //game也要sendMessage吗？
 
             return;
         }
@@ -294,6 +325,38 @@ namespace Server
                 }
             )
             { IsBackground = true }.Start();
+        }
+        private Preparation.Utility.PropType ProtoProp2UtilityProp(Communication.Proto.PropType propType)
+        {
+            switch(propType)
+            {
+                case PropType.AddAp:
+                    return Preparation.Utility.PropType.addAP;
+                case PropType.AddCd:
+                    return Preparation.Utility.PropType.addCD;
+                case PropType.AddHp:
+                    return Preparation.Utility.PropType.addHP;
+                case PropType.AddLife:
+                    return Preparation.Utility.PropType.addLIFE;
+                case PropType.AddSpeed:
+                    return Preparation.Utility.PropType.addSpeed;
+                case PropType.Gem:
+                    return Preparation.Utility.PropType.Gem;
+                case PropType.MinusAp:
+                    return Preparation.Utility.PropType.minusAP;
+                case PropType.MinusCd:
+                    return Preparation.Utility.PropType.minusCD;
+                case PropType.MinusSpeed:
+                    return Preparation.Utility.PropType.minusSpeed;
+                case PropType.NullPropType:
+                    return Preparation.Utility.PropType.Null;
+                case PropType.Shield:
+                    return Preparation.Utility.PropType.Shield;
+                case PropType.Spear:
+                    return Preparation.Utility.PropType.Spear;
+                default:
+                    return Preparation.Utility.PropType.Null;
+            }
         }
         public GameServer(ArgumentOptions options) : base(options)
         {

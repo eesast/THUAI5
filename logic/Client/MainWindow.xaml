@@ -99,7 +99,7 @@
                 </TransformGroup>
             </Border.RenderTransform>
         </Border>
-        <Button Name="Help" Content=" 帮&#xA; 助&#xA;(H)" Height="84" Margin="859,170,9,0" VerticalAlignment="Top" Background="Ivory" Click="ClickForHelp"/>
+        <Button Content=" 帮&#xA; 助&#xA;(H)" HorizontalAlignment="Left" Height="84" Margin="859,170,0,0" VerticalAlignment="Top" Width="42" Background="Ivory" Click="ClickForHelp"/>
         <Grid x:Name="UpperLayerOfMap" HorizontalAlignment="Left" Height="676" Margin="182,45,0,0" VerticalAlignment="Top" Width="676">
         </Grid>
         <Button Name="Server" Content="📡" HorizontalAlignment="Left" Margin="857,62,0,0" VerticalAlignment="Top" Width="20" Click="SetServer"/>
