@@ -1,4 +1,4 @@
-#include "CAPI.h"
+#include "../include/CAPI.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
