@@ -119,7 +119,7 @@ namespace GameEngine
                                 flag = false;
                                 if (!isDestroyed)
                                 {
-                                    moveVec.length = deltaLen + (leftTime * obj.MoveSpeed / 1000);
+                                    moveVec.length = deltaLen + leftTime * obj.MoveSpeed / 1000;
                                     if ((collisionObj = collisionChecker.CheckCollision(obj, moveVec)) == null)
                                     {
                                         obj.Move(moveVec);

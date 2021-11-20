@@ -120,6 +120,7 @@ namespace Test
                         MessageToServer msgK = new MessageToServer();
                         msgK.MessageType = MessageType.UseGem;
                         msgK.PlayerID = playerID;
+                        msgK.GemSize = 1;
                         msgK.TeamID = teamID;
                         clientCommunication.SendMessage(msgK);
                         break;

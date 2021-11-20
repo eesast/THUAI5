@@ -65,10 +65,6 @@ namespace GameClass.GameObj
         public int Score
         {
             get => score;
-            set
-            {
-                score = value > 0 ? value : 0;
-            }
         }
 
         private readonly double attackRange;
@@ -272,7 +268,7 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 score += add;
-                //Debugger.Output(this, " 's score has been added to: " + score.ToString());
+                Debugger.Output(this, " 's score has been added to: " + score.ToString());
             }
         }
         /// <summary>
@@ -284,7 +280,7 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 score -= sub;
-                //Debugger.Output(this, " 's score has been subed to: " + score.ToString());
+                Debugger.Output(this, " 's score has been subed to: " + score.ToString());
             }
         }
         /// <summary>
