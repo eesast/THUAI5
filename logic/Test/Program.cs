@@ -47,7 +47,7 @@ namespace Test
             messageToServer.PlayerID = playerID;
             messageToServer.TeamID = teamID;
             messageToServer.ASkill1 = ActiveSkillType.SuperFast;
-            messageToServer.PSkill = PassiveSkillType.Vampire;
+            messageToServer.PSkill = PassiveSkillType.SpeedUpWhenLeavingGrass;
              
             clientCommunication.OnReceive += () =>
             {
