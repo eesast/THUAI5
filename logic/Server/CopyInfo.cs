@@ -24,7 +24,7 @@ namespace Server
             msg.MessageOfCharacter.Y = player.Position.y;
             msg.MessageOfCharacter.AttackRange = player.AttackRange;
             msg.MessageOfCharacter.Buff = 0; //没有buff这个属性，是否要加？
-            msg.MessageOfCharacter.BulletNum = player.BulletNum;  
+            msg.MessageOfCharacter.BulletNum = player.BulletNum;
             msg.MessageOfCharacter.CanMove = player.CanMove;
             msg.MessageOfCharacter.CD = player.CD;
             msg.MessageOfCharacter.GemNum = player.GemNum;
@@ -35,7 +35,7 @@ namespace Server
             msg.MessageOfCharacter.Radius = player.Radius;
             msg.MessageOfCharacter.Speed = player.MoveSpeed;
             msg.MessageOfCharacter.TimeUntilCommonSkillAvailable = player.TimeUntilCommonSkillAvailable;
-            
+
             //应该要发队伍分数，这里先发个人分数
             msg.MessageOfCharacter.Score = player.Score;
 
@@ -43,7 +43,7 @@ namespace Server
             msg.MessageOfCharacter.TimeUntilUltimateSkillAvailable = 0;
             msg.MessageOfCharacter.Vampire = player.Vampire;
 
-            switch(player.Place)
+            switch (player.Place)
             {
                 case Preparation.Utility.PlaceType.Land:
                     msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.Land;
@@ -187,7 +187,7 @@ namespace Server
             }
             msg.MessageOfBullet.X = bullet.Position.x;
             msg.MessageOfBullet.Y = bullet.Position.y;
-            if(bullet.Parent!=null)
+            if (bullet.Parent != null)
                 msg.MessageOfBullet.ParentID = bullet.Parent.ID;
             switch (bullet.Place)
             {

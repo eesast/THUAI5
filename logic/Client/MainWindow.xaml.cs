@@ -36,15 +36,14 @@ namespace Client
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
             timer.Start();
-            isGameRunning = false;
-            isClientStocked = false;
-            isInitialized = false;
+            isClientStocked = true;
             playerData = new List<MessageToClient.Types.GameObjMessage>();
             bulletData = new List<MessageToClient.Types.GameObjMessage>();
             propData = new List<MessageToClient.Types.GameObjMessage>();
             myMessages = new();
-            messageToServers = new();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            communicator = new ClientCommunication();
+            communicator.OnReceive += OnReceive;
             //注：队伍用边框区分，人物编号以背景颜色区分
             //角色死亡则对应信息框变灰
             //被动技能和buff在人物编号后用彩色文字注明
@@ -53,13 +52,9 @@ namespace Client
         //基础窗口函数
         private void ClickToClose(object sender, RoutedEventArgs e)
         {
-            if (communicator != null)
+            if (communicator.Client.IsConnected)
             {
-                if (communicator.Client.IsConnected)
-                {
-                    _ = communicator.Stop();
-                }
-                communicator.Dispose();
+                _ = communicator.Stop();
             }
             Application.Current.Shutdown();
         }
@@ -74,32 +69,6 @@ namespace Client
         }
 
         //Client控制函数
-        private void ClickToBegin(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if(communicator == null)
-                { 
-                    throw new Exception("Error:communicator is unexpectedly null");
-                }
-                else if (communicator.Client.IsConnected && (!isGameRunning))
-                {
-                    MessageToServer msg = new();
-                    msg.MessageType = MessageType.StartGame;
-                    msg.PlayerID = playerID;
-                    msg.TeamID = teamID;
-                    communicator.SendMessage(msg);
-                    //isGameRunning = true; 开始游戏应在收到消息后才开始
-                    Begin.Background = Brushes.Gray;//未完成初始化但已按下按钮，显示为灰色。完成后显示为黄色。
-                }
-            }
-            catch (Exception exc)
-            {
-                ErrorDisplayer error = new(exc.ToString());
-                error.Show();
-                Begin.Background = Brushes.Crimson;
-            }
-        }
 
         private void ClickToPauseOrContinue(object sender, RoutedEventArgs e)
         {
@@ -131,7 +100,7 @@ namespace Client
         //以下两个函数可能需要网站协助
         private void ClickToCheckLadder(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void ClickForUpdate(object sender, RoutedEventArgs e)
@@ -179,84 +148,156 @@ namespace Client
         {
 
         }
-        private void SetServer(object sender, RoutedEventArgs e)
-        {
-            //打开server
-            Server.Background = Brushes.Green;
-        }
-
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
-            Connect.Background = Brushes.Gray;
-            try
+            if (!communicator.Client.IsConnected)
             {
-                using (var sr = new StreamReader("ConnectInfo.txt"))
+                try
                 {
+                    using (var sr = new StreamReader(".\\ConnectInfo.txt"))
+                    {
 #pragma warning disable CS8602 // 解引用可能出现空引用。
-                    string[] comInfo = sr.ReadLine().Split(' ');
+                        string[] comInfo = sr.ReadLine().Split(' ');
 #pragma warning restore CS8602 // 解引用可能出现空引用。
-                    if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == "")
-                    {
-                        throw new Exception("Length<4");
+                        if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == "")
+                        {
+                            throw new Exception("Length<4");
+                        }
+                        playerID = Convert.ToInt64(comInfo[2]);
+                        teamID = Convert.ToInt64(comInfo[3]);
+                        Connect.Background = Brushes.Gray;
+                        if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
+                        {
+                            Connect.Background = Brushes.Aqua;
+                            Exception exc = new("TimeOut");
+                            throw exc;
+                        }
+                        else if (communicator.Client.IsConnected)
+                        {
+                            MessageToServer msg = new();
+                            msg.MessageType = MessageType.AddPlayer;
+                            msg.PlayerID = playerID;
+                            msg.TeamID = teamID;
+                            communicator.SendMessage(msg);
+                            Connect.Background = Brushes.Green;
+                            isClientStocked = false;
+                            PorC.Content = "⏸";
+                        }//建立连接的同时加入人物
                     }
-                    communicator = new ClientCommunication();
-                    communicator.OnReceive += OnReceive;
-                    playerID = Convert.ToInt64(comInfo[2]);
-                    teamID = Convert.ToInt64(comInfo[3]);
-                    if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
+                }
+                catch (Exception exc)
+                {
+                    if (exc.Message == "Length<4")
                     {
-                        Exception exc = new("TimeOut");
-                        throw exc;
+                        ConnectRegister crg = new();
+                        crg.State.Text = "配置非法，请重新输入或检查配置文件。";
+                        crg.Show();
                     }
-                    else if (communicator.Client.IsConnected)
+                    else
                     {
-                        Connect.Background = Brushes.Green;
-                        MessageToServer msg = new();
-                        msg.MessageType = MessageType.AddPlayer;
-                        msg.ASkill1 = ActiveSkillType.SuperFast;
-                        msg.PSkill = PassiveSkillType.RecoverAfterBattle;
-                        msg.PlayerID = playerID;
-                        msg.TeamID = teamID;
-                        communicator.SendMessage(msg);
-                        Connect.Background = Brushes.Green;
-                    }//建立连接的同时加入人物
+                        ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
+                        error.Show();
+                        Connect.Background = Brushes.Aqua;
+                        if (communicator != null)
+                        {
+                            if (communicator.Client.IsConnected)
+                            {
+                                _ = communicator.Stop();
+                            }
+                            communicator.Dispose();
+                            communicator = null;
+                        }
+                    }
                 }
             }
-            catch (Exception exc)
+            else
             {
-                if(exc.Message== "Length<4")
-                {
-                    ConnectRegister crg = new();
-                    crg.State.Text = "配置非法，请重新输入或检查配置文件。";
-                    crg.Show();
-                }
-                else
-                {
-                    ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
-                    error.Show();
-                    Connect.Background = Brushes.Aqua;
-                    if (communicator != null)
-                    {
-                        if (communicator.Client.IsConnected)
-                        {
-                            _ = communicator.Stop();
-                        }
-                        communicator.Dispose();
-                        communicator = null;
-                    }
-                }
+                _=communicator.Stop();
+                Connect.Background = Brushes.Aqua;
             }
         }
 
-        public bool CanSee(PlaceType myPlace, PlaceType other)
+        private void KeyBoardControl(object sender, KeyEventArgs e)
         {
-            if (other == PlaceType.Invisible)
-                return false;
-            if (other == PlaceType.Land) 
-                return true;
-            if (other == myPlace)
-                return true;
-            return false;
+            switch (e.Key)
+            {
+                case Key.W:
+                    MessageToServer msgA = new MessageToServer();
+                    msgA.MessageType = MessageType.Move;
+                    msgA.PlayerID = playerID;
+                    msgA.TeamID = teamID;
+                    msgA.TimeInMilliseconds = 50;
+                    msgA.Angle = Math.PI;
+                    communicator.SendMessage(msgA);
+                    break;
+                case Key.S:
+                    MessageToServer msgD = new MessageToServer();
+                    msgD.MessageType = MessageType.Move;
+                    msgD.PlayerID = playerID;
+                    msgD.TeamID = teamID;
+                    msgD.TimeInMilliseconds = 50;
+                    msgD.Angle = 0;
+                    communicator.SendMessage(msgD);
+                    break;
+                case Key.D:
+                    MessageToServer msgW = new MessageToServer();
+                    msgW.MessageType = MessageType.Move;
+                    msgW.PlayerID = playerID;
+                    msgW.TeamID = teamID;
+                    msgW.TimeInMilliseconds = 50;
+                    msgW.Angle = Math.PI / 2;
+                    communicator.SendMessage(msgW);
+                    break;
+                case Key.A:
+                    MessageToServer msgS = new MessageToServer();
+                    msgS.MessageType = MessageType.Move;
+                    msgS.PlayerID = playerID;
+                    msgS.TeamID = teamID;
+                    msgS.TimeInMilliseconds = 50;
+                    msgS.Angle = 3 * Math.PI / 2;
+                    communicator.SendMessage(msgS);
+                    break;
+                case Key.J:
+                    MessageToServer msgJ = new MessageToServer();
+                    msgJ.MessageType = MessageType.Attack;
+                    msgJ.PlayerID = playerID;
+                    msgJ.TeamID = teamID;
+                    msgJ.Angle = Math.PI;
+                    communicator.SendMessage(msgJ);
+                    break;
+                case Key.U:
+                    MessageToServer msgU = new MessageToServer();
+                    msgU.MessageType = MessageType.UseCommonSkill;
+                    msgU.PlayerID = playerID;
+                    msgU.TeamID = teamID;
+                    communicator.SendMessage(msgU);
+                    break;
+                case Key.K:
+                    MessageToServer msgK = new MessageToServer();
+                    msgK.MessageType = MessageType.UseGem;
+                    msgK.PlayerID = playerID;
+                    msgK.TeamID = teamID;
+                    communicator.SendMessage(msgK);
+                    break;
+                case Key.L:
+                    MessageToServer msgL = new MessageToServer();
+                    msgL.MessageType = MessageType.ThrowGem;
+                    msgL.PlayerID = playerID;
+                    msgL.TeamID = teamID;
+                    msgL.GemSize = 1;
+                    msgL.TimeInMilliseconds = 3000;
+                    msgL.Angle = Math.PI;
+                    communicator.SendMessage(msgL);
+                    break;
+                case Key.P:
+                    MessageToServer msgP = new MessageToServer();
+                    msgP.MessageType = MessageType.Pick;
+                    msgP.PlayerID = playerID;
+                    msgP.TeamID = teamID;
+                    msgP.PropType = Communication.Proto.PropType.Gem;
+                    communicator.SendMessage(msgP);
+                    break;
+            }
         }
         private void OnReceive()
         {
@@ -271,10 +312,8 @@ namespace Client
                     switch (content.MessageType)
                     {
                         case MessageType.InitialLized:
-                            isInitialized = true;
                             break;
                         case MessageType.StartGame:
-                            isGameRunning = true;
                             foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
                             {   
                                 switch (obj.ObjCase)
@@ -327,7 +366,6 @@ namespace Client
                                         break;
                                 }
                             }
-                            isGameRunning = false;
                             break;
                     }
                 }
@@ -336,17 +374,18 @@ namespace Client
         //定时器事件，刷新地图
         private void Refresh(object? sender, EventArgs e)
         {
-            try
+            if (!isClientStocked)
             {
-                if(isGameRunning)
+                try
                 {
                     UpperLayerOfMap.Children.Clear();
-                    if (communicator==null)
+                    if (communicator == null)
                     {
                         throw new Exception("Error: communicator is unexpectly null during a running game");
                     }
                     else if (communicator.Client.IsConnected)
                     {
+
                         lock(drawPicLock) //加锁是必要的，画图操作和接收信息操作不能同时进行
                         {
                             for (int i = 0; i < defaultMap.GetLength(0); i++)
@@ -551,13 +590,12 @@ namespace Client
                 isGameRunning = false;
             }
         }
+        //定时器事件，刷新地图
         //以下为Mainwindow自定义属性
         private DispatcherTimer timer;//定时器
         private ClientCommunication? communicator;
 
-        private bool isGameRunning;
         private bool isClientStocked;
-        private bool isInitialized;
 
         private Int64 playerID;
         private Int64 teamID;
@@ -569,6 +607,7 @@ namespace Client
         private MessageToClient.Types.GameObjMessage myInfo;  //这个client自己的message
 
         private Stack<string>? myMessages;
+
         private Queue<MessageToServer>? messageToServers;
         /// <summary>
         /// 50*50
