@@ -109,11 +109,7 @@ namespace GameClass.GameObj
         }
         public override FastBullet Clone(Character parent)
         {
-<<<<<<< HEAD
-            Bullet0 a = new Bullet0(this.Position, this.Radius, this.MoveSpeed, this.AP, this.HasSpear);
-=======
             FastBullet a = new FastBullet(this.Position, this.Radius, this.HasSpear);
->>>>>>> 86b0e2d2ed915257b2b73fcf19ffe3e0dc3438fa
             a.Parent = parent;
             return a;
         }

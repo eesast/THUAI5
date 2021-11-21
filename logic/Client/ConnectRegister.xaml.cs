@@ -30,12 +30,12 @@ namespace Client
         {
             try
             {
-                if (!File.Exists("ConnectInfo.txt"))
+                if (!File.Exists(".\\ConnectInfo.txt"))
                 {
                     File.Create("ConnectInfo.txt");
                     State.Text = "Created File";
                 }
-                else using (var sw = new StreamWriter("ConnectInfo.txt"))
+                else using (var sw = new StreamWriter(".\\ConnectInfo.txt"))
                 {
                     sw.WriteLine(IPBox.Text + " " + PortBox.Text + " " + PlayerIDBox.Text + " " + TeamIDBox.Text);
                     State.Text = "Info Registered.";
