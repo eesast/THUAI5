@@ -54,5 +54,27 @@
 - 扔出宝石
 - 需要指定：TeamID, PlayerID, TimeInMilliseconds, Angle, GemSize（扔出的宝石数量）
 
+# 对选手的限制
 
+## 视野
 
+- 草丛外的人看不到草丛内的物体
+
+- 具体逻辑：
+
+  - 根据消息中的place进行判断
+
+  - 假设有物体A和物体B，它们的place分别记为Xa，Xb，那么A能否看到B呢？
+
+    - ~~~c#
+      // A发起请求要看到周围物体，下面分析B能否被A看见
+      if (Xb == PlaceType.Invisible) //先判断B是否隐身，隐身则A看不见B
+          return false;
+      if (Xb == PlaceType.Land) //B是否在land上，若是，则A看得见B
+          return true;
+      if (obj.Place == this.Place) //A和B是否在同一个草丛里，如果是，则A看的见B
+          return true;
+      return false;  //A看不见B
+      ~~~
+
+- 视野要在客户端进行限制
