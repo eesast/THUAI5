@@ -2,7 +2,7 @@
   "profiles": {
     "Server": {
       "commandName": "Project",
-      "commandLineArgs": "--port=7777 --teamCount=2 --playerCount=1  --gameTimeInSecond=10"
+      "commandLineArgs": "--port=7777 --teamCount=2 --playerCount=1  --gameTimeInSecond=600"
     }
   }
 }
