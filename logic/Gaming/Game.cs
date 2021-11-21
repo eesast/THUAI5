@@ -120,6 +120,8 @@ namespace Gaming
             if (!gameMap.Timer.StartGame(milliSeconds))
                 return false;
 
+            EndGame(); //游戏结束时要做的事
+
             //清除所有对象
             gameMap.PlayerListLock.EnterWriteLock();
             try
@@ -151,6 +153,21 @@ namespace Gaming
             finally { gameMap.GemListLock.ExitWriteLock(); }
 
             return true;
+        }
+
+        public void EndGame()
+        {
+            gameMap.PlayerListLock.EnterWriteLock();
+            try
+            {
+                foreach (var player in gameMap.PlayerList)  //这里始终运行不下去，为什么？？？
+                {
+                    gemManager.UseAllGem((Character)player);
+                    Console.WriteLine("Fuck");
+                }
+            }
+            finally { gameMap.PlayerListLock.ExitWriteLock(); }
+
         }
         public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
         {
@@ -257,6 +274,22 @@ namespace Gaming
             }
             else return false;
         }
+
+        public void AllPlayerUsePassiveSkill()
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            gameMap.PlayerListLock.EnterWriteLock();
+            try
+            {
+                foreach (Character player in gameMap.PlayerList)
+                {
+                    skillManager.UsePassiveSkill(player);
+                }
+            }
+            finally { gameMap.PlayerListLock.ExitWriteLock(); }
+        }
+
         public int GetTeamScore(long teamID)
         {
             return teamList[(int)teamID].Score;
