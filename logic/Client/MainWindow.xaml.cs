@@ -312,7 +312,6 @@ namespace Client
                     switch (content.MessageType)
                     {
                         case MessageType.InitialLized:
-                            isInitialized = true;
                             break;
                         case MessageType.StartGame:
                             foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
