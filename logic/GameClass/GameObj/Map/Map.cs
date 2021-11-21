@@ -105,7 +105,7 @@ namespace GameClass.GameObj
                 case 4:
                     return PlaceType.Grass3;
                 default:
-                    return PlaceType.Null; 
+                    return PlaceType.Null;
             }
         }
         public Character? FindPlayer(long playerID)

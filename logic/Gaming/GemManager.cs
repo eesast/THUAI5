@@ -153,7 +153,7 @@ namespace Gaming
                 if (num > character.GemNum)
                     num = character.GemNum;
 
-                if(num > 0)
+                if (num > 0)
                 {
                     character.GemNum -= num;
                     character.AddScore(GemToScore(num));

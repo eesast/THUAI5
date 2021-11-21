@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="ClientV" Height="738" Width="910" Background="White" ResizeMode="NoResize" WindowStyle="None" MouseLeftButtonDown="DragWindow">
+        Title="ClientV" Height="738" Width="910" KeyDown="KeyBoardControl" Background="White" ResizeMode="NoResize" WindowStyle="None" MouseLeftButtonDown="DragWindow">
     <Window.Resources>
 
         <ImageBrush x:Key="Logo" ImageSource="Logo.png"/>
@@ -17,13 +17,11 @@
         </Grid.ColumnDefinitions>
 
         <Image x:Name="Map" Margin="182,45,52,0" Stretch="Fill" Source="Map.png"/>
-
-        <Button x:Name="Begin" Content="⚔" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Width="26" RenderTransformOrigin="0.597,-2.532" Margin="156,0,0,636" Background="Crimson" BorderBrush="Crimson" FontFamily="Microsoft YaHei" Click="ClickToBegin"/>
-        <Button x:Name="PorC" Content="⏸" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Width="25" RenderTransformOrigin="0.637,-0.304" Margin="157,0,0,605" Background="Green" BorderBrush="Green" FontFamily="Microsoft YaHei" Click="ClickToPauseOrContinue"/>
+        <Button x:Name="PorC" Content="▶" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Width="25" RenderTransformOrigin="0.637,-0.304" Margin="157,0,0,648" Background="Green" BorderBrush="Green" FontFamily="Microsoft YaHei" Click="ClickToPauseOrContinue"/>
         <Button Content="❎" HorizontalAlignment="Left" Height="36" VerticalAlignment="Bottom" Width="51" RenderTransformOrigin="0.488,0.772" Margin="859,0,0,685" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToClose"/>
         <Button Content="—" Height="34" VerticalAlignment="Bottom" RenderTransformOrigin="0.488,0.772" Margin="803,0,56,687" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToMinimize"/>
         <Label Content="THUAI5 Client for players "  HorizontalAlignment="Right" Height="38" Margin="0,0,622,680" VerticalAlignment="Bottom" Width="254" FontSize="20" />
-        <Button x:Name="Mode" Content="⚙" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Width="25" RenderTransformOrigin="0.597,-2.532" Margin="157,0,0,575" Background="BlueViolet" BorderBrush="BlueViolet" FontFamily="Microsoft YaHei" Click="ClickToSetMode"/>
+        <Button x:Name="Mode" Content="⚙" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Width="25" RenderTransformOrigin="0.597,-2.532" Margin="157,0,0,618" Background="BlueViolet" BorderBrush="BlueViolet" FontFamily="Microsoft YaHei" Click="ClickToSetMode"/>
         <Button Content="关&#xA;于&#xA;我&#xA;们&#xA;(F)" HorizontalAlignment="Left" Height="84" Margin="859,424,0,0" VerticalAlignment="Top" Width="42" Background="Ivory" Click="ClickToVisitEESAST"/>
 
         <Image Margin="0,1,874,681" Stretch="Fill" Source="pack://siteoforigin:,,,/Logo.png" RenderTransformOrigin="0.511,1.002"/>
@@ -104,7 +102,6 @@
         <Button Content=" 帮&#xA; 助&#xA;(H)" HorizontalAlignment="Left" Height="84" Margin="859,170,0,0" VerticalAlignment="Top" Width="42" Background="Ivory" Click="ClickForHelp"/>
         <Grid x:Name="UpperLayerOfMap" HorizontalAlignment="Left" Height="676" Margin="182,45,0,0" VerticalAlignment="Top" Width="676">
         </Grid>
-        <Button Name="Server" Content="📡" HorizontalAlignment="Left" Margin="857,62,0,0" VerticalAlignment="Top" Width="20" Click="SetServer"/>
-        <Button Name="Connect" Content="🔗" HorizontalAlignment="Left" Margin="857,101,0,0" VerticalAlignment="Top" Width="20" Background="Aqua" Click="ClickToConnect"/>
+        <Button Name="Connect" Content="🔗" HorizontalAlignment="Left" Margin="856,53,0,0" VerticalAlignment="Top" Width="20" Background="Aqua" Click="ClickToConnect"/>
     </Grid>
 </Window>
