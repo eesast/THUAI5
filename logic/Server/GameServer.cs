@@ -273,7 +273,7 @@ namespace Server
                 Thread.Sleep(1); //游戏未开始，等待
 
             SendMessageToAllClients(MessageType.StartGame);     //发送开始游戏信息
-
+            game.AllPlayerUsePassiveSkill();
             //定时向client发送游戏情况
             new Thread
             (

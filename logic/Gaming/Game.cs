@@ -274,6 +274,22 @@ namespace Gaming
             }
             else return false;
         }
+
+        public void AllPlayerUsePassiveSkill()
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            gameMap.PlayerListLock.EnterWriteLock();
+            try
+            {
+                foreach (Character player in gameMap.PlayerList)
+                {
+                    skillManager.UsePassiveSkill(player);
+                }
+            }
+            finally { gameMap.PlayerListLock.ExitWriteLock(); }
+        }
+
         public int GetTeamScore(long teamID)
         {
             return teamList[(int)teamID].Score;
