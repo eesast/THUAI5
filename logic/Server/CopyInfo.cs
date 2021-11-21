@@ -179,7 +179,7 @@ namespace Server
                     msg.MessageOfBullet.Type = Communication.Proto.BulletType.OrdinaryBullet;
                     break;
                 case Preparation.Utility.BulletType.FastBullet:
-                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.FastBullet;
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.FastBullet;
                     break;
                 default:
                     msg.MessageOfBullet.Type = Communication.Proto.BulletType.NullBulletType;
@@ -189,6 +189,27 @@ namespace Server
             msg.MessageOfBullet.Y = bullet.Position.y;
             if(bullet.Parent!=null)
                 msg.MessageOfBullet.ParentID = bullet.Parent.ID;
+            switch (bullet.Place)
+            {
+                case Preparation.Utility.PlaceType.Land:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Land;
+                    break;
+                case Preparation.Utility.PlaceType.Grass1:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass1;
+                    break;
+                case Preparation.Utility.PlaceType.Grass2:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass2;
+                    break;
+                case Preparation.Utility.PlaceType.Grass3:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass3;
+                    break;
+                case Preparation.Utility.PlaceType.Invisible:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Invisible;
+                    break;
+                default:
+                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.NullPlaceType;
+                    break;
+            }
             return msg;
         }
         private static MessageToClient.Types.GameObjMessage Prop(Prop prop)
@@ -245,6 +266,27 @@ namespace Server
             else
             {
                 msg.MessageOfProp.Size = 1;
+            }
+            switch (prop.Place)
+            {
+                case Preparation.Utility.PlaceType.Land:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Land;
+                    break;
+                case Preparation.Utility.PlaceType.Grass1:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass1;
+                    break;
+                case Preparation.Utility.PlaceType.Grass2:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass2;
+                    break;
+                case Preparation.Utility.PlaceType.Grass3:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass3;
+                    break;
+                case Preparation.Utility.PlaceType.Invisible:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Invisible;
+                    break;
+                default:
+                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.NullPlaceType;
+                    break;
             }
             return msg;
         }
