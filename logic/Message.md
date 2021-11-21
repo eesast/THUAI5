@@ -72,7 +72,7 @@
           return false;
       if (Xb == PlaceType.Land) //B是否在land上，若是，则A看得见B
           return true;
-      if (obj.Place == this.Place) //A和B是否在同一个草丛里，如果是，则A看的见B
+      if (Xa == Xb) //A和B是否在同一个草丛里，如果是，则A看的见B
           return true;
       return false;  //A看不见B
       ~~~
