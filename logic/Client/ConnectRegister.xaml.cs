@@ -37,7 +37,7 @@ namespace Client
                 }
                 else using (var sw = new StreamWriter(".\\ConnectInfo.txt"))
                 {
-                    sw.WriteLine(IPBox.Text + " " + PortBox.Text + " " + PlayerIDBox.Text + " " + TeamIDBox.Text);
+                    sw.WriteLine(IPBox.Text + " " + PortBox.Text + " " + PlayerIDBox.Text + " " + TeamIDBox.Text+" "+Pskill.Text+" "+Askill.Text);
                     State.Text = "Info Registered.";
                 }
             }
