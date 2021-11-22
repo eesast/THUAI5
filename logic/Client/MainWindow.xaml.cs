@@ -35,6 +35,7 @@ namespace Client
             };
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
+            DrawMap();
             timer.Start();
             isClientStocked = true;
             playerData = new List<MessageToClient.Types.GameObjMessage>();
@@ -67,7 +68,47 @@ namespace Client
         {
             DragMove();
         }
-
+        private void Attack(object sender,RoutedEventArgs e)
+        {
+            MessageToServer msgJ = new MessageToServer();
+            msgJ.MessageType = MessageType.Attack;
+            msgJ.PlayerID = playerID;
+            msgJ.TeamID = teamID;
+            foreach(var i in playerData)
+            {
+                //待补充
+            }
+            communicator.SendMessage(msgJ);
+        }
+        private void DrawMap()
+        {
+            for (int i = 0; i < defaultMap.GetLength(0); i++)
+            {
+                for (int j = 0; j < defaultMap.GetLength(1); j++)
+                {
+                    Rectangle rectangle = new Rectangle();
+                    rectangle.Width = 13;
+                    rectangle.Height = 13;
+                    rectangle.HorizontalAlignment = HorizontalAlignment.Left;
+                    rectangle.VerticalAlignment = VerticalAlignment.Top;
+                    rectangle.Margin = new Thickness(13 * (j), 13 * (i), 0, 0);
+                    switch (defaultMap[i, j])
+                    {
+                        case 1:
+                            rectangle.Fill = Brushes.Brown;
+                            rectangle.Stroke = Brushes.Brown;
+                            break;
+                        case 2:
+                        case 3:
+                        case 4:
+                            rectangle.Fill = Brushes.Green;
+                            rectangle.Stroke = Brushes.Green;
+                            break;
+                    }
+                    UnderLayerOfMap.Children.Add(rectangle);
+                }
+            }
+        }
         //Client控制函数
 
         private void ClickToPauseOrContinue(object sender, RoutedEventArgs e)
@@ -159,9 +200,9 @@ namespace Client
 #pragma warning disable CS8602 // 解引用可能出现空引用。
                         string[] comInfo = sr.ReadLine().Split(' ');
 #pragma warning restore CS8602 // 解引用可能出现空引用。
-                        if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == "")
+                        if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == ""|| comInfo[4] == ""|| comInfo[5] == "")
                         {
-                            throw new Exception("Length<4");
+                            throw new Exception("Input data not sufficent");
                         }
                         playerID = Convert.ToInt64(comInfo[2]);
                         teamID = Convert.ToInt64(comInfo[3]);
@@ -178,8 +219,61 @@ namespace Client
                             msg.MessageType = MessageType.AddPlayer;
                             msg.PlayerID = playerID;
                             msg.TeamID = teamID;
-                            msg.ASkill1 = ActiveSkillType.BecomeAssassin;
-                            msg.PSkill = PassiveSkillType.SpeedUpWhenLeavingGrass;
+                            switch(Convert.ToInt64(comInfo[4]))
+                            {
+                                case 0:
+                                    msg.PSkill = PassiveSkillType.NullPassiveSkillType;
+                                    break;
+                                case 1:
+                                    msg.PSkill = PassiveSkillType.RecoverAfterBattle;
+                                    break;
+                                case 2:
+                                    msg.PSkill = PassiveSkillType.SpeedUpWhenLeavingGrass;
+                                    break;
+                                case 3:
+                                    msg.PSkill = PassiveSkillType.Vampire;
+                                    break;
+                                case 4:
+                                    msg.PSkill = PassiveSkillType.Pskill3;
+                                    break;
+                                case 5:
+                                    msg.PSkill = PassiveSkillType.Pskill4;
+                                    break;
+                                default:
+                                    msg.PSkill = PassiveSkillType.Pskill5;
+                                    break;
+                            }
+                            switch(Convert.ToInt64(comInfo[5]))
+                            {
+                                case 0:
+                                    msg.ASkill1 = ActiveSkillType.NullActiveSkillType;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                case 1:
+                                    msg.ASkill1 = ActiveSkillType.BecomeAssassin;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                case 2:
+                                    msg.ASkill1 = ActiveSkillType.BecomeVampire;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                case 3:
+                                    msg.ASkill1 = ActiveSkillType.NuclearWeapon;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                case 4:
+                                    msg.ASkill1 = ActiveSkillType.SuperFast;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                case 5:
+                                    msg.ASkill1 = ActiveSkillType.Askill4;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                default:
+                                    msg.ASkill1 = ActiveSkillType.Askill5;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                            }
                             communicator.SendMessage(msg);
                             Connect.Background = Brushes.Green;
                             isClientStocked = false;
@@ -397,39 +491,39 @@ namespace Client
                 try
                 {
                     UpperLayerOfMap.Children.Clear();
-                    if (communicator == null)
+                    if (!communicator.Client.IsConnected)
                     {
-                        throw new Exception("Error: communicator is unexpectly null during a running game");
+                        throw new Exception("Client is unconnected.");
                     }
-                    else if (communicator.Client.IsConnected)
+                    else
                     {
 
                         lock (drawPicLock) //加锁是必要的，画图操作和接收信息操作不能同时进行
                         {
-                            for (int i = 0; i < defaultMap.GetLength(0); i++)
-                            {
-                                for (int j = 0; j < defaultMap.GetLength(1); j++)
-                                {
-                                    Rectangle rectangle = new Rectangle();
-                                    rectangle.Width = 13;
-                                    rectangle.Height = 13;
-                                    rectangle.HorizontalAlignment = HorizontalAlignment.Left;
-                                    rectangle.VerticalAlignment = VerticalAlignment.Top;
-                                    rectangle.Margin = new Thickness(13 * (j + 0.5), 13 * (i + 0.5), 0, 0);
-                                    switch (defaultMap[i, j])
-                                    {
-                                        case 1:
-                                            rectangle.Fill = Brushes.Brown;
-                                            break;
-                                        case 2:
-                                        case 3:
-                                        case 4:
-                                            rectangle.Fill = Brushes.Green;
-                                            break;
-                                    }
-                                    UpperLayerOfMap.Children.Add(rectangle);
-                                }
-                            }
+                            //for (int i = 0; i < defaultMap.GetLength(0); i++)
+                            //{
+                            //    for (int j = 0; j < defaultMap.GetLength(1); j++)
+                            //    {
+                            //        Rectangle rectangle = new Rectangle();
+                            //        rectangle.Width = 13;
+                            //        rectangle.Height = 13;
+                            //        rectangle.HorizontalAlignment = HorizontalAlignment.Left;
+                            //        rectangle.VerticalAlignment = VerticalAlignment.Top;
+                            //        rectangle.Margin = new Thickness(13 * (j + 0.5), 13 * (i + 0.5), 0, 0);
+                            //        switch (defaultMap[i, j])
+                            //        {
+                            //            case 1:
+                            //                rectangle.Fill = Brushes.Brown;
+                            //                break;
+                            //            case 2:
+                            //            case 3:
+                            //            case 4:
+                            //                rectangle.Fill = Brushes.Green;
+                            //                break;
+                            //        }
+                            //        UpperLayerOfMap.Children.Add(rectangle);
+                            //    }
+                            //}
                             foreach (var data in playerData)
                             {
                                 if (CanSee(data.MessageOfCharacter.Place, data.MessageOfCharacter.Guid))
@@ -515,7 +609,6 @@ namespace Client
 
         private Stack<string>? myMessages;
 
-        private Queue<MessageToServer> messageToServers;
         /// <summary>
         /// 50*50
         /// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3 
@@ -580,3 +673,7 @@ namespace Client
 //目前没有画图。并且，Client端能够开始游戏，但不能停止游戏，也不会收到游戏停止的消息。加上该功能后记得游戏停止时把Begin钮变红,isGameRunning置false.
 //2021-10-25
 //调整了一些提示出现的逻辑，并且修改了计时器，使得Error弹窗不再频繁弹出。
+//2021-11-22
+//更改显示方式，现在会在底层图层加载地图；为更新侧边栏人物信息和鼠标点击攻击做好了准备，但缺少ID属性；报错现在会显示时间，程序不再检测communicator是否为空，而是检测是否已连接；
+//放弃了log窗口设计；可以注册主动技能和被动技能，主动技能2号暂不采用；messageToServer弃用，改为包装后立刻发送。。
+//下一步的更新目标:引入生成地图机制；更新侧边栏人物信息和鼠标点击攻击；快捷键；未完成的按钮。
