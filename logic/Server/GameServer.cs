@@ -222,8 +222,8 @@ namespace Server
                 Console.WriteLine("Message string is too long!");
 #endif
             }
-            else 
-            { 
+            else
+            {
                 MessageToOneClient msg = new MessageToOneClient();
                 msg.PlayerID = msgToServer.ToPlayerID;
                 msg.TeamID = msgToServer.TeamID;

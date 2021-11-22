@@ -159,7 +159,7 @@ namespace GameEngine
                         MaxTolerantTimeExceedCount = ulong.MaxValue,
                         TimeExceedAction = b =>
                         {
-                            if (b) Console.WriteLine("Fetal Error: The computer runs so slow that the object cannot finish moving during this time!!!!!!");
+                            if (b) Console.WriteLine("Fatal Error: The computer runs so slow that the object cannot finish moving during this time!!!!!!");
 
 #if DEBUG
                             else
