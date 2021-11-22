@@ -38,30 +38,31 @@ namespace Communication.Proto {
             "bFR5cGUSMgoPQWN0aXZlU2tpbGxUeXBlGBEgASgOMhkuUHJvdG9idWYuQWN0",
             "aXZlU2tpbGxUeXBlEgwKBGd1aWQYEiABKAMSDwoHY2FuTW92ZRgTIAEoCBIO",
             "CgZyYWRpdXMYFCABKAUSCgoCQ0QYFSABKAUSDwoHbGlmZU51bRgWIAEoBRIN",
-            "CgVzY29yZRgXIAEoBSKAAQoNTWVzc2FnZU9mUHJvcBIgCgR0eXBlGAEgASgO",
+            "CgVzY29yZRgXIAEoBSKOAQoNTWVzc2FnZU9mUHJvcBIgCgR0eXBlGAEgASgO",
             "MhIuUHJvdG9idWYuUHJvcFR5cGUSCQoBeBgCIAEoBRIJCgF5GAMgASgFEhcK",
             "D2ZhY2luZ0RpcmVjdGlvbhgEIAEoARIMCgRndWlkGAUgASgDEhAKCHBhcmVu",
-            "dElEGAYgASgDIoQBCg9NZXNzYWdlT2ZCdWxsZXQSIgoEdHlwZRgBIAEoDjIU",
-            "LlByb3RvYnVmLkJ1bGxldFR5cGUSCQoBeBgCIAEoBRIJCgF5GAMgASgFEhcK",
-            "D2ZhY2luZ0RpcmVjdGlvbhgEIAEoARIMCgRndWlkGAUgASgDEhAKCHBhcmVu",
-            "dElEGAYgASgDIlQKE01lc3NhZ2VUb0luaXRpYWxpemUSEQoJTWFwU2VyaWFs",
-            "GAEgASgFEioKC21lc3NhZ2VUeXBlGAIgASgOMhUuUHJvdG9idWYuTWVzc2Fn",
-            "ZVR5cGUivQIKD01lc3NhZ2VUb0NsaWVudBJACg5nYW1lT2JqTWVzc2FnZRgB",
-            "IAMoCzIoLlByb3RvYnVmLk1lc3NhZ2VUb0NsaWVudC5HYW1lT2JqTWVzc2Fn",
-            "ZRIqCgttZXNzYWdlVHlwZRgCIAEoDjIVLlByb3RvYnVmLk1lc3NhZ2VUeXBl",
-            "GrsBCg5HYW1lT2JqTWVzc2FnZRI6ChJtZXNzYWdlT2ZDaGFyYWN0ZXIYASAB",
-            "KAsyHC5Qcm90b2J1Zi5NZXNzYWdlT2ZDaGFyYWN0ZXJIABI0Cg9tZXNzYWdl",
-            "T2ZCdWxsZXQYAiABKAsyGS5Qcm90b2J1Zi5NZXNzYWdlT2ZCdWxsZXRIABIw",
-            "Cg1tZXNzYWdlT2ZQcm9wGAMgASgLMhcuUHJvdG9idWYuTWVzc2FnZU9mUHJv",
-            "cEgAQgUKA29iaiKBAQoSTWVzc2FnZVRvT25lQ2xpZW50EhAKCHBsYXllcklE",
-            "GAEgASgDEg4KBnRlYW1JRBgCIAEoAxIqCgttZXNzYWdlVHlwZRgDIAEoDjIV",
-            "LlByb3RvYnVmLk1lc3NhZ2VUeXBlEgwKBGd1aWQYBCABKAMSDwoHbWVzc2Fn",
-            "ZRgFIAEoCUIWqgITQ29tbXVuaWNhdGlvbi5Qcm90b2IGcHJvdG8z"));
+            "dElEGAYgASgDEgwKBHNpemUYByABKAUihAEKD01lc3NhZ2VPZkJ1bGxldBIi",
+            "CgR0eXBlGAEgASgOMhQuUHJvdG9idWYuQnVsbGV0VHlwZRIJCgF4GAIgASgF",
+            "EgkKAXkYAyABKAUSFwoPZmFjaW5nRGlyZWN0aW9uGAQgASgBEgwKBGd1aWQY",
+            "BSABKAMSEAoIcGFyZW50SUQYBiABKAMiVAoTTWVzc2FnZVRvSW5pdGlhbGl6",
+            "ZRIRCglNYXBTZXJpYWwYASABKAUSKgoLbWVzc2FnZVR5cGUYAiABKA4yFS5Q",
+            "cm90b2J1Zi5NZXNzYWdlVHlwZSK9AgoPTWVzc2FnZVRvQ2xpZW50EkAKDmdh",
+            "bWVPYmpNZXNzYWdlGAEgAygLMiguUHJvdG9idWYuTWVzc2FnZVRvQ2xpZW50",
+            "LkdhbWVPYmpNZXNzYWdlEioKC21lc3NhZ2VUeXBlGAIgASgOMhUuUHJvdG9i",
+            "dWYuTWVzc2FnZVR5cGUauwEKDkdhbWVPYmpNZXNzYWdlEjoKEm1lc3NhZ2VP",
+            "ZkNoYXJhY3RlchgBIAEoCzIcLlByb3RvYnVmLk1lc3NhZ2VPZkNoYXJhY3Rl",
+            "ckgAEjQKD21lc3NhZ2VPZkJ1bGxldBgCIAEoCzIZLlByb3RvYnVmLk1lc3Nh",
+            "Z2VPZkJ1bGxldEgAEjAKDW1lc3NhZ2VPZlByb3AYAyABKAsyFy5Qcm90b2J1",
+            "Zi5NZXNzYWdlT2ZQcm9wSABCBQoDb2JqIoEBChJNZXNzYWdlVG9PbmVDbGll",
+            "bnQSEAoIcGxheWVySUQYASABKAMSDgoGdGVhbUlEGAIgASgDEioKC21lc3Nh",
+            "Z2VUeXBlGAMgASgOMhUuUHJvdG9idWYuTWVzc2FnZVR5cGUSDAoEZ3VpZBgE",
+            "IAEoAxIPCgdtZXNzYWdlGAUgASgJQhaqAhNDb21tdW5pY2F0aW9uLlByb3Rv",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Communication.Proto.MessageTypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfCharacter), global::Communication.Proto.MessageOfCharacter.Parser, new[]{ "X", "Y", "AttackRange", "BulletNum", "Speed", "Life", "TimeUntilCommonSkillAvailable", "TimeUntilUltimateSkillAvailable", "GemNum", "Buff", "Prop", "Place", "Vampire", "BulletType", "IsResetting", "PassiveSkillType", "ActiveSkillType", "Guid", "CanMove", "Radius", "CD", "LifeNum", "Score" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfProp), global::Communication.Proto.MessageOfProp.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "ParentID" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfProp), global::Communication.Proto.MessageOfProp.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "ParentID", "Size" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfBullet), global::Communication.Proto.MessageOfBullet.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "ParentID" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageToInitialize), global::Communication.Proto.MessageToInitialize.Parser, new[]{ "MapSerial", "MessageType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageToClient), global::Communication.Proto.MessageToClient.Parser, new[]{ "GameObjMessage", "MessageType" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageToClient.Types.GameObjMessage), global::Communication.Proto.MessageToClient.Types.GameObjMessage.Parser, new[]{ "MessageOfCharacter", "MessageOfBullet", "MessageOfProp" }, new[]{ "Obj" }, null, null, null)}),
@@ -1172,6 +1173,7 @@ namespace Communication.Proto {
       facingDirection_ = other.facingDirection_;
       guid_ = other.guid_;
       parentID_ = other.parentID_;
+      size_ = other.size_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1253,6 +1255,21 @@ namespace Communication.Proto {
       }
     }
 
+    /// <summary>Field number for the "size" field.</summary>
+    public const int SizeFieldNumber = 7;
+    private int size_;
+    /// <summary>
+    ///宝石大小
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int Size {
+      get { return size_; }
+      set {
+        size_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1274,6 +1291,7 @@ namespace Communication.Proto {
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(FacingDirection, other.FacingDirection)) return false;
       if (Guid != other.Guid) return false;
       if (ParentID != other.ParentID) return false;
+      if (Size != other.Size) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1287,6 +1305,7 @@ namespace Communication.Proto {
       if (FacingDirection != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(FacingDirection);
       if (Guid != 0L) hash ^= Guid.GetHashCode();
       if (ParentID != 0L) hash ^= ParentID.GetHashCode();
+      if (Size != 0) hash ^= Size.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1329,6 +1348,10 @@ namespace Communication.Proto {
         output.WriteRawTag(48);
         output.WriteInt64(ParentID);
       }
+      if (Size != 0) {
+        output.WriteRawTag(56);
+        output.WriteInt32(Size);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1363,6 +1386,10 @@ namespace Communication.Proto {
         output.WriteRawTag(48);
         output.WriteInt64(ParentID);
       }
+      if (Size != 0) {
+        output.WriteRawTag(56);
+        output.WriteInt32(Size);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1390,6 +1417,9 @@ namespace Communication.Proto {
       }
       if (ParentID != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(ParentID);
+      }
+      if (Size != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Size);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1420,6 +1450,9 @@ namespace Communication.Proto {
       }
       if (other.ParentID != 0L) {
         ParentID = other.ParentID;
+      }
+      if (other.Size != 0) {
+        Size = other.Size;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1460,6 +1493,10 @@ namespace Communication.Proto {
             ParentID = input.ReadInt64();
             break;
           }
+          case 56: {
+            Size = input.ReadInt32();
+            break;
+          }
         }
       }
     #endif
@@ -1497,6 +1534,10 @@ namespace Communication.Proto {
           }
           case 48: {
             ParentID = input.ReadInt64();
+            break;
+          }
+          case 56: {
+            Size = input.ReadInt32();
             break;
           }
         }

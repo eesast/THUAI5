@@ -11,7 +11,7 @@ namespace Gaming
 {
     public partial class Game
     {
-        public struct PlayerInitInfo  
+        public struct PlayerInitInfo
         {
             public uint birthPointIndex;
             public long teamID;
@@ -26,30 +26,32 @@ namespace Gaming
             }
         }
 
-        private List<Team> teamList;
+        private readonly List<Team> teamList;
         public List<Team> TeamList => teamList;
-        private Map gameMap;
+        private readonly Map gameMap;
         public Map GameMap => gameMap;
         private readonly int numOfTeam;
         public long AddPlayer(PlayerInitInfo playerInitInfo)
         {
-            if(!Team.teamExists(playerInitInfo.teamID))
-              /*  || !MapInfo.ValidBirthPointIdx(playerInitInfo.birthPointIdx)
-                || gameMap.BirthPointList[playerInitInfo.birthPointIdx].Parent != null)*/
+            if (!Team.teamExists(playerInitInfo.teamID))
+                /*  || !MapInfo.ValidBirthPointIdx(playerInitInfo.birthPointIdx)
+                  || gameMap.BirthPointList[playerInitInfo.birthPointIdx].Parent != null)*/
                 return GameObj.invalidID;
 
             XYPosition pos = gameMap.BirthPointList[playerInitInfo.birthPointIndex].Position;
-            Character newPlayer = new Character(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.passiveSkill, playerInitInfo.commonSkill);
+            //Console.WriteLine($"x,y: {pos.x},{pos.y}");
+            Character newPlayer = new(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.passiveSkill, playerInitInfo.commonSkill);
             gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
-            gameMap.PlayerListLock.EnterWriteLock(); 
-            try 
-            { 
-                gameMap.PlayerList.Add(newPlayer); 
-            } 
-            finally 
-            { 
-                gameMap.PlayerListLock.ExitWriteLock(); 
+            gameMap.PlayerListLock.EnterWriteLock();
+            try
+            {
+                gameMap.PlayerList.Add(newPlayer);
             }
+            finally
+            {
+                gameMap.PlayerListLock.ExitWriteLock();
+            }
+            //Console.WriteLine($"Playerlist length:{gameMap.PlayerList.Count}");
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
             newPlayer.TeamID = playerInitInfo.teamID;
 
@@ -73,7 +75,7 @@ namespace Gaming
                                 long nowTime = Environment.TickCount64;
                                 if (nowTime - lastTime >= newPlayer.CD)
                                 {
-                                    newPlayer.TryAddBulletNum();
+                                    _ = newPlayer.TryAddBulletNum();
                                     lastTime = nowTime;
                                 }
                             }
@@ -102,22 +104,23 @@ namespace Gaming
             gameMap.PlayerListLock.EnterReadLock();
             try
             {
-                foreach(Character player in gameMap.PlayerList)
+                foreach (Character player in gameMap.PlayerList)
                 {
                     player.CanMove = true;
-                    
-                    //这里bug了，不信可以取消注释试试看0.0
-                    //player.AddShield(GameData.shieldTimeAtBirth);
+
+                    player.AddShield(GameData.shieldTimeAtBirth);
                 }
             }
             finally { gameMap.PlayerListLock.ExitReadLock(); }
 
+
             propManager.StartProducing();
-
-
+            gemManager.StartProducingGem();
             //开始游戏
             if (!gameMap.Timer.StartGame(milliSeconds))
                 return false;
+
+            EndGame(); //游戏结束时要做的事
 
             //清除所有对象
             gameMap.PlayerListLock.EnterWriteLock();
@@ -142,14 +145,36 @@ namespace Gaming
                 gameMap.PropList.Clear();
             }
             finally { gameMap.PropListLock.ExitWriteLock(); }
+            gameMap.GemListLock.EnterWriteLock();
+            try
+            {
+                gameMap.GemList.Clear();
+            }
+            finally { gameMap.GemListLock.ExitWriteLock(); }
+
             return true;
         }
-        public void MovePlayer(long playerID,int moveTimeInMilliseconds,double angle)
+
+        public void EndGame()
+        {
+            gameMap.PlayerListLock.EnterWriteLock();
+            try
+            {
+                foreach (var player in gameMap.PlayerList)  //这里始终运行不下去，为什么？？？
+                {
+                    gemManager.UseAllGem((Character)player);
+                    Console.WriteLine("Fuck");
+                }
+            }
+            finally { gameMap.PlayerListLock.ExitWriteLock(); }
+
+        }
+        public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
         {
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
-            if(player!=null)
+            if (player != null)
             {
                 moveManager.MovePlayer(player, moveTimeInMilliseconds, angle);
 #if DEBUG
@@ -168,10 +193,74 @@ namespace Gaming
             if (!gameMap.Timer.IsGaming)
                 return;
             Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                _ = attackManager.Attack(player, angle);
+            }
+        }
+        public void UseGem(long playerID, int num)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            Character? player = gameMap.FindPlayer(playerID);
             if(player!=null)
             {
-                attackManager.Attack(player, angle);
+                gemManager.UseGem(player, num);
+                return;
             }
+        }
+        public void ThrowGem(long playerID, int moveMilliTime,double angle ,int size = 1)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                gemManager.ThrowGem(player,moveMilliTime,angle,size);
+                return;
+            }
+        }
+        public bool PickGem(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if(player!=null)
+            {
+                return gemManager.PickGem(player);
+            }
+            return false;
+        }
+        public void UseProp(long playerID)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            Character? player = gameMap.FindPlayer(playerID);
+            if(player!=null)
+            {
+                propManager.UseProp(player);
+            }
+        }
+        public void ThrowProp(long playerID,int timeInmillionSeconds,double angle)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                propManager.ThrowProp(player, timeInmillionSeconds, angle);
+            }
+        }
+        public bool PickProp(long playerID,PropType propType=PropType.Null)
+        {
+            if (!gameMap.Timer.IsGaming)
+                return false;
+            Character? player = gameMap.FindPlayer(playerID);
+            if (player != null)
+            {
+                return propManager.PickProp(player, propType);
+            }
+            return false;
         }
 
         public bool UseCommonSkill(long playerID)
@@ -185,6 +274,22 @@ namespace Gaming
             }
             else return false;
         }
+
+        public void AllPlayerUsePassiveSkill()
+        {
+            if (!gameMap.Timer.IsGaming)
+                return;
+            gameMap.PlayerListLock.EnterWriteLock();
+            try
+            {
+                foreach (Character player in gameMap.PlayerList)
+                {
+                    skillManager.UsePassiveSkill(player);
+                }
+            }
+            finally { gameMap.PlayerListLock.ExitWriteLock(); }
+        }
+
         public int GetTeamScore(long teamID)
         {
             return teamList[(int)teamID].Score;
@@ -212,6 +317,13 @@ namespace Gaming
                 gameObjList.AddRange(gameMap.PropList);
             }
             finally { gameMap.PropListLock.ExitReadLock(); }
+
+            gameMap.GemListLock.EnterReadLock();
+            try
+            {
+                gameObjList.AddRange(gameMap.GemList);
+            }
+            finally { gameMap.GemListLock.ExitReadLock(); }
 
             return gameObjList;
         }

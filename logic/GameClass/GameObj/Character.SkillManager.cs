@@ -5,14 +5,13 @@ namespace GameClass.GameObj
 {
     public partial class Character
     {
-        public object SkillLock => gameObjLock;
         private delegate bool CharacterActiveSkill(Character player); //返回值：是否成功释放了技能
         private delegate void CharacterPassiveSkill(Character player);
-        private CharacterActiveSkill commonSkill;
-        private ActiveSkillType commonSkillType;
+        private readonly CharacterActiveSkill commonSkill;
+        private readonly ActiveSkillType commonSkillType;
         public ActiveSkillType CommonSkillType => commonSkillType;
 
-        private PassiveSkillType passiveSkillType;
+        private readonly PassiveSkillType passiveSkillType;
         public PassiveSkillType PassiveSkillType => passiveSkillType;
         public bool UseCommonSkill()
         {
@@ -24,11 +23,12 @@ namespace GameClass.GameObj
             get => timeUntilCommonSkillAvailable;
             set
             {
-                lock (SkillLock)
-                    TimeUntilCommonSkillAvailable = value < 0 ? 0 : value;
+                lock(gameObjLock)
+                    timeUntilCommonSkillAvailable = value < 0 ? 0 : value;
             }
         }
-        CharacterPassiveSkill passiveSkill;
+
+        readonly CharacterPassiveSkill passiveSkill;
         public void UsePassiveSkill()
         {
             passiveSkill(this);
@@ -38,6 +38,9 @@ namespace GameClass.GameObj
         {
             this.CanMove = true;
             this.Type = GameObjType.Character;
+            this.score = 0;
+            this.propInventory = null;
+            this.buffManeger = new BuffManeger();
             PassiveSkill pSkill;
             CommonSkill cSkill;
             switch (passiveSkillType)
@@ -75,9 +78,11 @@ namespace GameClass.GameObj
             }
             this.attackRange = cSkill.AttackRange;
             this.hp = cSkill.MaxHp;
+            this.OrgMoveSpeed = cSkill.MoveSpeed;
             this.moveSpeed = cSkill.MoveSpeed;
             this.cd = cSkill.CD;
             this.maxBulletNum = cSkill.MaxBulletNum;
+            this.bulletNum = maxBulletNum;
             this.bulletOfPlayer = pSkill.InitBullet;
             this.passiveSkill = pSkill.SkillEffect;
             this.commonSkill = cSkill.SkillEffect;
@@ -87,6 +92,8 @@ namespace GameClass.GameObj
 
             //UsePassiveSkill();  //创建player时开始被动技能，这一过程也可以放到gamestart时进行
             //这可以放在AddPlayer中做
+
+            Debugger.Output(this, "constructed!");
         }
-    }   
+    }
 }

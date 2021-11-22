@@ -46,6 +46,7 @@ message MessageOfProp
     double facingDirection=4;
     int64 guid=5;
     int64 parentID=6;
+    int32 size=7;  //宝石大小
 }
 
 message MessageOfBullet

@@ -14,10 +14,11 @@ message MessageToServer
     PropType propType = 4;	//messageType为Pick时要捡起的道具类型
     int64 timeInMilliseconds = 5;	//时间参数
     double angle = 6;		//角度参数
-    int64 ToPlayerID = 7;	//当messageType为Send时有效，为发送对象的ID
-    string message = 8;		//当messageType为Send时有效，为发送的消息
-    PassiveSkillType pSkill=9;  //AddPlayer时添加的被动技能，下面是添加的两个主动技能。
-    ActiveSkillType aSkill1=10;  
-    ActiveSkillType aSkill2=11;
+    int32 gemSize=7;        //宝石量参数
+    int64 ToPlayerID = 8;	//当messageType为Send时有效，为发送对象的ID
+    string message = 9;		//当messageType为Send时有效，为发送的消息
+    PassiveSkillType pSkill=10;  //AddPlayer时添加的被动技能，下面是添加的两个主动技能。
+    ActiveSkillType aSkill1=11;  
+    ActiveSkillType aSkill2=12;
 }
 
