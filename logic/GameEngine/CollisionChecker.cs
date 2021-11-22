@@ -83,8 +83,8 @@ namespace GameEngine
         private double FindMaxOnlyConsiderWall(IMoveable obj, Vector moveVec)
         {
             var desination = moveVec;
-            double maxOnlyConsiderWall = moveVec.length; //不知道为什么一定得是0
-            while (desination.length > 0)  //主要是为了防止穿墙，但实际上貌似不会发生
+            double maxOnlyConsiderWall = moveVec.length; 
+            if (desination.length > 0)  //如果length足够长，还是有可能穿墙的
             {
                 XYPosition nextXY = Vector.Vector2XY(desination) + obj.Position + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle)), (int)(obj.Radius * Math.Sin(moveVec.angle)));
                 if (gameMap.IsWall(nextXY)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
@@ -109,9 +109,7 @@ namespace GameEngine
                         if (dist < maxOnlyConsiderWall)
                             maxOnlyConsiderWall = dist;
                     }
-                    //maxOnlyConsiderWall = distLeft < distRight ? distLeft : distRight;  //找可移动距离的最小值
                 }
-                desination.length -= GameData.numOfPosGridPerCell / Math.Abs(Math.Cos(desination.angle));
             }
             return maxOnlyConsiderWall;
         }

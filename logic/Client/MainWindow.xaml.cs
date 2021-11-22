@@ -379,6 +379,8 @@ namespace Client
         {
             if (myInfo.MessageOfCharacter.Guid == guid)
                 return true;
+            if (myInfo.MessageOfCharacter.Place == PlaceType.Invisible)  //灵界
+                return false;
             if (obj == PlaceType.Invisible)
                 return false;
             if (obj == PlaceType.Land)
