@@ -47,6 +47,7 @@ message MessageOfProp
     int64 guid=5;
     int64 parentID=6;
     int32 size=7;  //宝石大小
+    PlaceType place = 8;
 }
 
 message MessageOfBullet
@@ -57,6 +58,7 @@ message MessageOfBullet
     double facingDirection=4;
     int64 guid=5;
     int64 parentID=6;
+    PlaceType place = 7;
 }
 
 message MessageToInitialize 
