@@ -119,7 +119,7 @@ namespace GameEngine
                                 flag = false;
                                 if (!isDestroyed)
                                 {
-                                    moveVec.length = deltaLen + (leftTime * obj.MoveSpeed / 1000);
+                                    moveVec.length = deltaLen + leftTime * obj.MoveSpeed / 1000;
                                     if ((collisionObj = collisionChecker.CheckCollision(obj, moveVec)) == null)
                                     {
                                         obj.Move(moveVec);
@@ -159,7 +159,7 @@ namespace GameEngine
                         MaxTolerantTimeExceedCount = ulong.MaxValue,
                         TimeExceedAction = b =>
                         {
-                            if (b) Console.WriteLine("Fetal Error: The computer runs so slow that the object cannot finish moving during this time!!!!!!");
+                            if (b) Console.WriteLine("Fatal Error: The computer runs so slow that the object cannot finish moving during this time!!!!!!");
 
 #if DEBUG
                             else

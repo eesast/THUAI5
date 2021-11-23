@@ -35,16 +35,16 @@ namespace Client
             };
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
+            DrawMap();
             timer.Start();
-            isGameRunning = false;
-            isClientStocked = false;
-            isInitialized = false;
+            isClientStocked = true;
             playerData = new List<MessageToClient.Types.GameObjMessage>();
             bulletData = new List<MessageToClient.Types.GameObjMessage>();
             propData = new List<MessageToClient.Types.GameObjMessage>();
             myMessages = new();
-            messageToServers = new();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            communicator = new ClientCommunication();
+            communicator.OnReceive += OnReceive;
             //注：队伍用边框区分，人物编号以背景颜色区分
             //角色死亡则对应信息框变灰
             //被动技能和buff在人物编号后用彩色文字注明
@@ -53,13 +53,9 @@ namespace Client
         //基础窗口函数
         private void ClickToClose(object sender, RoutedEventArgs e)
         {
-            if (communicator != null)
+            if (communicator.Client.IsConnected)
             {
-                if (communicator.Client.IsConnected)
-                {
-                    _ = communicator.Stop();
-                }
-                communicator.Dispose();
+                _ = communicator.Stop();
             }
             Application.Current.Shutdown();
         }
@@ -72,34 +68,48 @@ namespace Client
         {
             DragMove();
         }
-
-        //Client控制函数
-        private void ClickToBegin(object sender, RoutedEventArgs e)
+        private void Attack(object sender,RoutedEventArgs e)
         {
-            try
+            MessageToServer msgJ = new MessageToServer();
+            msgJ.MessageType = MessageType.Attack;
+            msgJ.PlayerID = playerID;
+            msgJ.TeamID = teamID;
+            foreach(var i in playerData)
             {
-                if(communicator == null)
-                { 
-                    throw new Exception("Error:communicator is unexpectedly null");
-                }
-                else if (communicator.Client.IsConnected && (!isGameRunning))
-                {
-                    MessageToServer msg = new();
-                    msg.MessageType = MessageType.StartGame;
-                    msg.PlayerID = playerID;
-                    msg.TeamID = teamID;
-                    communicator.SendMessage(msg);
-                    //isGameRunning = true; 开始游戏应在收到消息后才开始
-                    Begin.Background = Brushes.Gray;//未完成初始化但已按下按钮，显示为灰色。完成后显示为黄色。
-                }
+                //待补充
             }
-            catch (Exception exc)
+            communicator.SendMessage(msgJ);
+        }
+        private void DrawMap()
+        {
+            for (int i = 0; i < defaultMap.GetLength(0); i++)
             {
-                ErrorDisplayer error = new(exc.ToString());
-                error.Show();
-                Begin.Background = Brushes.Crimson;
+                for (int j = 0; j < defaultMap.GetLength(1); j++)
+                {
+                    Rectangle rectangle = new Rectangle();
+                    rectangle.Width = 13;
+                    rectangle.Height = 13;
+                    rectangle.HorizontalAlignment = HorizontalAlignment.Left;
+                    rectangle.VerticalAlignment = VerticalAlignment.Top;
+                    rectangle.Margin = new Thickness(13 * (j), 13 * (i), 0, 0);
+                    switch (defaultMap[i, j])
+                    {
+                        case 1:
+                            rectangle.Fill = Brushes.Brown;
+                            rectangle.Stroke = Brushes.Brown;
+                            break;
+                        case 2:
+                        case 3:
+                        case 4:
+                            rectangle.Fill = Brushes.Green;
+                            rectangle.Stroke = Brushes.Green;
+                            break;
+                    }
+                    UnderLayerOfMap.Children.Add(rectangle);
+                }
             }
         }
+        //Client控制函数
 
         private void ClickToPauseOrContinue(object sender, RoutedEventArgs e)
         {
@@ -131,7 +141,7 @@ namespace Client
         //以下两个函数可能需要网站协助
         private void ClickToCheckLadder(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void ClickForUpdate(object sender, RoutedEventArgs e)
@@ -179,78 +189,217 @@ namespace Client
         {
 
         }
-        private void SetServer(object sender, RoutedEventArgs e)
-        {
-            //打开server
-            Server.Background = Brushes.Green;
-        }
-
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
-            Connect.Background = Brushes.Gray;
-            try
+            if (!communicator.Client.IsConnected)
             {
-                using (var sr = new StreamReader("ConnectInfo.txt"))
+                try
                 {
+                    using (var sr = new StreamReader(".\\ConnectInfo.txt"))
+                    {
 #pragma warning disable CS8602 // 解引用可能出现空引用。
-                    string[] comInfo = sr.ReadLine().Split(' ');
+                        string[] comInfo = sr.ReadLine().Split(' ');
 #pragma warning restore CS8602 // 解引用可能出现空引用。
-                    if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == "")
-                    {
-                        throw new Exception("Length<4");
+                        if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == ""|| comInfo[4] == ""|| comInfo[5] == "")
+                        {
+                            throw new Exception("Input data not sufficent");
+                        }
+                        playerID = Convert.ToInt64(comInfo[2]);
+                        teamID = Convert.ToInt64(comInfo[3]);
+                        Connect.Background = Brushes.Gray;
+                        if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
+                        {
+                            Connect.Background = Brushes.Aqua;
+                            Exception exc = new("TimeOut");
+                            throw exc;
+                        }
+                        else if (communicator.Client.IsConnected)
+                        {
+                            MessageToServer msg = new();
+                            msg.MessageType = MessageType.AddPlayer;
+                            msg.PlayerID = playerID;
+                            msg.TeamID = teamID;
+                            switch(Convert.ToInt64(comInfo[4]))
+                            {
+                                case 0:
+                                    msg.PSkill = PassiveSkillType.NullPassiveSkillType;
+                                    break;
+                                case 1:
+                                    msg.PSkill = PassiveSkillType.RecoverAfterBattle;
+                                    break;
+                                case 2:
+                                    msg.PSkill = PassiveSkillType.SpeedUpWhenLeavingGrass;
+                                    break;
+                                case 3:
+                                    msg.PSkill = PassiveSkillType.Vampire;
+                                    break;
+                                case 4:
+                                    msg.PSkill = PassiveSkillType.Pskill3;
+                                    break;
+                                case 5:
+                                    msg.PSkill = PassiveSkillType.Pskill4;
+                                    break;
+                                default:
+                                    msg.PSkill = PassiveSkillType.Pskill5;
+                                    break;
+                            }
+                            switch(Convert.ToInt64(comInfo[5]))
+                            {
+                                case 0:
+                                    msg.ASkill1 = ActiveSkillType.NullActiveSkillType;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                case 1:
+                                    msg.ASkill1 = ActiveSkillType.BecomeAssassin;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                case 2:
+                                    msg.ASkill1 = ActiveSkillType.BecomeVampire;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                case 3:
+                                    msg.ASkill1 = ActiveSkillType.NuclearWeapon;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                case 4:
+                                    msg.ASkill1 = ActiveSkillType.SuperFast;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                case 5:
+                                    msg.ASkill1 = ActiveSkillType.Askill4;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                                default:
+                                    msg.ASkill1 = ActiveSkillType.Askill5;
+                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                                    break;
+                            }
+                            communicator.SendMessage(msg);
+                            Connect.Background = Brushes.Green;
+                            isClientStocked = false;
+                            PorC.Content = "⏸";
+                        }//建立连接的同时加入人物
                     }
-                    communicator = new ClientCommunication();
-                    communicator.OnReceive += OnReceive;
-                    playerID = Convert.ToInt64(comInfo[2]);
-                    teamID = Convert.ToInt64(comInfo[3]);
-                    if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
+                }
+                catch (Exception exc)
+                {
+                    if (exc.Message == "Length<4")
                     {
-                        Exception exc = new("TimeOut");
-                        throw exc;
+                        ConnectRegister crg = new();
+                        crg.State.Text = "配置非法，请重新输入或检查配置文件。";
+                        crg.Show();
                     }
-                    else if (communicator.Client.IsConnected)
+                    else
                     {
-                        Connect.Background = Brushes.Green;
-                        MessageToServer msg = new();
-                        msg.MessageType = MessageType.AddPlayer;
-                        msg.PlayerID = playerID;
-                        msg.TeamID = teamID;
-                        communicator.SendMessage(msg);
-                        Connect.Background = Brushes.Green;
-                    }//建立连接的同时加入人物
+                        ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
+                        error.Show();
+                        Connect.Background = Brushes.Aqua;
+                        if (communicator != null)
+                        {
+                            if (communicator.Client.IsConnected)
+                            {
+                                _ = communicator.Stop();
+                            }
+                            communicator.Dispose();
+                            communicator = null;
+                        }
+                    }
                 }
             }
-            catch (Exception exc)
+            else
             {
-                if(exc.Message== "Length<4")
-                {
-                    ConnectRegister crg = new();
-                    crg.State.Text = "配置非法，请重新输入或检查配置文件。";
-                    crg.Show();
-                }
-                else
-                {
-                    ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
-                    error.Show();
-                    Connect.Background = Brushes.Aqua;
-                    if (communicator != null)
-                    {
-                        if (communicator.Client.IsConnected)
-                        {
-                            _ = communicator.Stop();
-                        }
-                        communicator.Dispose();
-                        communicator = null;
-                    }
-                }
+                _=communicator.Stop();
+                Connect.Background = Brushes.Aqua;
             }
         }
 
+        private void KeyBoardControl(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.W:
+                    MessageToServer msgA = new MessageToServer();
+                    msgA.MessageType = MessageType.Move;
+                    msgA.PlayerID = playerID;
+                    msgA.TeamID = teamID;
+                    msgA.TimeInMilliseconds = 50;
+                    msgA.Angle = Math.PI;
+                    communicator.SendMessage(msgA);
+                    break;
+                case Key.S:
+                    MessageToServer msgD = new MessageToServer();
+                    msgD.MessageType = MessageType.Move;
+                    msgD.PlayerID = playerID;
+                    msgD.TeamID = teamID;
+                    msgD.TimeInMilliseconds = 50;
+                    msgD.Angle = 0;
+                    communicator.SendMessage(msgD);
+                    break;
+                case Key.D:
+                    MessageToServer msgW = new MessageToServer();
+                    msgW.MessageType = MessageType.Move;
+                    msgW.PlayerID = playerID;
+                    msgW.TeamID = teamID;
+                    msgW.TimeInMilliseconds = 50;
+                    msgW.Angle = Math.PI / 2;
+                    communicator.SendMessage(msgW);
+                    break;
+                case Key.A:
+                    MessageToServer msgS = new MessageToServer();
+                    msgS.MessageType = MessageType.Move;
+                    msgS.PlayerID = playerID;
+                    msgS.TeamID = teamID;
+                    msgS.TimeInMilliseconds = 50;
+                    msgS.Angle = 3 * Math.PI / 2;
+                    communicator.SendMessage(msgS);
+                    break;
+                case Key.J:
+                    MessageToServer msgJ = new MessageToServer();
+                    msgJ.MessageType = MessageType.Attack;
+                    msgJ.PlayerID = playerID;
+                    msgJ.TeamID = teamID;
+                    msgJ.Angle = Math.PI;
+                    communicator.SendMessage(msgJ);
+                    break;
+                case Key.U:
+                    MessageToServer msgU = new MessageToServer();
+                    msgU.MessageType = MessageType.UseCommonSkill;
+                    msgU.PlayerID = playerID;
+                    msgU.TeamID = teamID;
+                    communicator.SendMessage(msgU);
+                    break;
+                case Key.K:
+                    MessageToServer msgK = new MessageToServer();
+                    msgK.MessageType = MessageType.UseGem;
+                    msgK.PlayerID = playerID;
+                    msgK.TeamID = teamID;
+                    communicator.SendMessage(msgK);
+                    break;
+                case Key.L:
+                    MessageToServer msgL = new MessageToServer();
+                    msgL.MessageType = MessageType.ThrowGem;
+                    msgL.PlayerID = playerID;
+                    msgL.TeamID = teamID;
+                    msgL.GemSize = 1;
+                    msgL.TimeInMilliseconds = 3000;
+                    msgL.Angle = Math.PI;
+                    communicator.SendMessage(msgL);
+                    break;
+                case Key.P:
+                    MessageToServer msgP = new MessageToServer();
+                    msgP.MessageType = MessageType.Pick;
+                    msgP.PlayerID = playerID;
+                    msgP.TeamID = teamID;
+                    msgP.PropType = Communication.Proto.PropType.Gem;
+                    communicator.SendMessage(msgP);
+                    break;
+            }
+        }
         private void OnReceive()
         {
             if (communicator.TryTake(out IGameMessage msg) && msg.PacketType == PacketType.MessageToClient)
             {
-                lock (drawPicLock)
+                lock (drawPicLock)  //加锁是必要的，画图操作和接收信息操作不能同时进行，否则画图时foreach会有bug
                 {
                     playerData.Clear();
                     propData.Clear();
@@ -259,11 +408,8 @@ namespace Client
                     switch (content.MessageType)
                     {
                         case MessageType.InitialLized:
-                            //这里要设置地图类型
-                            //可地图还没写呢...
                             break;
                         case MessageType.StartGame:
-                            isGameRunning = true;
                             foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
                             {
                                 switch (obj.ObjCase)
@@ -314,7 +460,6 @@ namespace Client
                                         break;
                                 }
                             }
-                            isGameRunning = false;
                             break;
                     }
                 }
@@ -323,19 +468,20 @@ namespace Client
         //定时器事件，刷新地图
         private void Refresh(object? sender, EventArgs e)
         {
-            try
+            if (!isClientStocked)
             {
-                if(isGameRunning)
+                try
                 {
                     UpperLayerOfMap.Children.Clear();
-                    if (communicator==null)
+                    if (!communicator.Client.IsConnected)
                     {
-                        throw new Exception("Error: communicator is unexpectly null during a running game");
+                        throw new Exception("Client is unconnected.");
                     }
-                    else if (communicator.Client.IsConnected)
+                    else
                     {
-                        lock(drawPicLock)
-                        { 
+
+                        lock(drawPicLock) //加锁是必要的，画图操作和接收信息操作不能同时进行
+                        {
                             foreach (var data in playerData)
                             {
                                 Ellipse icon = new Ellipse();
@@ -384,134 +530,23 @@ namespace Client
                                 }
                             }
                         }
-                        {
-                            //if (!isInitialized)
-                            //{
-                            //    //一般来说new不会失败，所以下面的警告忽略。
-                            //    IGameMessage msg = communicator.Take();
-                            //    if (msg.PacketType == PacketType.MessageToInitialize)
-                            //    {
-                            //        MessageToInitialize? messageToInitialize = msg.Content as MessageToInitialize;
-                            //        if (messageToInitialize == null)
-                            //        {
-                            //            throw new Exception("Error:Null Map Serial");
-                            //        }
-                            //        Map.Source = new BitmapImage(new Uri(Convert.ToString(messageToInitialize.MapSerial) + ".png", UriKind.Relative));
-                            //        MessageToServer reply = new();
-                            //        reply.MessageType = MessageType.InitialLized;
-                            //        reply.PlayerID = playerID;
-                            //        reply.TeamID = teamID;
-                            //        communicator.SendMessage(reply);
-                            //        Begin.Background = Brushes.Yellow;
-                            //        Begin.Content = "⚪";
-                            //    }
-                            //    //若收到初始化信息，初始化，发送“已收到”并将IsGameRunning置为真,按钮置黄,标志变成⚪。
-                            //}
-                            //else if (!isClientStocked)
-                            //{
-                            //    IGameMessage msg = communicator.Take();
-                            //    switch (msg.PacketType)
-                            //    {
-                            //        case PacketType.MessageToOneClient:
-                            //            {
-                            //                MessageToOneClient? messageToOneClient = msg.Content as MessageToOneClient;
-                            //                if (messageToOneClient != null && messageToOneClient.PlayerID == playerID && messageToOneClient.TeamID == teamID)
-                            //                {
-                            //                    myMessages.Push(messageToOneClient.Message);
-                            //                }
-                            //            }
-                            //            break;
-                            //        case PacketType.MessageToClient:
-                            //            {
-                            //                bulletData.Clear();
-                            //                propData.Clear();
-                            //                playerData.Clear();
-                            //                while (UpperLayerOfMap.Children.Count != 0)
-                            //                {
-                            //                    UpperLayerOfMap.Children.RemoveAt(0);
-                            //                }
-                            //                MessageToClient? messageToClient = msg.Content as MessageToClient;
-                            //                if (messageToClient != null)
-                            //                {
-                            //                    foreach (MessageToClient.Types.GameObjMessage i in messageToClient.GameObjMessage)
-                            //                    {
-                            //                        switch (i.ObjCase)
-                            //                        {
-                            //                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
-                            //                                {
-                            //                                    bulletData.Add(i.MessageOfBullet);
-                            //                                    Ellipse item = new Ellipse();
-                            //                                    item.Stroke = Brushes.Black;
-                            //                                    item.Fill = Brushes.DarkBlue;
-                            //                                    item.HorizontalAlignment = HorizontalAlignment.Left;
-                            //                                    item.VerticalAlignment = VerticalAlignment.Top;
-                            //                                    item.Margin = new((i.MessageOfBullet.Y * 13 / 1000) - 4, (i.MessageOfBullet.X * 13 / 1000) - 4, 0, 0);//确认坐标轴方向
-                            //                                    item.Width = 8;
-                            //                                    item.Height = 8;
-                            //                                    UpperLayerOfMap.Children.Add(item);
-                            //                                    break;
-                            //                                }
-                            //                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
-                            //                                {
-                            //                                    playerData.Add(i.MessageOfCharacter);
-                            //                                    Ellipse item = new Ellipse();
-                            //                                    item.Stroke = Brushes.Orange;
-                            //                                    item.Fill = Brushes.Orange;//目前同种游戏实例的颜色都是一样的。
-                            //                                    item.HorizontalAlignment = HorizontalAlignment.Left;
-                            //                                    item.VerticalAlignment = VerticalAlignment.Top;
-                            //                                    item.Margin = new((i.MessageOfBullet.Y * 13 / 1000) - 6.5, (i.MessageOfBullet.X * 13 / 1000) - 6.5, 0, 0);
-                            //                                    item.Width = 13;
-                            //                                    item.Height = 13;
-                            //                                    UpperLayerOfMap.Children.Add(item);
-                            //                                    break;
-                            //                                }
-                            //                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
-                            //                                {
-                            //                                    propData.Add(i.MessageOfProp);
-                            //                                    Ellipse item = new Ellipse();
-                            //                                    item.Stroke = Brushes.Blue;
-                            //                                    item.Fill = Brushes.Blue;
-                            //                                    item.HorizontalAlignment = HorizontalAlignment.Left;
-                            //                                    item.VerticalAlignment = VerticalAlignment.Top;
-                            //                                    item.Margin = new((i.MessageOfBullet.Y * 13 / 1000) - 4, (i.MessageOfBullet.X * 13 / 1000) - 4, 0, 0);
-                            //                                    item.Width = 8;
-                            //                                    item.Height = 8;
-                            //                                    UpperLayerOfMap.Children.Add(item);
-                            //                                    break;
-                            //                                }
-                            //                            default: break;//目前不会对侧边栏的人物信息做出改动。
-                            //                        }
-                            //                    }
-                            //                }
-                            //            }
-                            //            break;
-                            //        default:
-                            //            break;
-                            //    }
-                            //    while (messageToServers.Count != 0)
-                            //    {
-                            //        communicator.SendMessage(messageToServers.Dequeue());
-                            //    }
-                            //    //对于MyMessage，进栈和出栈都在API中完成。
-                            //}
-                        }
-                    }
+                    };
+                }
+                catch (Exception exc)
+                {
+                    ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
+                    error.Show();
+                    isClientStocked = true;
+                    PorC.Content = "▶";
                 }
             }
-            catch (Exception exc)
-            {
-                ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
-                error.Show();
-                isGameRunning = false;
-            }
         }
+        //定时器事件，刷新地图
         //以下为Mainwindow自定义属性
         private DispatcherTimer timer;//定时器
         private ClientCommunication? communicator;
 
-        private bool isGameRunning;
         private bool isClientStocked;
-        private bool isInitialized;
 
         private Int64 playerID;
         private Int64 teamID;
@@ -522,8 +557,64 @@ namespace Client
         private object drawPicLock = new object();
 
         private Stack<string>? myMessages;
-        private Queue<MessageToServer>? messageToServers;
 
+        /// <summary>
+        /// 50*50
+        /// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3 
+        /// </summary>
+        public static uint[,] defaultMap = new uint[,]
+        {
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+         };
 
     }
 }
@@ -531,3 +622,7 @@ namespace Client
 //目前没有画图。并且，Client端能够开始游戏，但不能停止游戏，也不会收到游戏停止的消息。加上该功能后记得游戏停止时把Begin钮变红,isGameRunning置false.
 //2021-10-25
 //调整了一些提示出现的逻辑，并且修改了计时器，使得Error弹窗不再频繁弹出。
+//2021-11-22
+//更改显示方式，现在会在底层图层加载地图；为更新侧边栏人物信息和鼠标点击攻击做好了准备，但缺少ID属性；报错现在会显示时间，程序不再检测communicator是否为空，而是检测是否已连接；
+//放弃了log窗口设计；可以注册主动技能和被动技能，主动技能2号暂不采用；messageToServer弃用，改为包装后立刻发送。。
+//下一步的更新目标:引入生成地图机制；更新侧边栏人物信息和鼠标点击攻击；快捷键；未完成的按钮。
