@@ -2,10 +2,10 @@
 
 namespace Function
 {
-    internal class Program
+   internal class Program
     {
         static int[,] map;
-        static readonly double P1 = 0.7;//不建议小于0.2，建议加入错误处理
+        static readonly double P1 = 0.7;//不建议小于0.2或大于0.9，否则会爆栈。建议加入错误处理
         static readonly double Pturn = 0.33;
         static int count = 0;
         static int grasscount = 0;
@@ -13,33 +13,33 @@ namespace Function
         static bool flag = false;
         static void CreateMap(int size)
         {
-            for (int i = 0; i < 4; i++)
+            for(int i = 0; i < 4;i++)
             {
                 connect[i] = false;
             }
             count = 0;
             flag = false;
             map = new int[size, size];
-            Grow(size / 5, size / 2, size, size * size * P1 * Pturn, 3);
-            Grow(size * 13 / 20, size / 2 - size * 13 / 100, size, 2 * size * size * P1 * Pturn, 1);
-            Grow(size * 13 / 20, size / 2 + size * 13 / 100, size, size * size * P1, 2);
+            Grow(size/5, size/2, size, size*size*P1*Pturn,3);
+            Grow(size*13/20, size / 2-size*13/100, size, 2 * size * size * P1 * Pturn,1);
+            Grow(size * 13 / 20, size / 2+ size * 13 / 100, size, size * size * P1,2);
             for (int i = 0; i < size; i++)
             {
                 int j;
                 for (j = 0; j < size; j++)
                 {
-                    if (map[i, j] != 0) break;
+                    if (map[i, j] !=0) break;
                 }
                 if (j == size) flag = true;
             }
-            if (!flag)
+            if(!flag)
             {
                 for (int i = 0; i < size; i++)
                 {
                     int j;
                     for (j = 0; j < size; j++)
                     {
-                        if (map[j, i] != 0) break;
+                        if (map[j, i] !=0) break;
                     }
                     if (j == size) flag = true;
                 }
@@ -58,32 +58,32 @@ namespace Function
         }
         static int Rand(int n)
         {
-            Random r = new();
+            Random r=new();
             return r.Next(0, n);
         }
-        static void Grow(int x, int y, int size, double lim, int sign)
+        static void Grow(int x,int y,int size,double lim,int sign)
         {
             if (count <= lim)
             {
                 if (x >= size)
                 {
-                    Grow(x - 1, y, size, lim, sign);
+                    Grow(x - 1, y, size,lim,sign);
                 }
                 else if (y >= size)
                 {
-                    Grow(x, y - 1, size, lim, sign);
+                    Grow(x, y - 1, size,lim, sign);
                 }
                 else if (x < 0)
                 {
-                    Grow(x + 1, y, size, lim, sign);
+                    Grow(x + 1, y, size,lim, sign);
                 }
                 else if (y < 0)
                 {
-                    Grow(x, y + 1, size, lim, sign);
+                    Grow(x, y + 1, size,lim, sign);
                 }
                 else
                 {
-                    if (map[x, y] != sign)
+                    if (map[x, y] !=sign)
                     {
                         if (map[x, y] == 0)
                         {
@@ -99,16 +99,16 @@ namespace Function
                     switch (r)
                     {
                         case 0://上
-                            Grow(x - 1, y, size, lim, sign);
+                            Grow(x - 1, y, size,lim, sign);
                             break;
                         case 1://左
-                            Grow(x, y - 1, size, lim, sign);
+                            Grow(x, y - 1, size,lim, sign);
                             break;
                         case 2://下
-                            Grow(x + 1, y, size, lim, sign);
+                            Grow(x + 1, y, size,lim, sign);
                             break;
                         case 3://右
-                            Grow(x, y + 1, size, lim, sign);
+                            Grow(x, y + 1, size,lim, sign);
                             break;
                         default:
                             return;
@@ -168,7 +168,7 @@ namespace Function
         }
         static void CreateGrass(int n)
         {
-            for (int i = 0; i < n; i++)
+            for(int i=0; i < n;i++)
             {
                 int x, y;
                 do
@@ -184,10 +184,12 @@ namespace Function
         static void Main()
         {
             int size = 50;
-            while (Console.Read() != -1)
+            while (Console.ReadLine()=="a")//input a to generate a map
             {
+                Console.WriteLine("Begin:"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff:ffffff"));
                 CreateMap(size);
                 CreateGrass(3);
+                Console.WriteLine("Done:"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff:ffffff"));
                 for (int i = 0; i < size; i++)
                 {
                     for (int j = 0; j < size; j++)
@@ -198,9 +200,9 @@ namespace Function
                         }
                         else if (map[i, j] == 4)
                             Console.Write("::");
-                        else Console.Write("0 ");
+                        else Console.Write("0 ");//图形显示
                         //Console.Write(Convert.ToString(map[i, j]));
-                        //Console.Write(' ');
+                        //Console.Write(' ');//数字显示
                     }
                     Console.WriteLine();
                 }
