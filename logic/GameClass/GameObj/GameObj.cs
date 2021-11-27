@@ -152,7 +152,7 @@ namespace GameClass.GameObj
                 FacingDirection = moveVec.angle;
                 this.Position += XYVec;
             }
-            return (long)(XYVec.ToVector2() * new Vector2(0, 0));
+            return (long)(XYVec.ToVector2() * XYVec.ToVector2());
         }
         /// <summary>
         /// 设置位置

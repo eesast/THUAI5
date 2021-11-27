@@ -403,10 +403,12 @@ namespace Client
                             break;
                         case MessageType.StartGame:
                             foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
-                            {
+                            {   
                                 switch (obj.ObjCase)
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
+                                        if (obj.MessageOfCharacter.Guid == 11)  //怎么指定guid是个问题..
+                                            myInfo = obj;
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -425,6 +427,8 @@ namespace Client
                                 switch (obj.ObjCase)
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
+                                        if (obj.MessageOfCharacter.Guid == 11)  //怎么指定guid是个问题..
+                                            myInfo = obj;
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -457,6 +461,20 @@ namespace Client
                 }
             }
         }
+        private bool CanSee(PlaceType obj, long guid)
+        {
+            if (myInfo.MessageOfCharacter.Guid == guid)
+                return true;
+            if (myInfo.MessageOfCharacter.Place == PlaceType.Invisible)  //灵界
+                return false;
+            if (obj == PlaceType.Invisible)
+                return false;
+            if (obj == PlaceType.Land)
+                return true;
+            if (obj != myInfo.MessageOfCharacter.Place)  
+                return false;
+            return true;
+        }
         //定时器事件，刷新地图
         private void Refresh(object? sender, EventArgs e)
         {
@@ -472,71 +490,103 @@ namespace Client
                     else
                     {
 
-                        lock(drawPicLock) //加锁是必要的，画图操作和接收信息操作不能同时进行
+                        lock (drawPicLock) //加锁是必要的，画图操作和接收信息操作不能同时进行
                         {
+                            //for (int i = 0; i < defaultMap.GetLength(0); i++)
+                            //{
+                            //    for (int j = 0; j < defaultMap.GetLength(1); j++)
+                            //    {
+                            //        Rectangle rectangle = new Rectangle();
+                            //        rectangle.Width = 13;
+                            //        rectangle.Height = 13;
+                            //        rectangle.HorizontalAlignment = HorizontalAlignment.Left;
+                            //        rectangle.VerticalAlignment = VerticalAlignment.Top;
+                            //        rectangle.Margin = new Thickness(13 * (j + 0.5), 13 * (i + 0.5), 0, 0);
+                            //        switch (defaultMap[i, j])
+                            //        {
+                            //            case 1:
+                            //                rectangle.Fill = Brushes.Brown;
+                            //                break;
+                            //            case 2:
+                            //            case 3:
+                            //            case 4:
+                            //                rectangle.Fill = Brushes.Green;
+                            //                break;
+                            //        }
+                            //        UpperLayerOfMap.Children.Add(rectangle);
+                            //    }
+                            //}
                             foreach (var data in playerData)
                             {
-                                Ellipse icon = new Ellipse();
-                                icon.Width = 13;
-                                icon.Height = 13;
-                                icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                icon.VerticalAlignment = VerticalAlignment.Top;
-                                icon.Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0, data.MessageOfCharacter.X * 13.0 / 1000.0, 0, 0);
-                                icon.Fill = Brushes.Black;
-                                UpperLayerOfMap.Children.Add(icon);
+                                if (CanSee(data.MessageOfCharacter.Place, data.MessageOfCharacter.Guid))
+                                {
+                                    Ellipse icon = new Ellipse();
+                                    icon.Width = 13;
+                                    icon.Height = 13;
+                                    icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                    icon.VerticalAlignment = VerticalAlignment.Top;
+                                    icon.Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0, data.MessageOfCharacter.X * 13.0 / 1000.0, 0, 0);
+                                    icon.Fill = Brushes.Black;
+                                    UpperLayerOfMap.Children.Add(icon);
+                                }
                             }
                             foreach (var data in bulletData)
                             {
-                                Ellipse icon = new Ellipse();
-                                icon.Width = 10;
-                                icon.Height = 10;
-                                icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                icon.VerticalAlignment = VerticalAlignment.Top;
-                                icon.Margin = new Thickness(data.MessageOfBullet.Y * 13.0 / 1000.0, data.MessageOfBullet.X * 13.0 / 1000.0, 0, 0);
-                                icon.Fill = Brushes.Red;
-                                UpperLayerOfMap.Children.Add(icon);
+                                if (CanSee(data.MessageOfBullet.Place, data.MessageOfBullet.Guid))
+                                {
+                                    Ellipse icon = new Ellipse();
+                                    icon.Width = 10;
+                                    icon.Height = 10;
+                                    icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                    icon.VerticalAlignment = VerticalAlignment.Top;
+                                    icon.Margin = new Thickness(data.MessageOfBullet.Y * 13.0 / 1000.0, data.MessageOfBullet.X * 13.0 / 1000.0, 0, 0);
+                                    icon.Fill = Brushes.Red;
+                                    UpperLayerOfMap.Children.Add(icon);
+                                }
                             }
                             foreach (var data in propData)
                             {
-                                if (data.MessageOfProp.Type == PropType.Gem)
+                                if (CanSee(data.MessageOfProp.Place, data.MessageOfProp.Guid))
                                 {
-                                    Ellipse icon = new Ellipse();
-                                    icon.Width = 10;
-                                    icon.Height = 10;
-                                    icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                    icon.VerticalAlignment = VerticalAlignment.Top;
-                                    icon.Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0);
-                                    icon.Fill = Brushes.Purple;
-                                    UpperLayerOfMap.Children.Add(icon);
-                                }
-                                else
-                                {
-                                    Ellipse icon = new Ellipse();
-                                    icon.Width = 10;
-                                    icon.Height = 10;
-                                    icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                    icon.VerticalAlignment = VerticalAlignment.Top;
-                                    icon.Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0);
-                                    icon.Fill = Brushes.Gray;
-                                    UpperLayerOfMap.Children.Add(icon);
+                                    if (data.MessageOfProp.Type == PropType.Gem)
+                                    {
+                                        Ellipse icon = new Ellipse();
+                                        icon.Width = 10;
+                                        icon.Height = 10;
+                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                        icon.VerticalAlignment = VerticalAlignment.Top;
+                                        icon.Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0);
+                                        icon.Fill = Brushes.Purple;
+                                        UpperLayerOfMap.Children.Add(icon);
+                                    }
+                                    else
+                                    {
+                                        Ellipse icon = new Ellipse();
+                                        icon.Width = 10;
+                                        icon.Height = 10;
+                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                        icon.VerticalAlignment = VerticalAlignment.Top;
+                                        icon.Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0);
+                                        icon.Fill = Brushes.Gray;
+                                        UpperLayerOfMap.Children.Add(icon);
+                                    }
                                 }
                             }
                         }
-                    };
+                    }
                 }
                 catch (Exception exc)
                 {
                     ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
                     error.Show();
-                    isClientStocked = true;
-                    PorC.Content = "▶";
+                    //isGameRunning = false;
                 }
             }
         }
         //定时器事件，刷新地图
         //以下为Mainwindow自定义属性
         private DispatcherTimer timer;//定时器
-        private ClientCommunication? communicator;
+        private ClientCommunication communicator;
 
         private bool isClientStocked;
 
@@ -546,7 +596,9 @@ namespace Client
         private List<MessageToClient.Types.GameObjMessage> playerData;
         private List<MessageToClient.Types.GameObjMessage> bulletData;
         private List<MessageToClient.Types.GameObjMessage> propData;
-        private object drawPicLock;
+        private object drawPicLock = new object();
+        private MessageToClient.Types.GameObjMessage myInfo;  //这个client自己的message
+
         private Stack<string>? myMessages;
         
         /// <summary>
