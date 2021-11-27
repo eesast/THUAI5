@@ -191,7 +191,7 @@ namespace Client
         }
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
-            if (!communicator.Client.IsConnected)
+            if (!communicator.Client.IsConnected)//第一次连接失败后第二次连接会出错
             {
                 try
                 {
