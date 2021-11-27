@@ -55,7 +55,7 @@ namespace Gaming
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
             newPlayer.TeamID = playerInitInfo.teamID;
 
-            new Thread  //检查人物位置，同时装子弹。
+            new Thread  //检查人物位置，同时人物装弹。
             (
                 () =>
                 {
@@ -116,6 +116,34 @@ namespace Gaming
 
             propManager.StartProducing();
             gemManager.StartProducingGem();
+            new Thread
+            (
+                () =>
+                {
+                    new FrameRateTaskExecutor<int>
+                    (
+                        loopCondition: () => gameMap.Timer.IsGaming,
+                        loopToDo: () =>
+                        {
+                            gameMap.BulletListLock.EnterWriteLock();  //检查子弹位置
+                            try
+                            {
+                                foreach(var bullet in gameMap.BulletList)
+                                {
+                                    bullet.Place = gameMap.GetPlaceType(bullet.Position);
+                                }
+                            }
+                            finally { gameMap.BulletListLock.ExitWriteLock(); }
+                        },
+                        timeInterval: GameData.checkInterval,
+                        finallyReturn: () => 0
+                    )
+                    {
+                        AllowTimeExceed = true
+                    }.Start();
+                }
+            )
+            { IsBackground = true }.Start();
             //开始游戏
             if (!gameMap.Timer.StartGame(milliSeconds))
                 return false;
