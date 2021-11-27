@@ -38,6 +38,7 @@ namespace Client
             DrawMap();
             timer.Start();
             isClientStocked = true;
+            drawPicLock = new();
             playerData = new List<MessageToClient.Types.GameObjMessage>();
             bulletData = new List<MessageToClient.Types.GameObjMessage>();
             propData = new List<MessageToClient.Types.GameObjMessage>();
@@ -283,7 +284,7 @@ namespace Client
                 }
                 catch (Exception exc)
                 {
-                    if (exc.Message == "Length<4")
+                    if (exc.Message == "Input data not sufficent")
                     {
                         ConnectRegister crg = new();
                         crg.State.Text = "配置非法，请重新输入或检查配置文件。";
@@ -294,15 +295,6 @@ namespace Client
                         ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
                         error.Show();
                         Connect.Background = Brushes.Aqua;
-                        if (communicator != null)
-                        {
-                            if (communicator.Client.IsConnected)
-                            {
-                                _ = communicator.Stop();
-                            }
-                            communicator.Dispose();
-                            communicator = null;
-                        }
                     }
                 }
             }
@@ -554,10 +546,9 @@ namespace Client
         private List<MessageToClient.Types.GameObjMessage> playerData;
         private List<MessageToClient.Types.GameObjMessage> bulletData;
         private List<MessageToClient.Types.GameObjMessage> propData;
-        private object drawPicLock = new object();
-
+        private object drawPicLock;
         private Stack<string>? myMessages;
-
+        
         /// <summary>
         /// 50*50
         /// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3 
