@@ -25,8 +25,8 @@ class Logic
 {
 private:
     std::unique_ptr<ClientCommunication> pComm; // 通信组件指针
-    std::unique_ptr<AIBase> pAI; // 玩家指针
-    std::shared_ptr<int> xx; // 玩家状态
+    //std::unique_ptr<AIBase> pAI; // 玩家指针
+    //std::shared_ptr<int> xx; // 玩家状态
 
     std::thread tAI; // 需要对玩家单开线程
 
