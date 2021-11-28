@@ -27,6 +27,9 @@
     <ClInclude Include="include\state.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="API.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">

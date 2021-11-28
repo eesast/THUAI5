@@ -13,8 +13,7 @@
 class IAPI
 {
 public:
-    // 指
-
+     
     // 移动
     virtual bool MovePlayer(uint32_t timeInMilliseconds, double angleInRadian) = 0;
     virtual bool MoveRight(uint32_t timeInMilliseconds) = 0;

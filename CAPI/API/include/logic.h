@@ -43,8 +43,8 @@ private:
     concurrency::concurrent_queue<std::string> MessageStorage;
 
     // 记录状态和缓冲区数(可能和线程有关)
-    volatile int counter_state = 0;
-    volatile int counter_buffer = 0;
+    int counter_state = 0;
+    int counter_buffer = 0;
 
     // 此时是否应该循环执行player()
     std::atomic_bool AI_loop = true;

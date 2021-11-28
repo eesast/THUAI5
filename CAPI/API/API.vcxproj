@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Communication\include\concurrent_queue.hpp" />
+    <ClInclude Include="API.h" />
     <ClInclude Include="include\base.h" />
     <ClInclude Include="include\logic.h" />
     <ClInclude Include="include\state.h" />

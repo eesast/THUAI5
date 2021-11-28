@@ -11,7 +11,7 @@ struct StateConstant
     constexpr static inline int nTeams = 2;
     constexpr static inline int nPlayers = 4;
     constexpr static inline int nCells = 50;
-};
+}; 
 
 
 
