@@ -16,7 +16,7 @@
 #include "base.h"
 #include "state.h"
 #include "CAPI.h"
-#include "concurrent_queue.hpp"
+#include <concurrent_queue.hpp>
 
 /// <summary>
 /// 封装了通信组件和AI对象进行操作
@@ -40,7 +40,7 @@ private:
     std::condition_variable cv_ai;
 
     // 信息队列
-    concurrency::concurrent_queue<std::string> MessageStorage;
+    thuai::concurrency::concurrent_queue<std::string> MessageStorage;
 
     // 记录状态和缓冲区数(可能和线程有关)
     int counter_state = 0;

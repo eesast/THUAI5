@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Communication\include\concurrent_queue.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\base.h">
       <Filter>头文件</Filter>
     </ClInclude>

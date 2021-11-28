@@ -4,7 +4,7 @@
 // proto files
 #include <Message2Clients.pb.h>
 #include <Message2Server.pb.h>
-#include "concurrent_queue.hpp"
+#include <concurrent_queue.hpp>
 #include "message.hpp"
 
 // third-party libraries
@@ -112,7 +112,7 @@ private:
     std::mutex mtx;
     std::condition_variable cv;
 
-    concurrency::concurrent_queue<pointer_m2c> queue;
+    thuai::concurrency::concurrent_queue<pointer_m2c> queue;
 
     CAPI capi;
     

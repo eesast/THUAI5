@@ -70,7 +70,7 @@ void CAPI::Stop()
 }
 
 
-ClientCommunication::ClientCommunication(std::function<void(pointer_m2c)> OnReceive, std::function<void() > OnConnect, std::function<void() > CloseHandler = nullptr) :__OnReceive(OnReceive), __OnClose(CloseHandler), 
+ClientCommunication::ClientCommunication(std::function<void(pointer_m2c)> OnReceive, std::function<void() > OnConnect, std::function<void() > CloseHandler) :__OnReceive(OnReceive), __OnClose(CloseHandler), 
 capi(OnConnect, 
 	[this]() 
 	{
@@ -89,7 +89,7 @@ capi(OnConnect,
 		{
 			counter = 0;
 		}
-		queue.push(pm2c);
+		queue.emplace(pm2c);
 		UnBlock(); // 唤醒线程
 	})
 {}
@@ -117,12 +117,12 @@ void ClientCommunication::ProcessMessage()
 			}
 			*/
 		}
-		if (!queue.try_pop(pm2c)) // 接收信息，若获取失败则跳过处理信息的部分
+		if (auto pm2c = queue.try_pop(); !pm2c.has_value()) // 接收信息，若获取失败则跳过处理信息的部分
 		{
 			std::cout << "failed to pop the message" << std::endl;
 			continue; // 避免处理空信息
 		}
-		__OnReceive(std::move(pm2c)); // 处理信息
+		else __OnReceive(std::move(pm2c.value())); // 处理信息
 	}
 }
 
