@@ -46,7 +46,7 @@ namespace Test
             messageToServer.MessageType = MessageType.AddPlayer;
             messageToServer.PlayerID = playerID;
             messageToServer.TeamID = teamID;
-            messageToServer.ASkill1 = ActiveSkillType.SuperFast;
+            messageToServer.ASkill1 = ActiveSkillType.BecomeAssassin;
             messageToServer.PSkill = PassiveSkillType.SpeedUpWhenLeavingGrass;
              
             clientCommunication.OnReceive += () =>

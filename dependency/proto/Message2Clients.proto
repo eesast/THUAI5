@@ -23,7 +23,7 @@ message MessageOfCharacter
     int32 gemNum = 9;//可见
     BuffType buff = 10;//可见
     PropType prop = 11;//可见
-    PlaceType place = 12;//人物背景框颜色
+    PlaceType place = 12;//人物所在位置
     double vampire=13;//吸血率
     BulletType bulletType = 14;//子弹类型
     bool isResetting=15;//是否在复活中
@@ -47,6 +47,7 @@ message MessageOfProp
     int64 guid=5;
     int64 parentID=6;
     int32 size=7;  //宝石大小
+    PlaceType place = 8;
 }
 
 message MessageOfBullet
@@ -57,6 +58,7 @@ message MessageOfBullet
     double facingDirection=4;
     int64 guid=5;
     int64 parentID=6;
+    PlaceType place = 7;
 }
 
 message MessageToInitialize 
