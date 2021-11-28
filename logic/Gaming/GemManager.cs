@@ -153,13 +153,16 @@ namespace Gaming
                 if (num > character.GemNum)
                     num = character.GemNum;
 
-                if(num > 0)
+                if (num > 0)
                 {
                     character.GemNum -= num;
-                    character.Score += GemToScore(num);
+                    character.AddScore(GemToScore(num));
                 }
             }
-
+            public void UseAllGem(Character character)
+            {
+                UseGem(character, character.GemNum);
+            }
 
             /// <summary>
             /// 宝石转化为积分，有没有更好的函数？

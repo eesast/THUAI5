@@ -62,24 +62,25 @@ namespace GameClass.GameObj
         /// <returns>若为null，则是空地</returns>
         public IGameObj? GetCell(XYPosition pos)
         {
+            XYPosition cellPos = new XYPosition(pos.x / GameData.numOfPosGridPerCell * GameData.numOfPosGridPerCell + GameData.numOfPosGridPerCell / 2, pos.y / GameData.numOfPosGridPerCell* GameData.numOfPosGridPerCell + GameData.numOfPosGridPerCell / 2);
             if (pos.x / GameData.numOfPosGridPerCell >= GameData.rows || pos.x / GameData.numOfPosGridPerCell < 0
                 || pos.y / GameData.numOfPosGridPerCell >= GameData.cols || pos.y / GameData.numOfPosGridPerCell < 0)
-                return new OutOfBoundBlock(pos);
+                return new OutOfBoundBlock(cellPos);
             else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 0)
                 return null; //这可能有问题，但是还没想好怎么写
             else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 1)
-                return new Wall(pos);
+                return new Wall(cellPos);
             else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 2)
-                return new Grass1(pos);
+                return new Grass1(cellPos);
             else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 3)
-                return new Grass2(pos);
+                return new Grass2(cellPos);
             else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 4)
-                return new Grass3(pos);
+                return new Grass3(cellPos);
             else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] < 13)
-                return new BirthPoint(pos);
+                return new BirthPoint(cellPos);
             else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 13)
-                return new GemWell(pos);
-            else return new OutOfBoundBlock(pos);
+                return new GemWell(cellPos);
+            else return new OutOfBoundBlock(cellPos);
         }
         public PlaceType GetPlaceType(XYPosition pos)
         {
@@ -104,7 +105,7 @@ namespace GameClass.GameObj
                 case 4:
                     return PlaceType.Grass3;
                 default:
-                    return PlaceType.Null; 
+                    return PlaceType.Null;
             }
         }
         public Character? FindPlayer(long playerID)

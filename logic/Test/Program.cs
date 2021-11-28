@@ -5,7 +5,7 @@ using Timothy.FrameRateTask;
 using System.Threading;
 
 namespace Test
-    
+
 {
     class Program
     {
@@ -47,7 +47,7 @@ namespace Test
             messageToServer.PlayerID = playerID;
             messageToServer.TeamID = teamID;
             messageToServer.ASkill1 = ActiveSkillType.SuperFast;
-            messageToServer.PSkill = PassiveSkillType.Vampire;
+            messageToServer.PSkill = PassiveSkillType.SpeedUpWhenLeavingGrass;
              
             clientCommunication.OnReceive += () =>
             {
@@ -63,7 +63,7 @@ namespace Test
             var k = Console.ReadKey().Key;
             while (k != ConsoleKey.Escape)
             {
-                switch(k)
+                switch (k)
                 {
                     case ConsoleKey.W:
                         MessageToServer msgA = new MessageToServer();
@@ -89,7 +89,7 @@ namespace Test
                         msgW.PlayerID = playerID;
                         msgW.TeamID = teamID;
                         msgW.TimeInMilliseconds = 50;
-                        msgW.Angle = Math.PI/2;
+                        msgW.Angle = Math.PI / 2;
                         clientCommunication.SendMessage(msgW);
                         break;
                     case ConsoleKey.A:
@@ -98,7 +98,7 @@ namespace Test
                         msgS.PlayerID = playerID;
                         msgS.TeamID = teamID;
                         msgS.TimeInMilliseconds = 50;
-                        msgS.Angle = 3*Math.PI/2;
+                        msgS.Angle = 3 * Math.PI / 2;
                         clientCommunication.SendMessage(msgS);
                         break;
                     case ConsoleKey.J:
@@ -120,6 +120,7 @@ namespace Test
                         MessageToServer msgK = new MessageToServer();
                         msgK.MessageType = MessageType.UseGem;
                         msgK.PlayerID = playerID;
+                        msgK.GemSize = 1;
                         msgK.TeamID = teamID;
                         clientCommunication.SendMessage(msgK);
                         break;

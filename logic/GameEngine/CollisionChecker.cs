@@ -17,7 +17,9 @@ namespace GameEngine
         /// <returns>和它碰撞的物体</returns>
         public IGameObj? CheckCollision(IMoveable obj, Vector moveVec)
         {
-            XYPosition nextPos = obj.Position + Vector.Vector2XY(moveVec);
+            XYPosition nextPos = obj.Position + Vector.Vector2XY(moveVec) + new XYPosition((int)(obj.Radius*Math.Cos(moveVec.angle)), (int)(obj.Radius * Math.Sin(moveVec.angle))); //记录下一步将到达的最远点
+            //XYPosition nextPosRight = obj.Position + Vector.Vector2XY(moveVec) + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle - Math.PI/2)), (int)(obj.Radius * Math.Sin(moveVec.angle - Math.PI / 2))); //记录下一步将到达的最远点
+            //XYPosition nextPosLeft = obj.Position + Vector.Vector2XY(moveVec) + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle + Math.PI / 2)), (int)(obj.Radius * Math.Sin(moveVec.angle + Math.PI / 2))); //记录下一步将到达的最远点
             if (!obj.IsRigid)
             {
                 if (gameMap.IsOutOfBound(obj))
@@ -57,6 +59,7 @@ namespace GameEngine
             //对墙体检查
             if (gameMap.IsWall(nextPos))
                 return gameMap.GetCell(nextPos);
+
             return null;
         }
         /// <summary>
@@ -77,6 +80,42 @@ namespace GameEngine
             return tmpMax;
         }
 
+        private double FindMaxOnlyConsiderWall(IMoveable obj, Vector moveVec)
+        {
+            var desination = moveVec;
+            double maxOnlyConsiderWall = moveVec.length; //不知道为什么一定得是0
+            while (desination.length > 0)  //主要是为了防止穿墙，但实际上貌似不会发生
+            {
+                XYPosition nextXY = Vector.Vector2XY(desination) + obj.Position + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle)), (int)(obj.Radius * Math.Sin(moveVec.angle)));
+                if (gameMap.IsWall(nextXY)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
+                {
+                    maxOnlyConsiderWall = MaxMoveToSquare(obj, gameMap.GetCell(nextXY));
+                }
+                else //考虑物体宽度
+                {
+                    double dist = 0;
+                    XYPosition nextXYConsiderWidth;
+                    nextXYConsiderWidth = Vector.Vector2XY(desination) + obj.Position + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle + Math.PI / 2)), (int)(obj.Radius * Math.Sin(moveVec.angle + Math.PI / 2)));
+                    if (gameMap.IsWall(nextXYConsiderWidth)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
+                    {
+                        dist = MaxMoveToSquare(obj, gameMap.GetCell(nextXYConsiderWidth));
+                        if (dist < maxOnlyConsiderWall)
+                            maxOnlyConsiderWall = dist;
+                    }
+                    nextXYConsiderWidth = Vector.Vector2XY(desination) + obj.Position + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle - Math.PI / 2)), (int)(obj.Radius * Math.Sin(moveVec.angle - Math.PI / 2)));
+                    if (gameMap.IsWall(nextXYConsiderWidth)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
+                    {
+                        dist = MaxMoveToSquare(obj, gameMap.GetCell(nextXYConsiderWidth));
+                        if (dist < maxOnlyConsiderWall)
+                            maxOnlyConsiderWall = dist;
+                    }
+                    //maxOnlyConsiderWall = distLeft < distRight ? distLeft : distRight;  //找可移动距离的最小值
+                }
+                desination.length -= GameData.numOfPosGridPerCell / Math.Abs(Math.Cos(desination.angle));
+            }
+            return maxOnlyConsiderWall;
+        }
+
         /// <summary>
         /// 寻找最大可能移动距离
         /// </summary>
@@ -90,17 +129,7 @@ namespace GameEngine
             double tmpMax = maxLen; //暂存最大值
 
             // 先找只考虑墙的最大距离。需要明确的是，objlist中不应当添加墙
-            var desination = moveVec;
-            double maxOnlyConsiderWall = maxLen;
-            while (desination.length > 0)
-            {
-                if (gameMap.IsWall(Vector.Vector2XY(desination) + obj.Position)) //先加了判断，下面的getcell不会为null
-                {
-                    maxOnlyConsiderWall = MaxMoveToSquare(obj, gameMap.GetCell(Vector.Vector2XY(desination) + obj.Position));
-                }
-                desination.length -= GameData.numOfPosGridPerCell / (Math.Abs(Math.Cos(desination.angle)));
-            }
-            tmpMax = maxLen;
+            double maxOnlyConsiderWall = FindMaxOnlyConsiderWall(obj, moveVec);
             double maxIgnoringWall = maxLen;
             foreach (var listWithLock in lists)
             {
@@ -164,7 +193,7 @@ namespace GameEngine
                 }
                 finally
                 {
-                    maxLen = Math.Min(maxOnlyConsiderWall, maxIgnoringWall);
+                    maxLen = Math.Min(maxOnlyConsiderWall, maxIgnoringWall); //最大可能距离的最小值
                     listLock.ExitReadLock();
                 }
             }
