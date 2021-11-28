@@ -30,6 +30,7 @@ public:
     concurrent_queue() = default;
     concurrent_queue(const concurrent_queue&) = delete;
     ~concurrent_queue() noexcept = default;
+    concurrent_queue& operator=(const concurrent_queue&) = delete;
 
     void clear()
     {
