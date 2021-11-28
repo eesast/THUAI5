@@ -108,7 +108,11 @@ private:
     /// </summary>
     void UnBlockAI();
 
-    void Update();
+    /// <summary>
+    /// 更新目前的状态(上锁时调用)
+    /// </summary>
+    /// <returns></returns>
+    void Update() noexcept;
    
 public:
     Logic();
