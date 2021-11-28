@@ -7,6 +7,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "API", "API\API.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Communication", "Communication\Communication.vcxproj", "{1A94F4E5-D09D-449C-BF8D-13E978AC7CFA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "thuai", "thuai", "{E094BF4B-EBD5-4951-BB25-00D7779BDEE1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{15044D05-5747-4FF9-A2B3-98928065E46D}"
+	ProjectSection(SolutionItems) = preProject
+		thuai\include\concurrent_queue.hpp = thuai\include\concurrent_queue.hpp
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -34,6 +41,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{15044D05-5747-4FF9-A2B3-98928065E46D} = {E094BF4B-EBD5-4951-BB25-00D7779BDEE1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {51F01ECB-36E0-47EA-99AC-AF0985134039}

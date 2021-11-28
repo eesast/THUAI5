@@ -55,7 +55,7 @@ void Logic::ProcessMessageToOneClient(std::shared_ptr<Protobuf::MessageToOneClie
         std::cout << "Invalid player!" << std::endl;
         break;
     case Protobuf::MessageType::Send:
-        MessageStorage.push(pm2oc->message());
+        MessageStorage.emplace(pm2oc->message());
         break;
     default:
         std::cout << "Invalid MessageType of MessageToOneClient!" << std::endl;
@@ -129,7 +129,7 @@ void Logic::UnBlockBuffer()
     cv_buffer.notify_one();
 }
 
-void Logic::Update()
+void Logic::Update() noexcept
 {
     // 交换两个指针的位置
     State* temp = pState;

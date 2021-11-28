@@ -18,9 +18,6 @@
     <ClInclude Include="include\CAPI.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\concurrent_queue.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\message.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
