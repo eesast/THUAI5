@@ -53,11 +53,16 @@ namespace Gaming
                     }
 
                     //人死了应该要生成宝石的
-                    //if(playerBeingShot.GemNum>0)
-                    //{
-                    //    Gem gem = new Gem(playerBeingShot.Position, playerBeingShot.GemNum);
-                        
-                    //}
+                    if(playerBeingShot.GemNum > 0)
+                    {
+                        Gem gem = new Gem(playerBeingShot.Position, playerBeingShot.GemNum);
+                        gameMap.GemListLock.EnterWriteLock();
+                        try 
+                        {
+                            gameMap.GemList.Add(gem);
+                        }
+                        finally { gameMap.GemListLock.ExitWriteLock(); }
+                    }
 
                     playerBeingShot.Reset();
                     ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  //给击杀者加分

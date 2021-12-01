@@ -415,7 +415,7 @@ namespace Client
                                 switch (obj.ObjCase)
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
-                                        if (obj.MessageOfCharacter.Guid == 11)  //怎么指定guid是个问题..
+                                        if (obj.MessageOfCharacter.PlayerID == playerID && obj.MessageOfCharacter.TeamID == teamID)
                                             myInfo = obj;
                                         playerData.Add(obj);
                                         break;
@@ -435,7 +435,7 @@ namespace Client
                                 switch (obj.ObjCase)
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
-                                        if (obj.MessageOfCharacter.Guid == 11)  //怎么指定guid是个问题..
+                                        if (obj.MessageOfCharacter.PlayerID == playerID && obj.MessageOfCharacter.TeamID == teamID)
                                             myInfo = obj;
                                         playerData.Add(obj);
                                         break;
@@ -587,7 +587,8 @@ namespace Client
                 {
                     ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
                     error.Show();
-                    //isGameRunning = false;
+                    isClientStocked = true;
+                    PorC.Content = "\\xfgg/";
                 }
             }
         }

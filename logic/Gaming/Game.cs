@@ -15,14 +15,16 @@ namespace Gaming
         {
             public uint birthPointIndex;
             public long teamID;
+            public long playerID;
             public PassiveSkillType passiveSkill;
             public ActiveSkillType commonSkill;
-            public PlayerInitInfo(uint birthPointIndex, long teamID, PassiveSkillType passiveSkill, ActiveSkillType commonSkill)
+            public PlayerInitInfo(uint birthPointIndex, long teamID, long playerID, PassiveSkillType passiveSkill, ActiveSkillType commonSkill)
             {
                 this.birthPointIndex = birthPointIndex;
                 this.teamID = teamID;
                 this.passiveSkill = passiveSkill;
                 this.commonSkill = commonSkill;
+                this.playerID = playerID;
             }
         }
 
@@ -54,6 +56,7 @@ namespace Gaming
             //Console.WriteLine($"Playerlist length:{gameMap.PlayerList.Count}");
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
             newPlayer.TeamID = playerInitInfo.teamID;
+            newPlayer.PlayerID = playerInitInfo.playerID;
 
             new Thread  //检查人物位置，同时人物装弹。
             (
