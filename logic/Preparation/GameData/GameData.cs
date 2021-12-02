@@ -40,16 +40,16 @@ namespace Preparation.GameData
         /// 玩家相关
         /// </summary>
         public const int characterRadius = numOfPosGridPerCell / 2;  //人物半径
-        public const int basicAp = 1000;	// 初始攻击力
+        public const int basicAp = 3000;	// 初始攻击力
         public const int basicHp = 6000;	// 初始血量
         public const int basicCD = 3000;    // 初始子弹冷却
         public const int basicBulletNum = 5;   // 初始子弹量
         public const int MinAP = 0; // 最小攻击力
         public const int MaxAP = int.MaxValue;  //最大攻击力
-        public const double basicAttackRange = 4000;               // 基本攻击范围
+        public const double basicAttackRange = 10000;               // 基本攻击范围
         public const double basicBulletBombRange = 5000;           // 基本子弹爆炸范围
-        public const int basicMoveSpeed = 2000;                   // 基本移动速度，单位：s-1
-        public const int basicBulletMoveSpeed = 4000;             // 基本子弹移动速度，单位：s-1
+        public const int basicMoveSpeed = 3000;                   // 基本移动速度，单位：s-1
+        public const int basicBulletMoveSpeed = 6000;             // 基本子弹移动速度，单位：s-1
         public const int addScoreWhenKillOneLevelPlayer = 100;   // 击杀一级角色获得的加分
         public const int scoreInrease = 20;                      // 每高一级，击杀该角色多的加分
         public const int commonSkillCD = 30000;    //普通技能标准冷却时间

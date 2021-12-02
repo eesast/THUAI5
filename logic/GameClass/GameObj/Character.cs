@@ -354,6 +354,18 @@ namespace GameClass.GameObj
                 }
             }
         }
+        private long playerID = long.MaxValue;
+        public long PlayerID
+        {
+            get => playerID;
+            set
+            {
+                lock(gameObjLock)
+                {
+                    playerID = value;
+                }
+            }
+        }
         /// <summary>
         /// 角色携带的信息
         /// </summary>
