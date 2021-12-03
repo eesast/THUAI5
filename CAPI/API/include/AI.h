@@ -2,8 +2,18 @@
 #ifndef AI_H
 #define AI_H
 
-#include<memory>
-#include"API.h"
+#include <memory>
+#include "API.h"
+
+
+/// <summary>
+/// 记录玩家AI的ID信息
+/// </summary>
+struct ID
+{
+    static inline int playerID = 0;
+    static inline int teamID = 0;
+};
 
 /// <summary>
 /// AI通用接口
@@ -26,6 +36,9 @@ public:
     AI() :IAI() {}
     virtual void play(IAPI& api) override;
 };
+
+/// 命令行程序主函数
+int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder);
 
 
 #endif // !AI_H
