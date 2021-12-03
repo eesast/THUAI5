@@ -11,14 +11,6 @@ EnHandleResult CAPI::OnConnect(ITcpClient* pSender, CONNID dwConnID)
     return HR_OK; 
 }
 
-/// <summary>
-/// 收发字节流前四比特是type(little endian)，随后是Message的字节流
-/// </summary>
-/// <param name="pSender"></param>
-/// <param name="dwConnID"></param>
-/// <param name="pData"></param>
-/// <param name="iLength"></param>
-/// <returns></returns>
 EnHandleResult CAPI::OnReceive(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 {
     pointer_m2c pm2c = GameMessage::Deserialize(pData, iLength);
