@@ -4,6 +4,7 @@
 
 #include <string>
 #include "Message2Server.pb.h"
+#include "structures.h"
 
 /// <summary>
 /// 游戏常量
@@ -39,7 +40,7 @@ public:
     virtual bool Send(int toPlayerID,std::string) = 0;
 
     // 道具
-    virtual bool Pick() = 0; // 需要指定道具属性
+    virtual bool Pick(THUAI5::PropType) = 0; // 需要指定道具属性
     virtual bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) = 0;
     virtual bool UseProp() = 0;
     virtual bool ThrowGem(uint32_t timeInMilliseconds, double angleInRadian,uint32_t gemNum) = 0;
