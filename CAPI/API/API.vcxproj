@@ -159,7 +159,6 @@
     <ClInclude Include="API.h" />
     <ClInclude Include="include\AI.h" />
     <ClInclude Include="include\API.h" />
-    <ClInclude Include="include\base.h" />
     <ClInclude Include="include\logic.h" />
     <ClInclude Include="include\state.h" />
     <ClInclude Include="include\structures.h" />
@@ -168,6 +167,7 @@
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
     <ClCompile Include="src\AI.cpp" />
+    <ClCompile Include="src\API.cpp" />
     <ClCompile Include="src\logic.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>

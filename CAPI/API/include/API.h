@@ -87,7 +87,7 @@ public:
     bool Send(int toPlayerID, std::string) override;
 
     // 道具
-    bool Pick() override; // 需要指定道具属性
+    bool Pick(THUAI5::PropType) override; // 需要指定道具属性
     bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) override;
     bool UseProp() override;
     bool ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum) override;
