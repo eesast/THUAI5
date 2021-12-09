@@ -117,7 +117,7 @@ private:
 public:
     Logic();
     ~Logic() = default;
-    void Main();
+    void Main(int pID,int tID,THUAI5::ActiveSkillType aSkill,THUAI5::PassiveSkillType pSkill, CreateAIFunc AIBuilder,int level,std::string filename);
 };
 
 #endif
