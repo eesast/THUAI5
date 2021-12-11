@@ -36,7 +36,8 @@ message MessageOfCharacter
     int32 CD=21;
     int32 lifeNum = 22;		//第几次复活
     int32 score=23;
-}
+    int64 ID=24;
+    int64 teamID=25;
 
 message MessageOfProp
 {
