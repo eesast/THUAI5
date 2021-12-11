@@ -142,6 +142,8 @@ namespace Test
                         msgP.PropType = Communication.Proto.PropType.Gem;
                         clientCommunication.SendMessage(msgP);
                         break;
+                    default:
+                        break;
                 }
                 k = Console.ReadKey().Key;
             }
