@@ -5,6 +5,7 @@ using Timothy.FrameRateTask;
 using Gaming;
 using Communication.Proto;
 using GameClass.GameObj;
+using System.IO;
 
 namespace Server
 {
@@ -360,7 +361,42 @@ namespace Server
         }
         public GameServer(ArgumentOptions options) : base(options)
         {
-            this.game = new Game(MapInfo.defaultMap, options.TeamCount);
+            if (options.mapResource == DefaultArgumentOptions.MapResource)
+                this.game = new Game(MapInfo.defaultMap, options.TeamCount);
+            else
+            {
+                uint[,] map = new uint[GameData.rows, GameData.cols];
+                try
+                {
+                    string? line;
+                    int i = 0, j = 0;
+                    using (StreamReader sr = new StreamReader(options.mapResource))
+                    {
+                        while (!sr.EndOfStream && i < GameData.rows && j < GameData.cols)
+                        {
+                            if ((line = sr.ReadLine()) != null)
+                            {
+                                string[] nums = line.Split(' ');
+                                foreach (string item in nums)
+                                {
+                                    map[i, j] = (uint)int.Parse(item);
+                                    j++;
+                                    if (j >= GameData.cols)
+                                    {
+                                        j = 0;
+                                        i++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    map = MapInfo.defaultMap;
+                }
+                finally { this.game = new Game(map, options.TeamCount); }
+            }
             communicationToGameID = new long[options.TeamCount, options.PlayerCountPerTeam];
             //创建server时先设定待加入人物都是invalid
             for (int i = 0; i < communicationToGameID.GetLength(0); i++)

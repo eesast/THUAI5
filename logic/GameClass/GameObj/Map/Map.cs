@@ -35,13 +35,27 @@ namespace GameClass.GameObj
 
         private readonly Dictionary<uint, BirthPoint> birthPointList;   // 出生点列表
         public Dictionary<uint, BirthPoint> BirthPointList => birthPointList;
+
+        public readonly uint[,] ProtoGameMap;
+        public PlaceType GetPlaceType(GameObj obj)
+        {
+            uint type = ProtoGameMap[obj.Position.x / GameData.numOfPosGridPerCell, obj.Position.y / GameData.numOfPosGridPerCell];
+            if (type == 1)
+                return PlaceType.Grass1;
+            else if (type == 2)
+                return PlaceType.Grass2;
+            else if (type == 3)
+                return PlaceType.Grass3;
+            else
+                return PlaceType.Land;  //其他情况均返回land
+        }
         // 出生点列表暂不需要锁
         public bool IsWall(XYPosition pos)
         {
             if (pos.x / GameData.numOfPosGridPerCell >= GameData.rows || pos.x / GameData.numOfPosGridPerCell < 0
                 || pos.y / GameData.numOfPosGridPerCell >= GameData.cols || pos.y / GameData.numOfPosGridPerCell < 0)
                 return true;
-            return MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 1;
+            return ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 1;
         }
         public bool IsOutOfBound(IGameObj obj)
         {
@@ -66,25 +80,25 @@ namespace GameClass.GameObj
             if (pos.x / GameData.numOfPosGridPerCell >= GameData.rows || pos.x / GameData.numOfPosGridPerCell < 0
                 || pos.y / GameData.numOfPosGridPerCell >= GameData.cols || pos.y / GameData.numOfPosGridPerCell < 0)
                 return new OutOfBoundBlock(cellPos);
-            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 0)
+            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 0)
                 return null; //这可能有问题，但是还没想好怎么写
-            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 1)
+            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 1)
                 return new Wall(cellPos);
-            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 2)
+            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 2)
                 return new Grass1(cellPos);
-            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 3)
+            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 3)
                 return new Grass2(cellPos);
-            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 4)
+            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 4)
                 return new Grass3(cellPos);
-            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] < 13)
+            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] < 13)
                 return new BirthPoint(cellPos);
-            else if (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 13)
+            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 13)
                 return new GemWell(cellPos);
             else return new OutOfBoundBlock(cellPos);
         }
         public PlaceType GetPlaceType(XYPosition pos)
         {
-            switch (MapInfo.defaultMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell])
+            switch (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell])
             {
                 case 0:
                 case 1:
@@ -137,6 +151,17 @@ namespace GameClass.GameObj
             playerListLock = new ReaderWriterLockSlim();
             propListLock = new ReaderWriterLockSlim();
             gemListLock = new ReaderWriterLockSlim();
+
+            ProtoGameMap = new uint[mapResource.GetLength(0), mapResource.GetLength(1)];
+            Array.Copy(mapResource, ProtoGameMap, mapResource.Length);
+            //for(int i = 0;i< mapResource.GetLength(0); i++)
+            //{
+            //    for(int j=0;j< mapResource.GetLength(1);j++)
+            //    {
+            //        Console.Write($" {ProtoGameMap[i, j]}");
+            //    }
+            //    Console.WriteLine("");
+            //}
 
             birthPointList = new Dictionary<uint, BirthPoint>(MapInfo.numOfBirthPoint);
 
