@@ -38,7 +38,6 @@ namespace Client
             DrawMap();
             timer.Start();
             isClientStocked = true;
-            drawPicLock = new();
             playerData = new List<MessageToClient.Types.GameObjMessage>();
             bulletData = new List<MessageToClient.Types.GameObjMessage>();
             propData = new List<MessageToClient.Types.GameObjMessage>();
@@ -69,13 +68,13 @@ namespace Client
         {
             DragMove();
         }
-        private void Attack(object sender,RoutedEventArgs e)
+        private void Attack(object sender, RoutedEventArgs e)
         {
             MessageToServer msgJ = new MessageToServer();
             msgJ.MessageType = MessageType.Attack;
             msgJ.PlayerID = playerID;
             msgJ.TeamID = teamID;
-            foreach(var i in playerData)
+            foreach (var i in playerData)
             {
                 //待补充
             }
@@ -192,7 +191,7 @@ namespace Client
         }
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
-            if (!communicator.Client.IsConnected)//第一次连接失败后第二次连接会出错
+            if (!communicator.Client.IsConnected)
             {
                 try
                 {
@@ -201,7 +200,7 @@ namespace Client
 #pragma warning disable CS8602 // 解引用可能出现空引用。
                         string[] comInfo = sr.ReadLine().Split(' ');
 #pragma warning restore CS8602 // 解引用可能出现空引用。
-                        if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == ""|| comInfo[4] == ""|| comInfo[5] == "")
+                        if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == "" || comInfo[4] == "" || comInfo[5] == "")
                         {
                             throw new Exception("Input data not sufficent");
                         }
@@ -220,7 +219,7 @@ namespace Client
                             msg.MessageType = MessageType.AddPlayer;
                             msg.PlayerID = playerID;
                             msg.TeamID = teamID;
-                            switch(Convert.ToInt64(comInfo[4]))
+                            switch (Convert.ToInt64(comInfo[4]))
                             {
                                 case 0:
                                     msg.PSkill = PassiveSkillType.NullPassiveSkillType;
@@ -244,7 +243,7 @@ namespace Client
                                     msg.PSkill = PassiveSkillType.Pskill5;
                                     break;
                             }
-                            switch(Convert.ToInt64(comInfo[5]))
+                            switch (Convert.ToInt64(comInfo[5]))
                             {
                                 case 0:
                                     msg.ASkill1 = ActiveSkillType.NullActiveSkillType;
@@ -284,7 +283,7 @@ namespace Client
                 }
                 catch (Exception exc)
                 {
-                    if (exc.Message == "Input data not sufficent")
+                    if (exc.Message == "Length<4")
                     {
                         ConnectRegister crg = new();
                         crg.State.Text = "配置非法，请重新输入或检查配置文件。";
@@ -295,12 +294,21 @@ namespace Client
                         ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
                         error.Show();
                         Connect.Background = Brushes.Aqua;
+                        if (communicator != null)
+                        {
+                            if (communicator.Client.IsConnected)
+                            {
+                                _ = communicator.Stop();
+                            }
+                            communicator.Dispose();
+                            communicator = null;
+                        }
                     }
                 }
             }
             else
             {
-                _=communicator.Stop();
+                _ = communicator.Stop();
                 Connect.Background = Brushes.Aqua;
             }
         }
@@ -403,7 +411,7 @@ namespace Client
                             break;
                         case MessageType.StartGame:
                             foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
-                            {   
+                            {
                                 switch (obj.ObjCase)
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
@@ -463,16 +471,19 @@ namespace Client
         }
         private bool CanSee(PlaceType obj, long guid)
         {
-            if (myInfo.MessageOfCharacter.Guid == guid)
-                return true;
-            if (myInfo.MessageOfCharacter.Place == PlaceType.Invisible)  //灵界
-                return false;
-            if (obj == PlaceType.Invisible)
-                return false;
-            if (obj == PlaceType.Land)
-                return true;
-            if (obj != myInfo.MessageOfCharacter.Place)  
-                return false;
+            if (myInfo != null)
+            {
+                if (myInfo.MessageOfCharacter.Guid == guid)
+                    return true;
+                if (myInfo.MessageOfCharacter.Place == PlaceType.Invisible)  //灵界
+                    return false;
+                if (obj == PlaceType.Invisible)
+                    return false;
+                if (obj == PlaceType.Land)
+                    return true;
+                if (obj != myInfo.MessageOfCharacter.Place)
+                    return false;
+            }
             return true;
         }
         //定时器事件，刷新地图
@@ -598,10 +609,10 @@ namespace Client
         private List<MessageToClient.Types.GameObjMessage> bulletData;
         private List<MessageToClient.Types.GameObjMessage> propData;
         private object drawPicLock = new object();
-        private MessageToClient.Types.GameObjMessage myInfo;  //这个client自己的message
+        private MessageToClient.Types.GameObjMessage? myInfo;  //这个client自己的message
 
         private Stack<string>? myMessages;
-        
+
         /// <summary>
         /// 50*50
         /// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3 
