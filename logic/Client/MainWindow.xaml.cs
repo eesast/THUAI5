@@ -471,16 +471,19 @@ namespace Client
         }
         private bool CanSee(PlaceType obj, long guid)
         {
-            if (myInfo.MessageOfCharacter.Guid == guid)
-                return true;
-            if (myInfo.MessageOfCharacter.Place == PlaceType.Invisible)  //灵界
-                return false;
-            if (obj == PlaceType.Invisible)
-                return false;
-            if (obj == PlaceType.Land)
-                return true;
-            if (obj != myInfo.MessageOfCharacter.Place)  
-                return false;
+            if (myInfo != null)
+            {
+                if (myInfo.MessageOfCharacter.Guid == guid)
+                    return true;
+                if (myInfo.MessageOfCharacter.Place == PlaceType.Invisible)  //灵界
+                    return false;
+                if (obj == PlaceType.Invisible)
+                    return false;
+                if (obj == PlaceType.Land)
+                    return true;
+                if (obj != myInfo.MessageOfCharacter.Place)
+                    return false;
+            }
             return true;
         }
         //定时器事件，刷新地图
@@ -606,7 +609,7 @@ namespace Client
         private List<MessageToClient.Types.GameObjMessage> bulletData;
         private List<MessageToClient.Types.GameObjMessage> propData;
         private object drawPicLock = new object();
-        private MessageToClient.Types.GameObjMessage myInfo;  //这个client自己的message
+        private MessageToClient.Types.GameObjMessage? myInfo;  //这个client自己的message
 
         private Stack<string>? myMessages;
 

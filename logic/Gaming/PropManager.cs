@@ -189,14 +189,14 @@ namespace Gaming
                     }
                 );
                 availableCellForGenerateProp = new List<XYPosition>();
-                for (int i = 0; i < MapInfo.defaultMap.GetLength(0); i++)
+                for (int i = 0; i < gameMap.ProtoGameMap.GetLength(0); i++)
                 {
-                    for (int j = 0; j < MapInfo.defaultMap.GetLength(1); j++)
+                    for (int j = 0; j < gameMap.ProtoGameMap.GetLength(1); j++)
                     {
-                        if (   MapInfo.defaultMap[i, j] == (int)MapInfo.MapInfoObjType.Null
-                            || MapInfo.defaultMap[i, j] == (int)MapInfo.MapInfoObjType.Grass1
-                            || MapInfo.defaultMap[i, j] == (int)MapInfo.MapInfoObjType.Grass2
-                            || MapInfo.defaultMap[i, j] == (int)MapInfo.MapInfoObjType.Grass3 )
+                        if ( gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Null
+                            || gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Grass1
+                            || gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Grass2
+                            || gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Grass3 )
                         {
                             availableCellForGenerateProp.Add(GameData.GetCellCenterPos(i, j));
                         }
