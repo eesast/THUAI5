@@ -36,7 +36,8 @@ namespace Server
             msg.MessageOfCharacter.Speed = player.MoveSpeed;
             msg.MessageOfCharacter.TimeUntilCommonSkillAvailable = player.TimeUntilCommonSkillAvailable;
             msg.MessageOfCharacter.TeamID = player.TeamID;
-            msg.MessageOfCharacter.PlayerID = player.PlayerID; 
+            msg.MessageOfCharacter.PlayerID = player.PlayerID;
+            msg.MessageOfCharacter.IsInvisible = player.IsInvisible;
 
             //应该要发队伍分数，这里先发个人分数
             msg.MessageOfCharacter.Score = player.Score;
@@ -59,9 +60,9 @@ namespace Server
                 case Preparation.Utility.PlaceType.Grass3:
                     msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.Grass3;
                     break;
-                case Preparation.Utility.PlaceType.Invisible:
-                    msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.Invisible;
-                    break;
+               // case Preparation.Utility.PlaceType.Invisible:
+               //     msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.Invisible;
+               //     break;
                 default:
                     msg.MessageOfCharacter.Place = Communication.Proto.PlaceType.NullPlaceType;
                     break;
@@ -205,9 +206,9 @@ namespace Server
                 case Preparation.Utility.PlaceType.Grass3:
                     msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass3;
                     break;
-                case Preparation.Utility.PlaceType.Invisible:
-                    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Invisible;
-                    break;
+                //case Preparation.Utility.PlaceType.Invisible:
+                //    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Invisible;
+                //    break;
                 default:
                     msg.MessageOfBullet.Place = Communication.Proto.PlaceType.NullPlaceType;
                     break;
@@ -283,9 +284,9 @@ namespace Server
                 case Preparation.Utility.PlaceType.Grass3:
                     msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass3;
                     break;
-                case Preparation.Utility.PlaceType.Invisible:
-                    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Invisible;
-                    break;
+                //case Preparation.Utility.PlaceType.Invisible:
+                //    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Invisible;
+                //    break;
                 default:
                     msg.MessageOfProp.Place = Communication.Proto.PlaceType.NullPlaceType;
                     break;

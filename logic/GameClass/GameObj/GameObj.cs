@@ -133,16 +133,7 @@ namespace GameClass.GameObj
         /// </summary>
         private int orgMoveSpeed;
         public int OrgMoveSpeed { get => orgMoveSpeed; protected set { orgMoveSpeed = value; } }
-        public virtual bool CanSee(GameObj obj)
-        {
-            if (obj.Place == PlaceType.Invisible) //先判断是否隐身
-                return false;
-            if (obj.Place == PlaceType.Land)
-                return true;
-            if (obj.Place == this.Place)
-                return true;
-            return false;
-        }
+
         // 移动，改变坐标
         public long Move(Vector moveVec)
         {

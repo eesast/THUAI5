@@ -29,7 +29,7 @@ namespace Preparation.Utility
         Grass1 = 2,
         Grass2 = 3,
         Grass3 = 4,
-        Invisible = 5
+        //Invisible = 5
     }
     public enum BulletType //工厂方式
     {
