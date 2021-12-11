@@ -7,6 +7,7 @@ namespace Server
         public static string FileName = "不用记啊";     // An impossible name of the playback file to indicate -f is not sepcified.
         public static string Token = "随手推啊";         // An impossible name of the token to indicate -f is not sepcified.
         public static string Url = "闭眼写啊";
+        public static string MapResource = "多简单啊";
     }
 
     public class ArgumentOptions
@@ -38,8 +39,11 @@ namespace Server
         [Option('k', "token", Required = false, HelpText = "Web API Token")]
         public string Token { get; set; } = DefaultArgumentOptions.Token;
 
-        [Option('u', "url", Required = false, HelpText = "Web url")]
+        [Option('u', "url", Required = false, HelpText = "Web Url")]
         public string Url { get; set; } = DefaultArgumentOptions.Url;
+
+        [Option('m', "mapResource", Required = false, HelpText = "Map Resource Path")]
+        public string mapResource { get; set; } = DefaultArgumentOptions.MapResource;
 
         [Option("requestOnly", Required = false, HelpText = "Only send web requests")]
         public bool RequestOnly { get; set; } = false;
