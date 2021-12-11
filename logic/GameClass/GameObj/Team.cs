@@ -21,11 +21,11 @@ namespace GameClass.GameObj
                 return score;
             }
         }
-        public Character? GetPlayer(long playerID)
+        public Character? GetPlayer(long ID)
         {
             foreach (Character player in playerList)
             {
-                if (player.ID == playerID)
+                if (player.ID == ID)
                 {
                     return player;
                 }
@@ -36,12 +36,12 @@ namespace GameClass.GameObj
         {
             playerList.Add(player);
         }
-        public void OutPlayer(long playerID)
+        public void OutPlayer(long ID)
         {
             int i;
             for (i = 0; i < playerList.Count; ++i)
             {
-                if (playerList[i].ID == playerID) break;
+                if (playerList[i].ID == ID) break;
             }
             playerList.RemoveAt(i);
         }

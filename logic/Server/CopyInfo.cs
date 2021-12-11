@@ -35,6 +35,8 @@ namespace Server
             msg.MessageOfCharacter.Radius = player.Radius;
             msg.MessageOfCharacter.Speed = player.MoveSpeed;
             msg.MessageOfCharacter.TimeUntilCommonSkillAvailable = player.TimeUntilCommonSkillAvailable;
+            msg.MessageOfCharacter.TeamID = player.TeamID;
+            msg.MessageOfCharacter.PlayerID = player.PlayerID; 
 
             //应该要发队伍分数，这里先发个人分数
             msg.MessageOfCharacter.Score = player.Score;
@@ -188,7 +190,7 @@ namespace Server
             msg.MessageOfBullet.X = bullet.Position.x;
             msg.MessageOfBullet.Y = bullet.Position.y;
             if (bullet.Parent != null)
-                msg.MessageOfBullet.ParentID = bullet.Parent.ID;
+                msg.MessageOfBullet.ParentTeamID = bullet.Parent.TeamID;
             switch (bullet.Place)
             {
                 case Preparation.Utility.PlaceType.Land:

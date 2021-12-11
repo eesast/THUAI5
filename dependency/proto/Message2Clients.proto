@@ -36,8 +36,14 @@ message MessageOfCharacter
     int32 CD=21;
     int32 lifeNum = 22;		//第几次复活
     int32 score=23;
+<<<<<<< HEAD
     int64 ID=24;
     int64 teamID=25;
+=======
+    int64 teamID=24;
+    int64 playerID=25;
+}
+>>>>>>> 127c18da360d88ffb1bac452b359510fcb76b04e
 
 message MessageOfProp
 {
@@ -46,9 +52,8 @@ message MessageOfProp
     int32 y = 3;
     double facingDirection=4;
     int64 guid=5;
-    int64 parentID=6;
-    int32 size=7;  //宝石大小
-    PlaceType place = 8;
+    int32 size=6;  //宝石大小
+    PlaceType place = 7;
 }
 
 message MessageOfBullet
@@ -58,7 +63,7 @@ message MessageOfBullet
     int32 y=3;
     double facingDirection=4;
     int64 guid=5;
-    int64 parentID=6;
+    int64 parentTeamID=6;
     PlaceType place = 7;
 }
 
