@@ -96,4 +96,57 @@ bool API::UseGem(uint32_t gemNum)
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::UseGem);
     message.set_gemsize(gemNum);
+    return 0;
+}
+
+std::vector<std::shared_ptr<const THUAI5::Character>> API::GetCharacters() const
+{
+    
+}
+
+APIBuilder::APIBuilder(bool type)
+{
+    if (type)
+    {
+        api = std::make_shared<API>();
+    }
+    else
+    {
+        api = std::make_shared<DebugAPI>();
+    }
+}
+
+std::shared_ptr<IAPI> APIBuilder::get_api()
+{
+    return this->api;
+}
+
+APIBuilder_1::APIBuilder_1(bool type) :APIBuilder(type)
+{
+
+}
+
+void APIBuilder_1::set_SendInfo()
+{
+
+}
+
+void APIBuilder_1::set_Empty()
+{
+
+}
+
+void APIBuilder_1::set_GetInfo()
+{
+
+}
+
+void APIBuilder_1::set_getCounter()
+{
+
+}
+
+void APIBuilder_1::set_WaitThread()
+{
+
 }

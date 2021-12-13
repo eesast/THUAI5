@@ -159,6 +159,7 @@
     <ClInclude Include="API.h" />
     <ClInclude Include="include\AI.h" />
     <ClInclude Include="include\API.h" />
+    <ClInclude Include="include\constants.h" />
     <ClInclude Include="include\logic.h" />
     <ClInclude Include="include\state.h" />
     <ClInclude Include="include\structures.h" />

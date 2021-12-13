@@ -4,7 +4,9 @@
 
 #include <string>
 #include "Message2Server.pb.h"
-#include "structures.h"
+#include "state.h"
+
+
 
 /// <summary>
 /// 游戏常量
@@ -24,7 +26,7 @@ class IAPI
 {
 public: 
     //***********选手可执行的操作***********//
-     
+    
     // 移动
     virtual bool MovePlayer(uint32_t timeInMilliseconds, double angleInRadian) = 0;
     virtual bool MoveRight(uint32_t timeInMilliseconds) = 0;
@@ -62,6 +64,16 @@ public:
 
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<std::vector<int64_t>> GetPlayerGUIDs() const = 0;
+
+protected:
+    // **********需要在logic中指定的，辅助API进行的成员和函数***************//
+    std::function<bool(Protobuf::MessageToServer&)> SendInfo;           // 发送信息
+    std::function<bool()> Empty;                                        // 判断队列是否为空
+    std::function<bool(std::string&)> GetInfo;                          // 获取信息
+    std::function<int()> GetCounter;
+    std::function<void()> WaitThread;                                   // 等待
+    State*& pState;                                                     // 当前状态
+    friend class APIBuilder;                                            // 十分糟糕的设计
 };
 
 
@@ -115,6 +127,35 @@ class DebugAPI final :public IAPI
 {
 public:
     DebugAPI(); // 待定
+
+};
+
+class APIBuilder
+{
+public:
+    APIBuilder(bool type);
+    virtual void set_SendInfo() = 0;
+    virtual void set_Empty() = 0;
+    virtual void set_GetInfo() = 0;
+    virtual void set_getCounter() = 0;
+    virtual void set_WaitThread() = 0;
+    
+    std::shared_ptr<IAPI> get_api();
+    virtual ~APIBuilder() {};
+
+private:
+    std::shared_ptr<IAPI> api;
+};
+
+class APIBuilder_1 : public APIBuilder
+{
+public:
+    APIBuilder_1(bool type);
+    void set_SendInfo() override;
+    void set_Empty() override;
+    void set_GetInfo() override;
+    void set_getCounter() override;
+    void set_WaitThread() override;
 
 };
 
