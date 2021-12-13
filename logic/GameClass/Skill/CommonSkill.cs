@@ -113,7 +113,7 @@ namespace GameClass.Skill
                 new Thread
                 (() =>
                 {
-                    player.Place = PlaceType.Invisible;
+                    player.IsInvisible = true;
                     Debugger.Output(player, "becomes assassin!");
                     new FrameRateTaskExecutor<int>
                     (
@@ -131,7 +131,7 @@ namespace GameClass.Skill
                         MaxTolerantTimeExceedCount = ulong.MaxValue,
                     }.Start();
 
-                    player.Place = MapInfo.GetPlaceType(player);
+                    player.IsInvisible = false;
                     Debugger.Output(player, "returns to normal.");
 
                     new FrameRateTaskExecutor<int>

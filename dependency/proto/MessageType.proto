@@ -49,7 +49,6 @@ enum PlaceType  //位置标志，包括陆地，草丛，以及角色技能带�
     Grass1 = 2;
     Grass2 = 3;
     Grass3 = 4;
-    Invisible = 5;
 }
 enum PropType    // 道具的类型
 {

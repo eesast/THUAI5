@@ -167,6 +167,22 @@ namespace GameClass.GameObj
         }
 
         /// <summary>
+        /// 是否在隐身
+        /// </summary>
+        private bool isInvisible = false;
+        public bool IsInvisible
+        {
+            get => isInvisible;
+            set
+            {
+                lock(gameObjLock)
+                {
+                    isInvisible = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// 进行一次远程攻击
         /// </summary>
         /// <param name="posOffset">子弹初始位置偏差值</param>
@@ -407,7 +423,7 @@ namespace GameClass.GameObj
             }
         }
         #endregion
-        public override void Reset()
+        public override void Reset()  //要加锁吗？有点晕了
         {
             _ = AddDeathCount();
             base.Reset();
@@ -417,6 +433,7 @@ namespace GameClass.GameObj
             propInventory = null;
             bulletNum = maxBulletNum / 2;
             buffManeger.ClearAll();
+            isInvisible = false;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;

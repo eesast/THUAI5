@@ -10,7 +10,7 @@ namespace GameClass.GameObj
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static PlaceType GetPlaceType(GameObj obj)
+        /*public static PlaceType GetPlaceType(GameObj obj)
         {
             uint type = defaultMap[obj.Position.x / GameData.numOfPosGridPerCell, obj.Position.y / GameData.numOfPosGridPerCell];
             if (type == 1)
@@ -21,7 +21,7 @@ namespace GameClass.GameObj
                 return PlaceType.Grass3;
             else
                 return PlaceType.Land;  //其他情况均返回land
-        }
+        }*/
         public enum MapInfoObjType
         {
             Null=0,
