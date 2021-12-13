@@ -234,6 +234,8 @@ class MessageOfCharacter final :
     kRadiusFieldNumber = 20,
     kCDFieldNumber = 21,
     kLifeNumFieldNumber = 22,
+    kTeamIDFieldNumber = 24,
+    kPlayerIDFieldNumber = 25,
     kScoreFieldNumber = 23,
   };
   // int32 x = 1;
@@ -434,6 +436,24 @@ class MessageOfCharacter final :
   void _internal_set_lifenum(int32_t value);
   public:
 
+  // int64 teamID = 24;
+  void clear_teamid();
+  int64_t teamid() const;
+  void set_teamid(int64_t value);
+  private:
+  int64_t _internal_teamid() const;
+  void _internal_set_teamid(int64_t value);
+  public:
+
+  // int64 playerID = 25;
+  void clear_playerid();
+  int64_t playerid() const;
+  void set_playerid(int64_t value);
+  private:
+  int64_t _internal_playerid() const;
+  void _internal_set_playerid(int64_t value);
+  public:
+
   // int32 score = 23;
   void clear_score();
   int32_t score() const;
@@ -472,6 +492,8 @@ class MessageOfCharacter final :
   int32_t radius_;
   int32_t cd_;
   int32_t lifenum_;
+  int64_t teamid_;
+  int64_t playerid_;
   int32_t score_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
@@ -603,10 +625,10 @@ class MessageOfProp final :
     kTypeFieldNumber = 1,
     kXFieldNumber = 2,
     kFacingDirectionFieldNumber = 4,
-    kGuidFieldNumber = 5,
     kYFieldNumber = 3,
-    kSizeFieldNumber = 7,
-    kParentIDFieldNumber = 6,
+    kSizeFieldNumber = 6,
+    kGuidFieldNumber = 5,
+    kPlaceFieldNumber = 7,
   };
   // .Protobuf.PropType type = 1;
   void clear_type();
@@ -635,15 +657,6 @@ class MessageOfProp final :
   void _internal_set_facingdirection(double value);
   public:
 
-  // int64 guid = 5;
-  void clear_guid();
-  int64_t guid() const;
-  void set_guid(int64_t value);
-  private:
-  int64_t _internal_guid() const;
-  void _internal_set_guid(int64_t value);
-  public:
-
   // int32 y = 3;
   void clear_y();
   int32_t y() const;
@@ -653,7 +666,7 @@ class MessageOfProp final :
   void _internal_set_y(int32_t value);
   public:
 
-  // int32 size = 7;
+  // int32 size = 6;
   void clear_size();
   int32_t size() const;
   void set_size(int32_t value);
@@ -662,13 +675,22 @@ class MessageOfProp final :
   void _internal_set_size(int32_t value);
   public:
 
-  // int64 parentID = 6;
-  void clear_parentid();
-  int64_t parentid() const;
-  void set_parentid(int64_t value);
+  // int64 guid = 5;
+  void clear_guid();
+  int64_t guid() const;
+  void set_guid(int64_t value);
   private:
-  int64_t _internal_parentid() const;
-  void _internal_set_parentid(int64_t value);
+  int64_t _internal_guid() const;
+  void _internal_set_guid(int64_t value);
+  public:
+
+  // .Protobuf.PlaceType place = 7;
+  void clear_place();
+  ::Protobuf::PlaceType place() const;
+  void set_place(::Protobuf::PlaceType value);
+  private:
+  ::Protobuf::PlaceType _internal_place() const;
+  void _internal_set_place(::Protobuf::PlaceType value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protobuf.MessageOfProp)
@@ -681,10 +703,10 @@ class MessageOfProp final :
   int type_;
   int32_t x_;
   double facingdirection_;
-  int64_t guid_;
   int32_t y_;
   int32_t size_;
-  int64_t parentid_;
+  int64_t guid_;
+  int place_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
 };
@@ -816,8 +838,9 @@ class MessageOfBullet final :
     kXFieldNumber = 2,
     kFacingDirectionFieldNumber = 4,
     kGuidFieldNumber = 5,
-    kParentIDFieldNumber = 6,
     kYFieldNumber = 3,
+    kPlaceFieldNumber = 7,
+    kParentTeamIDFieldNumber = 6,
   };
   // .Protobuf.BulletType type = 1;
   void clear_type();
@@ -855,15 +878,6 @@ class MessageOfBullet final :
   void _internal_set_guid(int64_t value);
   public:
 
-  // int64 parentID = 6;
-  void clear_parentid();
-  int64_t parentid() const;
-  void set_parentid(int64_t value);
-  private:
-  int64_t _internal_parentid() const;
-  void _internal_set_parentid(int64_t value);
-  public:
-
   // int32 y = 3;
   void clear_y();
   int32_t y() const;
@@ -871,6 +885,24 @@ class MessageOfBullet final :
   private:
   int32_t _internal_y() const;
   void _internal_set_y(int32_t value);
+  public:
+
+  // .Protobuf.PlaceType place = 7;
+  void clear_place();
+  ::Protobuf::PlaceType place() const;
+  void set_place(::Protobuf::PlaceType value);
+  private:
+  ::Protobuf::PlaceType _internal_place() const;
+  void _internal_set_place(::Protobuf::PlaceType value);
+  public:
+
+  // int64 parentTeamID = 6;
+  void clear_parentteamid();
+  int64_t parentteamid() const;
+  void set_parentteamid(int64_t value);
+  private:
+  int64_t _internal_parentteamid() const;
+  void _internal_set_parentteamid(int64_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protobuf.MessageOfBullet)
@@ -884,8 +916,9 @@ class MessageOfBullet final :
   int32_t x_;
   double facingdirection_;
   int64_t guid_;
-  int64_t parentid_;
   int32_t y_;
+  int place_;
+  int64_t parentteamid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
 };
@@ -2096,6 +2129,46 @@ inline void MessageOfCharacter::set_score(int32_t value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.score)
 }
 
+// int64 teamID = 24;
+inline void MessageOfCharacter::clear_teamid() {
+  teamid_ = int64_t{0};
+}
+inline int64_t MessageOfCharacter::_internal_teamid() const {
+  return teamid_;
+}
+inline int64_t MessageOfCharacter::teamid() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfCharacter.teamID)
+  return _internal_teamid();
+}
+inline void MessageOfCharacter::_internal_set_teamid(int64_t value) {
+  
+  teamid_ = value;
+}
+inline void MessageOfCharacter::set_teamid(int64_t value) {
+  _internal_set_teamid(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.teamID)
+}
+
+// int64 playerID = 25;
+inline void MessageOfCharacter::clear_playerid() {
+  playerid_ = int64_t{0};
+}
+inline int64_t MessageOfCharacter::_internal_playerid() const {
+  return playerid_;
+}
+inline int64_t MessageOfCharacter::playerid() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfCharacter.playerID)
+  return _internal_playerid();
+}
+inline void MessageOfCharacter::_internal_set_playerid(int64_t value) {
+  
+  playerid_ = value;
+}
+inline void MessageOfCharacter::set_playerid(int64_t value) {
+  _internal_set_playerid(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.playerID)
+}
+
 // -------------------------------------------------------------------
 
 // MessageOfProp
@@ -2200,27 +2273,7 @@ inline void MessageOfProp::set_guid(int64_t value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfProp.guid)
 }
 
-// int64 parentID = 6;
-inline void MessageOfProp::clear_parentid() {
-  parentid_ = int64_t{0};
-}
-inline int64_t MessageOfProp::_internal_parentid() const {
-  return parentid_;
-}
-inline int64_t MessageOfProp::parentid() const {
-  // @@protoc_insertion_point(field_get:Protobuf.MessageOfProp.parentID)
-  return _internal_parentid();
-}
-inline void MessageOfProp::_internal_set_parentid(int64_t value) {
-  
-  parentid_ = value;
-}
-inline void MessageOfProp::set_parentid(int64_t value) {
-  _internal_set_parentid(value);
-  // @@protoc_insertion_point(field_set:Protobuf.MessageOfProp.parentID)
-}
-
-// int32 size = 7;
+// int32 size = 6;
 inline void MessageOfProp::clear_size() {
   size_ = 0;
 }
@@ -2238,6 +2291,26 @@ inline void MessageOfProp::_internal_set_size(int32_t value) {
 inline void MessageOfProp::set_size(int32_t value) {
   _internal_set_size(value);
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfProp.size)
+}
+
+// .Protobuf.PlaceType place = 7;
+inline void MessageOfProp::clear_place() {
+  place_ = 0;
+}
+inline ::Protobuf::PlaceType MessageOfProp::_internal_place() const {
+  return static_cast< ::Protobuf::PlaceType >(place_);
+}
+inline ::Protobuf::PlaceType MessageOfProp::place() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfProp.place)
+  return _internal_place();
+}
+inline void MessageOfProp::_internal_set_place(::Protobuf::PlaceType value) {
+  
+  place_ = value;
+}
+inline void MessageOfProp::set_place(::Protobuf::PlaceType value) {
+  _internal_set_place(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfProp.place)
 }
 
 // -------------------------------------------------------------------
@@ -2344,24 +2417,44 @@ inline void MessageOfBullet::set_guid(int64_t value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfBullet.guid)
 }
 
-// int64 parentID = 6;
-inline void MessageOfBullet::clear_parentid() {
-  parentid_ = int64_t{0};
+// int64 parentTeamID = 6;
+inline void MessageOfBullet::clear_parentteamid() {
+  parentteamid_ = int64_t{0};
 }
-inline int64_t MessageOfBullet::_internal_parentid() const {
-  return parentid_;
+inline int64_t MessageOfBullet::_internal_parentteamid() const {
+  return parentteamid_;
 }
-inline int64_t MessageOfBullet::parentid() const {
-  // @@protoc_insertion_point(field_get:Protobuf.MessageOfBullet.parentID)
-  return _internal_parentid();
+inline int64_t MessageOfBullet::parentteamid() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfBullet.parentTeamID)
+  return _internal_parentteamid();
 }
-inline void MessageOfBullet::_internal_set_parentid(int64_t value) {
+inline void MessageOfBullet::_internal_set_parentteamid(int64_t value) {
   
-  parentid_ = value;
+  parentteamid_ = value;
 }
-inline void MessageOfBullet::set_parentid(int64_t value) {
-  _internal_set_parentid(value);
-  // @@protoc_insertion_point(field_set:Protobuf.MessageOfBullet.parentID)
+inline void MessageOfBullet::set_parentteamid(int64_t value) {
+  _internal_set_parentteamid(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfBullet.parentTeamID)
+}
+
+// .Protobuf.PlaceType place = 7;
+inline void MessageOfBullet::clear_place() {
+  place_ = 0;
+}
+inline ::Protobuf::PlaceType MessageOfBullet::_internal_place() const {
+  return static_cast< ::Protobuf::PlaceType >(place_);
+}
+inline ::Protobuf::PlaceType MessageOfBullet::place() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfBullet.place)
+  return _internal_place();
+}
+inline void MessageOfBullet::_internal_set_place(::Protobuf::PlaceType value) {
+  
+  place_ = value;
+}
+inline void MessageOfBullet::set_place(::Protobuf::PlaceType value) {
+  _internal_set_place(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfBullet.place)
 }
 
 // -------------------------------------------------------------------
