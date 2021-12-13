@@ -91,7 +91,7 @@ message MessageToOneClient
     MessageType messageType = 3;
     int64 guid = 4;             //自己的guid
     string message = 5;         //如果 messageType 为 Send，则为要发送的消息
-} //继承自THUIAI4
+} //继承自THUAI4
 //注：转换函数还没写好
 
 

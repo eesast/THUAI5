@@ -146,7 +146,11 @@ namespace THUAI5
     /// </summary>
     struct Wall
     {
-
+        ShapeType shapeType;                            // 墙的形状（正方形）
+        uint16_t radius;                                // 圆形物体的半径或正方形内切圆半径
+        uint32_t x;                                     // x坐标
+        uint32_t y;                                     // y坐标
+        int64_t guid;                                   // guid
     };
     // 注：墙的处理机制目前还不大确定，所以先不写了（这块还需要探讨一下）
 
