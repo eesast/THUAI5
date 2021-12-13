@@ -1,5 +1,39 @@
 #include "../include/logic.h"
 
+BuilderDirector::BuilderDirector(int type)
+{
+    // 后续会加
+    switch (type)
+    {
+    case 1:
+        api_builder = std::make_shared<APIBuilder_1>(0);
+        comm_builder = std::make_shared<MultiThreadClientCommunicationBuilder_A>();
+        break;
+    default:
+        api_builder = std::make_shared<APIBuilder_1>(1);
+        comm_builder = std::make_shared<MultiThreadClientCommunicationBuilder_A>();
+        break;
+    }
+}
+
+std::shared_ptr<IAPI> BuilderDirector::get_api()
+{
+    api_builder->set_Empty();
+    api_builder->set_getCounter();
+    api_builder->set_GetInfo();
+    api_builder->set_SendInfo();
+    api_builder->set_WaitThread();
+    return api_builder->get_api();
+}
+
+std::shared_ptr<MultiThreadClientCommunication> BuilderDirector::get_comm()
+{
+    comm_builder->set_OnClose();
+    comm_builder->set_OnConnect();
+    comm_builder->set_OnReceive();
+    return comm_builder->get_comm();
+}
+
 void Logic::ProcessMessage(pointer_m2c p2m)
 {
     switch (p2m.index())

@@ -12,11 +12,28 @@
 
 #include <Message2Clients.pb.h>
 #include <Message2Server.pb.h>
+#include <concurrent_queue.hpp>
 
 #include "state.h"
-#include "CAPI.h"
+#include "Communication.h"
+#include "CommunicationBuilder.hpp"
 #include "API.h"
-#include <concurrent_queue.hpp>
+#include "constants.h"
+
+/// <summary>
+/// 负责创建对象的主管类
+/// </summary>
+class BuilderDirector
+{
+public:
+    BuilderDirector(int type = 1);
+    std::shared_ptr<IAPI> get_api();
+    std::shared_ptr<MultiThreadClientCommunication> get_comm();
+
+private:
+    std::shared_ptr<APIBuilder> api_builder;
+    std::shared_ptr<MultiThreadClientCommunicationBuilder> comm_builder;
+};
 
 /// <summary>
 /// 封装了通信组件和AI对象进行操作
