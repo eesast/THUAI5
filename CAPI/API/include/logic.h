@@ -20,6 +20,11 @@
 #include "API.h"
 #include "constants.h"
 
+// 使用oneof语法所需要的宏
+#define MESSAGE_OF_CHARACTER 1
+#define MESSAGE_OF_BULLET 2
+#define MESSAGE_OF_PROP 3
+
 /// <summary>
 /// 负责创建对象的主管类
 /// </summary>
@@ -45,7 +50,7 @@ private:
     //std::unique_ptr<AIBase> pAI; // 玩家指针
     //std::shared_ptr<int> xx; // 玩家状态
 
-    std::thread tAI; // 需要对玩家单开线程
+    std::thread tAI; // 需要对玩家单开线程 
 
     // 互斥锁
     std::mutex mtx_ai;
@@ -56,7 +61,7 @@ private:
     std::condition_variable cv_buffer;
     std::condition_variable cv_ai;
 
-    // 信息队列
+    // 信息队列（队友发来的字符串）
     thuai::concurrency::concurrent_queue<std::string> MessageStorage;
 
     // 记录状态和缓冲区数(可能和线程有关)
@@ -130,6 +135,27 @@ private:
     /// </summary>
     /// <returns></returns>
     void Update() noexcept;
+
+    /// <summary>
+    /// 将protobuf类转换为THUAI5命名空间的结构体（人物）
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    std::shared_ptr<THUAI5::Character> Protobuf2THUAI5_C(const Protobuf::MessageOfCharacter);
+
+    /// <summary>
+    /// 将protobuf类转换为THUAI5命名空间的结构体（子弹）
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    std::shared_ptr<THUAI5::Bullet> Protobuf2THUAI5_B(const Protobuf::MessageOfBullet);
+
+    /// <summary>
+    /// 将protobuf类转换为THUAI5命名空间的结构体（道具）
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    std::shared_ptr<THUAI5::Prop> Protobuf2THUAI5_P(const Protobuf::MessageOfProp);
    
 public:
     Logic();

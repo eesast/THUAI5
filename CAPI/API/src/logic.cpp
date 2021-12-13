@@ -61,14 +61,25 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
     case Protobuf::MessageType::StartGame:
         LoadBuffer(pm2c); // 加载信息到buffer
 
+        // 记录guid信息
+        State::playerGUIDS.clear();
+        // 此处需要对guid进行重新载入，但proto里好像没有？
+        // TODO
+
         AI_loop = true;
         UnBlockAI();
         std::cout << "Start Game!" << std::endl;
         break;
+
+
     case Protobuf::MessageType::Gaming:
         LoadBuffer(pm2c);
         break;
     case Protobuf::MessageType::EndGame:
+        AI_loop = false;
+        // 加锁？？
+        // TODO
+        cv_buffer.notify_one();
         std::cout << "End Game!" << std::endl;
         break;
     default:
@@ -78,7 +89,7 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
 
 void Logic::ProcessMessageToOneClient(std::shared_ptr<Protobuf::MessageToOneClient> pm2oc)
 {
-    switch (pm2oc->messagetype())
+    switch (pm2oc->messagetype()) 
     {
     case Protobuf::MessageType::ValidPlayer:
         std::cout << "Valid player!" << std::endl;
@@ -102,20 +113,29 @@ void Logic::ProcessMessageToInitialize(std::shared_ptr<Protobuf::MessageToInitia
     {
     case Protobuf::MessageType::StartGame:
         std::cout << "loading map.." << std::endl;
-        // pm2i->mapserial
+        pm2i->mapserial();
     default:
         break;
     }
 }
 
-void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient>)
+void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 {
     // 更新buffer内容
     {
         std::lock_guard<std::mutex> lck(mtx_buffer);
 
         // 具体操作，等state完善了以后再写
-        // ...
+        
+        // 1.清除原有信息
+        pBuffer->characters.clear();
+        pBuffer->walls.clear();
+        pBuffer->props.clear();
+        pBuffer->bullets.clear();
+
+        // 2.信息不能全盘接受，要根据现有的视野范围接受（话说是这么用吗...）
+        pBuffer->teamScore = pm2c->gameobjmessage(MESSAGE_OF_CHARACTER).messageofcharacter().score();
+        pBuffer->self = Protobuf2THUAI5_C(pm2c->gameobjmessage(MESSAGE_OF_CHARACTER).messageofcharacter());
 
         buffer_updated = true;
         counter_buffer += 1;
@@ -173,4 +193,64 @@ void Logic::Update() noexcept
     // pBuffer已经指向访问过的，无用的pState
     buffer_updated = false;
     counter_state = counter_buffer;
+}
+
+std::shared_ptr<THUAI5::Character> Logic::Protobuf2THUAI5_C(const Protobuf::MessageOfCharacter c)
+{
+    std::shared_ptr<THUAI5::Character> character = std::make_shared<THUAI5::Character>();
+    character->ActiveSkillType = (THUAI5::ActiveSkillType)c.activeskilltype();
+    character->attackRange = c.attackrange();
+    character->buff = (THUAI5::BuffType)c.buff();
+    character->bulletNum = c.bulletnum();
+    character->bulletType = (THUAI5::BulletType)c.bullettype();
+    character->canMove = c.canmove();
+    character->CD = c.cd();
+    character->gemNum = c.gemnum();
+    character->guid = c.guid();
+    character->isResetting = c.isresetting();
+    character->life = c.life();
+    character->lifeNum = c.lifenum();
+    character->PassiveSkillType = (THUAI5::PassiveSkillType)c.passiveskilltype();
+    character->place = (THUAI5::PlaceType)c.place();
+    character->playerID = c.playerid();
+    character->prop = (THUAI5::PropType)c.prop();
+    character->radius = c.radius();
+    character->score = c.score();
+    character->speed = c.speed();
+    character->teamID = c.teamid();
+    character->timeUntilCommonSkillAvailable = c.timeuntilcommonskillavailable();
+    character->timeUntilUltimateSkillAvailable = c.timeuntilultimateskillavailable();
+    character->vampire = c.vampire();
+    character->x = c.x();
+    character->y = c.y();
+
+    return character;
+}
+
+std::shared_ptr<THUAI5::Bullet> Logic::Protobuf2THUAI5_B(const Protobuf::MessageOfBullet b)
+{
+    std::shared_ptr<THUAI5::Bullet> bullet = std::make_shared<THUAI5::Bullet>();
+    bullet->facingDirection = b.facingdirection();
+    bullet->guid = b.guid();
+    bullet->parentTeamID = b.parentteamid();
+    bullet->place = (THUAI5::PlaceType)b.place();
+    bullet->type = (THUAI5::BulletType)b.type();
+    bullet->x = b.x();
+    bullet->y = b.y();
+
+    return bullet;
+}
+
+std::shared_ptr<THUAI5::Prop> Logic::Protobuf2THUAI5_P(const Protobuf::MessageOfProp p)
+{
+    std::shared_ptr<THUAI5::Prop> prop = std::make_shared<THUAI5::Prop>();
+    prop->facingDirection = p.facingdirection();
+    prop->guid = p.guid();
+    prop->place = (THUAI5::PlaceType)p.place();
+    prop->size = p.size();
+    prop->type = (THUAI5::PropType)p.type();
+    prop->x = p.x();
+    prop->y = p.y();
+
+    return prop;
 }
