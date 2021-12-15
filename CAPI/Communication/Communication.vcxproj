@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Communication.h" />
-    <ClInclude Include="include\CommunicationBuilder.hpp" />
     <ClInclude Include="include\message.hpp" />
   </ItemGroup>
   <ItemGroup>

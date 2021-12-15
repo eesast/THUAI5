@@ -3,21 +3,6 @@
 #include <thread>
 #include <chrono>
 
-void ClientCommunication::set_OnConnect(std::function<void()> f)
-{
-	this->__OnConnect = std::move(f);
-}
-
-void ClientCommunication::set_OnReceive(std::function<void(pointer_m2c)> f)
-{
-	this->__OnReceive = std::move(f);
-}
-
-void ClientCommunication::set_OnClose(std::function<void()> f)
-{
-	this->__OnClose = std::move(f);
-}
-
 EnHandleResult ClientCommunication::OnConnect(ITcpClient* pSender, CONNID dwConnID)
 {
     __OnConnect();
@@ -74,13 +59,37 @@ void ClientCommunication::Stop()
 	}
 }
 
-void MultiThreadClientCommunication::set_AdvancedOnReceive(std::function<void(pointer_m2c)> f)
-{
-	this->__AdvancedOnReceive = std::move(f);
-}
+MultiThreadClientCommunication::MultiThreadClientCommunication(std::function<Protobuf::MessageToServer()>MultiThreadOnConnect, std::function<void(pointer_m2c)>MultiThreadOnReceive, std::function<void()>MultiThreadOnClose)
+	:capi
+	(
+		[this,MultiThreadOnConnect]()
+		{
+			auto message = MultiThreadOnConnect();
+			Send(message);
+		},
+		[this](pointer_m2c p2M)
+		{
+			// 这里的index如何使用
+			if (p2M.index() == 0)
+			{
+				counter = 0;
+			}
+			queue.emplace(p2M);
+			UnBlock();
+		},
+		[this,MultiThreadOnClose]()
+		{
+			std::cout << "Connection was closed!" << std::endl;
+			loop = false;
+			UnBlock();
+			MultiThreadOnClose();
+		},
 
-
-MultiThreadClientCommunication::MultiThreadClientCommunication() {}
+		MultiThreadOnConnect,
+		MultiThreadOnReceive,
+		MultiThreadOnClose
+	)
+{}
 
 void MultiThreadClientCommunication::UnBlock()
 {
@@ -110,7 +119,7 @@ void MultiThreadClientCommunication::ProcessMessage()
 			std::cout << "failed to pop the message" << std::endl;
 			continue; // 避免处理空信息
 		}
-		else __AdvancedOnReceive(std::move(pm2c.value())); // 处理信息
+		else capi.MultiThreadOnReceive(std::move(pm2c.value())); // 处理信息
 	}
 }
 

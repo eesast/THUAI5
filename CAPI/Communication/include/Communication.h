@@ -1,5 +1,6 @@
 #pragma once
 #ifndef CAPI_H
+#define CAPI_H
 
 // proto files
 #include <Message2Clients.pb.h>
@@ -21,10 +22,33 @@
 #include <atomic>
 #include <memory>
 
+class ClientCommunicationInterface
+{
+public:
+    ClientCommunicationInterface(std::function<void()>__OnConnect, std::function<void(pointer_m2c)>__OnReceive, std::function<void()>__OnClose, std::function<Protobuf::MessageToServer()>MultiThreadOnConnect, std::function<void(pointer_m2c)>MultiThreadOnReceive, std::function<void()>MultiThreadOnClose)
+        :__OnConnect(__OnConnect), __OnReceive(__OnReceive), __OnClose(__OnClose), MultiThreadOnConnect(MultiThreadOnConnect), MultiThreadOnReceive(MultiThreadOnReceive), MultiThreadOnClose(MultiThreadOnClose) 
+    {}
+
+    /// <summary>
+    /// 多线程环境下需要执行的回调函数
+    /// </summary>
+    std::function<Protobuf::MessageToServer()> MultiThreadOnConnect;
+    std::function<void(pointer_m2c)> MultiThreadOnReceive;
+    std::function<void()> MultiThreadOnClose;
+
+protected:
+    /// <summary>
+    /// HPSocket所需要用到的委托，即下面OnConnect、OnClose、OnReceive所真正需要执行的回调函数可由函数对象自定义
+    /// </summary>
+    std::function<void()> __OnConnect;
+    std::function<void(pointer_m2c)> __OnReceive;
+    std::function<void()> __OnClose;
+};
+
 /// <summary>
 /// 通信组件，只定义了基础操作
 /// </summary>
-class ClientCommunication final: public CTcpClientListener
+class ClientCommunication final: public CTcpClientListener,public ClientCommunicationInterface
 {
 private:
     /// <summary>
@@ -38,13 +62,6 @@ private:
     CTcpPackClientPtr pclient;
 
     /// <summary>
-    /// 可以理解为委托，即下面OnConnect、Onclose、Onreceive所真正需要执行的回调函数可由函数对象自定义
-    /// </summary>
-    std::function<void()> __OnConnect;
-    std::function<void(pointer_m2c)> __OnReceive;
-    std::function<void()> __OnClose;
-
-    /// <summary>
     /// event
     /// </summary>
     virtual EnHandleResult OnConnect(ITcpClient* pSender, CONNID dwConnID) override;
@@ -52,18 +69,13 @@ private:
     virtual EnHandleResult OnReceive(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength) override;
 
 public:
-    /// <summary>
-    /// 委托的设置
-    /// </summary>
-    /// <param name=""></param>
-    void set_OnConnect(std::function<void()>);
-    void set_OnReceive(std::function<void(pointer_m2c)>);
-    void set_OnClose(std::function<void()>);
 
     /// <summary>
     /// 构造函数
     /// </summary>
-    ClientCommunication() {};
+    ClientCommunication(std::function<void()> __OnConnect, std::function<void(pointer_m2c)>__OnReceive, std::function<void()>__OnClose,std::function<Protobuf::MessageToServer()>MultiThreadOnConnect,std::function<void(pointer_m2c)>MultiThreadOnReceive,std::function<void()>MultiThreadOnClose) :
+        ClientCommunicationInterface(__OnConnect, __OnReceive, __OnClose, MultiThreadOnConnect, MultiThreadOnReceive, MultiThreadOnClose)
+    {}
 
     /// <summary>
     /// 连接server
@@ -118,12 +130,6 @@ private:
     thuai::concurrency::concurrent_queue<pointer_m2c> queue;
 
     ClientCommunication capi;
-    
-    /// <summary>
-    /// 相比于ClientCommunication的委托新增了一些功能
-    /// </summary>
-    std::function<void(pointer_m2c)> __AdvancedOnReceive;
-    std::function<void()> __AdvancedOnClose;
 
     /// <summary>
     /// 唤醒一个线程
@@ -136,10 +142,9 @@ private:
     void ProcessMessage();
 
 public:
-    MultiThreadClientCommunication() {}
-    ~MultiThreadClientCommunication();
-
-    void set_AdvancedOnReceive(std::function<void(pointer_m2c)>);
+    MultiThreadClientCommunication(std::function<Protobuf::MessageToServer()>MultiThreadOnConnect, std::function<void(pointer_m2c)>MultiThreadOnReceive, std::function<void()>MultiThreadOnClose);
+    MultiThreadClientCommunication(ClientCommunication&&);
+    ~MultiThreadClientCommunication() {};
 
     /// <summary>
     /// 连接Server，成功返回真且启动PM线程，否则返回假且不启动线程
