@@ -130,7 +130,7 @@ void Logic::ProcessMessage(pointer_m2c p2m)
         ProcessMessageToInitialize(std::get<std::shared_ptr<Protobuf::MessageToInitialize>>(p2m));
         break;
     default:
-        std::cout << "No info type matches std::varient!" << std::endl;
+        std::cerr << "No info type matches std::varient!" << std::endl;
     }
 }
 
@@ -168,7 +168,7 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
         break;
 
     default:
-        std::cout << "Invalid MessageType of MessageToClient!" << std::endl;
+        std::cerr << "Invalid MessageType of MessageToClient!" << std::endl;
     }
 }
 
@@ -188,7 +188,7 @@ void Logic::ProcessMessageToOneClient(std::shared_ptr<Protobuf::MessageToOneClie
         MessageStorage.emplace(pm2oc->message());
         break;
     default:
-        std::cout << "Invalid MessageType of MessageToOneClient!" << std::endl;
+        std::cerr << "Invalid MessageType of MessageToOneClient!" << std::endl;
     }
 }
 
@@ -260,7 +260,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 
             else
             {
-                std::cout << "invalid gameobjtype (not character, prop or bullet)" << std::endl;
+                std::cerr << "invalid gameobjtype (not character, prop or bullet)" << std::endl;
             }
         }
         /*pBuffer->teamScore = pm2c->gameobjmessage(MESSAGE_OF_CHARACTER).messageofcharacter().score();

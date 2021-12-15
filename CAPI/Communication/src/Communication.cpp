@@ -29,7 +29,7 @@ bool ClientCommunication::Connect(const char* address, uint16_t port)
 	{
 		if (!pclient->Start(address,port))
 		{
-			std::cout << "Failed to connect with the server" << std::endl;
+			std::cerr << "Failed to connect with the server" << std::endl;
 			return false;
 		}
 		std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -44,8 +44,8 @@ void ClientCommunication::Send(const Protobuf::MessageToServer& m2s)
 	GameMessage::Serialize(data,m2s);
 	if (!pclient->Send(data, msgSize))
 	{
-		std::cout << "Failed to send the message. Error code:";
-		std::cout << pclient->GetLastError() << std::endl;
+		std::cerr << "Failed to send the message. Error code:";
+		std::cerr << pclient->GetLastError() << std::endl;
 	}
 }
 
@@ -54,8 +54,8 @@ void ClientCommunication::Stop()
 	if (!pclient->HasStarted()) return;
 	if (!pclient->Stop())
 	{
-		std::cout << "The client wasn`t stopped. Error code:";
-		std::cout << pclient->GetLastError() << std::endl;
+		std::cerr << "The client wasn`t stopped. Error code:";
+		std::cerr << pclient->GetLastError() << std::endl;
 	}
 }
 
@@ -116,7 +116,7 @@ void MultiThreadClientCommunication::ProcessMessage()
 		}
 		if (auto pm2c = queue.try_pop(); !pm2c.has_value()) // 接收信息，若获取失败则跳过处理信息的部分
 		{
-			std::cout << "failed to pop the message" << std::endl;
+			std::cerr << "failed to pop the message" << std::endl;
 			continue; // 避免处理空信息
 		}
 		else capi.MultiThreadOnReceive(std::move(pm2c.value())); // 处理信息
@@ -128,7 +128,7 @@ bool MultiThreadClientCommunication::Start(const char* address, uint16_t port)
 	tPM = std::thread(&MultiThreadClientCommunication::ProcessMessage, this); // 单开一个线程处理信息
 	if (!capi.Connect(address, port))
 	{
-		std::cout << "unable to connect to server!" << std::endl;
+		std::cerr << "unable to connect to server!" << std::endl;
 		loop = false; // 终止循环
 		UnBlock(); // 若该线程阻塞则迅速解锁
 		tPM.join(); // 等待该子线程执行完才可以执行母线程
