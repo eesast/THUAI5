@@ -38,6 +38,7 @@ message MessageOfCharacter
     int32 score=23;
     int64 teamID=24;
     int64 playerID=25;
+    bool isInvisible=26;
 }
 
 message MessageOfProp

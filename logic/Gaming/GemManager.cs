@@ -196,11 +196,11 @@ namespace Gaming
                 );
 
                 gemWellList = new List<XYPosition>();
-                for(int i=0; i<MapInfo.defaultMap.GetLength(0);i++)
+                for(int i=0; i<gameMap.ProtoGameMap.GetLength(0);i++)
                 {
-                    for(int j=0;j<MapInfo.defaultMap.GetLength(1);j++)
+                    for(int j=0;j< gameMap.ProtoGameMap.GetLength(1);j++)
                     {
-                        if(MapInfo.defaultMap[i,j]==(int)MapInfo.MapInfoObjType.GemWell)
+                        if(gameMap.ProtoGameMap[i,j]==(int)MapInfo.MapInfoObjType.GemWell)
                         {
                             gemWellList.Add(GameData.GetCellCenterPos(i, j));
                         }
