@@ -2,6 +2,11 @@
 
 const static double PI = 3.14159265358979323846;
 
+API::API(const LogicInterface& logicInterface):LogicInterface(logicInterface)
+{
+
+}
+
 bool API::MovePlayer(uint32_t timeInMilliseconds, double angleInRadian)
 {
     Protobuf::MessageToServer message;
@@ -132,49 +137,3 @@ std::shared_ptr<const THUAI5::Character> API::GetSelfInfo() const
     return pState->self;
 }
 
-APIBuilder::APIBuilder(bool type)
-{
-    if (type)
-    {
-        api = std::make_shared<API>();
-    }
-    else
-    {
-        api = std::make_shared<DebugAPI>();
-    }
-}
-
-std::shared_ptr<IAPI> APIBuilder::get_api()
-{
-    return this->api;
-}
-
-APIBuilder_1::APIBuilder_1(bool type) :APIBuilder(type)
-{
-
-}
-
-void APIBuilder_1::set_SendInfo()
-{
-
-}
-
-void APIBuilder_1::set_Empty()
-{
-
-}
-
-void APIBuilder_1::set_GetInfo()
-{
-
-}
-
-void APIBuilder_1::set_getCounter()
-{
-
-}
-
-void APIBuilder_1::set_WaitThread()
-{
-
-}
