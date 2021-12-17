@@ -6,6 +6,7 @@ using Gaming;
 using Communication.Proto;
 using GameClass.GameObj;
 using System.IO;
+using Playback;
 
 namespace Server
 {
@@ -15,8 +16,9 @@ namespace Server
         public override int TeamCount => options.TeamCount;
         protected long[,] communicationToGameID; //通信用的ID映射到游戏内的ID,[i,j]表示team：i，player：j的id。
         private readonly object messageToAllClientsLock = new();
-        private readonly long SendMessageToClientIntervalInMilliseconds = 50;
+        public static readonly long SendMessageToClientIntervalInMilliseconds = 50;
         private readonly Semaphore endGameInfoSema = new(0, 1);
+        private MessageWriter? mwr = null;
         public override int GetTeamScore(long teamID)
         {
             return game.GetTeamScore(teamID);
@@ -24,6 +26,7 @@ namespace Server
         public override void WaitForGame()
         {
             _ = endGameInfoSema.WaitOne();  //开始等待游戏开始
+            mwr?.Dispose();
         }
         private uint GetBirthPointIdx(long teamID, long playerID)       //获取出生点位置
         {
@@ -203,6 +206,7 @@ namespace Server
                         }
                         messageToClient.MessageType = msgType;
                         serverCommunicator.SendToClient(messageToClient);
+                        mwr?.WriteOne(messageToClient);
                         break;
                     case MessageType.InitialLized:
                         MessageToInitialize messageToInitialize = new();
@@ -240,6 +244,7 @@ namespace Server
         private void OnGameEnd()
         {
             SendMessageToAllClients(MessageType.EndGame, false);
+            mwr?.Flush();
 #if DEBUG
             //跑起来时测试用
             for (int i = 0; i < TeamCount; i++)
@@ -409,18 +414,17 @@ namespace Server
                 }
             }
 
-            //只要跑起来的话，这部分好像用不到，而且我还不会...
-            //if (options.FileName != DefaultArgumentOptions.FileName)
-            //{
-            //    try
-            //    {
-            //        mwr = new MessageWriter(options.FileName, options.TeamCount, options.PlayerCountPerTeam);
-            //    }
-            //    catch
-            //    {
-            //        Console.WriteLine($"Error: Cannot create the playback file: {options.FileName}!");
-            //    }
-            //}
+            if (options.FileName != DefaultArgumentOptions.FileName)
+            {
+                try
+                {
+                    mwr = new MessageWriter(options.FileName, options.TeamCount, options.PlayerCountPerTeam);
+                }
+                catch
+                {
+                    Console.WriteLine($"Error: Cannot create the playback file: {options.FileName}!");
+                }
+            }
 
             //if (options.Token != DefaultArgumentOptions.Token && options.Url != DefaultArgumentOptions.Url)
             //{
