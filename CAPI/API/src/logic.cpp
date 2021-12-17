@@ -4,10 +4,10 @@
 extern const THUAI5::ActiveSkillType playerActiveSkill;
 extern const THUAI5::PassiveSkillType playerPassiveSkill;
 
-MultiThreadClientCommunicationBuilder::MultiThreadClientCommunicationBuilder(Logic*& pLogic):pLogic(pLogic)
+MultiThreadClientCommunicationBuilder::MultiThreadClientCommunicationBuilder(Logic* pLogic):pLogic(pLogic)
 {}
 
-MultiThreadClientCommunicationBuilder_A::MultiThreadClientCommunicationBuilder_A(Logic*& pLogic) : MultiThreadClientCommunicationBuilder(pLogic)
+MultiThreadClientCommunicationBuilder_A::MultiThreadClientCommunicationBuilder_A(Logic* pLogic) : MultiThreadClientCommunicationBuilder(pLogic)
 {}
 
 std::shared_ptr<MultiThreadClientCommunication>  MultiThreadClientCommunicationBuilder_A::get_comm()
@@ -35,10 +35,10 @@ std::shared_ptr<MultiThreadClientCommunication>  MultiThreadClientCommunicationB
     return comm;
 }
 
-APIBuilder::APIBuilder(Logic*& pLogic):pLogic(pLogic)
+APIBuilder::APIBuilder(Logic* pLogic):pLogic(pLogic)
 {}
 
-APIBuilder_A::APIBuilder_A(Logic*& pLogic) : APIBuilder(pLogic)
+APIBuilder_A::APIBuilder_A(Logic* pLogic) : APIBuilder(pLogic)
 {
    
     
@@ -83,7 +83,7 @@ std::shared_ptr<IAPI> APIBuilder_A::get_api()
     return api;
 }
 
-BuilderDirector::BuilderDirector(Logic*& plogic,int type)
+BuilderDirector::BuilderDirector(Logic* plogic,int type)
 {
     // 后续会加
     switch (type)
@@ -130,7 +130,7 @@ void Logic::ProcessMessage(pointer_m2c p2m)
         ProcessMessageToInitialize(std::get<std::shared_ptr<Protobuf::MessageToInitialize>>(p2m));
         break;
     default:
-        std::cerr << "No info type matches std::varient!" << std::endl;
+        std::cerr << "No info type matches std::variant!" << std::endl;
     }
 }
 
@@ -143,10 +143,15 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
     case Protobuf::MessageType::StartGame:
         LoadBuffer(pm2c); // 加载信息到buffer
 
-        // 记录guid信息
-        State::playerGUIDS.clear();
-        // 此处需要对guid进行重新载入，但proto里好像没有？
-        // TODO
+        // 对guid进行重新载入（只载入玩家的guid信息）
+        playerGUIDS.clear();
+        for (auto it = pm2c->gameobjmessage().begin(); it != pm2c->gameobjmessage().end(); it++)
+        {
+            if (it->has_messageofcharacter())
+            {
+                playerGUIDS.push_back(it->messageofcharacter().guid());
+            }
+        }
 
         AI_loop = true;
         UnBlockAI();
@@ -212,8 +217,6 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
     {
         std::lock_guard<std::mutex> lck(mtx_buffer);
 
-        // 具体操作，等state完善了以后再写
-        
         // 1.清除原有信息
         pBuffer->characters.clear();
         pBuffer->walls.clear();
@@ -228,7 +231,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
             if (it->has_messageofcharacter())
             {
                 // 此信息是属于自身的
-                if (it->messageofcharacter().teamid() == ID::GetTeamID() && it->messageofcharacter().playerid() == ID::GetPlayerID())
+                if (it->messageofcharacter().teamid() == TeamID() && it->messageofcharacter().playerid() == PlayerID())
                 {
                     pBuffer->self = Protobuf2THUAI5_C(it->messageofcharacter());
                     pBuffer->teamScore = it->messageofcharacter().score();

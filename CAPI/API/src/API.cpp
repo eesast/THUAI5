@@ -104,6 +104,26 @@ bool API::UseGem(uint32_t gemNum)
     return SendInfo(message);
 }
 
+bool API::Wait()
+{
+    if (GetCounter() == -1)
+    {
+        return false;
+    }
+    WaitThread();
+    return true;
+}
+
+bool API::MessageAvailable()
+{
+    return !Empty();
+}
+
+bool API::TryGetMessage(std::string& msg)
+{
+    return GetInfo(msg);
+}
+
 std::vector<std::shared_ptr<const THUAI5::Character>> API::GetCharacters() const
 {
     std::vector<std::shared_ptr<const THUAI5::Character>> temp;
@@ -135,5 +155,15 @@ std::vector<std::shared_ptr<const THUAI5::Prop>> API::GetProps() const
 std::shared_ptr<const THUAI5::Character> API::GetSelfInfo() const
 {
     return pState->self;
+}
+
+uint32_t API::GetTeamScore()const
+{
+    return pState->teamScore;
+}
+
+const std::vector<int64_t> API::GetPlayerGUIDs() const
+{
+    return pState->guids;
 }
 

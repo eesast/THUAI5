@@ -7,18 +7,6 @@
 #include "state.h"
 
 
-
-/// <summary>
-/// 游戏常量
-/// </summary>
-struct StateConstant
-{
-    constexpr static inline int nTeams = 2;
-    constexpr static inline int nPlayers = 4;
-    constexpr static inline int nCells = 50;
-};
-
-
 /// <summary>
 /// API通用接口，可派生为一般API和DebugAPI
 /// </summary>
@@ -79,10 +67,10 @@ protected:
     std::function<bool(std::string&)> GetInfo;                          // 获取信息
     std::function<int()> GetCounter;                                    // 获取帧数??
     std::function<void()> WaitThread;                                   // 等待
-    State*& pState;                                                     // 当前状态
+    State* pState;                                                     // 当前状态
 
 public:
-    LogicInterface(std::function<bool(Protobuf::MessageToServer&)> SendInfo, std::function<bool()>Empty, std::function<bool(std::string&)> GetInfo, std::function<int()>GetCounter, std::function<void()>WaitThread,State*& pState)
+    LogicInterface(std::function<bool(Protobuf::MessageToServer&)> SendInfo, std::function<bool()>Empty, std::function<bool(std::string&)> GetInfo, std::function<int()>GetCounter, std::function<void()>WaitThread,State* pState)
         :SendInfo(SendInfo), Empty(Empty), GetInfo(GetInfo), GetCounter(GetCounter), WaitThread(WaitThread), pState(pState) {}
 };
 

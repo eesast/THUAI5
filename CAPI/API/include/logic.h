@@ -34,7 +34,7 @@ class Logic;
 class MultiThreadClientCommunicationBuilder
 {
 public:
-    MultiThreadClientCommunicationBuilder(Logic*& pLogic);
+    MultiThreadClientCommunicationBuilder(Logic* pLogic);
     virtual std::shared_ptr<MultiThreadClientCommunication> get_comm() = 0;
     virtual ~MultiThreadClientCommunicationBuilder() {}
 
@@ -45,7 +45,7 @@ protected:
 class MultiThreadClientCommunicationBuilder_A :public MultiThreadClientCommunicationBuilder
 {
 public:
-    MultiThreadClientCommunicationBuilder_A(Logic*& pLogic) ;
+    MultiThreadClientCommunicationBuilder_A(Logic* pLogic) ;
     std::shared_ptr<MultiThreadClientCommunication> get_comm()override;
 };
 
@@ -55,7 +55,7 @@ public:
 class APIBuilder
 {
 public:
-    APIBuilder(Logic*& pLogic);
+    APIBuilder(Logic* pLogic);
 
     virtual std::shared_ptr<IAPI> get_api() = 0;
     virtual ~APIBuilder() {}
@@ -68,7 +68,7 @@ protected:
 class APIBuilder_A : public APIBuilder
 {
 public:
-    APIBuilder_A(Logic*& pLogic);
+    APIBuilder_A(Logic* pLogic);
     std::shared_ptr<IAPI> get_api() override;
 };
 
@@ -79,7 +79,7 @@ public:
 class BuilderDirector
 {
 public:
-    BuilderDirector(Logic*& pLogic, int type = 1);
+    BuilderDirector(Logic* pLogic, int type = 1);
     std::shared_ptr<IAPI> get_api();
     std::shared_ptr<MultiThreadClientCommunication> get_comm();
 
@@ -93,6 +93,11 @@ private:
 /// </summary>
 class Logic
 {
+private:
+    // ID记录
+    int teamID;
+    int playerID;
+
 public:
     std::unique_ptr<BuilderDirector> pDirector;
     std::shared_ptr<MultiThreadClientCommunication> pComm; // 通信组件指针
@@ -123,10 +128,6 @@ public:
     // 操作储存状态的指针（不是动态内存，不需要开智能指针）
     State* pState;
     State* pBuffer;
-
-    // ID记录
-    int teamID;
-    int playerID;
 
     // 此时是否应该循环执行player()
     std::atomic_bool AI_loop = true;
