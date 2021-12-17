@@ -86,10 +86,12 @@ namespace Server
         }
         private void ReadyToStart(MessageToServer msgRecieve, bool isValid)
         {
-            //if(msgRecieve.PlayerID==2021&&msgRecieve.TeamID==2021)
-            //{
-            //    //观战模式
-            //}
+            if(msgRecieve.PlayerID==2021&&msgRecieve.TeamID==2021)
+            {
+                //观战模式
+                Console.WriteLine("A new spectator comes to watch this game.");
+                return;
+            }
 
             lock (addPlayerLock)
             {
