@@ -19,11 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\CAPI.h" />
+    <ClInclude Include="include\Communication.h" />
     <ClInclude Include="include\message.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\CAPI.cpp" />
+    <ClCompile Include="src\Communication.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
