@@ -5,20 +5,20 @@
 
 EnHandleResult ClientCommunication::OnConnect(ITcpClient* pSender, CONNID dwConnID)
 {
-    __OnConnect();
+    comm.OnConnect();
     return HR_OK; 
 }
 
 EnHandleResult ClientCommunication::OnReceive(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)
 {
     pointer_m2c pm2c = GameMessage::Deserialize(pData, iLength);
-	__OnReceive(std::move(pm2c));
+	comm.OnReceive(std::move(pm2c));
 	return HR_OK;
 }
 
 EnHandleResult ClientCommunication::OnClose(ITcpClient* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)
 {
-    __OnClose();
+    comm.OnClose();
     return HR_OK;
 }
 
@@ -59,37 +59,34 @@ void ClientCommunication::Stop()
 	}
 }
 
-MultiThreadClientCommunication::MultiThreadClientCommunication(std::function<Protobuf::MessageToServer()>MultiThreadOnConnect, std::function<void(pointer_m2c)>MultiThreadOnReceive, std::function<void()>MultiThreadOnClose)
-	:capi
-	(
-		[this,MultiThreadOnConnect]()
-		{
-			auto message = MultiThreadOnConnect();
-			Send(message);
-		},
-		[this](pointer_m2c p2M)
-		{
-			// 这里的index如何使用
-			if (p2M.index() == 0)
-			{
-				counter = 0;
-			}
-			queue.emplace(p2M);
-			UnBlock();
-		},
-		[this,MultiThreadOnClose]()
-		{
-			std::cout << "Connection was closed!" << std::endl;
-			loop = false;
-			UnBlock();
-			MultiThreadOnClose();
-		},
+void MultiThreadClientCommunication::OnConnect()
+{
+	auto message = subscripter.OnConnect();
+	Send(message);
+}
 
-		MultiThreadOnConnect,
-		MultiThreadOnReceive,
-		MultiThreadOnClose
-	)
-{}
+void MultiThreadClientCommunication::OnReceive(pointer_m2c p2M)
+{
+	if (p2M.index() == TYPEM2C)
+	{
+		counter = 0;
+		queue.emplace(p2M);
+		UnBlock();
+	}
+}
+
+void MultiThreadClientCommunication::OnClose()
+{
+	std::cout << "Connection was closed." << std::endl;
+	loop = false;
+	UnBlock();
+	subscripter.OnClose();
+}
+
+void MultiThreadClientCommunication::init()
+{
+	capi = std::make_unique<ClientCommunication>(*this);
+}
 
 void MultiThreadClientCommunication::UnBlock()
 {
@@ -116,17 +113,17 @@ void MultiThreadClientCommunication::ProcessMessage()
 		}
 		if (auto pm2c = queue.try_pop(); !pm2c.has_value()) // 接收信息，若获取失败则跳过处理信息的部分
 		{
-			std::cerr << "failed to pop the message" << std::endl;
+			std::cerr << "failed to pop the message!" << std::endl;
 			continue; // 避免处理空信息
 		}
-		else capi.MultiThreadOnReceive(std::move(pm2c.value())); // 处理信息
+		else subscripter.OnReceive(std::move(pm2c.value())); // 处理信息
 	}
 }
 
 bool MultiThreadClientCommunication::Start(const char* address, uint16_t port)
 {
 	tPM = std::thread(&MultiThreadClientCommunication::ProcessMessage, this); // 单开一个线程处理信息
-	if (!capi.Connect(address, port))
+	if (!capi->Connect(address, port))
 	{
 		std::cerr << "unable to connect to server!" << std::endl;
 		loop = false; // 终止循环
@@ -144,14 +141,14 @@ bool MultiThreadClientCommunication::Send(const Protobuf::MessageToServer& m2s)
 	{
 		return false;
 	}
-	capi.Send(m2s);
+	capi->Send(m2s);
 	counter++;
 	return true;
 }
 
 void MultiThreadClientCommunication::Join()
 {
-	capi.Stop();
+	capi->Stop();
 	loop = false;
 	UnBlock(); // 唤醒当前休眠的tPM线程
 	if (tPM.joinable())

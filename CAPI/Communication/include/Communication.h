@@ -22,35 +22,45 @@
 #include <atomic>
 #include <memory>
 
-class ClientCommunicationInterface
+// 首先解释一下ClientCommunication和MultiThreadClientCommunication之间的联系：
+// 1.ClientCommunication侧重于HPSOCKET中委托和事件的构造
+// 2.MultiThreadClientCommunication侧重于对多线程的处理
+// 3.ClientCommunication依赖于MultiThreadClientCommunication的接口，而MultiThreadClientCommunication依赖于ClientCommunication的实体
+// 在THUAI4中，从MultiThreadClientCommunication(THUAI4中名为Communication)构造ClientCommunication(THUAI4中名为CAPI)中，又用到了大量的回调函数
+// 所以不妨将ClientCommunication依赖于MultiThreadClientCommunication的部分抽取为一个接口ICommunication
+
+/// <summary>
+/// 信息的委托接口，是指ClientCommunication依赖于MultiThreadClientCommunication的部分
+/// </summary>
+class ICommunication
 {
 public:
-    ClientCommunicationInterface(std::function<void()>__OnConnect, std::function<void(pointer_m2c)>__OnReceive, std::function<void()>__OnClose, std::function<Protobuf::MessageToServer()>MultiThreadOnConnect, std::function<void(pointer_m2c)>MultiThreadOnReceive, std::function<void()>MultiThreadOnClose)
-        :__OnConnect(__OnConnect), __OnReceive(__OnReceive), __OnClose(__OnClose), MultiThreadOnConnect(MultiThreadOnConnect), MultiThreadOnReceive(MultiThreadOnReceive), MultiThreadOnClose(MultiThreadOnClose) 
-    {}
-
-    /// <summary>
-    /// 多线程环境下需要执行的回调函数
-    /// </summary>
-    std::function<Protobuf::MessageToServer()> MultiThreadOnConnect;
-    std::function<void(pointer_m2c)> MultiThreadOnReceive;
-    std::function<void()> MultiThreadOnClose;
-
-protected:
-    /// <summary>
-    /// HPSocket所需要用到的委托，即下面OnConnect、OnClose、OnReceive所真正需要执行的回调函数可由函数对象自定义
-    /// </summary>
-    std::function<void()> __OnConnect;
-    std::function<void(pointer_m2c)> __OnReceive;
-    std::function<void()> __OnClose;
+    virtual void OnConnect() = 0;
+    virtual void OnReceive(pointer_m2c p2M) = 0;
+    virtual void OnClose() = 0;
 };
+ 
+
+/// <summary>
+/// 信息的订阅接口，是指MultiThreadCommunication依赖于Logic的部分
+/// </summary>
+class ISubscripter
+{
+public:
+    [[nodiscard]] virtual Protobuf::MessageToServer OnConnect() = 0;
+    virtual void OnReceive(pointer_m2c p2M) = 0;
+    virtual void OnClose() = 0;
+};
+
 
 /// <summary>
 /// 通信组件，只定义了基础操作
 /// </summary>
-class ClientCommunication final: public CTcpClientListener,public ClientCommunicationInterface
+class ClientCommunication final: public CTcpClientListener
 {
 private:
+    ICommunication& comm;
+
     /// <summary>
     /// 信息流的最大长度
     /// </summary>
@@ -73,9 +83,7 @@ public:
     /// <summary>
     /// 构造函数
     /// </summary>
-    ClientCommunication(std::function<void()> __OnConnect, std::function<void(pointer_m2c)>__OnReceive, std::function<void()>__OnClose,std::function<Protobuf::MessageToServer()>MultiThreadOnConnect,std::function<void(pointer_m2c)>MultiThreadOnReceive,std::function<void()>MultiThreadOnClose) :
-        ClientCommunicationInterface(__OnConnect, __OnReceive, __OnClose, MultiThreadOnConnect, MultiThreadOnReceive, MultiThreadOnClose)
-    {}
+    ClientCommunication(ICommunication& comm):comm(comm) {}
 
     /// <summary>
     /// 连接server
@@ -83,7 +91,7 @@ public:
     /// <param name="address"></param>
     /// <param name="part"></param>
     /// <returns></returns>
-    bool Connect(const char* address, uint16_t part);
+    bool Connect(const char* address, uint16_t port);
 
     /// <summary>
     /// 发送信息
@@ -100,9 +108,11 @@ public:
 /// <summary>
 /// 加入了对信息的多线程处理。
 /// </summary>
-class MultiThreadClientCommunication
+class MultiThreadClientCommunication:public ICommunication
 {
 private:
+    ISubscripter& subscripter;
+
     /// <summary>
     /// 每收到一次message2client就允许发50条消息
     /// </summary>
@@ -129,7 +139,7 @@ private:
 
     thuai::concurrency::concurrent_queue<pointer_m2c> queue;
 
-    ClientCommunication capi;
+    std::unique_ptr<ClientCommunication> capi;
 
     /// <summary>
     /// 唤醒一个线程
@@ -142,9 +152,13 @@ private:
     void ProcessMessage();
 
 public:
-    MultiThreadClientCommunication(std::function<Protobuf::MessageToServer()>MultiThreadOnConnect, std::function<void(pointer_m2c)>MultiThreadOnReceive, std::function<void()>MultiThreadOnClose);
-    MultiThreadClientCommunication(ClientCommunication&&);
+    MultiThreadClientCommunication(ISubscripter& subscripter) :subscripter(subscripter) {}
     ~MultiThreadClientCommunication() {};
+
+    /// <summary>
+    /// 在MultiThreadClientCommunication对象构造完毕后设置std::unique_ptr<ClientCommunication> capi的内容
+    /// </summary>
+    void init();
 
     /// <summary>
     /// 连接Server，成功返回真且启动PM线程，否则返回假且不启动线程
@@ -165,6 +179,10 @@ public:
     /// 结束线程
     /// </summary>
     void Join();
+
+    void OnConnect() override;
+    void OnReceive(pointer_m2c p2M) override;
+    void OnClose() override;
 };
 
 
