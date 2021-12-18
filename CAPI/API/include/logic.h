@@ -46,9 +46,9 @@ private:
     std::thread tAI; // 需要对玩家单开线程 
 
     // 互斥锁
-    std::mutex mtx_ai;
-    std::mutex mtx_state;
-    std::mutex mtx_buffer;
+    mutable std::mutex mtx_ai;
+    mutable std::mutex mtx_state;
+    mutable std::mutex mtx_buffer;
 
     // 条件变量
     std::condition_variable cv_buffer;
@@ -80,6 +80,19 @@ private:
     // 是否应该启动AI
     bool AI_start = false;
 
+    // 返回信息
+    bool MessageAvailable() override;
+    std::optional<std::string> TryGetMessage() override;
+
+    std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
+    std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
+    std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const override;
+    std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const override;
+    std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
+
+    virtual uint32_t GetTeamScore() const = 0;
+    virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+
     // 重写的委托
     Protobuf::MessageToServer OnConnect() override;
     virtual void OnReceive(pointer_m2c p2M) override;
@@ -89,7 +102,6 @@ private:
     bool Empty() override;
     std::optional<std::string> GetInfo() override;
     bool WaitThread() override;
-    State* GetpState() override;
 
     /// <summary>
     /// 执行AI线程

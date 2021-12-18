@@ -114,58 +114,43 @@ bool API::MessageAvailable()
     return !logic.Empty();
 }
 
-bool API::TryGetMessage(std::string& msg)
+std::optional<std::string> API::TryGetMessage()
 {
-    return logic.GetInfo(msg);
+    return logic.GetInfo();
 }
 
 std::vector<std::shared_ptr<const THUAI5::Character>> API::GetCharacters() const
 {
-    State* pState = logic.GetpState();
-    std::vector<std::shared_ptr<const THUAI5::Character>> temp;
-    temp.assign(pState->characters.begin(), pState->characters.end());
-    return temp;
+    return logic.GetCharacters();
 }
 
 std::vector<std::shared_ptr<const THUAI5::Wall>> API::GetWalls() const
 {
-    State* pState = logic.GetpState();
-    std::vector<std::shared_ptr<const THUAI5::Wall>> temp;
-    temp.assign(pState->walls.begin(), pState->walls.end());
-    return temp;
+    return logic.GetWalls();
 }
 
 std::vector<std::shared_ptr<const THUAI5::Bullet>> API::GetBullets() const
 {
-    State* pState = logic.GetpState();
-    std::vector<std::shared_ptr<const THUAI5::Bullet>> temp;
-    temp.assign(pState->bullets.begin(), pState->bullets.end());
-    return temp;
+    return logic.GetBullets();
 }
 
 std::vector<std::shared_ptr<const THUAI5::Prop>> API::GetProps() const
 {
-    State* pState = logic.GetpState();
-    std::vector<std::shared_ptr<const THUAI5::Prop>> temp;
-    temp.assign(pState->props.begin(), pState->props.end());
-    return temp;
+    return logic.GetProps();
 }
 
 std::shared_ptr<const THUAI5::Character> API::GetSelfInfo() const
 {
-    State* pState = logic.GetpState();
-    return pState->self;
+    return logic.GetSelfInfo();
 }
 
 uint32_t API::GetTeamScore()const
 {
-    State* pState = logic.GetpState();
-    return pState->teamScore;
+    return logic.GetTeamScore();
 }
 
 const std::vector<int64_t> API::GetPlayerGUIDs() const
 {
-    State* pState = logic.GetpState();
-    return pState->guids;
+    return logic.GetPlayerGUIDs();
 }
 

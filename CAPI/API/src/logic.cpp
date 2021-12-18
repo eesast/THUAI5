@@ -106,6 +106,57 @@ namespace Vision
     }
 }
 
+std::vector<std::shared_ptr<const THUAI5::Character>> Logic::GetCharacters() const
+{
+    std::unique_lock<std::mutex> lock(mtx_buffer);
+    std::vector<std::shared_ptr<const THUAI5::Character>> temp;
+    temp.assign(pState->characters.begin(), pState->characters.end());
+    return temp;
+}
+
+std::vector<std::shared_ptr<const THUAI5::Wall>> Logic::GetWalls() const
+{
+    std::unique_lock<std::mutex> lock(mtx_buffer);
+    std::vector<std::shared_ptr<const THUAI5::Wall>> temp;
+    temp.assign(pState->walls.begin(), pState->walls.end());
+    return temp;
+}
+
+std::vector<std::shared_ptr<const THUAI5::Bullet>> Logic::GetBullets() const
+{
+    std::unique_lock<std::mutex> lock(mtx_buffer);
+    std::vector<std::shared_ptr<const THUAI5::Bullet>> temp;
+    temp.assign(pState->bullets.begin(), pState->bullets.end());
+    return temp;
+}
+
+std::vector<std::shared_ptr<const THUAI5::Prop>> Logic::GetProps() const
+{
+    std::unique_lock<std::mutex> lock(mtx_buffer);
+    std::vector<std::shared_ptr<const THUAI5::Prop>> temp;
+    temp.assign(pState->props.begin(), pState->props.end());
+    return temp;
+}
+
+std::shared_ptr<const THUAI5::Character> Logic::GetSelfInfo() const
+{
+    std::unique_lock<std::mutex> lock(mtx_buffer);
+    return pState->self;
+}
+
+uint32_t Logic::GetTeamScore()const
+{
+    std::unique_lock<std::mutex> lock(mtx_buffer);
+    return pState->teamScore;
+}
+
+const std::vector<int64_t> Logic::GetPlayerGUIDs() const
+{
+    std::unique_lock<std::mutex> lock(mtx_buffer);
+    return pState->guids;
+}
+
+
 Protobuf::MessageToServer Logic::OnConnect()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -151,11 +202,6 @@ bool Logic::WaitThread()
     std::unique_lock<std::mutex> lck_buffer(mtx_buffer);
     cv_buffer.wait(lck_buffer, [this]() {return buffer_updated; });
     Update();
-}
-
-State* Logic::GetpState()
-{
-    return pState;
 }
 
 Logic::Logic(int teamID, int playerID) :teamID(teamID), playerID(playerID)

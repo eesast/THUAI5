@@ -3,6 +3,7 @@
 #define API_H
 
 #include <string>
+#include <optional>
 #include "Message2Server.pb.h"
 #include "state.h"
 
@@ -44,11 +45,16 @@ public:
     /// <returns></returns>
     virtual int GetCounter() = 0;
 
-    /// <summary>
-    /// 获取当前的状态指针
-    /// </summary>
-    /// <returns></returns>
-    virtual State* GetpState() = 0;
+    /// 获取信息（因为必须保证线程安全，所以必须在Logic类的内部实现这些接口）
+    [[nodiscard]] virtual bool MessageAvailable() = 0;
+    [[nodiscard]] virtual std::optional<std::string> TryGetMessage() = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
+    [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
+    [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
 };
 
 
@@ -87,14 +93,12 @@ public:
     //***********选手可获取的信息***********//
     // 待补充，此处只写了和THUAI4相同的内容
     [[nodiscard]] virtual bool MessageAvailable() = 0;
-    [[nodiscard]] virtual bool TryGetMessage(std::string&) = 0;
-
+    [[nodiscard]] virtual std::optional<std::string> TryGetMessage() = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
-
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
     
@@ -145,7 +149,7 @@ public:
     //***********选手可获取的信息***********//
     // 待补充，此处只写了和THUAI4相同的内容
     bool MessageAvailable() override;
-    bool TryGetMessage(std::string&) override;
+    std::optional<std::string> TryGetMessage() override;
 
     std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
     std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
