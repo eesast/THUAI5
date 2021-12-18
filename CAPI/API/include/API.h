@@ -8,6 +8,51 @@
 
 
 /// <summary>
+/// API中依赖Logic的部分
+/// </summary>
+class ILogic
+{
+public:
+    /// <summary>
+    /// 向Server端发送信息
+    /// </summary>
+    /// <returns></returns>
+    virtual bool SendInfo(Protobuf::MessageToServer) = 0;
+
+    /// <summary>
+    /// Logic中的队友消息队列是否为空
+    /// </summary>
+    /// <returns></returns>
+    virtual bool Empty() = 0;
+
+    /// <summary>
+    /// 获取消息队列中的信息
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    virtual bool GetInfo(std::string& s) = 0;
+
+    /// <summary>
+    /// 等待
+    /// </summary>
+    /// <returns></returns>
+    virtual bool WaitThread() = 0;
+
+    /// <summary>
+    /// 获取计数器
+    /// </summary>
+    /// <returns></returns>
+    virtual int GetCounter() = 0;
+
+    /// <summary>
+    /// 获取当前的状态指针
+    /// </summary>
+    /// <returns></returns>
+    virtual State* GetpState() = 0;
+};
+
+
+/// <summary>
 /// API通用接口，可派生为一般API和DebugAPI
 /// </summary>
 class IAPI
@@ -51,36 +96,25 @@ public:
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
 
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
-    [[nodiscard]] virtual const std::vector<std::vector<int64_t>> GetPlayerGUIDs() const = 0;
+    [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+    
+    //***********构造函数************//
+    IAPI(ILogic& logic) :logic(logic) {}
 
-};
+    //***********析构函数************//
+    virtual ~IAPI() {}
 
-/// <summary>
-/// 封装了一系列需要在api中调用的内部函数
-/// </summary>
-class LogicInterface
-{
 protected:
-    // **********需要在logic中指定的，辅助API进行的成员和函数***************//
-    std::function<bool(Protobuf::MessageToServer&)> SendInfo;           // 发送信息
-    std::function<bool()> Empty;                                        // 判断队列是否为空
-    std::function<bool(std::string&)> GetInfo;                          // 获取信息
-    std::function<int()> GetCounter;                                    // 获取帧数??
-    std::function<void()> WaitThread;                                   // 等待
-    State* pState;                                                     // 当前状态
-
-public:
-    LogicInterface(std::function<bool(Protobuf::MessageToServer&)> SendInfo, std::function<bool()>Empty, std::function<bool(std::string&)> GetInfo, std::function<int()>GetCounter, std::function<void()>WaitThread,State* pState)
-        :SendInfo(SendInfo), Empty(Empty), GetInfo(GetInfo), GetCounter(GetCounter), WaitThread(WaitThread), pState(pState) {}
+    ILogic& logic;
 };
 
 /// <summary>
 /// 一般API
 /// </summary>
-class API final :public IAPI, LogicInterface
+class API final :public IAPI
 {
 public:
-    API(const LogicInterface& logicInterface); // 待定
+    API(ILogic& logic) :IAPI(logic) {}
 
     //***********选手可执行的操作***********//
 
@@ -120,14 +154,13 @@ public:
     std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
 
     uint32_t GetTeamScore() const override;
-    const std::vector<std::vector<int64_t>> GetPlayerGUIDs() const override;
+    const std::vector<int64_t> GetPlayerGUIDs() const override;
 };
 
 class DebugAPI final :public IAPI
 {
 public:
-    DebugAPI(); // 待定
-
+    DebugAPI(ILogic& logic) :IAPI(logic) {}
 };
 
 #endif
