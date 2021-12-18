@@ -611,7 +611,7 @@ namespace Client
         private List<MessageToClient.Types.GameObjMessage> bulletData;
         private List<MessageToClient.Types.GameObjMessage> propData;
         private object drawPicLock = new object();
-        private MessageToClient.Types.GameObjMessage? myInfo;  //这个client自己的message
+        private MessageToClient.Types.GameObjMessage? myInfo = null;  //这个client自己的message
 
         private Stack<string>? myMessages;
 
