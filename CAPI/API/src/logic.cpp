@@ -432,6 +432,7 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
 
     // 构造通信组件
     pComm = std::make_unique<MultiThreadClientCommunication>(*this);
+    pComm->init();
 
     // 构造API
     pAPI = std::make_unique<IAPI>(*this);

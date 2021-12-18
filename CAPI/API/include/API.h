@@ -46,8 +46,6 @@ public:
     virtual int GetCounter() = 0;
 
     /// 获取信息（因为必须保证线程安全，所以必须在Logic类的内部实现这些接口）
-    [[nodiscard]] virtual bool MessageAvailable() = 0;
-    [[nodiscard]] virtual std::optional<std::string> TryGetMessage() = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;

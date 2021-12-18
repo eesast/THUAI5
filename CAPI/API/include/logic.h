@@ -80,10 +80,6 @@ private:
     // 是否应该启动AI
     bool AI_start = false;
 
-    // 返回信息
-    bool MessageAvailable() override;
-    std::optional<std::string> TryGetMessage() override;
-
     std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
     std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
     std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const override;
