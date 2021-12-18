@@ -24,7 +24,7 @@ class AI :public IAI
 {
 public:
     AI() :IAI() {}
-    virtual void play(IAPI& api) override;
+    void play(IAPI& api) override;
 };
 
 /// 命令行程序主函数

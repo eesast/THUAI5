@@ -17,7 +17,7 @@ public:
     /// 向Server端发送信息
     /// </summary>
     /// <returns></returns>
-    virtual bool SendInfo(Protobuf::MessageToServer) = 0;
+    virtual bool SendInfo(Protobuf::MessageToServer&) = 0;
 
     /// <summary>
     /// Logic中的队友消息队列是否为空
@@ -30,7 +30,7 @@ public:
     /// </summary>
     /// <param name="s"></param>
     /// <returns></returns>
-    virtual bool GetInfo(std::string& s) = 0;
+    virtual std::optional<std::string> GetInfo() = 0;
 
     /// <summary>
     /// 等待

@@ -24,6 +24,10 @@ struct State
     std::vector<std::shared_ptr<THUAI5::Wall>> walls;
     std::vector<std::shared_ptr<THUAI5::Prop>> props;
     std::vector<std::shared_ptr<THUAI5::Bullet>> bullets;
+
+    // GUID信息
+    std::vector<int64_t> guids;
+
 };
 
 #endif // !STATE_H

@@ -26,82 +26,21 @@
 #define MESSAGE_OF_BULLET 2
 #define MESSAGE_OF_PROP 3
 
-class Logic;
-
-/// <summary>
-/// 通信组件建造类
-/// </summary>
-class MultiThreadClientCommunicationBuilder
-{
-public:
-    MultiThreadClientCommunicationBuilder(Logic* pLogic);
-    virtual std::shared_ptr<MultiThreadClientCommunication> get_comm() = 0;
-    virtual ~MultiThreadClientCommunicationBuilder() {}
-
-protected:
-    Logic* pLogic;
-};
-
-class MultiThreadClientCommunicationBuilder_A :public MultiThreadClientCommunicationBuilder
-{
-public:
-    MultiThreadClientCommunicationBuilder_A(Logic* pLogic) ;
-    std::shared_ptr<MultiThreadClientCommunication> get_comm()override;
-};
-
-/// <summary>
-/// API建造类
-/// </summary>
-class APIBuilder
-{
-public:
-    APIBuilder(Logic* pLogic);
-
-    virtual std::shared_ptr<IAPI> get_api() = 0;
-    virtual ~APIBuilder() {}
-
-protected:
-    Logic* pLogic;
-    std::shared_ptr<LogicInterface> pLogicInterface;
-};
-
-class APIBuilder_A : public APIBuilder
-{
-public:
-    APIBuilder_A(Logic* pLogic);
-    std::shared_ptr<IAPI> get_api() override;
-};
-
-
-/// <summary>
-/// 负责创建对象的主管类
-/// </summary>
-class BuilderDirector
-{
-public:
-    BuilderDirector(Logic* pLogic, int type = 1);
-    std::shared_ptr<IAPI> get_api();
-    std::shared_ptr<MultiThreadClientCommunication> get_comm();
-
-private:
-    std::shared_ptr<APIBuilder> api_builder;
-    std::shared_ptr<MultiThreadClientCommunicationBuilder> comm_builder;
-};
-
 /// <summary>
 /// 封装了通信组件和AI对象进行操作
 /// </summary>
-class Logic
+class Logic: public ISubscripter, public ILogic
 {
 private:
     // ID记录
     int teamID;
     int playerID;
 
-public:
-    std::unique_ptr<BuilderDirector> pDirector;
-    std::shared_ptr<MultiThreadClientCommunication> pComm; // 通信组件指针
-    std::shared_ptr<IAI> pAI; // 玩家指针
+    // 记录一场游戏中所有玩家的全部GUID信息
+    std::vector<int64_t> playerGUIDS;
+
+    std::unique_ptr<MultiThreadClientCommunication> pComm; // 通信组件指针
+    std::unique_ptr<IAI> pAI; // 玩家指针
     std::shared_ptr<IAPI> pAPI; // API指针
 
     std::thread tAI; // 需要对玩家单开线程 
@@ -140,6 +79,17 @@ public:
 
     // 是否应该启动AI
     bool AI_start = false;
+
+    // 重写的委托
+    Protobuf::MessageToServer OnConnect() override;
+    virtual void OnReceive(pointer_m2c p2M) override;
+    virtual void OnClose() override;
+
+    bool SendInfo(Protobuf::MessageToServer&) override;
+    bool Empty() override;
+    std::optional<std::string> GetInfo() override;
+    bool WaitThread() override;
+    State* GetpState() override;
 
     /// <summary>
     /// 执行AI线程
@@ -192,43 +142,12 @@ public:
     /// </summary>
     /// <returns></returns>
     void Update() noexcept;
+  
+public:
 
-    /// <summary>
-    /// 将protobuf类转换为THUAI5命名空间的结构体（人物）
-    /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    std::shared_ptr<THUAI5::Character> Protobuf2THUAI5_C(const Protobuf::MessageOfCharacter&);
-
-    /// <summary>
-    /// 将protobuf类转换为THUAI5命名空间的结构体（子弹）
-    /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    std::shared_ptr<THUAI5::Bullet> Protobuf2THUAI5_B(const Protobuf::MessageOfBullet&);
-
-    /// <summary>
-    /// 将protobuf类转换为THUAI5命名空间的结构体（道具）
-    /// </summary>
-    /// <param name=""></param>
-    /// <returns></returns>
-    std::shared_ptr<THUAI5::Prop> Protobuf2THUAI5_P(const Protobuf::MessageOfProp&);
-    
-    /// <summary>
-    /// 是否可视（有3个重载）
-    /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <returns></returns>
-    bool visible(int x, int y, const Protobuf::MessageOfCharacter& c)const;
-    bool visible(int x, int y, const Protobuf::MessageOfBullet& b)const;
-    bool visible(int x, int y, const Protobuf::MessageOfProp& p)const;
-
-    int TeamID()const { return teamID; }
-    int PlayerID()const { return playerID; }
-   
     Logic(int teamID, int playerID);
     ~Logic() = default;
+
     /// <summary>
     /// logic运行的主函数
     /// </summary>
