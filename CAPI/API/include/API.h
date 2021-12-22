@@ -4,6 +4,7 @@
 
 #include <string>
 #include <optional>
+#include <fstream>
 #include "Message2Server.pb.h"
 #include "state.h"
 
@@ -53,6 +54,16 @@ public:
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+};
+
+/// <summary>
+/// API的时间记录接口
+/// </summary>
+class Itime
+{
+public:
+    virtual void StartTimer() = 0;
+    virtual void EndTimer() = 0;
 };
 
 
@@ -113,7 +124,7 @@ protected:
 /// <summary>
 /// 一般API
 /// </summary>
-class API final :public IAPI
+class API final :public IAPI,public Itime
 {
 public:
     API(ILogic& logic) :IAPI(logic) {}
@@ -157,12 +168,64 @@ public:
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
+
+private:
+    void StartTimer() override {}
+    void EndTimer() override {}
 };
 
-class DebugAPI final :public IAPI
+class DebugAPI final :public IAPI,public Itime
 {
 public:
-    DebugAPI(ILogic& logic) :IAPI(logic) {}
+    DebugAPI(ILogic& logic,std::ostream &Out = std::cout) :IAPI(logic),Out(Out) {}
+
+    //***********选手可执行的操作***********//
+    // 移动
+    bool MovePlayer(uint32_t timeInMilliseconds, double angleInRadian) override;
+    bool MoveRight(uint32_t timeInMilliseconds) override;
+    bool MoveUp(uint32_t timeInMilliseconds) override;
+    bool MoveLeft(uint32_t timeInMilliseconds) override;
+    bool MoveDown(uint32_t timeInMilliseconds) override;
+
+    // 攻击
+    bool Attack(uint32_t timeInMilliseconds, double angleInRadian) override;
+    bool UseCommonSkill() override;
+
+    // 通信
+    bool Send(int toPlayerID, std::string) override;
+
+    // 道具
+    bool Pick(THUAI5::PropType) override; // 需要指定道具属性
+    bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) override;
+    bool UseProp() override;
+    bool ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum) override;
+    bool UseGem(uint32_t gemNum) override;
+
+    // 其它
+    bool Wait() override;
+
+    //***********选手可获取的信息***********//
+    // 待补充，此处只写了和THUAI4相同的内容
+    bool MessageAvailable() override;
+    std::optional<std::string> TryGetMessage() override;
+
+    std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
+    std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
+    std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const override;
+    std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const override;
+    std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
+
+    uint32_t GetTeamScore() const override;
+    const std::vector<int64_t> GetPlayerGUIDs() const override;
+
+private:
+    bool CanPick(THUAI5::PropType propType);
+    bool CanUseActiveSkill(THUAI5::ActiveSkillType activeSkillType);
+    std::ostream& Out;
+    std::chrono::system_clock::time_point StartPoint; // 记录起始时间
+
+    void StartTimer()override;
+    void EndTimer() override;
 };
 
 #endif

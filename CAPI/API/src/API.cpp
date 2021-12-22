@@ -2,6 +2,16 @@
 
 const static double PI = 3.14159265358979323846;
 
+namespace Time
+{
+    double TimeSinceStart(const std::chrono::system_clock::time_point& sp)
+    {
+        std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
+        std::chrono::duration<double, std::milli> time_span = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(tp - sp);
+        return time_span.count();
+    }
+}
+
 bool API::MovePlayer(uint32_t timeInMilliseconds, double angleInRadian)
 {
     Protobuf::MessageToServer message;
@@ -154,3 +164,187 @@ const std::vector<int64_t> API::GetPlayerGUIDs() const
     return logic.GetPlayerGUIDs();
 }
 
+void DebugAPI::StartTimer()
+{
+    StartPoint = std::chrono::system_clock::now();
+    std::time_t t = std::chrono::system_clock::to_time_t(StartPoint);
+    Out << "=== AI.play() ===" << std::endl;
+    Out << "Current time: " << ctime(&t);
+}
+
+void DebugAPI::EndTimer()
+{
+    Out << "Time elapsed: " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Out << std::endl;
+}
+
+bool DebugAPI::MovePlayer(uint32_t timeInMilliseconds, double angleInRadian)
+{
+    Out << "Call MovePlayer(" << timeInMilliseconds << "," << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::Move);
+    message.set_timeinmilliseconds(timeInMilliseconds);
+    message.set_angle(angleInRadian);
+
+    return logic.SendInfo(message); //!此处还没有定好使用哪种接口发送信息，return 0只是占位符
+}
+
+bool DebugAPI::MoveUp(uint32_t timeInMilliseconds)
+{
+    return MovePlayer(timeInMilliseconds, PI);
+}
+
+bool DebugAPI::MoveDown(uint32_t timeInMilliseconds)
+{
+    return MovePlayer(timeInMilliseconds, 0);
+}
+
+bool DebugAPI::MoveLeft(uint32_t timeInMilliseconds)
+{
+    return MovePlayer(timeInMilliseconds, PI * 1.5);
+}
+
+bool DebugAPI::MoveRight(uint32_t timeInMilliseconds)
+{
+    return MovePlayer(timeInMilliseconds, PI * 0.5);
+}
+
+bool DebugAPI::Attack(uint32_t timeInMilliseconds, double angleInRadian)
+{
+    Out << "Call Attack(" << timeInMilliseconds << "," << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::Attack);
+    message.set_timeinmilliseconds(timeInMilliseconds);
+    message.set_angle(angleInRadian);
+    return logic.SendInfo(message);
+}
+
+bool DebugAPI::UseCommonSkill()
+{
+    Out << "Call UseCommonSkill() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::UseCommonSkill);
+    return logic.SendInfo(message);
+}
+
+bool DebugAPI::Send(int toPlayerID, std::string to_message)
+{
+    Out << "Call Send(" << toPlayerID << "," << to_message << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::Send);
+    message.set_toplayerid(toPlayerID);
+    message.set_message(to_message);
+    return logic.SendInfo(message);
+}
+
+bool DebugAPI::Pick(THUAI5::PropType proptype)
+{
+    Out << "Call Pick(" << THUAI5::prop_dict[proptype] << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::Pick);
+    message.set_proptype(Protobuf::PropType(proptype));
+    return logic.SendInfo(message);
+}
+
+bool DebugAPI::ThrowProp(uint32_t timeInMilliseconds, double angleInRadian)
+{
+    Out << "Call ThrowProp(" << timeInMilliseconds << "," << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::ThrowProp);
+    message.set_timeinmilliseconds(timeInMilliseconds);
+    message.set_angle(angleInRadian);
+    return logic.SendInfo(message);
+}
+
+bool DebugAPI::UseProp()
+{
+    Out << "Call UseProp() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::UseProp);
+    return logic.SendInfo(message);
+}
+
+bool DebugAPI::ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum)
+{
+    Out << "Call ThrowGem(" << timeInMilliseconds << angleInRadian << gemNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::ThrowGem);
+    message.set_timeinmilliseconds(timeInMilliseconds);
+    message.set_angle(angleInRadian);
+    message.set_gemsize(gemNum);
+    return logic.SendInfo(message);
+}
+
+bool DebugAPI::UseGem(uint32_t gemNum)
+{
+    Out << "Call UseGem(" << gemNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::UseGem);
+    message.set_gemsize(gemNum);
+    return logic.SendInfo(message);
+}
+
+bool DebugAPI::Wait()
+{
+    Out << "Call Wait() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (logic.GetCounter() == -1)
+    {
+        return false;
+    }
+    logic.WaitThread();
+    return true;
+}
+
+bool DebugAPI::MessageAvailable()
+{
+    Out << "Call MessageAvailable() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return !logic.Empty();
+}
+
+std::optional<std::string> DebugAPI::TryGetMessage()
+{
+    Out << "Call TryGetMessage() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetInfo();
+}
+
+std::vector<std::shared_ptr<const THUAI5::Character>> DebugAPI::GetCharacters() const
+{
+    Out << "Call GetCharacters() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetCharacters();
+}
+
+std::vector<std::shared_ptr<const THUAI5::Wall>> DebugAPI::GetWalls() const
+{
+    Out << "Call GetWalls() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetWalls();
+}
+
+std::vector<std::shared_ptr<const THUAI5::Bullet>> DebugAPI::GetBullets() const
+{
+    Out << "Call GetBullets() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetBullets();
+}
+
+std::vector<std::shared_ptr<const THUAI5::Prop>> DebugAPI::GetProps() const
+{
+    Out << "Call GetProps() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetProps();
+}
+
+std::shared_ptr<const THUAI5::Character> DebugAPI::GetSelfInfo() const
+{
+    Out << "Call GetSelfInfo() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetSelfInfo();
+}
+
+uint32_t DebugAPI::GetTeamScore()const
+{
+    Out << "Call GetTeamScore() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetTeamScore();
+}
+
+const std::vector<int64_t> DebugAPI::GetPlayerGUIDs() const
+{
+    Out << "Call GetTeamGUIDs() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetPlayerGUIDs();
+}
