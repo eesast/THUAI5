@@ -156,7 +156,6 @@ const std::vector<int64_t> Logic::GetPlayerGUIDs() const
     return pState->guids;
 }
 
-
 Protobuf::MessageToServer Logic::OnConnect()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -259,12 +258,17 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
         break;
 
     case Protobuf::MessageType::EndGame:
+#ifdef __linux__
+        pthread_cancel(tAI.native_gandle());
+#else
         AI_loop = false;
         {
             std::lock_guard<std::mutex> lck(mtx_buffer);
             buffer_updated = true;
+            counter_buffer = -1;
         }
         cv_buffer.notify_one();
+#endif
         std::cout << "End Game!" << std::endl;
         break;
 
@@ -278,7 +282,7 @@ void Logic::ProcessMessageToOneClient(std::shared_ptr<Protobuf::MessageToOneClie
     switch (pm2oc->messagetype()) 
     {
     case Protobuf::MessageType::ValidPlayer:
-        std::cout << "Valid player!" << std::endl;
+        std::cout << "Valid player: " <<pm2oc->teamid() << " " << pm2oc->playerid() << std::endl;
         break;
     case Protobuf::MessageType::InvalidPlayer:
         AI_loop = false;
@@ -334,7 +338,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                 }
                 else
                 {
-                    if (Vision::visible(selfX,selfY,it->messageofcharacter())) // 这里不应该是true，还应该加一个视野条件限制，但视野还没有完全确定好
+                    if (Vision::visible(selfX,selfY,it->messageofcharacter()))
                     {
                         pBuffer->characters.push_back(Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter()));
                     }
@@ -384,6 +388,9 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 
 void Logic::PlayerWrapper(std::function<void()> player)
 {
+#ifdef __linux__
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+#endif
     {
         std::unique_lock<std::mutex> lock(mtx_ai);
         cv_ai.wait(lock, [this]() {return AI_start; }); // 突然发现此处不能返回atomic_bool类型，所以THUAI4才会搞出另一个控制AI是否启动的标志值
@@ -422,7 +429,7 @@ void Logic::Update() noexcept
     // pBuffer已经指向访问过的，无用的pState
     buffer_updated = false;
     counter_state = counter_buffer;
-    current_state_accessed = true;
+    current_state_accessed = false;
 }
 
 void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t teamID, THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType, CreateAIFunc f, int debuglevel, std::string filename)
@@ -432,7 +439,7 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
 
     // 构造通信组件
     pComm = std::make_unique<MultiThreadClientCommunication>(*this);
-    pComm->init();
+    pComm->init(); // 千万不要忘记这一步!
 
     // 构造API
     pAPI = std::make_unique<IAPI>(*this);
@@ -440,6 +447,7 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
     std::ofstream Out;
     if (debuglevel)
     {
+        Out.open(filename);
         if (Out.fail())
         {
             std::cerr << "Failed to open the file!" << std::endl;
