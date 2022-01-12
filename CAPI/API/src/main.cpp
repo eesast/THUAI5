@@ -2,7 +2,7 @@
 #include"../API/include/AI.h"
 #include"../API/include/logic.h"
 
-Logic logic;
+Logic& logic;
 
 int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
 {
@@ -15,7 +15,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
 
 	try
 	{
-		TCLAP::CmdLine cmd("THUAI5 C++接口命令行参数介绍");
+		TCLAP::CmdLine cmd("THUAI5 C++ interface commandline parameter introduction");
 
 		std::vector<int> validPlayerIDs{ 0, 1, 2, 3 };
 		TCLAP::ValuesConstraint<int> playerIdConstraint(validPlayerIDs);
@@ -44,8 +44,6 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
 		extern const THUAI5::PassiveSkillType passiveSkill;
 		pID = playerID.getValue();
 		tID = teamID.getValue();
-		ID::playerID = pID;
-		ID::teamID = tID;
 		aSkill = activeSkill;
 		pSkill = passiveSkill;
 
@@ -60,7 +58,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
 	catch (TCLAP::ArgException& e) // catch exceptions
 	{
 		std::cerr << "Parsing error: " << e.error() << " for arg " << e.argId() << std::endl;
-		return 0;
+		return 1;
 	}
 	logic.Main(pID, tID, aSkill, pSkill, AIBuilder, level, filename);
 	return 0;
