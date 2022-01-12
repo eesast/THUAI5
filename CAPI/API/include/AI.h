@@ -5,16 +5,6 @@
 #include <memory>
 #include "API.h"
 
-
-/// <summary>
-/// 记录玩家AI的ID信息
-/// </summary>
-struct ID
-{
-    static inline int playerID = 0;
-    static inline int teamID = 0;
-};
-
 /// <summary>
 /// AI通用接口
 /// </summary>
@@ -34,7 +24,7 @@ class AI :public IAI
 {
 public:
     AI() :IAI() {}
-    virtual void play(IAPI& api) override;
+    void play(IAPI& api) override;
 };
 
 /// 命令行程序主函数

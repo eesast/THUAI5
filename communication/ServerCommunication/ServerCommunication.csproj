@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.19.1" />
-    <PackageReference Include="HPSocket.Net" Version="5.8.5.2" />
+    <PackageReference Include="Google.Protobuf" Version="3.19.2" />
+    <PackageReference Include="HPSocket.Net" Version="5.8.5.5" />
   </ItemGroup>
 
   <ItemGroup>

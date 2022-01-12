@@ -3,17 +3,56 @@
 #define API_H
 
 #include <string>
+#include <optional>
 #include "Message2Server.pb.h"
-#include "structures.h"
+#include "state.h"
+
 
 /// <summary>
-/// 游戏常量
+/// API中依赖Logic的部分
 /// </summary>
-struct StateConstant
+class ILogic
 {
-    constexpr static inline int nTeams = 2;
-    constexpr static inline int nPlayers = 4;
-    constexpr static inline int nCells = 50;
+public:
+    /// <summary>
+    /// 向Server端发送信息
+    /// </summary>
+    /// <returns></returns>
+    virtual bool SendInfo(Protobuf::MessageToServer&) = 0;
+
+    /// <summary>
+    /// Logic中的队友消息队列是否为空
+    /// </summary>
+    /// <returns></returns>
+    virtual bool Empty() = 0;
+
+    /// <summary>
+    /// 获取消息队列中的信息
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    virtual std::optional<std::string> GetInfo() = 0;
+
+    /// <summary>
+    /// 等待
+    /// </summary>
+    /// <returns></returns>
+    virtual bool WaitThread() = 0;
+
+    /// <summary>
+    /// 获取计数器
+    /// </summary>
+    /// <returns></returns>
+    virtual int GetCounter() = 0;
+
+    /// 获取信息（因为必须保证线程安全，所以必须在Logic类的内部实现这些接口）
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
+    [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
+    [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
 };
 
 
@@ -24,7 +63,7 @@ class IAPI
 {
 public: 
     //***********选手可执行的操作***********//
-     
+    
     // 移动
     virtual bool MovePlayer(uint32_t timeInMilliseconds, double angleInRadian) = 0;
     virtual bool MoveRight(uint32_t timeInMilliseconds) = 0;
@@ -52,23 +91,32 @@ public:
     //***********选手可获取的信息***********//
     // 待补充，此处只写了和THUAI4相同的内容
     [[nodiscard]] virtual bool MessageAvailable() = 0;
-    [[nodiscard]] virtual bool TryGetMessage(std::string&) = 0;
-
+    [[nodiscard]] virtual std::optional<std::string> TryGetMessage() = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
-
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
-    [[nodiscard]] virtual const std::vector<std::vector<int64_t>> GetPlayerGUIDs() const = 0;
+    [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+    
+    //***********构造函数************//
+    IAPI(ILogic& logic) :logic(logic) {}
+
+    //***********析构函数************//
+    virtual ~IAPI() {}
+
+protected:
+    ILogic& logic;
 };
 
-
+/// <summary>
+/// 一般API
+/// </summary>
 class API final :public IAPI
 {
 public:
-    API(); // 待定
+    API(ILogic& logic) :IAPI(logic) {}
 
     //***********选手可执行的操作***********//
 
@@ -87,7 +135,7 @@ public:
     bool Send(int toPlayerID, std::string) override;
 
     // 道具
-    bool Pick() override; // 需要指定道具属性
+    bool Pick(THUAI5::PropType) override; // 需要指定道具属性
     bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) override;
     bool UseProp() override;
     bool ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum) override;
@@ -99,7 +147,7 @@ public:
     //***********选手可获取的信息***********//
     // 待补充，此处只写了和THUAI4相同的内容
     bool MessageAvailable() override;
-    bool TryGetMessage(std::string&) override;
+    std::optional<std::string> TryGetMessage() override;
 
     std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
     std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
@@ -108,14 +156,13 @@ public:
     std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
 
     uint32_t GetTeamScore() const override;
-    const std::vector<std::vector<int64_t>> GetPlayerGUIDs() const override;
+    const std::vector<int64_t> GetPlayerGUIDs() const override;
 };
 
 class DebugAPI final :public IAPI
 {
 public:
-    DebugAPI(); // 待定
-
+    DebugAPI(ILogic& logic) :IAPI(logic) {}
 };
 
 #endif
