@@ -155,20 +155,7 @@ public:
 
     Logic(int teamID, int playerID);
     ~Logic() = default;
-
-    /// <summary>
-    /// logic运行的主函数
-    /// </summary>
-    /// <param name="address">ip地址</param>
-    /// <param name="port">监听端口</param>
-    /// <param name="playerID">玩家ID</param>
-    /// <param name="teamID">队伍ID</param>
-    /// <param name="activeSkillType">主动技能（需要玩家手动指定）</param>
-    /// <param name="passiveSkillType">被动技能（需要玩家手动指定）</param>
-    /// <param name="f">AI函数包装器</param>
-    /// <param name="debuglevel">debug模式</param>
-    /// <param name="filename">输出信息写入的输出流</param>
-    void Main(const char* address,uint16_t port,int32_t playerID,int32_t teamID,THUAI5::ActiveSkillType activeSkillType,THUAI5::PassiveSkillType passiveSkillType,CreateAIFunc f,int debuglevel,std::string filename);
+    void Main(int pID,int tID,THUAI5::ActiveSkillType aSkill,THUAI5::PassiveSkillType pSkill, CreateAIFunc AIBuilder,int level,std::string filename);
 };
 
 #endif
