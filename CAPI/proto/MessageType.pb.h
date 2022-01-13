@@ -160,13 +160,12 @@ enum PlaceType : int {
   Grass1 = 2,
   Grass2 = 3,
   Grass3 = 4,
-  Invisible = 5,
   PlaceType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   PlaceType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool PlaceType_IsValid(int value);
 constexpr PlaceType PlaceType_MIN = NullPlaceType;
-constexpr PlaceType PlaceType_MAX = Invisible;
+constexpr PlaceType PlaceType_MAX = Grass3;
 constexpr int PlaceType_ARRAYSIZE = PlaceType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PlaceType_descriptor();

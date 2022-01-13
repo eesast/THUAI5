@@ -90,21 +90,55 @@ namespace Proto2THUAI
 /// </summary>
 namespace Vision
 {
-    bool visible(int x, int y, const Protobuf::MessageOfCharacter& c)
+    /*
+    * 人物是否可见的判定机制如下：
+    * 1.若人物不在草丛里，则看不到技能隐身和在草丛里的玩家
+    * 2.若人物在草丛里，则可以看得到与自己位于同一草丛的玩家，但是看不到技能隐身的玩家
+    */
+
+    bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfCharacter& c)
     {
+        int64_t dx = self->x - c.x();
+        int64_t dy = self->y - c.y();
+        uint64_t distanceSquared = dx * dx + dy * dy;
+        if (!(distanceSquared <= Constants::Map::sightRadiusSquared))
+        {
+            return false;
+        }
+        if (c.isinvisible())
+        {
+            return false;
+        }
+        if (c.place() == (Protobuf::PlaceType::Grass1 || Protobuf::PlaceType::Grass2 || Protobuf::PlaceType::Grass3)) // 人物在草丛中
+        {
+            if (self->place == (THUAI5::PlaceType)c.place())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         return true;
     }
 
-    bool visible(int x, int y, const Protobuf::MessageOfBullet& b)
+    bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfBullet& b)
     {
-        return true;
+        int64_t dx = self->x - b.x();
+        int64_t dy = self->y - b.y();
+        uint64_t distanceSquared = dx * dx + dy * dy;
+        return distanceSquared <= Constants::Map::sightRadiusSquared;
     }
 
-    bool visible(int x, int y, const Protobuf::MessageOfProp& p)
+    bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfProp& p)
     {
-        return true;
+        int64_t dx = self->x - p.x();
+        int64_t dy = self->y - p.y();
+        uint64_t distanceSquared = dx * dx + dy * dy;
+        return distanceSquared <= Constants::Map::sightRadiusSquared;
     }
-}
+} // 目前还没有引入草丛机制！
 
 int Logic::GetCounter() const
 {
@@ -329,8 +363,6 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
         pBuffer->bullets.clear();
 
         // 2.信息不能全盘接受，要根据现有的视野范围接受（话说是这么用吗...）
-        int selfX = pState->self->x;
-        int selfY = pState->self->y;
         for (auto it = pm2c->gameobjmessage().begin(); it != pm2c->gameobjmessage().end(); it++)
         {
             if (it->has_messageofcharacter())
@@ -343,7 +375,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                 }
                 else
                 {
-                    if (Vision::visible(selfX,selfY,it->messageofcharacter()))
+                    if (Vision::visible(pState->self,it->messageofcharacter()))
                     {
                         pBuffer->characters.push_back(Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter()));
                     }
@@ -352,7 +384,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 
             else if (it->has_messageofbullet())
             {
-                if (Vision::visible(selfX, selfY,it->messageofbullet()))
+                if (Vision::visible(pState->self,it->messageofbullet()))
                 {
                     pBuffer->bullets.push_back(Proto2THUAI::Protobuf2THUAI5_B(it->messageofbullet()));
                 }
@@ -360,7 +392,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 
             else if (it->has_messageofprop())
             {
-                if (Vision::visible(selfX, selfY,it->messageofprop()))
+                if (Vision::visible(pState->self,it->messageofprop()))
                 {
                     pBuffer->props.push_back(Proto2THUAI::Protobuf2THUAI5_P(it->messageofprop()));
                 }
