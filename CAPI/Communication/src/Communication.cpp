@@ -18,10 +18,12 @@ namespace GameMessage
 	};
 
 	static const int MessageToServerNum = int(PacketType::MessageToServer);
+
 	/// <summary>
 	/// 反序列化
 	/// </summary>
-	/// <param name="data"></param>
+	/// <param name="data">需要进行反序列化的数据</param>
+	/// <param name="length">序列长度</param>
 	pointer_m2c Deserialize(const unsigned char* data, int length)
 	{
 		/// 解析前四位以获取数据类型
@@ -120,7 +122,7 @@ void ClientCommunication::Send(const Protobuf::MessageToServer& m2s)
 {
 	unsigned char data[max_length];
 	int msgSize = m2s.ByteSizeLong();
-	GameMessage::Serialize(data,m2s);
+    GameMessage::Serialize(data, m2s);
 	if (!pclient->Send(data, msgSize))
 	{
 		std::cerr << "Failed to send the message. Error code:";

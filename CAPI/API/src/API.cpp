@@ -19,7 +19,7 @@ bool API::MovePlayer(uint32_t timeInMilliseconds, double angleInRadian)
     message.set_timeinmilliseconds(timeInMilliseconds);
     message.set_angle(angleInRadian);
 
-    return logic.SendInfo(message); //!此处还没有定好使用哪种接口发送信息，return 0只是占位符
+    return logic.SendInfo(message);
 }
 
 bool API::MoveUp(uint32_t timeInMilliseconds)
@@ -154,7 +154,7 @@ std::shared_ptr<const THUAI5::Character> API::GetSelfInfo() const
     return logic.GetSelfInfo();
 }
 
-uint32_t API::GetTeamScore()const
+uint32_t API::GetTeamScore() const
 {
     return logic.GetTeamScore();
 }
@@ -162,6 +162,11 @@ uint32_t API::GetTeamScore()const
 const std::vector<int64_t> API::GetPlayerGUIDs() const
 {
     return logic.GetPlayerGUIDs();
+}
+
+int API::GetCounterOfFrames() const
+{
+    return logic.GetCounter();
 }
 
 void DebugAPI::StartTimer()
@@ -186,7 +191,7 @@ bool DebugAPI::MovePlayer(uint32_t timeInMilliseconds, double angleInRadian)
     message.set_timeinmilliseconds(timeInMilliseconds);
     message.set_angle(angleInRadian);
 
-    return logic.SendInfo(message); //!此处还没有定好使用哪种接口发送信息，return 0只是占位符
+    return logic.SendInfo(message); 
 }
 
 bool DebugAPI::MoveUp(uint32_t timeInMilliseconds)
@@ -212,6 +217,19 @@ bool DebugAPI::MoveRight(uint32_t timeInMilliseconds)
 bool DebugAPI::Attack(uint32_t timeInMilliseconds, double angleInRadian)
 {
     Out << "Call Attack(" << timeInMilliseconds << "," << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (ExamineValidity)
+    {
+        if (logic.GetSelfInfo()->isResetting)
+        {
+            Out << "[Warning: You have been slained.]" << std::endl;
+            return false;
+        }
+        if (logic.GetSelfInfo()->bulletNum == 0)
+        {
+            Out << "[Warning: You are out of bullets.]" << std::endl;
+            return false;
+        }
+    }
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Attack);
     message.set_timeinmilliseconds(timeInMilliseconds);
@@ -222,6 +240,15 @@ bool DebugAPI::Attack(uint32_t timeInMilliseconds, double angleInRadian)
 bool DebugAPI::UseCommonSkill()
 {
     Out << "Call UseCommonSkill() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (ExamineValidity)
+    {
+        if (logic.GetSelfInfo()->isResetting)
+        {
+            Out << "[Warning: You have been slained.]" << std::endl;
+            return false;
+        }
+        // 饼：查看commonskill是否冷却完毕
+    }
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::UseCommonSkill);
     return logic.SendInfo(message);
@@ -230,6 +257,14 @@ bool DebugAPI::UseCommonSkill()
 bool DebugAPI::Send(int toPlayerID, std::string to_message)
 {
     Out << "Call Send(" << toPlayerID << "," << to_message << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (ExamineValidity)
+    {
+        if (toPlayerID < 0 || toPlayerID >= 4)
+        {
+            Out << "[Error: Illegal player ID.]" << std::endl;
+            return false;
+        }
+    }
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Send);
     message.set_toplayerid(toPlayerID);
@@ -240,6 +275,19 @@ bool DebugAPI::Send(int toPlayerID, std::string to_message)
 bool DebugAPI::Pick(THUAI5::PropType proptype)
 {
     Out << "Call Pick(" << THUAI5::prop_dict[proptype] << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (ExamineValidity)
+    {
+        if (logic.GetSelfInfo()->isResetting)
+        {
+            Out << "[Warning: You have been slained.]" << std::endl;
+            return false;
+        }
+        if (!CanPick(proptype))
+        {
+            Out << "[Warning: No such property to pick within the cell.]" << std::endl;
+            return false;
+        }
+    }
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Pick);
     message.set_proptype(Protobuf::PropType(proptype));
@@ -249,6 +297,19 @@ bool DebugAPI::Pick(THUAI5::PropType proptype)
 bool DebugAPI::ThrowProp(uint32_t timeInMilliseconds, double angleInRadian)
 {
     Out << "Call ThrowProp(" << timeInMilliseconds << "," << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (ExamineValidity)
+    {
+        if (logic.GetSelfInfo()->isResetting) // 正在复活中
+        {
+            Out << "[Warning: You have been slained.]" << std::endl;
+            return false;
+        }
+        if (logic.GetSelfInfo()->prop == THUAI5::PropType::NullPropType)
+        {
+            Out << "[Warning: You don't have any props.]" << std::endl;
+            return false;
+        }
+    }
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::ThrowProp);
     message.set_timeinmilliseconds(timeInMilliseconds);
@@ -259,6 +320,19 @@ bool DebugAPI::ThrowProp(uint32_t timeInMilliseconds, double angleInRadian)
 bool DebugAPI::UseProp()
 {
     Out << "Call UseProp() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (ExamineValidity)
+    {
+        if (logic.GetSelfInfo()->isResetting) // 正在复活中
+        {
+            Out << "[Warning: You have been slained.]" << std::endl;
+            return false;
+        }
+        if (logic.GetSelfInfo()->prop == THUAI5::PropType::NullPropType)
+        {
+            Out << "[Warning: You don't have any props.]" << std::endl;
+            return false;
+        }
+    }
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::UseProp);
     return logic.SendInfo(message);
@@ -267,6 +341,19 @@ bool DebugAPI::UseProp()
 bool DebugAPI::ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum)
 {
     Out << "Call ThrowGem(" << timeInMilliseconds << angleInRadian << gemNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (ExamineValidity)
+    {
+        if (logic.GetSelfInfo()->isResetting) // 正在复活中
+        {
+            Out << "[Warning: You have been slained.]" << std::endl;
+            return false;
+        }
+        if (logic.GetSelfInfo()->gemNum == 0)
+        {
+            Out << "[Warning: You don't have any gems.]" << std::endl;
+            return false;
+        }
+    }
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::ThrowGem);
     message.set_timeinmilliseconds(timeInMilliseconds);
@@ -278,6 +365,19 @@ bool DebugAPI::ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint3
 bool DebugAPI::UseGem(uint32_t gemNum)
 {
     Out << "Call UseGem(" << gemNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (ExamineValidity)
+    {
+        if (logic.GetSelfInfo()->isResetting) // 正在复活中
+        {
+            Out << "[Warning: You have been slained.]" << std::endl;
+            return false;
+        }
+        if (logic.GetSelfInfo()->gemNum == 0)
+        {
+            Out << "[Warning: You don't have any gems.]" << std::endl;
+            return false;
+        }
+    }
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::UseGem);
     message.set_gemsize(gemNum);
@@ -304,7 +404,15 @@ bool DebugAPI::MessageAvailable()
 std::optional<std::string> DebugAPI::TryGetMessage()
 {
     Out << "Call TryGetMessage() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
-    return logic.GetInfo();
+    auto info = logic.GetInfo();
+    if (ExamineValidity)
+    {
+        if (!info)
+        {
+            Out << "[Warning: Failed to get a message.]" << std::endl;
+        }
+    }
+    return info;
 }
 
 std::vector<std::shared_ptr<const THUAI5::Character>> DebugAPI::GetCharacters() const
@@ -337,7 +445,7 @@ std::shared_ptr<const THUAI5::Character> DebugAPI::GetSelfInfo() const
     return logic.GetSelfInfo();
 }
 
-uint32_t DebugAPI::GetTeamScore()const
+uint32_t DebugAPI::GetTeamScore() const
 {
     Out << "Call GetTeamScore() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     return logic.GetTeamScore();
@@ -347,4 +455,10 @@ const std::vector<int64_t> DebugAPI::GetPlayerGUIDs() const
 {
     Out << "Call GetTeamGUIDs() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     return logic.GetPlayerGUIDs();
+}
+
+int DebugAPI::GetCounterOfFrames() const
+{
+    Out << "Call GetCounterOfFrames() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetCounter();
 }

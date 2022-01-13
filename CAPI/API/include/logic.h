@@ -80,14 +80,15 @@ private:
     // 是否应该启动AI
     bool AI_start = false;
 
+    int GetCounter() const override;
     std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
     std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
     std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const override;
     std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const override;
     std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
 
-    virtual uint32_t GetTeamScore() const = 0;
-    virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+    virtual uint32_t GetTeamScore() const override;
+    virtual const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     // 重写的委托
     Protobuf::MessageToServer OnConnect() override;

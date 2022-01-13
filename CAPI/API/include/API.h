@@ -44,7 +44,7 @@ public:
     /// 获取计数器
     /// </summary>
     /// <returns></returns>
-    virtual int GetCounter() = 0;
+    virtual int GetCounter() const = 0;
 
     /// 获取信息（因为必须保证线程安全，所以必须在Logic类的内部实现这些接口）
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
@@ -110,6 +110,7 @@ public:
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+    [[nodiscard]] virtual int GetCounterOfFrames() const = 0;
     
     //***********构造函数************//
     IAPI(ILogic& logic) :logic(logic) {}
@@ -168,6 +169,7 @@ public:
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
+    int GetCounterOfFrames() const override;
 
 private:
     void StartTimer() override {}
@@ -177,7 +179,7 @@ private:
 class DebugAPI final :public IAPI,public Itime
 {
 public:
-    DebugAPI(ILogic& logic,std::ostream &Out = std::cout) :IAPI(logic),Out(Out) {}
+    DebugAPI(ILogic& logic, std::ostream& Out = std::cout, bool ExamineValidity = true) :IAPI(logic), Out(Out), ExamineValidity(ExamineValidity) {}
 
     //***********选手可执行的操作***********//
     // 移动
@@ -217,10 +219,13 @@ public:
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
+    int GetCounterOfFrames() const override;
 
 private:
     bool CanPick(THUAI5::PropType propType);
     bool CanUseActiveSkill(THUAI5::ActiveSkillType activeSkillType);
+
+    bool ExamineValidity;
     std::ostream& Out;
     std::chrono::system_clock::time_point StartPoint; // 记录起始时间
 

@@ -106,6 +106,11 @@ namespace Vision
     }
 }
 
+int Logic::GetCounter() const
+{
+    return counter_state;
+}
+
 std::vector<std::shared_ptr<const THUAI5::Character>> Logic::GetCharacters() const
 {
     std::unique_lock<std::mutex> lock(mtx_buffer);

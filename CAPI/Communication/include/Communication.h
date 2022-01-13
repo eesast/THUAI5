@@ -6,7 +6,6 @@
 #include <Message2Clients.pb.h>
 #include <Message2Server.pb.h>
 #include <concurrent_queue.hpp>
-#include "message.hpp"
 
 // third-party libraries
 #include <google/protobuf/message.h>
@@ -92,15 +91,15 @@ public:
     /// <summary>
     /// 连接server
     /// </summary>
-    /// <param name="address"></param>
-    /// <param name="part"></param>
+    /// <param name="address">ip地址</param>
+    /// <param name="part">端口</param>
     /// <returns></returns>
     bool Connect(const char* address, uint16_t port);
 
     /// <summary>
     /// 发送信息
     /// </summary>
-    /// <param name="m2s"></param>
+    /// <param name="m2s">需要发送的信息</param>
     void Send(const Protobuf::MessageToServer& m2s);
 
     /// <summary>
@@ -167,15 +166,15 @@ public:
     /// <summary>
     /// 连接Server，成功返回真且启动PM线程，否则返回假且不启动线程
     /// </summary>
-    /// <param name="address"></param>
-    /// <param name="port"></param>
+    /// <param name="address">ip地址</param>
+    /// <param name="port">端口</param>
     /// <returns></returns>
     bool Start(const char* address, uint16_t port);
 
     /// <summary>
     /// 发送信息
     /// </summary>
-    /// <param name="m2s"></param>
+    /// <param name="m2s">需要发送的信息</param>
     /// <returns></returns>
     bool Send(const Protobuf::MessageToServer& m2s);
 
