@@ -1,9 +1,9 @@
-/*
+﻿/*
  * Copyright: JessMA Open Source (ldcsaa@gmail.com)
  *
  * Author	: Bruce Liang
  * Website	: https://github.com/ldcsaa
- * Project	: https://github.com/ldcsaa/HP-Socket/HP-Socket
+ * Project	: https://github.com/ldcsaa/HP-Socket
  * Blog		: http://www.cnblogs.com/ldcsaa
  * Wiki		: http://www.oschina.net/p/hp-socket
  * QQ Group	: 44636872, 75375912
@@ -35,7 +35,27 @@
 名称：双接口模版类
 描述：定义双接口转换方法
 ************************************************************************/
+
+#if FALSE
+
+#define __DUAL_VPTR_GAP__	sizeof(PVOID)
+
+class __IFakeDualInterface__
+{
+public:
+	virtual ~__IFakeDualInterface__() {}
+};
+
+template<class F, class S> class DualInterface : public F, private __IFakeDualInterface__, public S
+
+#else
+
+#define __DUAL_VPTR_GAP__	0
+
 template<class F, class S> class DualInterface : public F, public S
+
+#endif
+
 {
 public:
 
@@ -66,13 +86,13 @@ public:
 	/* S* 转换为 F* */
 	inline static F* S2F(S* pS)
 	{
-		return (F*)((char*)pS - sizeof(F));
+		return (F*)((char*)pS - (sizeof(F) + __DUAL_VPTR_GAP__));
 	}
 
 	/* F* 转换为 S* */
 	inline static S* F2S(F* pF)
 	{
-		return (S*)((char*)pF + sizeof(F));
+		return (S*)((char*)pF + (sizeof(F) + __DUAL_VPTR_GAP__));
 	}
 
 public:
@@ -455,6 +475,8 @@ public:
 	virtual void SetKeepAliveTime		(DWORD dwKeepAliveTime)			= 0;
 	/* 设置异常心跳包间隔（毫秒，0 不发送心跳包，，默认：20 * 1000，如果超过若干次 [默认：WinXP 5 次, Win7 10 次] 检测不到心跳确认包则认为已断线） */
 	virtual void SetKeepAliveInterval	(DWORD dwKeepAliveInterval)		= 0;
+	/* 设置是否开启 nodelay 模式（默认：FALSE，不开启） */
+	virtual void SetNoDelay				(BOOL bNoDelay)					= 0;
 
 	/* 获取 Accept 预投递数量 */
 	virtual DWORD GetAcceptSocketCount	()	= 0;
@@ -466,6 +488,8 @@ public:
 	virtual DWORD GetKeepAliveTime		()	= 0;
 	/* 获取异常心跳包间隔 */
 	virtual DWORD GetKeepAliveInterval	()	= 0;
+	/* 检查是否开启 nodelay 模式 */
+	virtual BOOL IsNoDelay				()	= 0;
 	
 #ifdef _SSL_SUPPORT
 	/* 设置通信组件握手方式（默认：TRUE，自动握手） */
@@ -741,6 +765,8 @@ public:
 	virtual void SetKeepAliveTime		(DWORD dwKeepAliveTime)			= 0;
 	/* 设置异常心跳包间隔（毫秒，0 不发送心跳包，，默认：20 * 1000，如果超过若干次 [默认：WinXP 5 次, Win7 10 次] 检测不到心跳确认包则认为已断线） */
 	virtual void SetKeepAliveInterval	(DWORD dwKeepAliveInterval)		= 0;
+	/* 设置是否开启 nodelay 模式（默认：FALSE，不开启） */
+	virtual void SetNoDelay				(BOOL bNoDelay)					= 0;
 
 	/* 获取通信数据缓冲区大小 */
 	virtual DWORD GetSocketBufferSize	()	= 0;
@@ -748,6 +774,8 @@ public:
 	virtual DWORD GetKeepAliveTime		()	= 0;
 	/* 获取异常心跳包间隔 */
 	virtual DWORD GetKeepAliveInterval	()	= 0;
+	/* 检查是否开启 nodelay 模式 */
+	virtual BOOL IsNoDelay				()	= 0;
 
 #ifdef _SSL_SUPPORT
 	/* 设置通信组件握手方式（默认：TRUE，自动握手） */
@@ -894,11 +922,11 @@ public:
 	virtual void SetFreeBufferPoolHold		(DWORD dwFreeBufferPoolHold)						= 0;
 
 	/* 获取地址重用选项 */
-	virtual EnReuseAddressPolicy GetReuseAddressPolicy()										= 0;
+	virtual EnReuseAddressPolicy GetReuseAddressPolicy	()										= 0;
 	/* 获取内存块缓存池大小 */
-	virtual DWORD GetFreeBufferPoolSize		()													= 0;
+	virtual DWORD GetFreeBufferPoolSize					()										= 0;
 	/* 获取内存块缓存池回收阀值 */
-	virtual DWORD GetFreeBufferPoolHold		()													= 0;
+	virtual DWORD GetFreeBufferPoolHold					()										= 0;
 
 public:
 	virtual ~IClient() {}
@@ -992,6 +1020,8 @@ public:
 	virtual void SetKeepAliveTime		(DWORD dwKeepAliveTime)		= 0;
 	/* 设置异常心跳包间隔（毫秒，0 不发送心跳包，，默认：20 * 1000，如果超过若干次 [默认：WinXP 5 次, Win7 10 次] 检测不到心跳确认包则认为已断线） */
 	virtual void SetKeepAliveInterval	(DWORD dwKeepAliveInterval)	= 0;
+	/* 设置是否开启 nodelay 模式（默认：FALSE，不开启） */
+	virtual void SetNoDelay				(BOOL bNoDelay)				= 0;
 
 	/* 获取通信数据缓冲区大小 */
 	virtual DWORD GetSocketBufferSize	()	= 0;
@@ -999,6 +1029,8 @@ public:
 	virtual DWORD GetKeepAliveTime		()	= 0;
 	/* 获取异常心跳包间隔 */
 	virtual DWORD GetKeepAliveInterval	()	= 0;
+	/* 检查是否开启 nodelay 模式 */
+	virtual BOOL IsNoDelay				()	= 0;
 
 #ifdef _SSL_SUPPORT
 	/* 设置通信组件握手方式（默认：TRUE，自动握手） */
@@ -2917,4 +2949,67 @@ public:
 
 public:
 	virtual ~IHPThreadPool() {};
+};
+
+/************************************************************************
+名称：线程池监听器接口
+描述：定义线程池监听器的所有事件
+************************************************************************/
+class IHPThreadPoolListener
+{
+public:
+
+	/*
+	* 名称：线程池启动通知
+	* 描述：线程池启动时监听器将收到该通知，监听器可以在通知处理方法中执行预处理工作
+	*		
+	* 参数：		pThreadPool		-- 线程池对象
+	* 返回值：	无
+	*/
+	virtual void OnStartup(IHPThreadPool* pThreadPool)								= 0;
+
+	/*
+	* 名称：线程池启动关闭通知
+	* 描述：线程池关闭时监听器将收到该通知，监听器可以在通知处理方法中执行后处理工作
+	*		
+	* 参数：		pThreadPool		-- 线程池对象
+	* 返回值：	无
+	*/
+	virtual void OnShutdown(IHPThreadPool* pThreadPool)								= 0;
+
+	/*
+	* 名称：工作线程启动通知
+	* 描述：工作线程启动时监听器将收到该通知，监听器可以在通知处理方法中执行线程级别预处理工作
+	*		
+	* 参数：		pThreadPool		-- 线程池对象
+	*			dwThreadID		-- 工作线程 ID
+	* 返回值：	无
+	*/
+	virtual void OnWorkerThreadStart(IHPThreadPool* pThreadPool, THR_ID dwThreadID)	= 0;
+
+	/*
+	* 名称：工作线程退出通知
+	* 描述：工作线程退出时监听器将收到该通知，监听器可以在通知处理方法中执行线程级别后处理工作
+	*		
+	* 参数：		pThreadPool		-- 线程池对象
+	*			dwThreadID		-- 工作线程 ID
+	* 返回值：	无
+	*/
+	virtual void OnWorkerThreadEnd(IHPThreadPool* pThreadPool, THR_ID dwThreadID)	= 0;
+
+public:
+	virtual ~IHPThreadPoolListener() {};
+};
+
+/************************************************************************
+名称：线程池监听器抽象基类
+描述：定义某些事件的默认处理方法（忽略事件）
+************************************************************************/
+class CHPThreadPoolListener : public IHPThreadPoolListener
+{
+public:
+	virtual void OnStartup(IHPThreadPool* pThreadPool)								{}
+	virtual void OnShutdown(IHPThreadPool* pThreadPool)								{}
+	virtual void OnWorkerThreadStart(IHPThreadPool* pThreadPool, THR_ID dwThreadID)	{}
+	virtual void OnWorkerThreadEnd(IHPThreadPool* pThreadPool, THR_ID dwThreadID)	{}
 };

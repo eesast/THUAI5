@@ -1,9 +1,9 @@
-/*
+﻿/*
  * Copyright: JessMA Open Source (ldcsaa@gmail.com)
  *
  * Author	: Bruce Liang
  * Website	: https://github.com/ldcsaa
- * Project	: https://github.com/ldcsaa/HP-Socket/HP-Socket
+ * Project	: https://github.com/ldcsaa/HP-Socket
  * Blog		: http://www.cnblogs.com/ldcsaa
  * Wiki		: http://www.oschina.net/p/hp-socket
  * QQ Group	: 44636872, 75375912
@@ -25,14 +25,15 @@
 
 /* HP-Socket 版本号 */
 #define HP_VERSION_MAJOR		5	// 主版本号
-#define HP_VERSION_MINOR		7	// 子版本号
-#define HP_VERSION_REVISE		2	// 修正版本号
-#define HP_VERSION_BUILD		1	// 构建编号
+#define HP_VERSION_MINOR		8	// 子版本号
+#define HP_VERSION_REVISE		5	// 修正版本号
+#define HP_VERSION_BUILD		4	// 构建编号
 
 //#define _UDP_DISABLED				// 禁用 UDP
 //#define _SSL_DISABLED				// 禁用 SSL
 //#define _HTTP_DISABLED			// 禁用 HTTP
 //#define _ZLIB_DISABLED			// 禁用 ZLIB
+//#define _BROTLI_DISABLED			// 禁用 BROTLI
 
 /* 是否启用 UDP，如果定义了 _UDP_DISABLED 则禁用（默认：启用） */
 #if !defined(_UDP_DISABLED)
@@ -62,6 +63,13 @@
 	#endif
 #endif
 
+/* 是否启用 BROTLI，如果定义了 _BROTLI_DISABLED 则禁用（默认：启用） */
+#if !defined(_BROTLI_DISABLED)
+	#ifndef _BROTLI_SUPPORT
+		#define _BROTLI_SUPPORT
+	#endif
+#endif
+
 /**************************************************/
 /********** imports / exports HPSocket4C **********/
 
@@ -81,13 +89,14 @@
 /**************************************************************** Base Type Definitions **************************************************************/
 /*****************************************************************************************************************************************************/
 
-typedef const BYTE*	LPCBYTE, PCBYTE;
+typedef const BYTE*		LPCBYTE, PCBYTE;
+typedef ULONG_PTR		TID, THR_ID, NTHR_ID, PID, PRO_ID;
 
 /************************************************************************
 名称：连接 ID 数据类型
 描述：应用程序可以把 CONNID 定义为自身需要的类型（如：ULONG / ULONGLONG）
 ************************************************************************/
-typedef ULONG_PTR	CONNID, HP_CONNID;
+typedef ULONG_PTR		CONNID, HP_CONNID;
 
 /************************************************************************
 名称：通信组件服务状态
@@ -232,8 +241,8 @@ typedef enum EnIPAddrType
 ************************************************************************/
 typedef struct TIPAddr
 {
-	EnIPAddrType type;
-	LPCTSTR		 address;
+	En_HP_IPAddrType type;
+	LPCTSTR			 address;
 } *LPTIPAddr, HP_TIPAddr, *HP_LPTIPAddr;
 
 /************************************************************************
@@ -275,7 +284,7 @@ struct TSocketTask;
 参数：pTask -- Socket 任务结构体指针
 返回值：（无）
 ************************************************************************/
-typedef VOID (__HP_CALL *Fn_SocketTaskProc)(TSocketTask* pTask);
+typedef VOID (__HP_CALL *Fn_SocketTaskProc)(struct TSocketTask* pTask);
 typedef Fn_SocketTaskProc	HP_Fn_SocketTaskProc;
 
 /************************************************************************
@@ -284,14 +293,14 @@ typedef Fn_SocketTaskProc	HP_Fn_SocketTaskProc;
 ************************************************************************/
 typedef struct TSocketTask
 {
-	Fn_SocketTaskProc	fn;			// 任务处理函数
-	PVOID				sender;		// 发起对象
-	CONNID				connID;		// 连接 ID
-	LPCBYTE				buf;		// 数据缓冲区
-	INT					bufLen;		// 数据缓冲区长度
-	EnTaskBufferType	bufType;	// 缓冲区类型
-	WPARAM				wparam;		// 自定义参数
-	LPARAM				lparam;		// 自定义参数
+	HP_Fn_SocketTaskProc	fn;			// 任务处理函数
+	PVOID					sender;		// 发起对象
+	CONNID					connID;		// 连接 ID
+	LPCBYTE					buf;		// 数据缓冲区
+	INT						bufLen;		// 数据缓冲区长度
+	En_HP_TaskBufferType	bufType;	// 缓冲区类型
+	WPARAM					wparam;		// 自定义参数
+	LPARAM					lparam;		// 自定义参数
 } *LPTSocketTask, HP_TSocketTask, *HP_LPTSocketTask;
 
 /************************************************************************
