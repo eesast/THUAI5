@@ -131,7 +131,7 @@ namespace Vision
         return distanceSquared <= Constants::Map::sightRadiusSquared;
     }
 
-    bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfProp& p)
+    static bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfProp& p)
     {
         int64_t dx = self->x - p.x();
         int64_t dy = self->y - p.y();
