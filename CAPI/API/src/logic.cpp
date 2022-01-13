@@ -96,7 +96,7 @@ namespace Vision
     * 2.若人物在草丛里，则可以看得到与自己位于同一草丛的玩家，但是看不到技能隐身的玩家
     */
 
-    bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfCharacter& c)
+    static bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfCharacter& c)
     {
         int64_t dx = self->x - c.x();
         int64_t dy = self->y - c.y();
