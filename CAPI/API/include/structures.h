@@ -206,7 +206,7 @@ namespace THUAI5
         { PropType::addCD ,"addCD "}
     };
 
-    std::map<THUAI5::PlaceType, std::string> place_dict
+    inline std::map<THUAI5::PlaceType, std::string> place_dict
     {
         { PlaceType::NullPlaceType ,"NullPlaceType "},
         { PlaceType::Land ,"Land "},
