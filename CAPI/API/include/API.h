@@ -8,7 +8,7 @@
 #include "Message2Server.pb.h"
 #include "state.h"
 
-#pragma warning(disable:4996);
+#pragma warning(disable:4996)
 
 
 /// <summary>

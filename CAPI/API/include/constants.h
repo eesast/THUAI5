@@ -14,21 +14,21 @@ namespace Constants
         M_SCI::std::uint64_t sightRadiusSquared = sightRadius * sightRadius;		
         M_SCI::std::int32_t numOfGridPerCell = 1000;
 
-		[[nodiscard]] MF_SCI auto CellToGrid(int x, int y) noexcept				// »ñÈ¡Ö¸¶¨¸ñ×ÓÖĞĞÄµÄ×ø±ê
+		[[nodiscard]] MF_SCI auto CellToGrid(int x, int y) noexcept				// è·å–æŒ‡å®šæ ¼å­ä¸­å¿ƒçš„åæ ‡
 		{
 			return ::std::make_pair<::std::int32_t, ::std::int32_t>(x * numOfGridPerCell + numOfGridPerCell / 2, y * numOfGridPerCell + numOfGridPerCell / 2);
 		}
-
-		[[nodiscard]] MF_SCI::std::int32_t GridToCellX(XYPosition pos) noexcept	// »ñÈ¡Ö¸¶¨×ø±êµãËùÎ»ÓÚµÄ¸ñ×ÓµÄ X ĞòºÅ
+		
+		[[nodiscard]] MF_SCI::std::int32_t GridToCellX(XYPosition pos) noexcept	// è·å–æŒ‡å®šåæ ‡ç‚¹æ‰€ä½äºçš„æ ¼å­çš„ X åºå·
 		{
 			return pos.first / numOfGridPerCell;
 		}
-
-		[[nodiscard]] MF_SCI::std::int32_t GridToCellY(XYPosition pos) noexcept	// »ñÈ¡Ö¸¶¨×ø±êµãËùÎ»ÓÚµÄ¸ñ×ÓµÄ Y ĞòºÅ
+		
+		[[nodiscard]] MF_SCI::std::int32_t GridToCellY(XYPosition pos) noexcept	// è·å–æŒ‡å®šåæ ‡ç‚¹æ‰€ä½äºçš„æ ¼å­çš„ Y åºå·
 		{
 			return pos.second / numOfGridPerCell;
 		}
-    };
+	};
 }
  
 #endif // !CONSTANTS_H

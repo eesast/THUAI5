@@ -11,6 +11,8 @@
 #include <google/protobuf/message.h>
 #include <HPSocket.h>
 #include <SocketInterface.h>
+#include <HPSocket-SSL.h>
+#include <HPTypeDef.h>
 
 // C++ standard libraries
 #include <variant> 

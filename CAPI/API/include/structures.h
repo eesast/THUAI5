@@ -81,7 +81,7 @@ namespace THUAI5
     /// 被动技能
     /// </summary>
     enum class PassiveSkillType :unsigned char 
-    {
+    { 
         NullPassiveSkillType = 0,
         RecoverAfterBattle = 1,
         SpeedUpWhenLeavingGrass = 2,
@@ -190,7 +190,7 @@ namespace THUAI5
 
     // debug方便使用。名称可以改动
 
-    std::map<THUAI5::PropType, std::string> prop_dict
+    inline std::map<THUAI5::PropType, std::string> prop_dict
     {
         { PropType::NullPropType,"NullPropType"},
         { PropType::addHP,"addHP"},
@@ -216,7 +216,7 @@ namespace THUAI5
         { PlaceType::Invisible ,"Invisible "}
     };
 
-    std::map<THUAI5::BuffType, std::string> buff_dict
+    inline std::map<THUAI5::BuffType, std::string> buff_dict
     {
         { BuffType::NullBuffType ,"NullBuffType "},
         { BuffType::MoveSpeed ,"MoveSpeed "},
@@ -227,7 +227,7 @@ namespace THUAI5
         { BuffType::SpearBuff ,"SpearBuff "},
     };
 
-    std::map<THUAI5::BulletType, std::string> bullet_dict
+    inline std::map<THUAI5::BulletType, std::string> bullet_dict
     {
         { BulletType::NullBulletType ,"NullBulletType "},
         { BulletType::CommonBullet1 ,"CommonBullet1 "},
@@ -237,7 +237,7 @@ namespace THUAI5
         { BulletType::AtomBomb ,"AtomBomb "}
     };
 
-    std::map<THUAI5::ActiveSkillType, std::string> active_dict
+    inline std::map<THUAI5::ActiveSkillType, std::string> active_dict
     {
         { ActiveSkillType::NullActiveSkillType ,"NullActiveSkillType "},
         { ActiveSkillType::BecomeVampire ,"BecomeVampire "},
@@ -248,7 +248,7 @@ namespace THUAI5
         { ActiveSkillType::ASkill5 ,"ASkill5 "}
     };
 
-    std::map<THUAI5::PassiveSkillType, std::string> passive_dict
+    inline std::map<THUAI5::PassiveSkillType, std::string> passive_dict
     {
         { PassiveSkillType::NullPassiveSkillType ,"NullPassiveSkillType "},
         { PassiveSkillType::RecoverAfterBattle ,"RecoverAfterBattle "},
@@ -258,7 +258,6 @@ namespace THUAI5
         { PassiveSkillType::PSkill4 ,"PSkill4 "},
         { PassiveSkillType::PSkill5 ,"PSkill5 "}
     };
-
 }
 
 #endif // !STRUCTURES_H

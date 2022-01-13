@@ -109,7 +109,7 @@ namespace Vision
         {
             return false;
         }
-        if (c.place() == (Protobuf::PlaceType::Grass1 ||c.place() == Protobuf::PlaceType::Grass2 || c.place() == Protobuf::PlaceType::Grass3)) // 人物在草丛中
+        if (c.place() == Protobuf::PlaceType::Grass1 ||c.place() == Protobuf::PlaceType::Grass2 || c.place() == Protobuf::PlaceType::Grass3) // 人物在草丛中
         {
             if (self->place == (THUAI5::PlaceType)c.place())
             {
@@ -123,7 +123,7 @@ namespace Vision
         return true;
     }
 
-    bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfBullet& b)
+    static bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfBullet& b)
     {
         int64_t dx = self->x - b.x();
         int64_t dy = self->y - b.y();
@@ -142,6 +142,7 @@ namespace Vision
 
 int Logic::GetCounter() const
 {
+    std::unique_lock<std::mutex> lock(mtx_buffer);
     return counter_state;
 }
 
@@ -298,9 +299,6 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
         break;
 
     case Protobuf::MessageType::EndGame:
-#ifdef __linux__
-        pthread_cancel(tAI.native_gandle());
-#else
         AI_loop = false;
         {
             std::lock_guard<std::mutex> lck(mtx_buffer);
@@ -308,7 +306,6 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
             counter_buffer = -1;
         }
         cv_buffer.notify_one();
-#endif
         std::cout << "End Game!" << std::endl;
         break;
 
@@ -426,9 +423,6 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 
 void Logic::PlayerWrapper(std::function<void()> player)
 {
-#ifdef __linux__
-    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
-#endif
     {
         std::unique_lock<std::mutex> lock(mtx_ai);
         cv_ai.wait(lock, [this]() {return AI_start; }); // 突然发现此处不能返回atomic_bool类型，所以THUAI4才会搞出另一个控制AI是否启动的标志值
@@ -513,7 +507,7 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
     };
 
     // 执行AI线程
-    tAI = std::thread(AI_execute);
+    tAI = std::thread(&Logic::PlayerWrapper, this, AI_execute);
 
     // 游戏运行
     if (!pComm->Start(address, port))

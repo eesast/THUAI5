@@ -2,10 +2,12 @@
 #include"../API/include/AI.h"
 #include"../API/include/logic.h"
 
+#ifdef _MSC_VER
 #pragma warning(disable:4996)
+#endif
 
 int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
-{
+{ 
     std::string sIP;
     uint16_t sPort;
     int pID;
