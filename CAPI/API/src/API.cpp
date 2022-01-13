@@ -4,7 +4,7 @@ const static double PI = 3.14159265358979323846;
 
 namespace Time
 {
-    double TimeSinceStart(const std::chrono::system_clock::time_point& sp)
+    static double TimeSinceStart(const std::chrono::system_clock::time_point& sp)
     {
         std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
         std::chrono::duration<double, std::milli> time_span = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(tp - sp);

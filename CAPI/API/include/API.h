@@ -110,7 +110,7 @@ public:
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
-    [[nodiscard]] virtual int GetCounterOfFrames() const = 0;
+    [[nodiscard]] virtual int GetFrameCount() const = 0;
     
     //***********构造函数************//
     IAPI(ILogic& logic) :logic(logic) {}
