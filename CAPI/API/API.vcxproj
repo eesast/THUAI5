@@ -126,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\thuai\include;..\HPSocket;..\tclap\include;..\protobuf\src;..\proto;..\Communication\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\thuai\include;..\HPSocket\win;..\tclap\include;..\protobuf\src;..\proto;..\Communication\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -143,7 +143,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\thuai\include;..\HPSocket;..\tclap\include;..\protobuf\src;..\proto;..\Communication\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\thuai\include;..\HPSocket\win;..\tclap\include;..\protobuf\src;..\proto;..\Communication\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
