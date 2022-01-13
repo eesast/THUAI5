@@ -164,7 +164,7 @@ const std::vector<int64_t> API::GetPlayerGUIDs() const
     return logic.GetPlayerGUIDs();
 }
 
-int API::GetCounterOfFrames() const
+int API::GetFrameCount() const
 {
     return logic.GetCounter();
 }
@@ -457,7 +457,7 @@ const std::vector<int64_t> DebugAPI::GetPlayerGUIDs() const
     return logic.GetPlayerGUIDs();
 }
 
-int DebugAPI::GetCounterOfFrames() const
+int DebugAPI::GetFrameCount() const
 {
     Out << "Call GetCounterOfFrames() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     return logic.GetCounter();

@@ -2,7 +2,7 @@
 #include"../API/include/AI.h"
 #include"../API/include/logic.h"
 
-Logic logic;
+#pragma warning(disable:4996)
 
 int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
 {
@@ -70,6 +70,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         std::cerr << "Parsing error: " << e.error() << " for arg " << e.argId() << std::endl;
         return 1;
     }
+    Logic logic(tID, pID);
     logic.Main(sIP.c_str(), sPort, pID, tID, aSkill, pSkill, AIBuilder, level, filename);
     return 0;
 }

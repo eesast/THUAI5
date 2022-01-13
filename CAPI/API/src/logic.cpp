@@ -109,7 +109,7 @@ namespace Vision
         {
             return false;
         }
-        if (c.place() == (Protobuf::PlaceType::Grass1 || Protobuf::PlaceType::Grass2 || Protobuf::PlaceType::Grass3)) // 人物在草丛中
+        if (c.place() == (Protobuf::PlaceType::Grass1 ||c.place() == Protobuf::PlaceType::Grass2 || c.place() == Protobuf::PlaceType::Grass3)) // 人物在草丛中
         {
             if (self->place == (THUAI5::PlaceType)c.place())
             {
@@ -240,6 +240,7 @@ bool Logic::WaitThread()
     std::unique_lock<std::mutex> lck_buffer(mtx_buffer);
     cv_buffer.wait(lck_buffer, [this]() {return buffer_updated; });
     Update();
+    return true;
 }
 
 Logic::Logic(int teamID, int playerID) :teamID(teamID), playerID(playerID)
@@ -479,8 +480,6 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
     pComm->init(); // 千万不要忘记这一步!
 
     // 构造API
-    pAPI = std::make_unique<IAPI>(*this);
-   
     std::ofstream Out;
     if (debuglevel)
     {
@@ -489,6 +488,11 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
         {
             std::cerr << "Failed to open the file!" << std::endl;
         }
+        pAPI = std::make_unique<DebugAPI>(*this);
+    }
+    else
+    {
+        pAPI = std::make_unique<API>(*this);
     }
 
     // 构造AI线程函数

@@ -8,6 +8,8 @@
 #include "Message2Server.pb.h"
 #include "state.h"
 
+#pragma warning(disable:4996);
+
 
 /// <summary>
 /// API中依赖Logic的部分
@@ -169,7 +171,7 @@ public:
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
-    int GetCounterOfFrames() const override;
+    int GetFrameCount() const override;
 
 private:
     void StartTimer() override {}
@@ -219,7 +221,7 @@ public:
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
-    int GetCounterOfFrames() const override;
+    int GetFrameCount() const override;
 
 private:
     bool CanPick(THUAI5::PropType propType);
