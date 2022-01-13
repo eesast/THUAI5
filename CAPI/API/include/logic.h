@@ -87,13 +87,13 @@ private:
     std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const override;
     std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
 
-    virtual uint32_t GetTeamScore() const override;
-    virtual const std::vector<int64_t> GetPlayerGUIDs() const override;
+    uint32_t GetTeamScore() const override;
+    const std::vector<int64_t> GetPlayerGUIDs() const override;
 
     // 重写的委托
     Protobuf::MessageToServer OnConnect() override;
-    virtual void OnReceive(pointer_m2c p2M) override;
-    virtual void OnClose() override;
+    void OnReceive(pointer_m2c p2M) override;
+    void OnClose() override;
 
     bool SendInfo(Protobuf::MessageToServer&) override;
     bool Empty() override;
@@ -156,7 +156,7 @@ public:
 
     Logic(int teamID, int playerID);
     ~Logic() = default;
-    void Main(int pID,int tID,THUAI5::ActiveSkillType aSkill,THUAI5::PassiveSkillType pSkill, CreateAIFunc AIBuilder,int level,std::string filename);
+    void Main(const char* address, uint16_t port, int32_t playerID, int32_t teamID, THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType, CreateAIFunc f, int debuglevel, std::string filename);
 };
 
 #endif

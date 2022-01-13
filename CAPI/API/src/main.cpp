@@ -2,74 +2,84 @@
 #include"../API/include/AI.h"
 #include"../API/include/logic.h"
 
-Logic& logic;
+Logic logic;
 
 int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
 {
-	int pID;
-	int tID;
-	THUAI5::ActiveSkillType aSkill;
-	THUAI5::PassiveSkillType pSkill;
-	int level = 0;
-	std::string filename;
+    std::string sIP;
+    uint16_t sPort;
+    int pID;
+    int tID;
+    THUAI5::ActiveSkillType aSkill;
+    THUAI5::PassiveSkillType pSkill;
+    int level = 0;
+    std::string filename;
 
-	try
-	{
-		TCLAP::CmdLine cmd("THUAI5 C++ interface commandline parameter introduction");
+    try
+    {
+        TCLAP::CmdLine cmd("THUAI5 C++ interface commandline parameter introduction");
 
-		std::vector<int> validPlayerIDs{ 0, 1, 2, 3 };
-		TCLAP::ValuesConstraint<int> playerIdConstraint(validPlayerIDs);
-		TCLAP::ValueArg<int> playerID("p", "playerID", "Player ID 0,1,2,3 valid only", true, -1, &playerIdConstraint);
-		cmd.add(playerID);
+        TCLAP::ValueArg<std::string> serverIP("I", "serverIP", "Server`s IP 127.0.0.1 in default", false, "127.0.0.1", "string");
+        cmd.add(serverIP);
 
-		std::vector<int> validTeamIDs{ 0, 1 };
-		TCLAP::ValuesConstraint<int> temIdConstraint(validTeamIDs);
-		TCLAP::ValueArg<int> teamID("t", "teamID", "Team ID, which can only be 0 or 1", true, -1, &temIdConstraint);
-		cmd.add(teamID);
+        TCLAP::ValueArg<uint16_t> serverPort("P", "serverPort", "Port the server listens to", true, 0, "USORT");
+        cmd.add(serverPort);
 
-		std::string DebugDesc = "Set this flag to use API for debugging.\n"
-			"If \"-f\" is not set, the log will be printed on the screen.\n"
-			"Or you could specify a file to store it.";
-		TCLAP::SwitchArg debug("d", "debug", DebugDesc);
-		cmd.add(debug);
+        std::vector<int> validPlayerIDs{ 0, 1, 2, 3 };
+        TCLAP::ValuesConstraint<int> playerIdConstraint(validPlayerIDs);
+        TCLAP::ValueArg<int> playerID("p", "playerID", "Player ID 0,1,2,3 valid only", true, -1, &playerIdConstraint);
+        cmd.add(playerID);
 
-		TCLAP::ValueArg<std::string> FileName("f", "filename", "Specify a file to store the log.", false, "", "string");
-		cmd.add(FileName);
+        std::vector<int> validTeamIDs{ 0, 1 };
+        TCLAP::ValuesConstraint<int> temIdConstraint(validTeamIDs);
+        TCLAP::ValueArg<int> teamID("t", "teamID", "Team ID, which can only be 0 or 1", true, -1, &temIdConstraint);
+        cmd.add(teamID);
 
-		TCLAP::SwitchArg warning("w", "warning", "Warn of some obviously invalid operations (only when \"-d\" is set).");
-		cmd.add(warning);
+        std::string DebugDesc = "Set this flag to use API for debugging.\n"
+            "If \"-f\" is not set, the log will be printed on the screen.\n"
+            "Or you could specify a file to store it.";
+        TCLAP::SwitchArg debug("d", "debug", DebugDesc);
+        cmd.add(debug);
 
-		cmd.parse(argc, argv);
-		extern const THUAI5::ActiveSkillType activeSkill; // Entern variable, actually defined in AI.cpp
-		extern const THUAI5::PassiveSkillType passiveSkill;
-		pID = playerID.getValue();
-		tID = teamID.getValue();
-		aSkill = activeSkill;
-		pSkill = passiveSkill;
+        TCLAP::ValueArg<std::string> FileName("f", "filename", "Specify a file to store the log.", false, "", "string");
+        cmd.add(FileName);
 
-		bool d = debug.getValue();
-		bool w = warning.getValue();
-		if (d)
-		{
-			level = 1 + w;
-		}
-		filename = FileName.getValue();
-	}
-	catch (TCLAP::ArgException& e) // catch exceptions
-	{
-		std::cerr << "Parsing error: " << e.error() << " for arg " << e.argId() << std::endl;
-		return 1;
-	}
-	logic.Main(pID, tID, aSkill, pSkill, AIBuilder, level, filename);
-	return 0;
+        TCLAP::SwitchArg warning("w", "warning", "Warn of some obviously invalid operations (only when \"-d\" is set).");
+        cmd.add(warning);
+
+        cmd.parse(argc, argv);
+        extern const THUAI5::ActiveSkillType activeSkill; // Extern variable, actually defined in AI.cpp
+        extern const THUAI5::PassiveSkillType passiveSkill;
+        pID = playerID.getValue();
+        tID = teamID.getValue();
+        aSkill = activeSkill;
+        pSkill = passiveSkill;
+        sIP = serverIP.getValue();
+        sPort = serverPort.getValue();
+
+        bool d = debug.getValue();
+        bool w = warning.getValue();
+        if (d)
+        {
+            level = 1 + w;
+        }
+        filename = FileName.getValue();
+    }
+    catch (TCLAP::ArgException& e) // catch exceptions
+    {
+        std::cerr << "Parsing error: " << e.error() << " for arg " << e.argId() << std::endl;
+        return 1;
+    }
+    logic.Main(sIP.c_str(), sPort, pID, tID, aSkill, pSkill, AIBuilder, level, filename);
+    return 0;
 }
 
 std::unique_ptr<IAI> CreateAI()
 {
-	return std::make_unique<AI>();
+    return std::make_unique<AI>();
 }
 
 int main(int argc, char* argv[])
 {
-	return thuai5_main(argc, argv, CreateAI);
+    return thuai5_main(argc, argv, CreateAI);
 }
