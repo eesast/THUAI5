@@ -25,8 +25,9 @@ struct State
     std::vector<std::shared_ptr<THUAI5::Prop>> props;
     std::vector<std::shared_ptr<THUAI5::Bullet>> bullets;
 
-    // 记录一场游戏中的全部GUID信息
-    static std::vector<std::vector<int64_t>> playerGUIDS;
+    // GUID信息
+    std::vector<int64_t> guids;
+
 };
 
 #endif // !STATE_H

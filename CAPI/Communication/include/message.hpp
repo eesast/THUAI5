@@ -11,6 +11,9 @@
 #include <memory>
 
 using pointer_m2c = std::variant<std::shared_ptr<Protobuf::MessageToClient>, std::shared_ptr<Protobuf::MessageToOneClient>, std::shared_ptr<Protobuf::MessageToInitialize>,std::nullptr_t>; // 类型安全的联合体
+#define TYPEM2C 0
+#define TYPEM2OC 1
+#define TYPEM2I 2
 
 /// <summary>
 /// 供little endian使用的枚举值

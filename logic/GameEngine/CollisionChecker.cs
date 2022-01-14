@@ -17,9 +17,7 @@ namespace GameEngine
         /// <returns>和它碰撞的物体</returns>
         public IGameObj? CheckCollision(IMoveable obj, Vector moveVec)
         {
-            XYPosition nextPos = obj.Position + Vector.Vector2XY(moveVec) + new XYPosition((int)(obj.Radius*Math.Cos(moveVec.angle)), (int)(obj.Radius * Math.Sin(moveVec.angle))); //记录下一步将到达的最远点
-            //XYPosition nextPosRight = obj.Position + Vector.Vector2XY(moveVec) + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle - Math.PI/2)), (int)(obj.Radius * Math.Sin(moveVec.angle - Math.PI / 2))); //记录下一步将到达的最远点
-            //XYPosition nextPosLeft = obj.Position + Vector.Vector2XY(moveVec) + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle + Math.PI / 2)), (int)(obj.Radius * Math.Sin(moveVec.angle + Math.PI / 2))); //记录下一步将到达的最远点
+            XYPosition nextPos = obj.Position + Vector.Vector2XY(moveVec);
             if (!obj.IsRigid)
             {
                 if (gameMap.IsOutOfBound(obj))
@@ -56,9 +54,26 @@ namespace GameEngine
                 }
             }
 
+            XYPosition nextPosFront = nextPos + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle)), (int)(obj.Radius * Math.Sin(moveVec.angle))); //记录下一步将到达的最远点
+            XYPosition nextPosRight = nextPosFront + new XYPosition((int)(GameData.numOfPosGridPerCell * Math.Cos(moveVec.angle - Math.PI / 2)), (int)(GameData.numOfPosGridPerCell * Math.Sin(moveVec.angle - Math.PI / 2))); //记录下一步将到达的最远点
+            XYPosition nextPosLeft = nextPosFront + new XYPosition((int)(GameData.numOfPosGridPerCell * Math.Cos(moveVec.angle + Math.PI / 2)), (int)(GameData.numOfPosGridPerCell * Math.Sin(moveVec.angle + Math.PI / 2))); //记录下一步将到达的最远点
+            //XYPosition nextPos1 = new XYPosition((nextPosFront.x / GameData.numOfPosGridPerCell) * GameData.numOfPosGridPerCell, (nextPosFront.y / GameData.numOfPosGridPerCell) * GameData.numOfPosGridPerCell);
+            //XYPosition nextPos2 = new XYPosition((nextPosFront.x / GameData.numOfPosGridPerCell + 1) * GameData.numOfPosGridPerCell, (nextPosFront.y / GameData.numOfPosGridPerCell) * GameData.numOfPosGridPerCell);
+            //XYPosition nextPos3 = new XYPosition((nextPosFront.x / GameData.numOfPosGridPerCell) * GameData.numOfPosGridPerCell, (nextPosFront.y / GameData.numOfPosGridPerCell + 1) * GameData.numOfPosGridPerCell);
+            //XYPosition nextPos4 = new XYPosition((nextPosFront.x / GameData.numOfPosGridPerCell + 1) * GameData.numOfPosGridPerCell, (nextPosFront.y / GameData.numOfPosGridPerCell + 1) * GameData.numOfPosGridPerCell);
+
             //对墙体检查
-            if (gameMap.IsWall(nextPos))
-                return gameMap.GetCell(nextPos);
+            if (gameMap.IsWall(nextPosFront)/*||XYPosition.Distance(nextPos1, nextPosFront) <obj.Radius|| XYPosition.Distance(nextPos2, nextPosFront) < obj.Radius|| XYPosition.Distance(nextPos3, nextPosFront) < obj.Radius|| XYPosition.Distance(nextPos4, nextPosFront) < obj.Radius*/)
+                return gameMap.GetCell(nextPosFront);
+            else if(gameMap.IsWall(nextPosRight))
+                return gameMap.GetCell(nextPosRight);
+            else if (gameMap.IsWall(nextPosLeft))
+                return gameMap.GetCell(nextPosLeft);
+
+            //else if (gameMap.IsWall(nextPosRight))
+            //    return gameMap.GetCell(nextPosRight);
+            //else if (gameMap.IsWall(nextPosLeft))
+            //    return gameMap.GetCell(nextPosLeft);
 
             return null;
         }
@@ -95,14 +110,14 @@ namespace GameEngine
                 {
                     double dist = 0;
                     XYPosition nextXYConsiderWidth;
-                    nextXYConsiderWidth = Vector.Vector2XY(desination) + obj.Position + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle + Math.PI / 2)), (int)(obj.Radius * Math.Sin(moveVec.angle + Math.PI / 2)));
+                    nextXYConsiderWidth = nextXY + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle + Math.PI / 4)), (int)(obj.Radius * Math.Sin(moveVec.angle + Math.PI / 4)));
                     if (gameMap.IsWall(nextXYConsiderWidth)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
                     {
                         dist = MaxMoveToSquare(obj, gameMap.GetCell(nextXYConsiderWidth));
                         if (dist < maxOnlyConsiderWall)
                             maxOnlyConsiderWall = dist;
                     }
-                    nextXYConsiderWidth = Vector.Vector2XY(desination) + obj.Position + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle - Math.PI / 2)), (int)(obj.Radius * Math.Sin(moveVec.angle - Math.PI / 2)));
+                    nextXYConsiderWidth = nextXY + new XYPosition((int)(obj.Radius * Math.Cos(moveVec.angle - Math.PI / 4)), (int)(obj.Radius * Math.Sin(moveVec.angle - Math.PI / 4)));
                     if (gameMap.IsWall(nextXYConsiderWidth)) //对下一步的位置进行检查，但这里只是考虑移动物体的宽度，只是考虑下一步能达到的最远位置
                     {
                         dist = MaxMoveToSquare(obj, gameMap.GetCell(nextXYConsiderWidth));
@@ -157,7 +172,7 @@ namespace GameEngine
                                             }
                                             else if ((listObj.Position - obj.Position).ToVector2() * moveVec.ToVector2() <= 0)
                                                 continue;      //如果相对位置和运动方向反向，那么不会发生碰撞
-                                            else if (mod / (Math.Cos(Math.Atan2(orgDeltaY, orgDeltaX) - moveVec.angle)) > obj.Radius + listObj.Radius) // 如果沿着moveVec方向移动不会撞，就真的不会撞
+                                            else if (mod * Math.Cos(Math.Atan2(orgDeltaY, orgDeltaX) - moveVec.angle) > obj.Radius + listObj.Radius) // 如果沿着moveVec方向移动不会撞，就真的不会撞
                                                 continue;
                                             else
                                             {

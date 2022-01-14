@@ -89,7 +89,7 @@ namespace Client
                     rectangle.Height = 13;
                     rectangle.HorizontalAlignment = HorizontalAlignment.Left;
                     rectangle.VerticalAlignment = VerticalAlignment.Top;
-                    rectangle.Margin = new Thickness(13 * (j), 13 * (i), 0, 0);
+                    rectangle.Margin = new Thickness(13 * (j + 0.5), 13 * (i + 0.5), 0, 0);
                     switch (defaultMap[i, j])
                     {
                         case 1:
@@ -311,6 +311,7 @@ namespace Client
             {
                 _ = communicator.Stop();
                 Connect.Background = Brushes.Aqua;
+
             }
         }
 
@@ -394,6 +395,8 @@ namespace Client
                     msgP.PropType = Communication.Proto.PropType.Gem;
                     communicator.SendMessage(msgP);
                     break;
+                default:
+                    break;
             }
         }
         private void OnReceive()
@@ -473,20 +476,47 @@ namespace Client
                 }
             }
         }
-        private bool CanSee(PlaceType obj, long guid)
+        private bool CanSee(MessageOfCharacter msg)
         {
-            if (myInfo.MessageOfCharacter.Guid == guid)
+            if (myInfo != null)
+            {
+                if (myInfo.MessageOfCharacter.Guid == msg.Guid) //自己能看见自己
+                    return true;
+            }
+            if (msg.IsInvisible)
+                return false;
+            if (msg.Place == PlaceType.Land)
                 return true;
-            if (myInfo.MessageOfCharacter.Place == PlaceType.Invisible)  //灵界
-                return false;
-            if (obj == PlaceType.Invisible)
-                return false;
-            if (obj == PlaceType.Land)
-                return true;
-            if (obj != myInfo.MessageOfCharacter.Place)
-                return false;
+            if (myInfo != null)
+            {
+                if (msg.Place != myInfo.MessageOfCharacter.Place)
+                    return false;
+            }
             return true;
         }
+        private bool CanSee(MessageOfBullet msg)
+        {
+            if (msg.Place == PlaceType.Land)
+                return true;
+            if (myInfo != null)
+            {
+                if (msg.Place != myInfo.MessageOfCharacter.Place)
+                    return false;
+            }
+            return true;
+        }
+        private bool CanSee(MessageOfProp msg)
+        {
+            if (msg.Place == PlaceType.Land)
+                return true;
+            if (myInfo != null)
+            {
+                if (msg.Place != myInfo.MessageOfCharacter.Place)
+                    return false;
+            }
+            return true;
+        }
+
         //定时器事件，刷新地图
         private void Refresh(object? sender, EventArgs e)
         {
@@ -501,36 +531,11 @@ namespace Client
                     }
                     else
                     {
-
                         lock (drawPicLock) //加锁是必要的，画图操作和接收信息操作不能同时进行
                         {
-                            //for (int i = 0; i < defaultMap.GetLength(0); i++)
-                            //{
-                            //    for (int j = 0; j < defaultMap.GetLength(1); j++)
-                            //    {
-                            //        Rectangle rectangle = new Rectangle();
-                            //        rectangle.Width = 13;
-                            //        rectangle.Height = 13;
-                            //        rectangle.HorizontalAlignment = HorizontalAlignment.Left;
-                            //        rectangle.VerticalAlignment = VerticalAlignment.Top;
-                            //        rectangle.Margin = new Thickness(13 * (j + 0.5), 13 * (i + 0.5), 0, 0);
-                            //        switch (defaultMap[i, j])
-                            //        {
-                            //            case 1:
-                            //                rectangle.Fill = Brushes.Brown;
-                            //                break;
-                            //            case 2:
-                            //            case 3:
-                            //            case 4:
-                            //                rectangle.Fill = Brushes.Green;
-                            //                break;
-                            //        }
-                            //        UpperLayerOfMap.Children.Add(rectangle);
-                            //    }
-                            //}
                             foreach (var data in playerData)
                             {
-                              //  if (CanSee(data.MessageOfCharacter.Place, data.MessageOfCharacter.Guid))
+                                if (CanSee(data.MessageOfCharacter))
                                 {
                                     Ellipse icon = new Ellipse();
                                     icon.Width = 13;
@@ -544,7 +549,7 @@ namespace Client
                             }
                             foreach (var data in bulletData)
                             {
-                               // if (CanSee(data.MessageOfBullet.Place, data.MessageOfBullet.Guid))
+                                if (CanSee(data.MessageOfBullet))
                                 {
                                     Ellipse icon = new Ellipse();
                                     icon.Width = 10;
@@ -558,7 +563,7 @@ namespace Client
                             }
                             foreach (var data in propData)
                             {
-                              //  if (CanSee(data.MessageOfProp.Place, data.MessageOfProp.Guid))
+                                if (CanSee(data.MessageOfProp))
                                 {
                                     if (data.MessageOfProp.Type == PropType.Gem)
                                     {
@@ -613,7 +618,7 @@ namespace Client
         private List<MessageToClient.Types.GameObjMessage> bulletData;
         private List<MessageToClient.Types.GameObjMessage> propData;
         private object drawPicLock = new object();
-        private MessageToClient.Types.GameObjMessage myInfo;  //这个client自己的message
+        private MessageToClient.Types.GameObjMessage? myInfo = null;  //这个client自己的message
 
         private Stack<string>? myMessages;
 

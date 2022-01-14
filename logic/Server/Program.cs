@@ -25,14 +25,29 @@ namespace Server
 
             ServerBase? server = null;
 
-            try
+            if (options.PlayBack)
             {
-                server = new GameServer(options);
+                try
+                {
+                    server = new PlayBackServer(options);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return 1;
+                }
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine(e);
-                return 1;
+                try
+                {
+                    server = new GameServer(options);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return 1;
+                }
             }
 
             server.WaitForGame();
