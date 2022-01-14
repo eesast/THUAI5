@@ -35,9 +35,11 @@ namespace Client
             };
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
+            SetStatusBar();
             DrawMap();
             timer.Start();
             isClientStocked = true;
+            drawPicLock = new();
             playerData = new List<MessageToClient.Types.GameObjMessage>();
             bulletData = new List<MessageToClient.Types.GameObjMessage>();
             propData = new List<MessageToClient.Types.GameObjMessage>();
@@ -50,6 +52,13 @@ namespace Client
             //被动技能和buff在人物编号后用彩色文字注明
         }
 
+        private void SetStatusBar()
+        {
+            for(int i=0;i<8;i++)
+            {
+                StatusBars[i] = new(MainGrid,2+80*(i%2),40+171*(i/2),764+78*(i%2),513-169*(i/2));
+            }
+        }
         //基础窗口函数
         private void ClickToClose(object sender, RoutedEventArgs e)
         {
@@ -68,18 +77,7 @@ namespace Client
         {
             DragMove();
         }
-        private void Attack(object sender, RoutedEventArgs e)
-        {
-            MessageToServer msgJ = new MessageToServer();
-            msgJ.MessageType = MessageType.Attack;
-            msgJ.PlayerID = playerID;
-            msgJ.TeamID = teamID;
-            foreach (var i in playerData)
-            {
-                //待补充
-            }
-            communicator.SendMessage(msgJ);
-        }
+
         private void DrawMap()
         {
             for (int i = 0; i < defaultMap.GetLength(0); i++)
@@ -120,8 +118,20 @@ namespace Client
             }
             else
             {
-                isClientStocked = false;
-                PorC.Content = "⏸";
+                try
+                {
+                    if (communicator.Client.IsConnected)
+                    {
+                        isClientStocked = false;
+                        PorC.Content = "⏸";
+                    }
+                    else throw new Exception("Unconnected");
+                }
+                catch (Exception ex)
+                {
+                    ErrorDisplayer error = new("发生错误。以下是系统报告:\n" + ex.ToString());
+                    error.Show();
+                }
             }
         }
 
@@ -191,7 +201,7 @@ namespace Client
         }
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
-            if (!communicator.Client.IsConnected)
+            if (!communicator.Client.IsConnected)//第一次连接失败后第二次连接会出错
             {
                 try
                 {
@@ -283,7 +293,7 @@ namespace Client
                 }
                 catch (Exception exc)
                 {
-                    if (exc.Message == "Length<4")
+                    if (exc.Message == "Input data not sufficent")
                     {
                         ConnectRegister crg = new();
                         crg.State.Text = "配置非法，请重新输入或检查配置文件。";
@@ -294,15 +304,6 @@ namespace Client
                         ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
                         error.Show();
                         Connect.Background = Brushes.Aqua;
-                        if (communicator != null)
-                        {
-                            if (communicator.Client.IsConnected)
-                            {
-                                _ = communicator.Stop();
-                            }
-                            communicator.Dispose();
-                            communicator = null;
-                        }
                     }
                 }
             }
@@ -417,6 +418,7 @@ namespace Client
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
                                         if (obj.MessageOfCharacter.PlayerID == playerID && obj.MessageOfCharacter.TeamID == teamID)
                                             myInfo = obj;
+                                        StatusBars[obj.MessageOfCharacter.TeamID * 4 + obj.MessageOfCharacter.PlayerID].SetValue(obj.MessageOfCharacter);
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -437,6 +439,7 @@ namespace Client
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
                                         if (obj.MessageOfCharacter.PlayerID == playerID && obj.MessageOfCharacter.TeamID == teamID)
                                             myInfo = obj;
+                                        StatusBars[obj.MessageOfCharacter.TeamID * 4 + obj.MessageOfCharacter.PlayerID].SetValue(obj.MessageOfCharacter);
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -454,6 +457,7 @@ namespace Client
                                 switch (obj.ObjCase)
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
+                                        StatusBars[obj.MessageOfCharacter.TeamID * 4 + obj.MessageOfCharacter.PlayerID].SetValue(obj.MessageOfCharacter);
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -471,19 +475,16 @@ namespace Client
         }
         private bool CanSee(PlaceType obj, long guid)
         {
-            if (myInfo != null)
-            {
-                if (myInfo.MessageOfCharacter.Guid == guid)
-                    return true;
-                if (myInfo.MessageOfCharacter.Place == PlaceType.Invisible)  //灵界
-                    return false;
-                if (obj == PlaceType.Invisible)
-                    return false;
-                if (obj == PlaceType.Land)
-                    return true;
-                if (obj != myInfo.MessageOfCharacter.Place)
-                    return false;
-            }
+            if (myInfo.MessageOfCharacter.Guid == guid)
+                return true;
+            if (myInfo.MessageOfCharacter.Place == PlaceType.Invisible)  //灵界
+                return false;
+            if (obj == PlaceType.Invisible)
+                return false;
+            if (obj == PlaceType.Land)
+                return true;
+            if (obj != myInfo.MessageOfCharacter.Place)
+                return false;
             return true;
         }
         //定时器事件，刷新地图
@@ -529,7 +530,7 @@ namespace Client
                             //}
                             foreach (var data in playerData)
                             {
-                                if (CanSee(data.MessageOfCharacter.Place, data.MessageOfCharacter.Guid))
+                              //  if (CanSee(data.MessageOfCharacter.Place, data.MessageOfCharacter.Guid))
                                 {
                                     Ellipse icon = new Ellipse();
                                     icon.Width = 13;
@@ -543,7 +544,7 @@ namespace Client
                             }
                             foreach (var data in bulletData)
                             {
-                                if (CanSee(data.MessageOfBullet.Place, data.MessageOfBullet.Guid))
+                               // if (CanSee(data.MessageOfBullet.Place, data.MessageOfBullet.Guid))
                                 {
                                     Ellipse icon = new Ellipse();
                                     icon.Width = 10;
@@ -557,7 +558,7 @@ namespace Client
                             }
                             foreach (var data in propData)
                             {
-                                if (CanSee(data.MessageOfProp.Place, data.MessageOfProp.Guid))
+                              //  if (CanSee(data.MessageOfProp.Place, data.MessageOfProp.Guid))
                                 {
                                     if (data.MessageOfProp.Type == PropType.Gem)
                                     {
@@ -591,13 +592,16 @@ namespace Client
                     ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
                     error.Show();
                     isClientStocked = true;
-                    PorC.Content = "\\xfgg/";
+                    PorC.Content = "▶";
                 }
             }
+            counter++;
         }
         //定时器事件，刷新地图
         //以下为Mainwindow自定义属性
         private DispatcherTimer timer;//定时器
+        private Int64 counter;//预留的取时间变量
+        private StatusBar[] StatusBars = new StatusBar[8];
         private ClientCommunication communicator;
 
         private bool isClientStocked;
@@ -609,7 +613,7 @@ namespace Client
         private List<MessageToClient.Types.GameObjMessage> bulletData;
         private List<MessageToClient.Types.GameObjMessage> propData;
         private object drawPicLock = new object();
-        private MessageToClient.Types.GameObjMessage? myInfo;  //这个client自己的message
+        private MessageToClient.Types.GameObjMessage myInfo;  //这个client自己的message
 
         private Stack<string>? myMessages;
 
