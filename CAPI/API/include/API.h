@@ -5,7 +5,9 @@
 #include <string>
 #include <optional>
 #include <fstream>
-#include "Message2Server.pb.h"
+#include <Message2Server.pb.h>
+#include <Message2Clients.pb.h>
+#include <MessageType.pb.h>
 #include "state.h"
 
 
