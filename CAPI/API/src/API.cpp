@@ -462,3 +462,13 @@ int DebugAPI::GetFrameCount() const
     Out << "Call GetCounterOfFrames() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     return logic.GetCounter();
 }
+
+bool CanPick(THUAI5::PropType propType)
+{
+    return true;
+}
+
+bool CanUseActiveSkill(THUAI5::ActiveSkillType activeSkillType)
+{
+    return true;
+}

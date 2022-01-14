@@ -128,7 +128,7 @@ private:
     /// 处理信息Part3 初始化
     /// </summary>
     /// <param name=""></param>
-    void ProcessMessageToInitialize(std::shared_ptr<Protobuf::MessageToInitialize>);
+    // void ProcessMessageToInitialize(std::shared_ptr<Protobuf::MessageToInitialize>);
 
     /// <summary>
     /// 加载到buffer

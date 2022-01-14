@@ -138,8 +138,8 @@ namespace THUAI5
         PropType prop;                                  // 所持有的道具
         PlaceType place;                                // 人物所在位置
         BulletType bulletType;                          // 子弹类型
-        PassiveSkillType PassiveSkillType;              // 持有的被动技能 
-        ActiveSkillType ActiveSkillType;                // 持有的主动技能
+        PassiveSkillType passiveSkillType;              // 持有的被动技能 
+        ActiveSkillType activeSkillType;                // 持有的主动技能
     };
 
     /// <summary>
