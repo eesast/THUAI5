@@ -4,6 +4,8 @@
 #ifndef GOOGLE_PROTOBUF_INCLUDED_MessageType_2eproto
 #define GOOGLE_PROTOBUF_INCLUDED_MessageType_2eproto
 
+#define PROTOBUF_USE_DLLS
+
 #include <limits>
 #include <string>
 

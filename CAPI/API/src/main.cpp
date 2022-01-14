@@ -1,6 +1,7 @@
 #include <tclap/CmdLine.h>
-#include"../API/include/AI.h"
-#include"../API/include/logic.h"
+#include "../API/include/AI.h"
+#include "../API/include/logic.h"
+#include "../API/include/structures.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable:4996)
@@ -24,7 +25,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         TCLAP::ValueArg<std::string> serverIP("I", "serverIP", "Server`s IP 127.0.0.1 in default", false, "127.0.0.1", "string");
         cmd.add(serverIP);
 
-        TCLAP::ValueArg<uint16_t> serverPort("P", "serverPort", "Port the server listens to", true, 0, "USORT");
+        TCLAP::ValueArg<uint16_t> serverPort("P", "serverPort", "Port the server listens to 7777 in default", false, 7777, "USORT");
         cmd.add(serverPort);
 
         std::vector<int> validPlayerIDs{ 0, 1, 2, 3 };
@@ -50,12 +51,12 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         cmd.add(warning);
 
         cmd.parse(argc, argv);
-        extern const THUAI5::ActiveSkillType activeSkill; // Extern variable, actually defined in AI.cpp
-        extern const THUAI5::PassiveSkillType passiveSkill;
+        extern const THUAI5::ActiveSkillType playerActiveSkill; // Extern variable, actually defined in AI.cpp
+        extern const THUAI5::PassiveSkillType playerPassiveSkill;
         pID = playerID.getValue();
         tID = teamID.getValue();
-        aSkill = activeSkill;
-        pSkill = passiveSkill;
+        aSkill = playerActiveSkill;
+        pSkill = playerPassiveSkill;
         sIP = serverIP.getValue();
         sPort = serverPort.getValue();
 
@@ -73,6 +74,16 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         return 1;
     }
     Logic logic(tID, pID);
+    std::cout << "*******************basic info*******************" << std::endl;
+    std::cout << "server IP: " << sIP.c_str() << std::endl;
+    std::cout << "server port: " << sPort << std::endl;
+    std::cout << "team ID: " << tID << std::endl;
+    std::cout << "port ID: " << pID << std::endl;
+    std::cout << "active skill type: " << THUAI5::active_dict[aSkill] << std::endl;
+    std::cout << "passive skill type: " << THUAI5::passive_dict[pSkill] << std::endl;
+    std::cout << "debug level: " << level << std::endl;
+    std::cout << "file name: " << filename << std::endl;
+    std::cout << "************************************************" << std::endl;
     logic.Main(sIP.c_str(), sPort, pID, tID, aSkill, pSkill, AIBuilder, level, filename);
     return 0;
 }

@@ -41,7 +41,7 @@ private:
 
     std::unique_ptr<MultiThreadClientCommunication> pComm; // 通信组件指针
     std::unique_ptr<IAI> pAI; // 玩家指针
-    std::shared_ptr<IAPI> pAPI; // API指针
+    std::shared_ptr<IAPI_For_Logic> pAPI; // API指针
 
     std::thread tAI; // 需要对玩家单开线程 
 

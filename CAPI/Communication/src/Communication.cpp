@@ -76,7 +76,7 @@ namespace GameMessage
 		// 设置前四位为数据类型
 		for (int i = 0; i < 4; i++)
 		{
-			data[i] = (2 >> (8 * i)) & 0xff;
+			data[i] = (int(PacketType::MessageToServer) >> (8 * i)) & 0xff;
 		}
 		int msg_size = m2s.ByteSizeLong();
 		m2s.SerializeToArray(data + 4, msg_size);

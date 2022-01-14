@@ -17,5 +17,11 @@ namespace
 
 void AI::play(IAPI& api)
 {
-
+	api.MovePlayer(10, 10);
+	api.MovePlayer(10, 100);
+	api.MovePlayer(10, 190);
+	api.MovePlayer(10, 280);
+	std::cout << api.GetSelfInfo()->x << std::endl;
+	std::cout << api.GetSelfInfo()->y << std::endl;
+	api.Attack(10,90);
 }

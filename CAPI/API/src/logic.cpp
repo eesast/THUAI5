@@ -138,7 +138,7 @@ namespace Vision
         uint64_t distanceSquared = dx * dx + dy * dy;
         return distanceSquared <= Constants::Map::sightRadiusSquared;
     }
-} // 目前还没有引入草丛机制！
+}
 
 int Logic::GetCounter() const
 {
@@ -477,10 +477,13 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
     std::ofstream Out;
     if (debuglevel)
     {
-        Out.open(filename);
-        if (Out.fail())
+        if (filename != "")
         {
-            std::cerr << "Failed to open the file!" << std::endl;
+            Out.open(filename);
+            if (Out.fail())
+            {
+                std::cerr << "Failed to open the file!" << std::endl;
+            }
         }
         pAPI = std::make_unique<DebugAPI>(*this);
     }
@@ -496,7 +499,9 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
         if (!current_state_accessed)
         {
             current_state_accessed = true;
+            pAPI->StartTimer();
             pAI->play(*pAPI);
+            pAPI->EndTimer();
         }
         else
         {

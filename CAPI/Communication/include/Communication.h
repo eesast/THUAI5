@@ -69,7 +69,7 @@ private:
     /// <summary>
     /// 信息流的最大长度
     /// </summary>
-    static const constexpr int max_length = 1000;
+    static const constexpr int max_length = 500;
 
     /// <summary>
     /// tcp-client组件
@@ -88,7 +88,7 @@ public:
     /// <summary>
     /// 构造函数
     /// </summary>
-    ClientCommunication(ICommunication& comm):comm(comm) {}
+    ClientCommunication(ICommunication& comm):comm(comm), pclient(this) {}
 
     /// <summary>
     /// 连接server

@@ -22,6 +22,9 @@
     <ClInclude Include="include\Communication.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\proto\Message2Clients.pb.cc" />
+    <ClCompile Include="..\proto\Message2Server.pb.cc" />
+    <ClCompile Include="..\proto\MessageType.pb.cc" />
     <ClCompile Include="src\Communication.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

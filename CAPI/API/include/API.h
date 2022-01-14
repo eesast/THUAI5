@@ -49,25 +49,49 @@ public:
     virtual int GetCounter() const = 0;
 
     /// 获取信息（因为必须保证线程安全，所以必须在Logic类的内部实现这些接口）
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
-    [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
-    [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
-};
 
-/// <summary>
-/// API的时间记录接口
-/// </summary>
-class Itime
-{
-public:
-    virtual void StartTimer() = 0;
-    virtual void EndTimer() = 0;
-};
+    /// <summary>
+    /// 获取可视的人物信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
 
+    /// <summary>
+    /// 获取墙的信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
+
+    /// <summary>
+    /// 获取道具的信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
+
+    /// <summary>
+    /// 获取子弹的信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
+
+    /// <summary>
+    /// 获取自身信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
+
+    /// <summary>
+    /// 获取队伍分数
+    /// </summary>
+    /// <returns></returns>
+    virtual uint32_t GetTeamScore() const = 0;
+
+    /// <summary>
+    /// 获取场上玩家的GUID信息
+    /// </summary>
+    /// <returns></returns>
+    virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+};
 
 /// <summary>
 /// API通用接口，可派生为一般API和DebugAPI
@@ -125,12 +149,23 @@ protected:
 };
 
 /// <summary>
-/// 一般API
+/// 给Logic使用的IAPI接口，至于为什么这样写会在issue中解释
 /// </summary>
-class API final :public IAPI,public Itime
+class IAPI_For_Logic :public IAPI
 {
 public:
-    API(ILogic& logic) :IAPI(logic) {}
+    IAPI_For_Logic(ILogic& logic) :IAPI(logic) {}
+    virtual void StartTimer() = 0;
+    virtual void EndTimer() = 0;
+};
+
+/// <summary>
+/// 一般API
+/// </summary>
+class API final :public IAPI_For_Logic
+{
+public:
+    API(ILogic& logic) :IAPI_For_Logic(logic) {}
 
     //***********选手可执行的操作***********//
 
@@ -178,10 +213,10 @@ private:
     void EndTimer() override {}
 };
 
-class DebugAPI final :public IAPI,public Itime
+class DebugAPI final :public IAPI_For_Logic
 {
 public:
-    DebugAPI(ILogic& logic, std::ostream& Out = std::cout, bool ExamineValidity = true) :IAPI(logic), Out(Out), ExamineValidity(ExamineValidity) {}
+    DebugAPI(ILogic& logic, std::ostream& Out = std::cout, bool ExamineValidity = true) :IAPI_For_Logic(logic), Out(Out), ExamineValidity(ExamineValidity) {}
 
     //***********选手可执行的操作***********//
     // 移动
