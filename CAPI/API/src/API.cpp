@@ -463,12 +463,12 @@ int DebugAPI::GetFrameCount() const
     return logic.GetCounter();
 }
 
-bool CanPick(THUAI5::PropType propType)
+bool DebugAPI::CanPick(THUAI5::PropType propType)
 {
     return true;
 }
 
-bool CanUseActiveSkill(THUAI5::ActiveSkillType activeSkillType)
+bool DebugAPI::CanUseActiveSkill(THUAI5::ActiveSkillType activeSkillType)
 {
     return true;
 }

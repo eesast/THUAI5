@@ -373,3 +373,4 @@ CMakeFiles/
 *.so
 *.la
 capi
+*.so.5

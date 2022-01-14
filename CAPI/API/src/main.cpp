@@ -50,12 +50,12 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         cmd.add(warning);
 
         cmd.parse(argc, argv);
-        extern const THUAI5::ActiveSkillType activeSkill; // Extern variable, actually defined in AI.cpp
-        extern const THUAI5::PassiveSkillType passiveSkill;
+        extern const THUAI5::ActiveSkillType playerActiveSkill; // Extern variable, actually defined in AI.cpp
+        extern const THUAI5::PassiveSkillType playerPassiveSkill;
         pID = playerID.getValue();
         tID = teamID.getValue();
-        aSkill = activeSkill;
-        pSkill = passiveSkill;
+        aSkill = playerActiveSkill;
+        pSkill = playerPassiveSkill;
         sIP = serverIP.getValue();
         sPort = serverPort.getValue();
 
