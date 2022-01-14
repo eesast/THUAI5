@@ -204,8 +204,7 @@ namespace GameClass.GameObj
                                 {
                                     lock (mapObjListLock)
                                     {
-                                        //现在还有bug，添加出生点后，不知道为什么出生点的parent仍然是null，因此出生点始终被视为墙
-                                        //mapObjList.Add(new BirthPoint(GameData.GetCellCenterPos(i, j)));
+                                        mapObjList.Add(newBirthPoint);
                                     }
                                 }
                                 finally { mapObjListLock.ExitWriteLock(); }
