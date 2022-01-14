@@ -17,7 +17,7 @@ namespace Proto2THUAI
     std::shared_ptr<THUAI5::Character> Protobuf2THUAI5_C(const Protobuf::MessageOfCharacter& c)
     {
         std::shared_ptr<THUAI5::Character> character = std::make_shared<THUAI5::Character>();
-        character->ActiveSkillType = (THUAI5::ActiveSkillType)c.activeskilltype();
+        character->activeSkillType = (THUAI5::ActiveSkillType)c.activeskilltype();
         character->attackRange = c.attackrange();
         character->buff = (THUAI5::BuffType)c.buff();
         character->bulletNum = c.bulletnum();
@@ -29,7 +29,7 @@ namespace Proto2THUAI
         character->isResetting = c.isresetting();
         character->life = c.life();
         character->lifeNum = c.lifenum();
-        character->PassiveSkillType = (THUAI5::PassiveSkillType)c.passiveskilltype();
+        character->passiveSkillType = (THUAI5::PassiveSkillType)c.passiveskilltype();
         character->place = (THUAI5::PlaceType)c.place();
         character->playerID = c.playerid();
         character->prop = (THUAI5::PropType)c.prop();
@@ -260,9 +260,9 @@ void Logic::ProcessMessage(pointer_m2c p2m)
     case 1:
         ProcessMessageToOneClient(std::get<std::shared_ptr<Protobuf::MessageToOneClient>>(p2m));
         break;
-    case 2:
-        ProcessMessageToInitialize(std::get<std::shared_ptr<Protobuf::MessageToInitialize>>(p2m));
-        break;
+    // case 2:
+    //     ProcessMessageToInitialize(std::get<std::shared_ptr<Protobuf::MessageToInitialize>>(p2m));
+    //     break;
     default:
         std::cerr << "No info type matches std::variant!" << std::endl;
     }
