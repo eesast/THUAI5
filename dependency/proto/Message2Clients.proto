@@ -36,15 +36,10 @@ message MessageOfCharacter
     int32 CD=21;
     int32 lifeNum = 22;		//第几次复活
     int32 score=23;
-<<<<<<< HEAD
-    int64 ID=24;
-    int64 teamID=25;
-=======
     int64 teamID=24;
     int64 playerID=25;
     bool isInvisible=26;
 }
->>>>>>> 127c18da360d88ffb1bac452b359510fcb76b04e
 
 message MessageOfProp
 {
