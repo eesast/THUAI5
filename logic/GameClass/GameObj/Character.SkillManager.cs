@@ -41,8 +41,8 @@ namespace GameClass.GameObj
             this.score = 0;
             this.propInventory = null;
             this.buffManeger = new BuffManeger();
-            PassiveSkill pSkill;
-            CommonSkill cSkill;
+            IPassiveSkill pSkill;
+            ICommonSkill cSkill;
             switch (passiveSkillType)
             {
                 case PassiveSkillType.RecoverAfterBattle:

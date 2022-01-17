@@ -6,13 +6,13 @@ namespace GameClass.GameObj
 {
     public class GemWell : GameObj
     {
-        public GemWell(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell, PlaceType.Land)
+        public GemWell(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell / 2, PlaceType.Land)
         {
             this.CanMove = false;
             this.Type = GameObjType.GemWell;
         }
         public override bool IsRigid => false;
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj) => true;	//草丛不与任何东西碰撞
+        protected override bool IgnoreCollideExecutor(IGameObj targetObj) => true;	//宝石井不与任何东西碰撞
         public override ShapeType Shape => ShapeType.Square;
     }
 }

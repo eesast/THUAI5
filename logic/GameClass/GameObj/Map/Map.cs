@@ -11,25 +11,26 @@ namespace GameClass.GameObj
     {
         private readonly List<ICharacter> playerList;
         public List<ICharacter> PlayerList => playerList;
-
         private readonly ReaderWriterLockSlim playerListLock;
         public ReaderWriterLockSlim PlayerListLock => playerListLock;
 
         private readonly List<IObjOfCharacter> bulletList;
         public List<IObjOfCharacter> BulletList => bulletList;
-
         private readonly ReaderWriterLockSlim bulletListLock;
         public ReaderWriterLockSlim BulletListLock => bulletListLock;
 
+        private readonly List<IGameObj> mapObjList;
+        public List<IGameObj> MapObjList => mapObjList;
+        private readonly ReaderWriterLockSlim mapObjListLock;
+        public ReaderWriterLockSlim MapObjListLock => mapObjListLock;
+
         private readonly List<IObjOfCharacter> propList;
         public List<IObjOfCharacter> PropList => propList;
-
         private readonly ReaderWriterLockSlim propListLock;
         public ReaderWriterLockSlim PropListLock => propListLock;
 
         private readonly List<IObjOfCharacter> gemList;
         public List<IObjOfCharacter> GemList => gemList;
-
         private readonly ReaderWriterLockSlim gemListLock;
         public ReaderWriterLockSlim GemListLock => gemListLock;
 
@@ -147,10 +148,12 @@ namespace GameClass.GameObj
             playerList = new List<ICharacter>();
             propList = new List<IObjOfCharacter>();
             gemList = new List<IObjOfCharacter>();
+            mapObjList = new List<IGameObj>();
             bulletListLock = new ReaderWriterLockSlim();
             playerListLock = new ReaderWriterLockSlim();
             propListLock = new ReaderWriterLockSlim();
             gemListLock = new ReaderWriterLockSlim();
+            mapObjListLock = new ReaderWriterLockSlim();
 
             ProtoGameMap = new uint[mapResource.GetLength(0), mapResource.GetLength(1)];
             Array.Copy(mapResource, ProtoGameMap, mapResource.Length);
@@ -172,6 +175,19 @@ namespace GameClass.GameObj
                 {
                     switch (mapResource[i, j])
                     {
+                        case (uint)MapInfo.MapInfoObjType.Wall:
+                            {
+                                mapObjListLock.EnterWriteLock();
+                                try
+                                {
+                                    lock (mapObjListLock)
+                                    {
+                                        mapObjList.Add(new Wall(GameData.GetCellCenterPos(i, j)));
+                                    }
+                                }
+                                finally { mapObjListLock.ExitWriteLock(); }
+                                break;
+                            }
                         case (uint)MapInfo.MapInfoObjType.BirthPoint1:
                         case (uint)MapInfo.MapInfoObjType.BirthPoint2:
                         case (uint)MapInfo.MapInfoObjType.BirthPoint3:
@@ -181,8 +197,17 @@ namespace GameClass.GameObj
                         case (uint)MapInfo.MapInfoObjType.BirthPoint7:
                         case (uint)MapInfo.MapInfoObjType.BirthPoint8:
                             {
-                                BirthPoint newBirthPoint = new BirthPoint(new XYPosition(i * 1000, j * 1000));
+                                BirthPoint newBirthPoint = new BirthPoint(GameData.GetCellCenterPos(i, j));
                                 birthPointList.Add(MapInfo.BirthPointEnumToIdx((MapInfo.MapInfoObjType)mapResource[i, j]), newBirthPoint);
+                                mapObjListLock.EnterWriteLock();
+                                try
+                                {
+                                    lock (mapObjListLock)
+                                    {
+                                        mapObjList.Add(newBirthPoint);
+                                    }
+                                }
+                                finally { mapObjListLock.ExitWriteLock(); }
                                 break;
                             }
                     }

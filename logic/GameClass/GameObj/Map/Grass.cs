@@ -9,7 +9,7 @@ namespace GameClass.GameObj
     /// </summary>
     public abstract class Grass : GameObj
     {
-        public Grass(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell, PlaceType.Land)
+        public Grass(XYPosition initPos) : base(initPos, GameData.numOfPosGridPerCell / 2, PlaceType.Land)
         {
             this.CanMove = false;
             this.Type = GameObjType.Grass;
