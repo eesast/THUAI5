@@ -64,8 +64,8 @@ target_link_libraries(capi
     PUBLIC
         communication
         ${PROTOBUF_LIBRARY} 
-        ${PROJECT_SOURCE_DIR}/lib/so/libhpsocket_d.so
-        ${PROJECT_SOURCE_DIR}/lib/so/libhpsocket.so
+        ${PROJECT_SOURCE_DIR}/lib/so/libhpsocket_d.so.5
+        ${PROJECT_SOURCE_DIR}/lib/so/libhpsocket.so.5
         ${PROJECT_SOURCE_DIR}/lib/a/libhpsocket_d.a
         ${PROJECT_SOURCE_DIR}/lib/a/libhpsocket.a
 )
