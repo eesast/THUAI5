@@ -27,7 +27,7 @@ namespace Communication.ClientCommunication
             msgQueue = new BlockingCollection<IGameMessage>();
             client.OnReceive += delegate (IClient sender, byte[] bytes)
             {
-                Message message = new();
+                Message message = new Message();
                 message.Deserialize(bytes); // 解码信息
 
                 // 欢迎补充
@@ -40,7 +40,7 @@ namespace Communication.ClientCommunication
                     }
                     else if (m21c.MessageType == MessageType.InvalidPlayer)
                     {
-                        Exception exc = new("Invalid IDs! Check your input, or contact developers.");
+                        Exception exc = new Exception("Invalid IDs! Check your input, or contact developers.");
                         throw exc;
                     }
                     else if (m21c.MessageType == MessageType.Send)
@@ -87,7 +87,7 @@ namespace Communication.ClientCommunication
         /// <param name="msg"></param>
         public void SendMessage(MessageToServer msg)
         {
-            Message message = new();
+            Message message = new Message();
             message.Content = msg;
             message.PacketType = PacketType.MessageToServer;
             byte[] bytes;
@@ -102,7 +102,7 @@ namespace Communication.ClientCommunication
         {
             if (!client.Send(bytes, bytes.Length))
             {
-                Exception exc = new("failed to send to server.");
+                Exception exc = new Exception("failed to send to server.");
                 throw exc;
             }
         }
