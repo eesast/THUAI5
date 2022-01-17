@@ -3,7 +3,7 @@
  *
  * Author	: Bruce Liang
  * Website	: https://github.com/ldcsaa
- * Project	: https://github.com/ldcsaa/HP-Socket/HP-Socket
+ * Project	: https://github.com/ldcsaa/HP-Socket
  * Blog		: http://www.cnblogs.com/ldcsaa
  * Wiki		: http://www.oschina.net/p/hp-socket
  * QQ Group	: 44636872, 75375912
@@ -23,8 +23,6 @@
  
 #pragma once
 
-#include <winsock2.h>
-
 #include "HPTypeDef.h"
 
 /*****************************************************************************************************************************************************/
@@ -35,7 +33,27 @@
 名称：双接口模版类
 描述：定义双接口转换方法
 ************************************************************************/
+
+#if defined(__arm__) && defined(__GNUC__) && !(defined(__clang__) || defined(__llvm__))
+
+#define __DUAL_VPTR_GAP__	sizeof(PVOID)
+
+class __IFakeDualInterface__
+{
+public:
+	virtual ~__IFakeDualInterface__() {}
+};
+
+template<class F, class S> class DualInterface : public F, private __IFakeDualInterface__, public S
+
+#else
+
+#define __DUAL_VPTR_GAP__	0
+
 template<class F, class S> class DualInterface : public F, public S
+
+#endif
+
 {
 public:
 
@@ -66,17 +84,17 @@ public:
 	/* S* 转换为 F* */
 	inline static F* S2F(S* pS)
 	{
-		return (F*)((char*)pS - sizeof(F));
+		return (F*)((char*)pS - (sizeof(F) + __DUAL_VPTR_GAP__));
 	}
 
 	/* F* 转换为 S* */
 	inline static S* F2S(F* pF)
 	{
-		return (S*)((char*)pF + sizeof(F));
+		return (S*)((char*)pF + (sizeof(F) + __DUAL_VPTR_GAP__));
 	}
 
 public:
-	virtual ~DualInterface() {}
+	virtual ~DualInterface() = default;
 };
 
 /************************************************************************
@@ -239,9 +257,9 @@ public:
 
 	/* 设置地址重用选项 */
 	virtual void SetReuseAddressPolicy(EnReuseAddressPolicy enReusePolicy)		= 0;
-	/* 设置数据发送策略 */
+	/* 设置数据发送策略（对 Linux 平台组件无效） */
 	virtual void SetSendPolicy				(EnSendPolicy enSendPolicy)			= 0;
-	/* 设置 OnSend 事件同步策略（默认：OSSP_NONE，不同步） */
+	/* 设置 OnSend 事件同步策略（对 Linux 平台组件无效） */
 	virtual void SetOnSendSyncPolicy		(EnOnSendSyncPolicy enSyncPolicy)	= 0;
 	/* 设置最大连接数（组件会根据设置值预分配内存，因此需要根据实际情况设置，不宜过大）*/
 	virtual void SetMaxConnectionCount		(DWORD dwMaxConnectionCount)		= 0;
@@ -253,7 +271,7 @@ public:
 	virtual void SetFreeBufferObjPool		(DWORD dwFreeBufferObjPool)			= 0;
 	/* 设置 Socket 缓存池回收阀值（通常设置为 Socket 缓存池大小的 3 倍） */
 	virtual void SetFreeSocketObjHold		(DWORD dwFreeSocketObjHold)			= 0;
-	/* 设置内存块缓存池回收阀值 */
+	/* 设置内存块缓存池回收阀值（通常设置为内存块缓存池大小的 3 倍） */
 	virtual void SetFreeBufferObjHold		(DWORD dwFreeBufferObjHold)			= 0;
 	/* 设置工作线程数量（通常设置为 2 * CPU + 2） */
 	virtual void SetWorkerThreadCount		(DWORD dwWorkerThreadCount)			= 0;
@@ -262,9 +280,9 @@ public:
 
 	/* 获取地址重用选项 */
 	virtual EnReuseAddressPolicy GetReuseAddressPolicy	()	= 0;
-	/* 获取数据发送策略 */
+	/* 获取数据发送策略（对 Linux 平台组件无效） */
 	virtual EnSendPolicy GetSendPolicy					()	= 0;
-	/* 获取 OnSend 事件同步策略 */
+	/* 获取 OnSend 事件同步策略（对 Linux 平台组件无效） */
 	virtual EnOnSendSyncPolicy GetOnSendSyncPolicy		()	= 0;
 	/* 获取最大连接数 */
 	virtual DWORD GetMaxConnectionCount					()	= 0;
@@ -284,7 +302,7 @@ public:
 	virtual BOOL IsMarkSilence							()	= 0;
 
 public:
-	virtual ~IComplexSocket() {}
+	virtual ~IComplexSocket() = default;
 };
 
 /************************************************************************
@@ -352,7 +370,7 @@ public:
 	*			lpszPemKeyFile			-- 私钥文件
 	*			lpszKeyPassword			-- 私钥密码（没有密码则为空）
 	*			lpszCAPemCertFileOrPath	-- CA 证书文件或目录（单向验证或客户端可选）
-	*			fnServerNameCallback	-- SNI 回调函数指针（可选，如果为 nullptr 则使用 SNI 默认回调函数）
+	*			fnServerNameCallback	-- SNI 回调函数指针（可选）
 	*
 	* 返回值：	TRUE	-- 成功
 	*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
@@ -436,7 +454,7 @@ public:
 	* 返回值：	TRUE	-- 成功
 	*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
 	*/
-	virtual BOOL StartSSLHandShake(CONNID dwConnID)						= 0;
+	virtual BOOL StartSSLHandShake(CONNID dwConnID)								= 0;
 
 #endif
 
@@ -445,7 +463,7 @@ public:
 	/***********************************************************************/
 	/***************************** 属性访问方法 *****************************/
 
-	/* 设置 Accept 预投递数量（根据负载调整设置，Accept 预投递数量越大则支持的并发连接请求越多） */
+	/* 设置 EPOLL 等待事件的最大数量 */
 	virtual void SetAcceptSocketCount	(DWORD dwAcceptSocketCount)		= 0;
 	/* 设置通信数据缓冲区大小（根据平均通信数据包大小调整设置，通常设置为 1024 的倍数） */
 	virtual void SetSocketBufferSize	(DWORD dwSocketBufferSize)		= 0;
@@ -455,8 +473,10 @@ public:
 	virtual void SetKeepAliveTime		(DWORD dwKeepAliveTime)			= 0;
 	/* 设置异常心跳包间隔（毫秒，0 不发送心跳包，，默认：20 * 1000，如果超过若干次 [默认：WinXP 5 次, Win7 10 次] 检测不到心跳确认包则认为已断线） */
 	virtual void SetKeepAliveInterval	(DWORD dwKeepAliveInterval)		= 0;
+	/* 设置是否开启 nodelay 模式（默认：FALSE，不开启） */
+	virtual void SetNoDelay				(BOOL bNoDelay)					= 0;
 
-	/* 获取 Accept 预投递数量 */
+	/* 获取 EPOLL 等待事件的最大数量 */
 	virtual DWORD GetAcceptSocketCount	()	= 0;
 	/* 获取通信数据缓冲区大小 */
 	virtual DWORD GetSocketBufferSize	()	= 0;
@@ -466,7 +486,9 @@ public:
 	virtual DWORD GetKeepAliveTime		()	= 0;
 	/* 获取异常心跳包间隔 */
 	virtual DWORD GetKeepAliveInterval	()	= 0;
-	
+	/* 检查是否开启 nodelay 模式 */
+	virtual BOOL IsNoDelay				()	= 0;
+
 #ifdef _SSL_SUPPORT
 	/* 设置通信组件握手方式（默认：TRUE，自动握手） */
 	virtual void SetSSLAutoHandShake(BOOL bAutoHandShake)				= 0;
@@ -508,7 +530,7 @@ public:
 	/***********************************************************************/
 	/***************************** 属性访问方法 *****************************/
 
-	/* 设置数据报文最大长度（建议在局域网环境下不超过 1432 字节，在广域网环境下不超过 548 字节） */
+	/* 设置数据报文最大长度（建议在局域网环境下不超过 1472 字节，在广域网环境下不超过 548 字节） */
 	virtual void SetMaxDatagramSize		(DWORD dwMaxDatagramSize)	= 0;
 	/* 获取数据报文最大长度 */
 	virtual DWORD GetMaxDatagramSize	()							= 0;
@@ -594,7 +616,7 @@ public:
 	virtual BOOL GetWaitingSendMessageCount	(CONNID dwConnID, int& iCount)	= 0;
 
 public:
-	virtual ~IArqSocket() {}
+	virtual ~IArqSocket() = default;
 };
 
 /************************************************************************
@@ -641,6 +663,7 @@ public:
 	*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取错误代码
 	*/
 	virtual BOOL Connect(LPCTSTR lpszRemoteAddress, USHORT usPort, CONNID* pdwConnID = nullptr, PVOID pExtra = nullptr, USHORT usLocalPort = 0, LPCTSTR lpszLocalAddress = nullptr)	= 0;
+
 
 public:
 
@@ -717,7 +740,7 @@ public:
 	* 
 	* 返回值：无
 	*/
-	virtual void CleanupSSLContext()									= 0;
+	virtual void CleanupSSLContext()						= 0;
 
 	/*
 	* 名称：启动 SSL 握手
@@ -726,7 +749,7 @@ public:
 	* 返回值：	TRUE	-- 成功
 	*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
 	*/
-	virtual BOOL StartSSLHandShake(CONNID dwConnID)						= 0;
+	virtual BOOL StartSSLHandShake(CONNID dwConnID)			= 0;
 
 #endif
 
@@ -741,6 +764,8 @@ public:
 	virtual void SetKeepAliveTime		(DWORD dwKeepAliveTime)			= 0;
 	/* 设置异常心跳包间隔（毫秒，0 不发送心跳包，，默认：20 * 1000，如果超过若干次 [默认：WinXP 5 次, Win7 10 次] 检测不到心跳确认包则认为已断线） */
 	virtual void SetKeepAliveInterval	(DWORD dwKeepAliveInterval)		= 0;
+	/* 设置是否开启 nodelay 模式（默认：FALSE，不开启） */
+	virtual void SetNoDelay				(BOOL bNoDelay)					= 0;
 
 	/* 获取通信数据缓冲区大小 */
 	virtual DWORD GetSocketBufferSize	()	= 0;
@@ -748,6 +773,8 @@ public:
 	virtual DWORD GetKeepAliveTime		()	= 0;
 	/* 获取异常心跳包间隔 */
 	virtual DWORD GetKeepAliveInterval	()	= 0;
+	/* 检查是否开启 nodelay 模式 */
+	virtual BOOL IsNoDelay				()	= 0;
 
 #ifdef _SSL_SUPPORT
 	/* 设置通信组件握手方式（默认：TRUE，自动握手） */
@@ -888,20 +915,20 @@ public:
 
 	/* 设置地址重用选项 */
 	virtual void SetReuseAddressPolicy(EnReuseAddressPolicy enReusePolicy)						= 0;
-	/* 设置内存块缓存池大小 */
+	/* 设置内存块缓存池大小（通常设置为 -> PUSH 模型：5 - 10；PULL 模型：10 - 20 ） */
 	virtual void SetFreeBufferPoolSize		(DWORD dwFreeBufferPoolSize)						= 0;
-	/* 设置内存块缓存池回收阀值 */
+	/* 设置内存块缓存池回收阀值（通常设置为内存块缓存池大小的 3 倍） */
 	virtual void SetFreeBufferPoolHold		(DWORD dwFreeBufferPoolHold)						= 0;
 
 	/* 获取地址重用选项 */
-	virtual EnReuseAddressPolicy GetReuseAddressPolicy()										= 0;
+	virtual EnReuseAddressPolicy GetReuseAddressPolicy	()										= 0;
 	/* 获取内存块缓存池大小 */
-	virtual DWORD GetFreeBufferPoolSize		()													= 0;
+	virtual DWORD GetFreeBufferPoolSize					()										= 0;
 	/* 获取内存块缓存池回收阀值 */
-	virtual DWORD GetFreeBufferPoolHold		()													= 0;
+	virtual DWORD GetFreeBufferPoolHold					()										= 0;
 
 public:
-	virtual ~IClient() {}
+	virtual ~IClient() = default;
 };
 
 /************************************************************************
@@ -968,7 +995,7 @@ public:
 	* 
 	* 返回值：无
 	*/
-	virtual void CleanupSSLContext()					= 0;
+	virtual void CleanupSSLContext()	= 0;
 
 	/*
 	* 名称：启动 SSL 握手
@@ -977,7 +1004,7 @@ public:
 	* 返回值：	TRUE	-- 成功
 	*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
 	*/
-	virtual BOOL StartSSLHandShake()					= 0;
+	virtual BOOL StartSSLHandShake()	= 0;
 
 #endif
 
@@ -992,6 +1019,8 @@ public:
 	virtual void SetKeepAliveTime		(DWORD dwKeepAliveTime)		= 0;
 	/* 设置异常心跳包间隔（毫秒，0 不发送心跳包，，默认：20 * 1000，如果超过若干次 [默认：WinXP 5 次, Win7 10 次] 检测不到心跳确认包则认为已断线） */
 	virtual void SetKeepAliveInterval	(DWORD dwKeepAliveInterval)	= 0;
+	/* 设置是否开启 nodelay 模式（默认：FALSE，不开启） */
+	virtual void SetNoDelay				(BOOL bNoDelay)				= 0;
 
 	/* 获取通信数据缓冲区大小 */
 	virtual DWORD GetSocketBufferSize	()	= 0;
@@ -999,6 +1028,8 @@ public:
 	virtual DWORD GetKeepAliveTime		()	= 0;
 	/* 获取异常心跳包间隔 */
 	virtual DWORD GetKeepAliveInterval	()	= 0;
+	/* 检查是否开启 nodelay 模式 */
+	virtual BOOL IsNoDelay				()	= 0;
 
 #ifdef _SSL_SUPPORT
 	/* 设置通信组件握手方式（默认：TRUE，自动握手） */
@@ -1041,7 +1072,7 @@ public:
 	/***********************************************************************/
 	/***************************** 属性访问方法 *****************************/
 
-	/* 设置数据报文最大长度（建议在局域网环境下不超过 1432 字节，在广域网环境下不超过 548 字节） */
+	/* 设置数据报文最大长度（建议在局域网环境下不超过 1472 字节，在广域网环境下不超过 548 字节） */
 	virtual void SetMaxDatagramSize	(DWORD dwMaxDatagramSize)	= 0;
 	/* 获取数据报文最大长度 */
 	virtual DWORD GetMaxDatagramSize()							= 0;
@@ -1072,7 +1103,7 @@ public:
 	/***********************************************************************/
 	/***************************** 属性访问方法 *****************************/
 
-	/* 设置数据报文最大长度（建议在局域网环境下不超过 1432 字节，在广域网环境下不超过 548 字节） */
+	/* 设置数据报文最大长度（建议在局域网环境下不超过 1472 字节，在广域网环境下不超过 548 字节） */
 	virtual void SetMaxDatagramSize	(DWORD dwMaxDatagramSize)		= 0;
 	/* 获取数据报文最大长度 */
 	virtual DWORD GetMaxDatagramSize()								= 0;
@@ -1252,11 +1283,11 @@ public:
 	virtual DWORD GetPostReceiveCount	()									= 0;
 	/* 获取内存块缓存池大小 */
 	virtual DWORD GetFreeBufferPoolSize	()									= 0;
-	/* 获取内存块缓存池回收阀值 */
+	/* 获取内存块缓存池回收阀值 */	
 	virtual DWORD GetFreeBufferPoolHold	()									= 0;
 
 public:
-	virtual ~IUdpNode() {}
+	virtual ~IUdpNode() = default;
 };
 
 /************************************************************************
@@ -1325,7 +1356,7 @@ public:
 	virtual BOOL GetWaitingSendMessageCount	(int& iCount)			= 0;
 
 public:
-	virtual ~IArqClient() {}
+	virtual ~IArqClient() = default;
 };
 
 /************************************************************************
@@ -1367,7 +1398,7 @@ public:
 	virtual EnFetchResult Peek	(CONNID dwConnID, BYTE* pData, int iLength)	= 0;
 
 public:
-	virtual ~IPullSocket() {}
+	virtual ~IPullSocket() = default;
 };
 
 /************************************************************************
@@ -1399,7 +1430,7 @@ public:
 	virtual EnFetchResult Peek	(BYTE* pData, int iLength)	= 0;
 
 public:
-	virtual ~IPullClient() {}
+	virtual ~IPullClient() = default;
 };
 
 /************************************************************************
@@ -1432,7 +1463,7 @@ public:
 	virtual USHORT GetPackHeaderFlag()								= 0;
 
 public:
-	virtual ~IPackSocket() {}
+	virtual ~IPackSocket() = default;
 };
 
 /************************************************************************
@@ -1457,7 +1488,7 @@ public:
 	virtual USHORT GetPackHeaderFlag()								= 0;
 
 public:
-	virtual ~IPackClient() {}
+	virtual ~IPackClient() = default;
 };
 
 /************************************************************************
@@ -1539,7 +1570,7 @@ public:
 	virtual EnHandleResult OnClose(T* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)	= 0;
 
 public:
-	virtual ~ISocketListenerT() {}
+	virtual ~ISocketListenerT() = default;
 };
 
 template<class T> class IComplexSocketListenerT : public ISocketListenerT<T>
@@ -1551,7 +1582,7 @@ public:
 	* 描述：通信组件关闭时，Socket 监听器将收到该通知
 	*		
 	* 参数：		pSender		-- 事件源对象
-	* 返回值：	忽略返回值
+	* 返回值：忽略返回值
 	*/
 	virtual EnHandleResult OnShutdown(T* pSender)																= 0;
 
@@ -1608,12 +1639,12 @@ public:
 class CTcpServerListener : public ITcpServerListener
 {
 public:
-	virtual EnHandleResult OnPrepareListen(ITcpServer* pSender, SOCKET soListen)							{return HR_IGNORE;}
-	virtual EnHandleResult OnAccept(ITcpServer* pSender, CONNID dwConnID, UINT_PTR soClient)				{return HR_IGNORE;}
-	virtual EnHandleResult OnHandShake(ITcpServer* pSender, CONNID dwConnID)								{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, int iLength)						{return HR_IGNORE;}
-	virtual EnHandleResult OnSend(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		{return HR_IGNORE;}
-	virtual EnHandleResult OnShutdown(ITcpServer* pSender)													{return HR_IGNORE;}
+	virtual EnHandleResult OnPrepareListen(ITcpServer* pSender, SOCKET soListen)							override {return HR_IGNORE;}
+	virtual EnHandleResult OnAccept(ITcpServer* pSender, CONNID dwConnID, UINT_PTR soClient)				override {return HR_IGNORE;}
+	virtual EnHandleResult OnHandShake(ITcpServer* pSender, CONNID dwConnID)								override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, int iLength)						override {return HR_IGNORE;}
+	virtual EnHandleResult OnSend(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		override {return HR_IGNORE;}
+	virtual EnHandleResult OnShutdown(ITcpServer* pSender)													override {return HR_IGNORE;}
 };
 
 /************************************************************************
@@ -1623,8 +1654,8 @@ public:
 class CTcpPullServerListener : public CTcpServerListener
 {
 public:
-	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, int iLength)						= 0;
-	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)	{return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, int iLength)						override = 0;
+	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)	override {return HR_IGNORE;}
 };
 
 #ifdef _UDP_SUPPORT
@@ -1646,12 +1677,12 @@ public:
 class CUdpServerListener : public IUdpServerListener
 {
 public:
-	virtual EnHandleResult OnPrepareListen(IUdpServer* pSender, SOCKET soListen)						{return HR_IGNORE;}
-	virtual EnHandleResult OnAccept(IUdpServer* pSender, CONNID dwConnID, UINT_PTR pSockAddr)			{return HR_IGNORE;}
-	virtual EnHandleResult OnHandShake(IUdpServer* pSender, CONNID dwConnID)							{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(IUdpServer* pSender, CONNID dwConnID, int iLength)					{return HR_IGNORE;}
-	virtual EnHandleResult OnSend(IUdpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)	{return HR_IGNORE;}
-	virtual EnHandleResult OnShutdown(IUdpServer* pSender)												{return HR_IGNORE;}
+	virtual EnHandleResult OnPrepareListen(IUdpServer* pSender, SOCKET soListen)						override {return HR_IGNORE;}
+	virtual EnHandleResult OnAccept(IUdpServer* pSender, CONNID dwConnID, UINT_PTR pSockAddr)			override {return HR_IGNORE;}
+	virtual EnHandleResult OnHandShake(IUdpServer* pSender, CONNID dwConnID)							override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(IUdpServer* pSender, CONNID dwConnID, int iLength)					override {return HR_IGNORE;}
+	virtual EnHandleResult OnSend(IUdpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)	override {return HR_IGNORE;}
+	virtual EnHandleResult OnShutdown(IUdpServer* pSender)												override {return HR_IGNORE;}
 };
 
 #endif
@@ -1707,12 +1738,12 @@ public:
 class CTcpAgentListener : public ITcpAgentListener
 {
 public:
-	virtual EnHandleResult OnPrepareConnect(ITcpAgent* pSender, CONNID dwConnID, SOCKET socket)				{return HR_IGNORE;}
-	virtual EnHandleResult OnConnect(ITcpAgent* pSender, CONNID dwConnID)									{return HR_IGNORE;}
-	virtual EnHandleResult OnHandShake(ITcpAgent* pSender, CONNID dwConnID)									{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(ITcpAgent* pSender, CONNID dwConnID, int iLength)						{return HR_IGNORE;}
-	virtual EnHandleResult OnSend(ITcpAgent* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		{return HR_IGNORE;}
-	virtual EnHandleResult OnShutdown(ITcpAgent* pSender)													{return HR_IGNORE;}
+	virtual EnHandleResult OnPrepareConnect(ITcpAgent* pSender, CONNID dwConnID, SOCKET socket)				override {return HR_IGNORE;}
+	virtual EnHandleResult OnConnect(ITcpAgent* pSender, CONNID dwConnID)									override {return HR_IGNORE;}
+	virtual EnHandleResult OnHandShake(ITcpAgent* pSender, CONNID dwConnID)									override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpAgent* pSender, CONNID dwConnID, int iLength)						override {return HR_IGNORE;}
+	virtual EnHandleResult OnSend(ITcpAgent* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		override {return HR_IGNORE;}
+	virtual EnHandleResult OnShutdown(ITcpAgent* pSender)													override {return HR_IGNORE;}
 };
 
 /************************************************************************
@@ -1722,8 +1753,8 @@ public:
 class CTcpPullAgentListener : public CTcpAgentListener
 {
 public:
-	virtual EnHandleResult OnReceive(ITcpAgent* pSender, CONNID dwConnID, int iLength)						= 0;
-	virtual EnHandleResult OnReceive(ITcpAgent* pSender, CONNID dwConnID, const BYTE* pData, int iLength)	{return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpAgent* pSender, CONNID dwConnID, int iLength)						override = 0;
+	virtual EnHandleResult OnReceive(ITcpAgent* pSender, CONNID dwConnID, const BYTE* pData, int iLength)	override {return HR_IGNORE;}
 };
 
 /************************************************************************
@@ -1778,11 +1809,11 @@ public:
 class CTcpClientListener : public ITcpClientListener
 {
 public:
-	virtual EnHandleResult OnPrepareConnect(ITcpClient* pSender, CONNID dwConnID, SOCKET socket)			{return HR_IGNORE;}
-	virtual EnHandleResult OnConnect(ITcpClient* pSender, CONNID dwConnID)									{return HR_IGNORE;}
-	virtual EnHandleResult OnHandShake(ITcpClient* pSender, CONNID dwConnID)								{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(ITcpClient* pSender, CONNID dwConnID, int iLength)						{return HR_IGNORE;}
-	virtual EnHandleResult OnSend(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		{return HR_IGNORE;}
+	virtual EnHandleResult OnPrepareConnect(ITcpClient* pSender, CONNID dwConnID, SOCKET socket)			override {return HR_IGNORE;}
+	virtual EnHandleResult OnConnect(ITcpClient* pSender, CONNID dwConnID)									override {return HR_IGNORE;}
+	virtual EnHandleResult OnHandShake(ITcpClient* pSender, CONNID dwConnID)								override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpClient* pSender, CONNID dwConnID, int iLength)						override {return HR_IGNORE;}
+	virtual EnHandleResult OnSend(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		override {return HR_IGNORE;}
 };
 
 /************************************************************************
@@ -1815,11 +1846,11 @@ public:
 class CUdpClientListener : public IUdpClientListener
 {
 public:
-	virtual EnHandleResult OnPrepareConnect(IUdpClient* pSender, CONNID dwConnID, SOCKET socket)			{return HR_IGNORE;}
-	virtual EnHandleResult OnConnect(IUdpClient* pSender, CONNID dwConnID)									{return HR_IGNORE;}
-	virtual EnHandleResult OnHandShake(IUdpClient* pSender, CONNID dwConnID)								{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(IUdpClient* pSender, CONNID dwConnID, int iLength)						{return HR_IGNORE;}
-	virtual EnHandleResult OnSend(IUdpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		{return HR_IGNORE;}
+	virtual EnHandleResult OnPrepareConnect(IUdpClient* pSender, CONNID dwConnID, SOCKET socket)			override {return HR_IGNORE;}
+	virtual EnHandleResult OnConnect(IUdpClient* pSender, CONNID dwConnID)									override {return HR_IGNORE;}
+	virtual EnHandleResult OnHandShake(IUdpClient* pSender, CONNID dwConnID)								override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(IUdpClient* pSender, CONNID dwConnID, int iLength)						override {return HR_IGNORE;}
+	virtual EnHandleResult OnSend(IUdpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		override {return HR_IGNORE;}
 };
 
 /************************************************************************
@@ -1839,11 +1870,11 @@ public:
 class CUdpCastListener : public IUdpCastListener
 {
 public:
-	virtual EnHandleResult OnPrepareConnect(IUdpCast* pSender, CONNID dwConnID, SOCKET socket)				{return HR_IGNORE;}
-	virtual EnHandleResult OnConnect(IUdpCast* pSender, CONNID dwConnID)									{return HR_IGNORE;}
-	virtual EnHandleResult OnHandShake(IUdpCast* pSender, CONNID dwConnID)									{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(IUdpCast* pSender, CONNID dwConnID, int iLength)						{return HR_IGNORE;}
-	virtual EnHandleResult OnSend(IUdpCast* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		{return HR_IGNORE;}
+	virtual EnHandleResult OnPrepareConnect(IUdpCast* pSender, CONNID dwConnID, SOCKET socket)				override {return HR_IGNORE;}
+	virtual EnHandleResult OnConnect(IUdpCast* pSender, CONNID dwConnID)									override {return HR_IGNORE;}
+	virtual EnHandleResult OnHandShake(IUdpCast* pSender, CONNID dwConnID)									override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(IUdpCast* pSender, CONNID dwConnID, int iLength)						override {return HR_IGNORE;}
+	virtual EnHandleResult OnSend(IUdpCast* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		override {return HR_IGNORE;}
 };
 
 /************************************************************************
@@ -1917,7 +1948,7 @@ public:
 	virtual EnHandleResult OnShutdown(IUdpNode* pSender)																				= 0;
 
 public:
-	virtual ~IUdpNodeListener() {}
+	virtual ~IUdpNodeListener() = default;
 };
 
 /************************************************************************
@@ -1927,9 +1958,9 @@ public:
 class CUdpNodeListener : public IUdpNodeListener
 {
 public:
-	virtual EnHandleResult OnPrepareListen(IUdpNode* pSender, SOCKET soListen)															{return HR_IGNORE;}
-	virtual EnHandleResult OnSend(IUdpNode* pSender, LPCTSTR lpszRemoteAddress, USHORT usRemotePort, const BYTE* pData, int iLength)	{return HR_IGNORE;}
-	virtual EnHandleResult OnShutdown(IUdpNode* pSender)																				{return HR_IGNORE;}
+	virtual EnHandleResult OnPrepareListen(IUdpNode* pSender, SOCKET soListen)															override {return HR_IGNORE;}
+	virtual EnHandleResult OnSend(IUdpNode* pSender, LPCTSTR lpszRemoteAddress, USHORT usRemotePort, const BYTE* pData, int iLength)	override {return HR_IGNORE;}
+	virtual EnHandleResult OnShutdown(IUdpNode* pSender)																				override {return HR_IGNORE;}
 };
 
 #endif
@@ -2034,7 +2065,7 @@ public:
 	virtual BOOL IsHttpAutoStart()																	= 0;
 
 public:
-	virtual ~IComplexHttp() {}
+	virtual ~IComplexHttp() = default;
 };
 
 /************************************************************************
@@ -2083,7 +2114,7 @@ public:
 	* 返回值：	TRUE			-- 成功
 	*			FALSE			-- 失败
 	*/
-	virtual BOOL SendRequest(CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszPath, const THeader lpHeaders[] = nullptr, int iHeaderCount = 0, const BYTE* pBody = nullptr, int iLength = 0)				= 0;
+	virtual BOOL SendRequest(CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszPath, const THeader lpHeaders[] = nullptr, int iHeaderCount = 0, const BYTE* pBody = nullptr, int iLength = 0)	= 0;
 
 	/*
 	* 名称：发送本地文件
@@ -2162,7 +2193,7 @@ public:
 	* 返回值：	TRUE			-- 成功
 	*			FALSE			-- 失败
 	*/
-	virtual BOOL SendWSMessage(CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE* pData = nullptr, int iLength = 0, ULONGLONG ullBodyLen = 0)	= 0;
+	virtual BOOL SendWSMessage(CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE* pData, int iLength = 0, ULONGLONG ullBodyLen = 0)	= 0;
 
 	/*
 	* 名称：回复请求
@@ -2342,7 +2373,7 @@ public:
 	virtual BOOL IsHttpAutoStart()													= 0;
 
 public:
-	virtual ~IHttp() {}
+	virtual ~IHttp() = default;
 };
 
 /************************************************************************
@@ -2666,7 +2697,7 @@ public:
 	virtual EnHandleResult OnWSMessageComplete(T* pSender, CONNID dwConnID)										= 0;
 
 public:
-	virtual ~IHttpListenerT() {}
+	virtual ~IHttpListenerT() = default;
 };
 
 /************************************************************************
@@ -2706,25 +2737,25 @@ public:
 class CHttpServerListener : public IHttpServerListener
 {
 public:
-	virtual EnHandleResult OnPrepareListen(ITcpServer* pSender, SOCKET soListen)										{return HR_IGNORE;}
-	virtual EnHandleResult OnAccept(ITcpServer* pSender, CONNID dwConnID, UINT_PTR soClient)							{return HR_IGNORE;}
-	virtual EnHandleResult OnHandShake(ITcpServer* pSender, CONNID dwConnID)											{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, int iLength)									{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)				{return HR_IGNORE;}
-	virtual EnHandleResult OnSend(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)					{return HR_IGNORE;}
-	virtual EnHandleResult OnShutdown(ITcpServer* pSender)																{return HR_IGNORE;}
+	virtual EnHandleResult OnPrepareListen(ITcpServer* pSender, SOCKET soListen)										override {return HR_IGNORE;}
+	virtual EnHandleResult OnAccept(ITcpServer* pSender, CONNID dwConnID, UINT_PTR soClient)							override {return HR_IGNORE;}
+	virtual EnHandleResult OnHandShake(ITcpServer* pSender, CONNID dwConnID)											override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, int iLength)									override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)				override {return HR_IGNORE;}
+	virtual EnHandleResult OnSend(ITcpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)					override {return HR_IGNORE;}
+	virtual EnHandleResult OnShutdown(ITcpServer* pSender)																override {return HR_IGNORE;}
 
-	virtual EnHttpParseResult OnMessageBegin(IHttpServer* pSender, CONNID dwConnID)										{return HPR_OK;}
-	virtual EnHttpParseResult OnRequestLine(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszUrl)	{return HPR_OK;}
-	virtual EnHttpParseResult OnStatusLine(IHttpServer* pSender, CONNID dwConnID, USHORT usStatusCode, LPCSTR lpszDesc)	{return HPR_OK;}
-	virtual EnHttpParseResult OnHeader(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszName, LPCSTR lpszValue)		{return HPR_OK;}
-	virtual EnHttpParseResult OnChunkHeader(IHttpServer* pSender, CONNID dwConnID, int iLength)							{return HPR_OK;}
-	virtual EnHttpParseResult OnChunkComplete(IHttpServer* pSender, CONNID dwConnID)									{return HPR_OK;}
-	virtual EnHttpParseResult OnUpgrade(IHttpServer* pSender, CONNID dwConnID, EnHttpUpgradeType enUpgradeType)			{return HPR_OK;}
+	virtual EnHttpParseResult OnMessageBegin(IHttpServer* pSender, CONNID dwConnID)										override {return HPR_OK;}
+	virtual EnHttpParseResult OnRequestLine(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszUrl)	override {return HPR_OK;}
+	virtual EnHttpParseResult OnStatusLine(IHttpServer* pSender, CONNID dwConnID, USHORT usStatusCode, LPCSTR lpszDesc)	override {return HPR_OK;}
+	virtual EnHttpParseResult OnHeader(IHttpServer* pSender, CONNID dwConnID, LPCSTR lpszName, LPCSTR lpszValue)		override {return HPR_OK;}
+	virtual EnHttpParseResult OnChunkHeader(IHttpServer* pSender, CONNID dwConnID, int iLength)							override {return HPR_OK;}
+	virtual EnHttpParseResult OnChunkComplete(IHttpServer* pSender, CONNID dwConnID)									override {return HPR_OK;}
+	virtual EnHttpParseResult OnUpgrade(IHttpServer* pSender, CONNID dwConnID, EnHttpUpgradeType enUpgradeType)			override {return HPR_OK;}
 
-	virtual EnHandleResult OnWSMessageHeader(IHttpServer* pSender, CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE lpszMask[4], ULONGLONG ullBodyLen)	{return HR_IGNORE;}
-	virtual EnHandleResult OnWSMessageBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		{return HR_IGNORE;}
-	virtual EnHandleResult OnWSMessageComplete(IHttpServer* pSender, CONNID dwConnID)									{return HR_IGNORE;}
+	virtual EnHandleResult OnWSMessageHeader(IHttpServer* pSender, CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE lpszMask[4], ULONGLONG ullBodyLen)	override {return HR_IGNORE;}
+	virtual EnHandleResult OnWSMessageBody(IHttpServer* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		override {return HR_IGNORE;}
+	virtual EnHandleResult OnWSMessageComplete(IHttpServer* pSender, CONNID dwConnID)									override {return HR_IGNORE;}
 };
 
 /************************************************************************
@@ -2734,25 +2765,25 @@ public:
 class CHttpAgentListener : public IHttpAgentListener
 {
 public:
-	virtual EnHandleResult OnPrepareConnect(ITcpAgent* pSender, CONNID dwConnID, SOCKET socket)							{return HR_IGNORE;}
-	virtual EnHandleResult OnConnect(ITcpAgent* pSender, CONNID dwConnID)												{return HR_IGNORE;}
-	virtual EnHandleResult OnHandShake(ITcpAgent* pSender, CONNID dwConnID)												{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(ITcpAgent* pSender, CONNID dwConnID, int iLength)									{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(ITcpAgent* pSender, CONNID dwConnID, const BYTE* pData, int iLength)				{return HR_IGNORE;}
-	virtual EnHandleResult OnSend(ITcpAgent* pSender, CONNID dwConnID, const BYTE* pData, int iLength)					{return HR_IGNORE;}
-	virtual EnHandleResult OnShutdown(ITcpAgent* pSender)																{return HR_IGNORE;}
+	virtual EnHandleResult OnPrepareConnect(ITcpAgent* pSender, CONNID dwConnID, SOCKET socket)							override {return HR_IGNORE;}
+	virtual EnHandleResult OnConnect(ITcpAgent* pSender, CONNID dwConnID)												override {return HR_IGNORE;}
+	virtual EnHandleResult OnHandShake(ITcpAgent* pSender, CONNID dwConnID)												override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpAgent* pSender, CONNID dwConnID, int iLength)									override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpAgent* pSender, CONNID dwConnID, const BYTE* pData, int iLength)				override {return HR_IGNORE;}
+	virtual EnHandleResult OnSend(ITcpAgent* pSender, CONNID dwConnID, const BYTE* pData, int iLength)					override {return HR_IGNORE;}
+	virtual EnHandleResult OnShutdown(ITcpAgent* pSender)																override {return HR_IGNORE;}
 
-	virtual EnHttpParseResult OnMessageBegin(IHttpAgent* pSender, CONNID dwConnID)										{return HPR_OK;}
-	virtual EnHttpParseResult OnRequestLine(IHttpAgent* pSender, CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszUrl)	{return HPR_OK;}
-	virtual EnHttpParseResult OnStatusLine(IHttpAgent* pSender, CONNID dwConnID, USHORT usStatusCode, LPCSTR lpszDesc)	{return HPR_OK;}
-	virtual EnHttpParseResult OnHeader(IHttpAgent* pSender, CONNID dwConnID, LPCSTR lpszName, LPCSTR lpszValue)			{return HPR_OK;}
-	virtual EnHttpParseResult OnChunkHeader(IHttpAgent* pSender, CONNID dwConnID, int iLength)							{return HPR_OK;}
-	virtual EnHttpParseResult OnChunkComplete(IHttpAgent* pSender, CONNID dwConnID)										{return HPR_OK;}
-	virtual EnHttpParseResult OnUpgrade(IHttpAgent* pSender, CONNID dwConnID, EnHttpUpgradeType enUpgradeType)			{return HPR_OK;}
+	virtual EnHttpParseResult OnMessageBegin(IHttpAgent* pSender, CONNID dwConnID)										override {return HPR_OK;}
+	virtual EnHttpParseResult OnRequestLine(IHttpAgent* pSender, CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszUrl)	override {return HPR_OK;}
+	virtual EnHttpParseResult OnStatusLine(IHttpAgent* pSender, CONNID dwConnID, USHORT usStatusCode, LPCSTR lpszDesc)	override {return HPR_OK;}
+	virtual EnHttpParseResult OnHeader(IHttpAgent* pSender, CONNID dwConnID, LPCSTR lpszName, LPCSTR lpszValue)			override {return HPR_OK;}
+	virtual EnHttpParseResult OnChunkHeader(IHttpAgent* pSender, CONNID dwConnID, int iLength)							override {return HPR_OK;}
+	virtual EnHttpParseResult OnChunkComplete(IHttpAgent* pSender, CONNID dwConnID)										override {return HPR_OK;}
+	virtual EnHttpParseResult OnUpgrade(IHttpAgent* pSender, CONNID dwConnID, EnHttpUpgradeType enUpgradeType)			override {return HPR_OK;}
 
-	virtual EnHandleResult OnWSMessageHeader(IHttpAgent* pSender, CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE lpszMask[4], ULONGLONG ullBodyLen)	{return HR_IGNORE;}
-	virtual EnHandleResult OnWSMessageBody(IHttpAgent* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		{return HR_IGNORE;}
-	virtual EnHandleResult OnWSMessageComplete(IHttpAgent* pSender, CONNID dwConnID)									{return HR_IGNORE;}
+	virtual EnHandleResult OnWSMessageHeader(IHttpAgent* pSender, CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE lpszMask[4], ULONGLONG ullBodyLen)	override {return HR_IGNORE;}
+	virtual EnHandleResult OnWSMessageBody(IHttpAgent* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		override {return HR_IGNORE;}
+	virtual EnHandleResult OnWSMessageComplete(IHttpAgent* pSender, CONNID dwConnID)									override {return HR_IGNORE;}
 };
 
 /************************************************************************
@@ -2763,24 +2794,24 @@ public:
 class CHttpClientListener : public IHttpClientListener
 {
 public:
-	virtual EnHandleResult OnPrepareConnect(ITcpClient* pSender, CONNID dwConnID, SOCKET socket)						{return HR_IGNORE;}
-	virtual EnHandleResult OnConnect(ITcpClient* pSender, CONNID dwConnID)												{return HR_IGNORE;}
-	virtual EnHandleResult OnHandShake(ITcpClient* pSender, CONNID dwConnID)											{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(ITcpClient* pSender, CONNID dwConnID, int iLength)									{return HR_IGNORE;}
-	virtual EnHandleResult OnReceive(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)				{return HR_IGNORE;}
-	virtual EnHandleResult OnSend(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)					{return HR_IGNORE;}
+	virtual EnHandleResult OnPrepareConnect(ITcpClient* pSender, CONNID dwConnID, SOCKET socket)						override {return HR_IGNORE;}
+	virtual EnHandleResult OnConnect(ITcpClient* pSender, CONNID dwConnID)												override {return HR_IGNORE;}
+	virtual EnHandleResult OnHandShake(ITcpClient* pSender, CONNID dwConnID)											override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpClient* pSender, CONNID dwConnID, int iLength)									override {return HR_IGNORE;}
+	virtual EnHandleResult OnReceive(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)				override {return HR_IGNORE;}
+	virtual EnHandleResult OnSend(ITcpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)					override {return HR_IGNORE;}
 
-	virtual EnHttpParseResult OnMessageBegin(IHttpClient* pSender, CONNID dwConnID)										{return HPR_OK;}
-	virtual EnHttpParseResult OnRequestLine(IHttpClient* pSender, CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszUrl)	{return HPR_OK;}
-	virtual EnHttpParseResult OnStatusLine(IHttpClient* pSender, CONNID dwConnID, USHORT usStatusCode, LPCSTR lpszDesc)	{return HPR_OK;}
-	virtual EnHttpParseResult OnHeader(IHttpClient* pSender, CONNID dwConnID, LPCSTR lpszName, LPCSTR lpszValue)		{return HPR_OK;}
-	virtual EnHttpParseResult OnChunkHeader(IHttpClient* pSender, CONNID dwConnID, int iLength)							{return HPR_OK;}
-	virtual EnHttpParseResult OnChunkComplete(IHttpClient* pSender, CONNID dwConnID)									{return HPR_OK;}
-	virtual EnHttpParseResult OnUpgrade(IHttpClient* pSender, CONNID dwConnID, EnHttpUpgradeType enUpgradeType)			{return HPR_OK;}
+	virtual EnHttpParseResult OnMessageBegin(IHttpClient* pSender, CONNID dwConnID)										override {return HPR_OK;}
+	virtual EnHttpParseResult OnRequestLine(IHttpClient* pSender, CONNID dwConnID, LPCSTR lpszMethod, LPCSTR lpszUrl)	override {return HPR_OK;}
+	virtual EnHttpParseResult OnStatusLine(IHttpClient* pSender, CONNID dwConnID, USHORT usStatusCode, LPCSTR lpszDesc)	override {return HPR_OK;}
+	virtual EnHttpParseResult OnHeader(IHttpClient* pSender, CONNID dwConnID, LPCSTR lpszName, LPCSTR lpszValue)		override {return HPR_OK;}
+	virtual EnHttpParseResult OnChunkHeader(IHttpClient* pSender, CONNID dwConnID, int iLength)							override {return HPR_OK;}
+	virtual EnHttpParseResult OnChunkComplete(IHttpClient* pSender, CONNID dwConnID)									override {return HPR_OK;}
+	virtual EnHttpParseResult OnUpgrade(IHttpClient* pSender, CONNID dwConnID, EnHttpUpgradeType enUpgradeType)			override {return HPR_OK;}
 
-	virtual EnHandleResult OnWSMessageHeader(IHttpClient* pSender, CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE lpszMask[4], ULONGLONG ullBodyLen)	{return HR_IGNORE;}
-	virtual EnHandleResult OnWSMessageBody(IHttpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		{return HR_IGNORE;}
-	virtual EnHandleResult OnWSMessageComplete(IHttpClient* pSender, CONNID dwConnID)									{return HR_IGNORE;}
+	virtual EnHandleResult OnWSMessageHeader(IHttpClient* pSender, CONNID dwConnID, BOOL bFinal, BYTE iReserved, BYTE iOperationCode, const BYTE lpszMask[4], ULONGLONG ullBodyLen)	override {return HR_IGNORE;}
+	virtual EnHandleResult OnWSMessageBody(IHttpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)		override {return HR_IGNORE;}
+	virtual EnHandleResult OnWSMessageComplete(IHttpClient* pSender, CONNID dwConnID)									override {return HR_IGNORE;}
 };
 
 /************************************************************************
@@ -2791,12 +2822,12 @@ public:
 class CHttpSyncClientListener : public CHttpClientListener
 {
 public:
-	virtual EnHandleResult OnClose(ITcpClient* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)	{return HR_IGNORE;}
+	virtual EnHandleResult OnClose(ITcpClient* pSender, CONNID dwConnID, EnSocketOperation enOperation, int iErrorCode)	override {return HR_IGNORE;}
 
-	virtual EnHttpParseResult OnHeadersComplete(IHttpClient* pSender, CONNID dwConnID)									{return HPR_OK;}
-	virtual EnHttpParseResult OnBody(IHttpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)				{return HPR_OK;}
-	virtual EnHttpParseResult OnMessageComplete(IHttpClient* pSender, CONNID dwConnID)									{return HPR_OK;}
-	virtual EnHttpParseResult OnParseError(IHttpClient* pSender, CONNID dwConnID, int iErrorCode, LPCSTR lpszErrorDesc)	{return HPR_OK;}
+	virtual EnHttpParseResult OnHeadersComplete(IHttpClient* pSender, CONNID dwConnID)									override {return HPR_OK;}
+	virtual EnHttpParseResult OnBody(IHttpClient* pSender, CONNID dwConnID, const BYTE* pData, int iLength)				override {return HPR_OK;}
+	virtual EnHttpParseResult OnMessageComplete(IHttpClient* pSender, CONNID dwConnID)									override {return HPR_OK;}
+	virtual EnHttpParseResult OnParseError(IHttpClient* pSender, CONNID dwConnID, int iErrorCode, LPCSTR lpszErrorDesc)	override {return HPR_OK;}
 
 };
 
@@ -2916,5 +2947,68 @@ public:
 	virtual EnRejectedPolicy GetRejectedPolicy	()	= 0;
 
 public:
-	virtual ~IHPThreadPool() {};
+	virtual ~IHPThreadPool() = default;
+};
+
+/************************************************************************
+名称：线程池监听器接口
+描述：定义线程池监听器的所有事件
+************************************************************************/
+class IHPThreadPoolListener
+{
+public:
+
+	/*
+	* 名称：线程池启动通知
+	* 描述：线程池启动时监听器将收到该通知，监听器可以在通知处理方法中执行预处理工作
+	*		
+	* 参数：		pThreadPool		-- 线程池对象
+	* 返回值：	无
+	*/
+	virtual void OnStartup(IHPThreadPool* pThreadPool)								= 0;
+
+	/*
+	* 名称：线程池启动关闭通知
+	* 描述：线程池关闭时监听器将收到该通知，监听器可以在通知处理方法中执行后处理工作
+	*		
+	* 参数：		pThreadPool		-- 线程池对象
+	* 返回值：	无
+	*/
+	virtual void OnShutdown(IHPThreadPool* pThreadPool)								= 0;
+
+	/*
+	* 名称：工作线程启动通知
+	* 描述：工作线程启动时监听器将收到该通知，监听器可以在通知处理方法中执行线程级别预处理工作
+	*		
+	* 参数：		pThreadPool		-- 线程池对象
+	*			dwThreadID		-- 工作线程 ID
+	* 返回值：	无
+	*/
+	virtual void OnWorkerThreadStart(IHPThreadPool* pThreadPool, THR_ID dwThreadID)	= 0;
+
+	/*
+	* 名称：工作线程退出通知
+	* 描述：工作线程退出时监听器将收到该通知，监听器可以在通知处理方法中执行线程级别后处理工作
+	*		
+	* 参数：		pThreadPool		-- 线程池对象
+	*			dwThreadID		-- 工作线程 ID
+	* 返回值：	无
+	*/
+	virtual void OnWorkerThreadEnd(IHPThreadPool* pThreadPool, THR_ID dwThreadID)	= 0;
+
+public:
+	virtual ~IHPThreadPoolListener() {};
+};
+
+/************************************************************************
+名称：线程池监听器抽象基类
+描述：定义某些事件的默认处理方法（忽略事件）
+************************************************************************/
+class CHPThreadPoolListener : public IHPThreadPoolListener
+{
+public:
+	virtual void OnStartup(IHPThreadPool* pThreadPool)								override {}
+	virtual void OnShutdown(IHPThreadPool* pThreadPool)								override {}
+	virtual void OnWorkerThreadStart(IHPThreadPool* pThreadPool, THR_ID dwThreadID)	override {}
+	virtual void OnWorkerThreadEnd(IHPThreadPool* pThreadPool, THR_ID dwThreadID)	override {}
 };

@@ -42,9 +42,10 @@ constexpr MessageOfCharacter::MessageOfCharacter(
   , activeskilltype_(0)
 
   , guid_(int64_t{0})
+  , radius_(0)
   , isresetting_(false)
   , canmove_(false)
-  , radius_(0)
+  , isinvisible_(false)
   , cd_(0)
   , lifenum_(0)
   , teamid_(int64_t{0})
@@ -193,6 +194,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, score_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, teamid_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, playerid_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, isinvisible_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -259,12 +261,12 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::Protobuf::MessageOfCharacter)},
-  { 31, -1, -1, sizeof(::Protobuf::MessageOfProp)},
-  { 44, -1, -1, sizeof(::Protobuf::MessageOfBullet)},
-  { 57, -1, -1, sizeof(::Protobuf::MessageToInitialize)},
-  { 65, -1, -1, sizeof(::Protobuf::MessageToClient_GameObjMessage)},
-  { 75, -1, -1, sizeof(::Protobuf::MessageToClient)},
-  { 83, -1, -1, sizeof(::Protobuf::MessageToOneClient)},
+  { 32, -1, -1, sizeof(::Protobuf::MessageOfProp)},
+  { 45, -1, -1, sizeof(::Protobuf::MessageOfBullet)},
+  { 58, -1, -1, sizeof(::Protobuf::MessageToInitialize)},
+  { 66, -1, -1, sizeof(::Protobuf::MessageToClient_GameObjMessage)},
+  { 76, -1, -1, sizeof(::Protobuf::MessageToClient)},
+  { 84, -1, -1, sizeof(::Protobuf::MessageToOneClient)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -279,7 +281,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\025Message2Clients.proto\022\010Protobuf\032\021Messa"
-  "geType.proto\"\356\004\n\022MessageOfCharacter\022\t\n\001x"
+  "geType.proto\"\203\005\n\022MessageOfCharacter\022\t\n\001x"
   "\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\023\n\013attackRange\030\003 \001(\001\022\021"
   "\n\tbulletNum\030\004 \001(\005\022\r\n\005speed\030\005 \001(\005\022\014\n\004life"
   "\030\006 \001(\005\022%\n\035timeUntilCommonSkillAvailable\030"
@@ -294,37 +296,38 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
   "\021 \001(\0162\031.Protobuf.ActiveSkillType\022\014\n\004guid"
   "\030\022 \001(\003\022\017\n\007canMove\030\023 \001(\010\022\016\n\006radius\030\024 \001(\005\022"
   "\n\n\002CD\030\025 \001(\005\022\017\n\007lifeNum\030\026 \001(\005\022\r\n\005score\030\027 "
-  "\001(\005\022\016\n\006teamID\030\030 \001(\003\022\020\n\010playerID\030\031 \001(\003\"\240\001"
-  "\n\rMessageOfProp\022 \n\004type\030\001 \001(\0162\022.Protobuf"
-  ".PropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facin"
-  "gDirection\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\014\n\004size\030\006"
-  " \001(\005\022\"\n\005place\030\007 \001(\0162\023.Protobuf.PlaceType"
-  "\"\254\001\n\017MessageOfBullet\022\"\n\004type\030\001 \001(\0162\024.Pro"
-  "tobuf.BulletType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027"
-  "\n\017facingDirection\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\024\n"
-  "\014parentTeamID\030\006 \001(\003\022\"\n\005place\030\007 \001(\0162\023.Pro"
-  "tobuf.PlaceType\"T\n\023MessageToInitialize\022\021"
-  "\n\tMapSerial\030\001 \001(\005\022*\n\013messageType\030\002 \001(\0162\025"
-  ".Protobuf.MessageType\"\275\002\n\017MessageToClien"
-  "t\022@\n\016gameObjMessage\030\001 \003(\0132(.Protobuf.Mes"
-  "sageToClient.GameObjMessage\022*\n\013messageTy"
-  "pe\030\002 \001(\0162\025.Protobuf.MessageType\032\273\001\n\016Game"
-  "ObjMessage\022:\n\022messageOfCharacter\030\001 \001(\0132\034"
-  ".Protobuf.MessageOfCharacterH\000\0224\n\017messag"
-  "eOfBullet\030\002 \001(\0132\031.Protobuf.MessageOfBull"
-  "etH\000\0220\n\rmessageOfProp\030\003 \001(\0132\027.Protobuf.M"
-  "essageOfPropH\000B\005\n\003obj\"\201\001\n\022MessageToOneCl"
-  "ient\022\020\n\010playerID\030\001 \001(\003\022\016\n\006teamID\030\002 \001(\003\022*"
-  "\n\013messageType\030\003 \001(\0162\025.Protobuf.MessageTy"
-  "pe\022\014\n\004guid\030\004 \001(\003\022\017\n\007message\030\005 \001(\tB\026\252\002\023Co"
-  "mmunication.Protob\006proto3"
+  "\001(\005\022\016\n\006teamID\030\030 \001(\003\022\020\n\010playerID\030\031 \001(\003\022\023\n"
+  "\013isInvisible\030\032 \001(\010\"\240\001\n\rMessageOfProp\022 \n\004"
+  "type\030\001 \001(\0162\022.Protobuf.PropType\022\t\n\001x\030\002 \001("
+  "\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDirection\030\004 \001(\001\022\014\n"
+  "\004guid\030\005 \001(\003\022\014\n\004size\030\006 \001(\005\022\"\n\005place\030\007 \001(\016"
+  "2\023.Protobuf.PlaceType\"\254\001\n\017MessageOfBulle"
+  "t\022\"\n\004type\030\001 \001(\0162\024.Protobuf.BulletType\022\t\n"
+  "\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDirection\030\004"
+  " \001(\001\022\014\n\004guid\030\005 \001(\003\022\024\n\014parentTeamID\030\006 \001(\003"
+  "\022\"\n\005place\030\007 \001(\0162\023.Protobuf.PlaceType\"T\n\023"
+  "MessageToInitialize\022\021\n\tMapSerial\030\001 \001(\005\022*"
+  "\n\013messageType\030\002 \001(\0162\025.Protobuf.MessageTy"
+  "pe\"\275\002\n\017MessageToClient\022@\n\016gameObjMessage"
+  "\030\001 \003(\0132(.Protobuf.MessageToClient.GameOb"
+  "jMessage\022*\n\013messageType\030\002 \001(\0162\025.Protobuf"
+  ".MessageType\032\273\001\n\016GameObjMessage\022:\n\022messa"
+  "geOfCharacter\030\001 \001(\0132\034.Protobuf.MessageOf"
+  "CharacterH\000\0224\n\017messageOfBullet\030\002 \001(\0132\031.P"
+  "rotobuf.MessageOfBulletH\000\0220\n\rmessageOfPr"
+  "op\030\003 \001(\0132\027.Protobuf.MessageOfPropH\000B\005\n\003o"
+  "bj\"\201\001\n\022MessageToOneClient\022\020\n\010playerID\030\001 "
+  "\001(\003\022\016\n\006teamID\030\002 \001(\003\022*\n\013messageType\030\003 \001(\016"
+  "2\025.Protobuf.MessageType\022\014\n\004guid\030\004 \001(\003\022\017\n"
+  "\007message\030\005 \001(\tB\026\252\002\023Communication.Protob\006"
+  "proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Message2Clients_2eproto_deps[1] = {
   &::descriptor_table_MessageType_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Clients_2eproto = {
-  false, false, 1585, descriptor_table_protodef_Message2Clients_2eproto, "Message2Clients.proto", 
+  false, false, 1606, descriptor_table_protodef_Message2Clients_2eproto, "Message2Clients.proto", 
   &descriptor_table_Message2Clients_2eproto_once, descriptor_table_Message2Clients_2eproto_deps, 1, 7,
   schemas, file_default_instances, TableStruct_Message2Clients_2eproto::offsets,
   file_level_metadata_Message2Clients_2eproto, file_level_enum_descriptors_Message2Clients_2eproto, file_level_service_descriptors_Message2Clients_2eproto,
@@ -613,6 +616,14 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         } else
           goto handle_unusual;
         continue;
+      // bool isInvisible = 26;
+      case 26:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 208)) {
+          isinvisible_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
       default:
         goto handle_unusual;
     }  // switch
@@ -814,6 +825,12 @@ uint8_t* MessageOfCharacter::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(25, this->_internal_playerid(), target);
   }
 
+  // bool isInvisible = 26;
+  if (this->_internal_isinvisible() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(26, this->_internal_isinvisible(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -939,6 +956,13 @@ size_t MessageOfCharacter::ByteSizeLong() const {
         this->_internal_guid());
   }
 
+  // int32 radius = 20;
+  if (this->_internal_radius() != 0) {
+    total_size += 2 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_radius());
+  }
+
   // bool isResetting = 15;
   if (this->_internal_isresetting() != 0) {
     total_size += 1 + 1;
@@ -949,11 +973,9 @@ size_t MessageOfCharacter::ByteSizeLong() const {
     total_size += 2 + 1;
   }
 
-  // int32 radius = 20;
-  if (this->_internal_radius() != 0) {
-    total_size += 2 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_radius());
+  // bool isInvisible = 26;
+  if (this->_internal_isinvisible() != 0) {
+    total_size += 2 + 1;
   }
 
   // int32 CD = 21;
@@ -1080,14 +1102,17 @@ void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
   if (from._internal_guid() != 0) {
     _internal_set_guid(from._internal_guid());
   }
+  if (from._internal_radius() != 0) {
+    _internal_set_radius(from._internal_radius());
+  }
   if (from._internal_isresetting() != 0) {
     _internal_set_isresetting(from._internal_isresetting());
   }
   if (from._internal_canmove() != 0) {
     _internal_set_canmove(from._internal_canmove());
   }
-  if (from._internal_radius() != 0) {
-    _internal_set_radius(from._internal_radius());
+  if (from._internal_isinvisible() != 0) {
+    _internal_set_isinvisible(from._internal_isinvisible());
   }
   if (from._internal_cd() != 0) {
     _internal_set_cd(from._internal_cd());

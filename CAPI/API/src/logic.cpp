@@ -17,7 +17,7 @@ namespace Proto2THUAI
     std::shared_ptr<THUAI5::Character> Protobuf2THUAI5_C(const Protobuf::MessageOfCharacter& c)
     {
         std::shared_ptr<THUAI5::Character> character = std::make_shared<THUAI5::Character>();
-        character->ActiveSkillType = (THUAI5::ActiveSkillType)c.activeskilltype();
+        character->activeSkillType = (THUAI5::ActiveSkillType)c.activeskilltype();
         character->attackRange = c.attackrange();
         character->buff = (THUAI5::BuffType)c.buff();
         character->bulletNum = c.bulletnum();
@@ -29,7 +29,7 @@ namespace Proto2THUAI
         character->isResetting = c.isresetting();
         character->life = c.life();
         character->lifeNum = c.lifenum();
-        character->PassiveSkillType = (THUAI5::PassiveSkillType)c.passiveskilltype();
+        character->passiveSkillType = (THUAI5::PassiveSkillType)c.passiveskilltype();
         character->place = (THUAI5::PlaceType)c.place();
         character->playerID = c.playerid();
         character->prop = (THUAI5::PropType)c.prop();
@@ -90,20 +90,60 @@ namespace Proto2THUAI
 /// </summary>
 namespace Vision
 {
-    bool visible(int x, int y, const Protobuf::MessageOfCharacter& c)
+    /*
+    * 人物是否可见的判定机制如下：
+    * 1.若人物不在草丛里，则看不到技能隐身和在草丛里的玩家
+    * 2.若人物在草丛里，则可以看得到与自己位于同一草丛的玩家，但是看不到技能隐身的玩家
+    */
+
+    static bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfCharacter& c)
     {
+        int64_t dx = self->x - c.x();
+        int64_t dy = self->y - c.y();
+        uint64_t distanceSquared = dx * dx + dy * dy;
+        if (!(distanceSquared <= Constants::Map::sightRadiusSquared))
+        {
+            return false;
+        }
+        if (c.isinvisible())
+        {
+            return false;
+        }
+        if (c.place() == Protobuf::PlaceType::Grass1 ||c.place() == Protobuf::PlaceType::Grass2 || c.place() == Protobuf::PlaceType::Grass3) // 人物在草丛中
+        {
+            if (self->place == (THUAI5::PlaceType)c.place())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         return true;
     }
 
-    bool visible(int x, int y, const Protobuf::MessageOfBullet& b)
+    static bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfBullet& b)
     {
-        return true;
+        int64_t dx = self->x - b.x();
+        int64_t dy = self->y - b.y();
+        uint64_t distanceSquared = dx * dx + dy * dy;
+        return distanceSquared <= Constants::Map::sightRadiusSquared;
     }
 
-    bool visible(int x, int y, const Protobuf::MessageOfProp& p)
+    static bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfProp& p)
     {
-        return true;
+        int64_t dx = self->x - p.x();
+        int64_t dy = self->y - p.y();
+        uint64_t distanceSquared = dx * dx + dy * dy;
+        return distanceSquared <= Constants::Map::sightRadiusSquared;
     }
+}
+
+int Logic::GetCounter() const
+{
+    std::unique_lock<std::mutex> lock(mtx_buffer);
+    return counter_state;
 }
 
 std::vector<std::shared_ptr<const THUAI5::Character>> Logic::GetCharacters() const
@@ -156,7 +196,6 @@ const std::vector<int64_t> Logic::GetPlayerGUIDs() const
     return pState->guids;
 }
 
-
 Protobuf::MessageToServer Logic::OnConnect()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
@@ -202,6 +241,7 @@ bool Logic::WaitThread()
     std::unique_lock<std::mutex> lck_buffer(mtx_buffer);
     cv_buffer.wait(lck_buffer, [this]() {return buffer_updated; });
     Update();
+    return true;
 }
 
 Logic::Logic(int teamID, int playerID) :teamID(teamID), playerID(playerID)
@@ -220,9 +260,9 @@ void Logic::ProcessMessage(pointer_m2c p2m)
     case 1:
         ProcessMessageToOneClient(std::get<std::shared_ptr<Protobuf::MessageToOneClient>>(p2m));
         break;
-    case 2:
-        ProcessMessageToInitialize(std::get<std::shared_ptr<Protobuf::MessageToInitialize>>(p2m));
-        break;
+    // case 2:
+    //     ProcessMessageToInitialize(std::get<std::shared_ptr<Protobuf::MessageToInitialize>>(p2m));
+    //     break;
     default:
         std::cerr << "No info type matches std::variant!" << std::endl;
     }
@@ -263,6 +303,7 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
         {
             std::lock_guard<std::mutex> lck(mtx_buffer);
             buffer_updated = true;
+            counter_buffer = -1;
         }
         cv_buffer.notify_one();
         std::cout << "End Game!" << std::endl;
@@ -278,7 +319,7 @@ void Logic::ProcessMessageToOneClient(std::shared_ptr<Protobuf::MessageToOneClie
     switch (pm2oc->messagetype()) 
     {
     case Protobuf::MessageType::ValidPlayer:
-        std::cout << "Valid player!" << std::endl;
+        std::cout << "Valid player: " <<pm2oc->teamid() << " " << pm2oc->playerid() << std::endl;
         break;
     case Protobuf::MessageType::InvalidPlayer:
         AI_loop = false;
@@ -320,8 +361,6 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
         pBuffer->bullets.clear();
 
         // 2.信息不能全盘接受，要根据现有的视野范围接受（话说是这么用吗...）
-        int selfX = pState->self->x;
-        int selfY = pState->self->y;
         for (auto it = pm2c->gameobjmessage().begin(); it != pm2c->gameobjmessage().end(); it++)
         {
             if (it->has_messageofcharacter())
@@ -334,7 +373,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                 }
                 else
                 {
-                    if (Vision::visible(selfX,selfY,it->messageofcharacter())) // 这里不应该是true，还应该加一个视野条件限制，但视野还没有完全确定好
+                    if (Vision::visible(pState->self,it->messageofcharacter()))
                     {
                         pBuffer->characters.push_back(Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter()));
                     }
@@ -343,7 +382,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 
             else if (it->has_messageofbullet())
             {
-                if (Vision::visible(selfX, selfY,it->messageofbullet()))
+                if (Vision::visible(pState->self,it->messageofbullet()))
                 {
                     pBuffer->bullets.push_back(Proto2THUAI::Protobuf2THUAI5_B(it->messageofbullet()));
                 }
@@ -351,7 +390,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 
             else if (it->has_messageofprop())
             {
-                if (Vision::visible(selfX, selfY,it->messageofprop()))
+                if (Vision::visible(pState->self,it->messageofprop()))
                 {
                     pBuffer->props.push_back(Proto2THUAI::Protobuf2THUAI5_P(it->messageofprop()));
                 }
@@ -422,7 +461,7 @@ void Logic::Update() noexcept
     // pBuffer已经指向访问过的，无用的pState
     buffer_updated = false;
     counter_state = counter_buffer;
-    current_state_accessed = true;
+    current_state_accessed = false;
 }
 
 void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t teamID, THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType, CreateAIFunc f, int debuglevel, std::string filename)
@@ -432,18 +471,25 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
 
     // 构造通信组件
     pComm = std::make_unique<MultiThreadClientCommunication>(*this);
-    pComm->init();
+    pComm->init(); // 千万不要忘记这一步!
 
     // 构造API
-    pAPI = std::make_unique<IAPI>(*this);
-   
     std::ofstream Out;
     if (debuglevel)
     {
-        if (Out.fail())
+        if (filename != "")
         {
-            std::cerr << "Failed to open the file!" << std::endl;
+            Out.open(filename);
+            if (Out.fail())
+            {
+                std::cerr << "Failed to open the file!" << std::endl;
+            }
         }
+        pAPI = std::make_unique<DebugAPI>(*this);
+    }
+    else
+    {
+        pAPI = std::make_unique<API>(*this);
     }
 
     // 构造AI线程函数
@@ -453,7 +499,9 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
         if (!current_state_accessed)
         {
             current_state_accessed = true;
+            pAPI->StartTimer();
             pAI->play(*pAPI);
+            pAPI->EndTimer();
         }
         else
         {
@@ -464,7 +512,7 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
     };
 
     // 执行AI线程
-    tAI = std::thread(AI_execute);
+    tAI = std::thread(&Logic::PlayerWrapper, this, AI_execute);
 
     // 游戏运行
     if (!pComm->Start(address, port))

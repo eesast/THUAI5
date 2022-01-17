@@ -4,9 +4,14 @@
 
 #include <string>
 #include <optional>
-#include "Message2Server.pb.h"
+#include <fstream>
+#include <Message2Server.pb.h>
+#include <Message2Clients.pb.h>
+#include <MessageType.pb.h>
 #include "state.h"
 
+
+#pragma warning(disable:4996)
 
 /// <summary>
 /// API中依赖Logic的部分
@@ -43,18 +48,52 @@ public:
     /// 获取计数器
     /// </summary>
     /// <returns></returns>
-    virtual int GetCounter() = 0;
+    virtual int GetCounter() const = 0;
 
     /// 获取信息（因为必须保证线程安全，所以必须在Logic类的内部实现这些接口）
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
-    [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
-    [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
-};
 
+    /// <summary>
+    /// 获取可视的人物信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
+
+    /// <summary>
+    /// 获取墙的信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
+
+    /// <summary>
+    /// 获取道具的信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
+
+    /// <summary>
+    /// 获取子弹的信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
+
+    /// <summary>
+    /// 获取自身信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
+
+    /// <summary>
+    /// 获取队伍分数
+    /// </summary>
+    /// <returns></returns>
+    virtual uint32_t GetTeamScore() const = 0;
+
+    /// <summary>
+    /// 获取场上玩家的GUID信息
+    /// </summary>
+    /// <returns></returns>
+    virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+};
 
 /// <summary>
 /// API通用接口，可派生为一般API和DebugAPI
@@ -99,6 +138,7 @@ public:
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
+    [[nodiscard]] virtual int GetFrameCount() const = 0;
     
     //***********构造函数************//
     IAPI(ILogic& logic) :logic(logic) {}
@@ -111,12 +151,23 @@ protected:
 };
 
 /// <summary>
-/// 一般API
+/// 给Logic使用的IAPI接口，至于为什么这样写会在issue中解释
 /// </summary>
-class API final :public IAPI
+class IAPI_For_Logic :public IAPI
 {
 public:
-    API(ILogic& logic) :IAPI(logic) {}
+    IAPI_For_Logic(ILogic& logic) :IAPI(logic) {}
+    virtual void StartTimer() = 0;
+    virtual void EndTimer() = 0;
+};
+
+/// <summary>
+/// 一般API
+/// </summary>
+class API final :public IAPI_For_Logic
+{
+public:
+    API(ILogic& logic) :IAPI_For_Logic(logic) {}
 
     //***********选手可执行的操作***********//
 
@@ -157,12 +208,68 @@ public:
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
+    int GetFrameCount() const override;
+
+private:
+    void StartTimer() override {}
+    void EndTimer() override {}
 };
 
-class DebugAPI final :public IAPI
+class DebugAPI final :public IAPI_For_Logic
 {
 public:
-    DebugAPI(ILogic& logic) :IAPI(logic) {}
+    DebugAPI(ILogic& logic, std::ostream& Out = std::cout, bool ExamineValidity = true) :IAPI_For_Logic(logic), Out(Out), ExamineValidity(ExamineValidity) {}
+
+    //***********选手可执行的操作***********//
+    // 移动
+    bool MovePlayer(uint32_t timeInMilliseconds, double angleInRadian) override;
+    bool MoveRight(uint32_t timeInMilliseconds) override;
+    bool MoveUp(uint32_t timeInMilliseconds) override;
+    bool MoveLeft(uint32_t timeInMilliseconds) override;
+    bool MoveDown(uint32_t timeInMilliseconds) override;
+
+    // 攻击
+    bool Attack(uint32_t timeInMilliseconds, double angleInRadian) override;
+    bool UseCommonSkill() override;
+
+    // 通信
+    bool Send(int toPlayerID, std::string) override;
+
+    // 道具
+    bool Pick(THUAI5::PropType) override; // 需要指定道具属性
+    bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) override;
+    bool UseProp() override;
+    bool ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum) override;
+    bool UseGem(uint32_t gemNum) override;
+
+    // 其它
+    bool Wait() override;
+
+    //***********选手可获取的信息***********//
+    // 待补充，此处只写了和THUAI4相同的内容
+    bool MessageAvailable() override;
+    std::optional<std::string> TryGetMessage() override;
+
+    std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
+    std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
+    std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const override;
+    std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const override;
+    std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
+
+    uint32_t GetTeamScore() const override;
+    const std::vector<int64_t> GetPlayerGUIDs() const override;
+    int GetFrameCount() const override;
+
+private:
+    bool CanPick(THUAI5::PropType propType);
+    bool CanUseActiveSkill(THUAI5::ActiveSkillType activeSkillType);
+
+    bool ExamineValidity;
+    std::ostream& Out;
+    std::chrono::system_clock::time_point StartPoint; // 记录起始时间
+
+    void StartTimer()override;
+    void EndTimer() override;
 };
 
 #endif

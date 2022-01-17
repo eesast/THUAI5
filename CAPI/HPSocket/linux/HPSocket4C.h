@@ -24,7 +24,7 @@
 /******************************************************************************
 Module:  HPSocket for C
 
-Desc: 导出纯 C 函数，让其它语言（如：C / C# / Delphi 等）能方便地使用 HPSocket
+Desc: 导出纯 C 函数，让其它语言（如：C / C# / Java 等）能方便地使用 HPSocket
 
 Usage:
 		方法一：
@@ -45,31 +45,20 @@ Usage:
 
 Release:
 		<-- 动态链接库 -->
-		1. x86/HPSocket4C.dll			- (32位/MBCS/Release)
-		2. x86/HPSocket4C_D.dll			- (32位/MBCS/DeBug)
-		3. x86/HPSocket4C_U.dll			- (32位/UNICODE/Release)
-		4. x86/HPSocket4C_UD.dll		- (32位/UNICODE/DeBug)
-		5. x64/HPSocket4C.dll			- (64位/MBCS/Release)
-		6. x64/HPSocket4C_D.dll			- (64位/MBCS/DeBug)
-		7. x64/HPSocket4C_U.dll			- (64位/UNICODE/Release)
-		8. x64/HPSocket4C_UD.dll		- (64位/UNICODE/DeBug)
+		1. x86/libhpsocket4c.so			- (32位/MBCS/Release)
+		2. x86/libhpsocket4c_d.so		- (32位/MBCS/DeBug)
+		3. x64/libhpsocket4c.so			- (64位/MBCS/Release)
+		4. x64/libhpsocket4c_d.so		- (64位/MBCS/DeBug)
 
 		<-- 静态链接库 -->
-		!!注意!!：使用 HPSocket 静态库时，需要在工程属性中定义预处理宏 -> HPSOCKET_STATIC_LIB
-		1. x86/static/HPSocket4C.lib	- (32位/MBCS/Release)
-		2. x86/static/HPSocket4C_D.lib	- (32位/MBCS/DeBug)
-		3. x86/static/HPSocket4C_U.lib	- (32位/UNICODE/Release)
-		4. x86/static/HPSocket4C_UD.lib	- (32位/UNICODE/DeBug)
-		5. x64/static/HPSocket4C.lib	- (64位/MBCS/Release)
-		6. x64/static/HPSocket4C_D.lib	- (64位/MBCS/DeBug)
-		7. x64/static/HPSocket4C_U.lib	- (64位/UNICODE/Release)
-		8. x64/static/HPSocket4C_UD.lib	- (64位/UNICODE/DeBug)
+		1. x86/static/libhpsocket4c.a	- (32位/MBCS/Release)
+		2. x86/static/libhpsocket4c_d.a	- (32位/MBCS/DeBug)
+		3. x64/static/libhpsocket4c.a	- (64位/MBCS/Release)
+		4. x64/static/libhpsocket4c_d.a	- (64位/MBCS/DeBug)
 
 ******************************************************************************/
 
 #pragma once
-
-#include <winsock2.h>
 
 #include "HPTypeDef.h"
 
@@ -97,6 +86,7 @@ typedef HP_Object	HP_PackClient;
 typedef HP_Object	HP_TcpPackServer;
 typedef HP_Object	HP_TcpPackAgent;
 typedef HP_Object	HP_TcpPackClient;
+typedef HP_Object	HP_ThreadPool;
 
 typedef HP_Object	HP_Listener;
 typedef HP_Object	HP_ServerListener;
@@ -115,6 +105,7 @@ typedef HP_Object	HP_PackClientListener;
 typedef HP_Object	HP_TcpPackServerListener;
 typedef HP_Object	HP_TcpPackAgentListener;
 typedef HP_Object	HP_TcpPackClientListener;
+typedef HP_Object	HP_ThreadPoolListener;
 
 #ifdef _UDP_SUPPORT
 
@@ -134,6 +125,8 @@ typedef HP_Object	HP_UdpArqClientListener;
 
 #endif
 
+#ifdef _HTTP_SUPPORT
+
 typedef HP_Object	HP_Http;
 typedef HP_Object	HP_HttpServer;
 typedef HP_Object	HP_HttpAgent;
@@ -144,7 +137,7 @@ typedef HP_Object	HP_HttpServerListener;
 typedef HP_Object	HP_HttpAgentListener;
 typedef HP_Object	HP_HttpClientListener;
 
-typedef HP_Object	HP_ThreadPool;
+#endif
 
 /*****************************************************************************************************************************************************/
 /****************************************************************** TCP/UDP Exports ******************************************************************/
@@ -193,7 +186,6 @@ typedef En_HP_HandleResult (__HP_CALL *HP_FN_UdpNode_OnError)			(HP_UdpNode pSen
 typedef En_HP_HandleResult (__HP_CALL *HP_FN_UdpNode_OnShutdown)		(HP_UdpNode pSender);
 
 #endif
-
 /****************************************************/
 /*************** TCP/UDP 对象创建函数 ****************/
 
@@ -404,7 +396,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Server_Stop(HP_Server pServer);
 /*
 * 名称：等待
 * 描述：等待通信组件停止运行
-*		
+*
 * 参数：		dwMilliseconds	-- 超时时间（毫秒，默认：-1，永不超时）
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取错误代码
@@ -419,7 +411,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Server_Wait(HP_Server pServer, DWORD dwMillisecon
 *			pBuffer		-- 发送缓冲区
 *			iLength		-- 发送缓冲区长度
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Server_Send(HP_Server pServer, HP_CONNID dwConnID, const BYTE* pBuffer, int iLength);
 
@@ -432,7 +424,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Server_Send(HP_Server pServer, HP_CONNID dwConnID
 *			iLength		-- 发送缓冲区长度
 *			iOffset		-- 发送缓冲区指针偏移量
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Server_SendPart(HP_Server pServer, HP_CONNID dwConnID, const BYTE* pBuffer, int iLength, int iOffset);
 
@@ -446,7 +438,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Server_SendPart(HP_Server pServer, HP_CONNID dwCo
 *			pBuffers	-- 发送缓冲区数组
 *			iCount		-- 发送缓冲区数目
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Server_SendPackets(HP_Server pServer, HP_CONNID dwConnID, const WSABUF pBuffers[], int iCount);
 
@@ -552,11 +544,11 @@ HPSOCKET_API BOOL __HP_CALL HP_Server_GetRemoteAddress(HP_Server pServer, HP_CON
 
 /* 设置地址重用选项 */
 HPSOCKET_API void __HP_CALL HP_Server_SetReuseAddressPolicy(HP_Server pServer, En_HP_ReuseAddressPolicy enReusePolicy);
-/* 设置数据发送策略 */
+/* 设置数据发送策略（对 Linux 平台组件无效） */
 HPSOCKET_API void __HP_CALL HP_Server_SetSendPolicy(HP_Server pServer, En_HP_SendPolicy enSendPolicy);
-/* 设置 OnSend 事件同步策略（默认：OSSP_NONE，不同步） */
+/* 设置 OnSend 事件同步策略（对 Linux 平台组件无效） */
 HPSOCKET_API void __HP_CALL HP_Server_SetOnSendSyncPolicy(HP_Server pServer, En_HP_OnSendSyncPolicy enSyncPolicy);
-/* 设置 Socket 缓存对象锁定时间（毫秒，在锁定期间该 Socket 缓存对象不能被获取使用） */
+//* 设置 Socket 缓存对象锁定时间（毫秒，在锁定期间该 Socket 缓存对象不能被获取使用） */
 HPSOCKET_API void __HP_CALL HP_Server_SetFreeSocketObjLockTime(HP_Server pServer, DWORD dwFreeSocketObjLockTime);
 /* 设置 Socket 缓存池大小（通常设置为平均并发连接数量的 1/3 - 1/2） */
 HPSOCKET_API void __HP_CALL HP_Server_SetFreeSocketObjPool(HP_Server pServer, DWORD dwFreeSocketObjPool);
@@ -575,11 +567,11 @@ HPSOCKET_API void __HP_CALL HP_Server_SetMarkSilence(HP_Server pServer, BOOL bMa
 
 /* 获取地址重用选项 */
 HPSOCKET_API En_HP_ReuseAddressPolicy __HP_CALL HP_Server_GetReuseAddressPolicy(HP_Server pServer);
-/* 获取数据发送策略 */
+/* 获取数据发送策略（对 Linux 平台组件无效） */
 HPSOCKET_API En_HP_SendPolicy __HP_CALL HP_Server_GetSendPolicy(HP_Server pServer);
-/* 获取 OnSend 事件同步策略 */
+/* 获取 OnSend 事件同步策略（对 Linux 平台组件无效） */
 HPSOCKET_API En_HP_OnSendSyncPolicy __HP_CALL HP_Server_GetOnSendSyncPolicy(HP_Server pServer);
-/* 获取 Socket 缓存对象锁定时间 */
+//* 获取 Socket 缓存对象锁定时间 */
 HPSOCKET_API DWORD __HP_CALL HP_Server_GetFreeSocketObjLockTime(HP_Server pServer);
 /* 获取 Socket 缓存池大小 */
 HPSOCKET_API DWORD __HP_CALL HP_Server_GetFreeSocketObjPool(HP_Server pServer);
@@ -608,7 +600,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Server_IsMarkSilence(HP_Server pServer);
 *			pHead			-- 头部附加数据
 *			pTail			-- 尾部附加数据
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_TcpServer_SendSmallFile(HP_Server pServer, HP_CONNID dwConnID, LPCTSTR lpszFileName, const LPWSABUF pHead, const LPWSABUF pTail);
 
@@ -617,7 +609,7 @@ HPSOCKET_API BOOL __HP_CALL HP_TcpServer_SendSmallFile(HP_Server pServer, HP_CON
 
 /* 设置监听 Socket 的等候队列大小（根据并发连接数量调整设置） */
 HPSOCKET_API void __HP_CALL HP_TcpServer_SetSocketListenQueue(HP_TcpServer pServer, DWORD dwSocketListenQueue);
-/* 设置 Accept 预投递数量（根据负载调整设置，Accept 预投递数量越大则支持的并发连接请求越多） */
+/* 设置 EPOLL 等待事件的最大数量 */
 HPSOCKET_API void __HP_CALL HP_TcpServer_SetAcceptSocketCount(HP_TcpServer pServer, DWORD dwAcceptSocketCount);
 /* 设置通信数据缓冲区大小（根据平均通信数据包大小调整设置，通常设置为 1024 的倍数） */
 HPSOCKET_API void __HP_CALL HP_TcpServer_SetSocketBufferSize(HP_TcpServer pServer, DWORD dwSocketBufferSize);
@@ -625,8 +617,10 @@ HPSOCKET_API void __HP_CALL HP_TcpServer_SetSocketBufferSize(HP_TcpServer pServe
 HPSOCKET_API void __HP_CALL HP_TcpServer_SetKeepAliveTime(HP_TcpServer pServer, DWORD dwKeepAliveTime);
 /* 设置异常心跳包间隔（毫秒，0 不发送心跳包，，默认：20 * 1000，如果超过若干次 [默认：WinXP 5 次, Win7 10 次] 检测不到心跳确认包则认为已断线） */
 HPSOCKET_API void __HP_CALL HP_TcpServer_SetKeepAliveInterval(HP_TcpServer pServer, DWORD dwKeepAliveInterval);
+/* 设置是否开启 nodelay 模式（默认：FALSE，不开启） */
+HPSOCKET_API void __HP_CALL HP_TcpServer_SetNoDelay(HP_TcpServer pServer, BOOL bNoDelay);
 
-/* 获取 Accept 预投递数量 */
+/* 获取 EPOLL 等待事件的最大数量 */
 HPSOCKET_API DWORD __HP_CALL HP_TcpServer_GetAcceptSocketCount(HP_TcpServer pServer);
 /* 获取通信数据缓冲区大小 */
 HPSOCKET_API DWORD __HP_CALL HP_TcpServer_GetSocketBufferSize(HP_TcpServer pServer);
@@ -636,13 +630,15 @@ HPSOCKET_API DWORD __HP_CALL HP_TcpServer_GetSocketListenQueue(HP_TcpServer pSer
 HPSOCKET_API DWORD __HP_CALL HP_TcpServer_GetKeepAliveTime(HP_TcpServer pServer);
 /* 获取异常心跳包间隔 */
 HPSOCKET_API DWORD __HP_CALL HP_TcpServer_GetKeepAliveInterval(HP_TcpServer pServer);
+/* 检查是否开启 nodelay 模式 */
+HPSOCKET_API BOOL __HP_CALL HP_TcpServer_IsNoDelay(HP_TcpServer pServer);
 
 #ifdef _UDP_SUPPORT
 
 /**********************************************************************************/
 /***************************** UDP Server 属性访问方法 *****************************/
 
-/* 设置数据报文最大长度（建议在局域网环境下不超过 1432 字节，在广域网环境下不超过 548 字节） */
+/* 设置数据报文最大长度（建议在局域网环境下不超过 1472 字节，在广域网环境下不超过 548 字节） */
 HPSOCKET_API void __HP_CALL HP_UdpServer_SetMaxDatagramSize(HP_UdpServer pServer, DWORD dwMaxDatagramSize);
 /* 获取数据报文最大长度 */
 HPSOCKET_API DWORD __HP_CALL HP_UdpServer_GetMaxDatagramSize(HP_UdpServer pServer);
@@ -742,7 +738,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Agent_Stop(HP_Agent pAgent);
 /*
 * 名称：等待
 * 描述：等待通信组件停止运行
-*		
+*
 * 参数：		dwMilliseconds	-- 超时时间（毫秒，默认：-1，永不超时）
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取错误代码
@@ -757,7 +753,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Agent_Wait(HP_Agent pAgent, DWORD dwMilliseconds)
 *			usPort				-- 服务端端口
 *			pdwConnID			-- 连接 ID（默认：nullptr，不获取连接 ID）
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过函数 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过函数 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Agent_Connect(HP_Agent pAgent, LPCTSTR lpszRemoteAddress, USHORT usPort, HP_CONNID* pdwConnID);
 
@@ -770,14 +766,14 @@ HPSOCKET_API BOOL __HP_CALL HP_Agent_Connect(HP_Agent pAgent, LPCTSTR lpszRemote
 *			pdwConnID			-- 连接 ID（默认：nullptr，不获取连接 ID）
 *			pExtra				-- 连接附加数据（默认：nullptr）
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过函数 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过函数 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Agent_ConnectWithExtra(HP_Agent pAgent, LPCTSTR lpszRemoteAddress, USHORT usPort, HP_CONNID* pdwConnID, PVOID pExtra);
 
 /*
 * 名称：连接服务器
 * 描述：连接服务器，连接成功后 IAgentListener 会接收到 OnConnect() / OnHandShake() 事件
-*		
+*
 * 参数：		lpszRemoteAddress	-- 服务端地址
 *			usPort				-- 服务端端口
 *			pdwConnID			-- 连接 ID（默认：nullptr，不获取连接 ID）
@@ -800,10 +796,10 @@ HPSOCKET_API BOOL __HP_CALL HP_Agent_ConnectWithLocalPort(HP_Agent pAgent, LPCTS
 */
 HPSOCKET_API BOOL __HP_CALL HP_Agent_ConnectWithLocalAddress(HP_Agent pAgent, LPCTSTR lpszRemoteAddress, USHORT usPort, HP_CONNID* pdwConnID, LPCTSTR lpszLocalAddress);
 
-/* 
+/*
 * 名称：连接服务器
 * 描述：连接服务器，连接成功后 IAgentListener 会接收到 OnConnect() / OnHandShake() 事件
-*		
+*
 * 参数：		lpszRemoteAddress	-- 服务端地址
 *			usPort				-- 服务端端口
 *			pdwConnID			-- 连接 ID（默认：nullptr，不获取连接 ID）
@@ -837,7 +833,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Agent_ConnectWithExtraAndLocalAddressPort(HP_Agen
 *			pBuffer		-- 发送缓冲区
 *			iLength		-- 发送缓冲区长度
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Agent_Send(HP_Agent pAgent, HP_CONNID dwConnID, const BYTE* pBuffer, int iLength);
 
@@ -850,7 +846,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Agent_Send(HP_Agent pAgent, HP_CONNID dwConnID, c
 *			iLength		-- 发送缓冲区长度
 *			iOffset		-- 发送缓冲区指针偏移量
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Agent_SendPart(HP_Agent pAgent, HP_CONNID dwConnID, const BYTE* pBuffer, int iLength, int iOffset);
 
@@ -864,7 +860,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Agent_SendPart(HP_Agent pAgent, HP_CONNID dwConnI
 *			pBuffers	-- 发送缓冲区数组
 *			iCount		-- 发送缓冲区数目
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Agent_SendPackets(HP_Agent pAgent, HP_CONNID dwConnID, const WSABUF pBuffers[], int iCount);
 
@@ -970,9 +966,9 @@ HPSOCKET_API BOOL __HP_CALL HP_Agent_IsConnected(HP_Agent pAgent, HP_CONNID dwCo
 
 /* 设置地址重用选项 */
 HPSOCKET_API void __HP_CALL HP_Agent_SetReuseAddressPolicy(HP_Agent pAgent, En_HP_ReuseAddressPolicy enReusePolicy);
-/* 设置数据发送策略 */
+/* 设置数据发送策略（对 Linux 平台组件无效） */
 HPSOCKET_API void __HP_CALL HP_Agent_SetSendPolicy(HP_Agent pAgent, En_HP_SendPolicy enSendPolicy);
-/* 设置 OnSend 事件同步策略（默认：OSSP_NONE，不同步） */
+/* 设置 OnSend 事件同步策略（对 Linux 平台组件无效） */
 HPSOCKET_API void __HP_CALL HP_Agent_SetOnSendSyncPolicy(HP_Agent pAgent, En_HP_OnSendSyncPolicy enSyncPolicy);
 /* 设置 Socket 缓存对象锁定时间（毫秒，在锁定期间该 Socket 缓存对象不能被获取使用） */
 HPSOCKET_API void __HP_CALL HP_Agent_SetFreeSocketObjLockTime(HP_Agent pAgent, DWORD dwFreeSocketObjLockTime);
@@ -993,9 +989,9 @@ HPSOCKET_API void __HP_CALL HP_Agent_SetMarkSilence(HP_Agent pAgent, BOOL bMarkS
 
 /* 获取地址重用选项 */
 HPSOCKET_API En_HP_ReuseAddressPolicy __HP_CALL HP_Agent_GetReuseAddressPolicy(HP_Agent pAgent);
-/* 获取数据发送策略 */
+/* 获取数据发送策略（对 Linux 平台组件无效） */
 HPSOCKET_API En_HP_SendPolicy __HP_CALL HP_Agent_GetSendPolicy(HP_Agent pAgent);
-/* 获取 OnSend 事件同步策略 */
+/* 获取 OnSend 事件同步策略（对 Linux 平台组件无效） */
 HPSOCKET_API En_HP_OnSendSyncPolicy __HP_CALL HP_Agent_GetOnSendSyncPolicy(HP_Agent pAgent);
 /* 获取 Socket 缓存对象锁定时间 */
 HPSOCKET_API DWORD __HP_CALL HP_Agent_GetFreeSocketObjLockTime(HP_Agent pAgent);
@@ -1026,7 +1022,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Agent_IsMarkSilence(HP_Agent pAgent);
 *			pHead			-- 头部附加数据
 *			pTail			-- 尾部附加数据
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_TcpAgent_SendSmallFile(HP_Agent pAgent, HP_CONNID dwConnID, LPCTSTR lpszFileName, const LPWSABUF pHead, const LPWSABUF pTail);
 
@@ -1039,6 +1035,8 @@ HPSOCKET_API void __HP_CALL HP_TcpAgent_SetSocketBufferSize(HP_TcpAgent pAgent, 
 HPSOCKET_API void __HP_CALL HP_TcpAgent_SetKeepAliveTime(HP_TcpAgent pAgent, DWORD dwKeepAliveTime);
 /* 设置异常心跳包间隔（毫秒，0 不发送心跳包，，默认：20 * 1000，如果超过若干次 [默认：WinXP 5 次, Win7 10 次] 检测不到心跳确认包则认为已断线） */
 HPSOCKET_API void __HP_CALL HP_TcpAgent_SetKeepAliveInterval(HP_TcpAgent pAgent, DWORD dwKeepAliveInterval);
+/* 设置是否开启 nodelay 模式（默认：FALSE，不开启） */
+HPSOCKET_API void __HP_CALL HP_TcpAgent_SetNoDelay(HP_TcpAgent pAgent, BOOL bNoDelay);
 
 /* 获取通信数据缓冲区大小 */
 HPSOCKET_API DWORD __HP_CALL HP_TcpAgent_GetSocketBufferSize(HP_TcpAgent pAgent);
@@ -1046,6 +1044,8 @@ HPSOCKET_API DWORD __HP_CALL HP_TcpAgent_GetSocketBufferSize(HP_TcpAgent pAgent)
 HPSOCKET_API DWORD __HP_CALL HP_TcpAgent_GetKeepAliveTime(HP_TcpAgent pAgent);
 /* 获取异常心跳包间隔 */
 HPSOCKET_API DWORD __HP_CALL HP_TcpAgent_GetKeepAliveInterval(HP_TcpAgent pAgent);
+/* 检查是否开启 nodelay 模式 */
+HPSOCKET_API BOOL __HP_CALL HP_TcpAgent_IsNoDelay(HP_TcpAgent pAgent);
 
 /******************************************************************************/
 /***************************** Client 组件操作方法 *****************************/
@@ -1106,7 +1106,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Client_Stop(HP_Client pClient);
 * 参数：		pBuffer		-- 发送缓冲区
 *			iLength		-- 发送缓冲区长度
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Client_Send(HP_Client pClient, const BYTE* pBuffer, int iLength);
 
@@ -1118,7 +1118,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Client_Send(HP_Client pClient, const BYTE* pBuffe
 *			iLength		-- 发送缓冲区长度
 *			iOffset		-- 发送缓冲区指针偏移量
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Client_SendPart(HP_Client pClient, const BYTE* pBuffer, int iLength, int iOffset);
 
@@ -1131,7 +1131,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Client_SendPart(HP_Client pClient, const BYTE* pB
 * 参数：		pBuffers	-- 发送缓冲区数组
 *			iCount		-- 发送缓冲区数目
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_Client_SendPackets(HP_Client pClient, const WSABUF pBuffers[], int iCount);
 
@@ -1148,7 +1148,7 @@ HPSOCKET_API BOOL __HP_CALL HP_Client_PauseReceive(HP_Client pClient, BOOL bPaus
 /*
 * 名称：等待
 * 描述：等待通信组件停止运行
-*		
+*
 * 参数：		dwMilliseconds	-- 超时时间（毫秒，默认：-1，永不超时）
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取错误代码
@@ -1211,7 +1211,7 @@ HPSOCKET_API DWORD __HP_CALL HP_Client_GetFreeBufferPoolHold(HP_Client pClient);
 *			pHead			-- 头部附加数据
 *			pTail			-- 尾部附加数据
 * 返回值：	TRUE	-- 成功
-*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取系统错误代码
 */
 HPSOCKET_API BOOL __HP_CALL HP_TcpClient_SendSmallFile(HP_Client pClient, LPCTSTR lpszFileName, const LPWSABUF pHead, const LPWSABUF pTail);
 
@@ -1224,6 +1224,8 @@ HPSOCKET_API void __HP_CALL HP_TcpClient_SetSocketBufferSize(HP_TcpClient pClien
 HPSOCKET_API void __HP_CALL HP_TcpClient_SetKeepAliveTime(HP_TcpClient pClient, DWORD dwKeepAliveTime);
 /* 设置异常心跳包间隔（毫秒，0 不发送心跳包，，默认：20 * 1000，如果超过若干次 [默认：WinXP 5 次, Win7 10 次] 检测不到心跳确认包则认为已断线） */
 HPSOCKET_API void __HP_CALL HP_TcpClient_SetKeepAliveInterval(HP_TcpClient pClient, DWORD dwKeepAliveInterval);
+/* 设置是否开启 nodelay 模式（默认：FALSE，不开启） */
+HPSOCKET_API void __HP_CALL HP_TcpClient_SetNoDelay(HP_TcpClient pClient, BOOL bNoDelay);
 
 /* 获取通信数据缓冲区大小 */
 HPSOCKET_API DWORD __HP_CALL HP_TcpClient_GetSocketBufferSize(HP_TcpClient pClient);
@@ -1231,13 +1233,15 @@ HPSOCKET_API DWORD __HP_CALL HP_TcpClient_GetSocketBufferSize(HP_TcpClient pClie
 HPSOCKET_API DWORD __HP_CALL HP_TcpClient_GetKeepAliveTime(HP_TcpClient pClient);
 /* 获取异常心跳包间隔 */
 HPSOCKET_API DWORD __HP_CALL HP_TcpClient_GetKeepAliveInterval(HP_TcpClient pClient);
+/* 检查是否开启 nodelay 模式 */
+HPSOCKET_API BOOL __HP_CALL HP_TcpClient_IsNoDelay(HP_TcpClient pClient);
 
 #ifdef _UDP_SUPPORT
 
 /**********************************************************************************/
 /***************************** UDP Client 属性访问方法 *****************************/
 
-/* 设置数据报文最大长度（建议在局域网环境下不超过 1432 字节，在广域网环境下不超过 548 字节） */
+/* 设置数据报文最大长度（建议在局域网环境下不超过 1472 字节，在广域网环境下不超过 548 字节） */
 HPSOCKET_API void __HP_CALL HP_UdpClient_SetMaxDatagramSize(HP_UdpClient pClient, DWORD dwMaxDatagramSize);
 /* 获取数据报文最大长度 */
 HPSOCKET_API DWORD __HP_CALL HP_UdpClient_GetMaxDatagramSize(HP_UdpClient pClient);
@@ -1306,7 +1310,7 @@ HPSOCKET_API BOOL __HP_CALL HP_UdpArqClient_GetWaitingSendMessageCount(HP_UdpArq
 /**********************************************************************************/
 /****************************** UDP Cast 属性访问方法 ******************************/
 
-/* 设置数据报文最大长度（建议在局域网环境下不超过 1432 字节，在广域网环境下不超过 548 字节） */
+/* 设置数据报文最大长度（建议在局域网环境下不超过 1472 字节，在广域网环境下不超过 548 字节） */
 HPSOCKET_API void __HP_CALL HP_UdpCast_SetMaxDatagramSize(HP_UdpCast pCast, DWORD dwMaxDatagramSize);
 /* 获取数据报文最大长度 */
 HPSOCKET_API DWORD __HP_CALL HP_UdpCast_GetMaxDatagramSize(HP_UdpCast pCast);
@@ -1365,7 +1369,7 @@ HPSOCKET_API BOOL __HP_CALL HP_UdpNode_Stop(HP_UdpNode pNode);
 /*
 * 名称：等待
 * 描述：等待通信组件停止运行
-*		
+*
 * 参数：		dwMilliseconds	-- 超时时间（毫秒，默认：-1，永不超时）
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取错误代码
@@ -1652,19 +1656,22 @@ HPSOCKET_API DWORD __HP_CALL HP_GetHPSocketVersion();
 
 /* 获取错误描述文本 */
 HPSOCKET_API LPCTSTR __HP_CALL HP_GetSocketErrorDesc(En_HP_SocketError enCode);
-/* 调用系统的 GetLastError() 方法获取系统错误代码 */
+// 调用系统的 errno 方法获取系统错误代码
 HPSOCKET_API DWORD __HP_CALL SYS_GetLastError();
-// 调用系统的 WSAGetLastError() 方法获取系统错误代码
-HPSOCKET_API int __HP_CALL SYS_WSAGetLastError();
+// 调用系统的 strerror() 方法获取系统错误代码描述
+HPSOCKET_API LPCSTR __HP_CALL SYS_GetLastErrorStr();
 // 调用系统的 setsockopt()
 HPSOCKET_API int __HP_CALL SYS_SetSocketOption(SOCKET sock, int level, int name, LPVOID val, int len);
 // 调用系统的 getsockopt()
 HPSOCKET_API int __HP_CALL SYS_GetSocketOption(SOCKET sock, int level, int name, LPVOID val, int* len);
 // 调用系统的 ioctlsocket()
-HPSOCKET_API int __HP_CALL SYS_IoctlSocket(SOCKET sock, long cmd, u_long* arg);
-// 调用系统的 WSAIoctl()
-HPSOCKET_API int __HP_CALL SYS_WSAIoctl(SOCKET sock, DWORD dwIoControlCode, LPVOID lpvInBuffer, DWORD cbInBuffer, LPVOID lpvOutBuffer, DWORD cbOutBuffer, LPDWORD lpcbBytesReturned);
+HPSOCKET_API int __HP_CALL SYS_IoctlSocket(SOCKET sock, long cmd, ULONG* arg);
 
+// 调用系统的 fcntl() 设置 F_SETFL 属性
+HPSOCKET_API BOOL __HP_CALL SYS_fcntl_SETFL(FD fd, INT fl, BOOL bSet);
+
+// 设置 FD 选项：O_NONBLOCK
+HPSOCKET_API int __HP_CALL SYS_SSO_NoBlock(SOCKET sock, BOOL bNoBlock);
 // 设置 socket 选项：IPPROTO_TCP -> TCP_NODELAY
 HPSOCKET_API int __HP_CALL SYS_SSO_NoDelay(SOCKET sock, BOOL bNoDelay);
 // 设置 socket 选项：SOL_SOCKET -> SO_DONTLINGER
@@ -1679,10 +1686,8 @@ HPSOCKET_API int __HP_CALL SYS_SSO_SendBuffSize(SOCKET sock, int size);
 HPSOCKET_API int __HP_CALL SYS_SSO_RecvTimeOut(SOCKET sock, int ms);
 // 设置 socket 选项：SOL_SOCKET -> SO_SNDTIMEO
 HPSOCKET_API int __HP_CALL SYS_SSO_SendTimeOut(SOCKET sock, int ms);
-// 设置 socket 选项：SOL_SOCKET -> SO_EXCLUSIVEADDRUSE / SO_REUSEADDR
+// 设置 socket 选项：SOL_SOCKET -> SO_REUSEADDR / SO_REUSEPORT
 HPSOCKET_API int __HP_CALL SYS_SSO_ReuseAddress(SOCKET sock, En_HP_ReuseAddressPolicy opt);
-// 设置 socket 选项：SOL_SOCKET -> SO_EXCLUSIVEADDRUSE
-HPSOCKET_API int __HP_CALL SYS_SSO_ExclusiveAddressUse(SOCKET sock, BOOL bExclusive);
 
 // 获取 SOCKET 本地地址信息
 HPSOCKET_API BOOL __HP_CALL SYS_GetSocketLocalAddress(SOCKET socket, TCHAR lpszAddress[], int* piAddressLen, USHORT* pusPort);
@@ -1715,23 +1720,28 @@ HPSOCKET_API LPBYTE __HP_CALL SYS_Malloc(int size);
 HPSOCKET_API LPBYTE __HP_CALL SYS_Realloc(LPBYTE p, int size);
 /* 释放内存 */
 HPSOCKET_API VOID __HP_CALL SYS_Free(LPBYTE p);
+/* 分配内存块 */
+HPSOCKET_API LPVOID __HP_CALL SYS_Calloc(int number, int size);
+/* 分配栈内存 */
+HPSOCKET_API LPBYTE __HP_CALL SYS_Alloca(int size);
 
-// CP_XXX -> UNICODE
-HPSOCKET_API BOOL __HP_CALL SYS_CodePageToUnicode(int iCodePage, const char szSrc[], WCHAR szDest[], int* piDestLength);
-// UNICODE -> CP_XXX
-HPSOCKET_API BOOL __HP_CALL SYS_UnicodeToCodePage(int iCodePage, const WCHAR szSrc[], char szDest[], int* piDestLength);
-// GBK -> UNICODE
-HPSOCKET_API BOOL __HP_CALL SYS_GbkToUnicode(const char szSrc[], WCHAR szDest[], int* piDestLength);
-// UNICODE -> GBK
-HPSOCKET_API BOOL __HP_CALL SYS_UnicodeToGbk(const WCHAR szSrc[], char szDest[], int* piDestLength);
-// UTF8 -> UNICODE
-HPSOCKET_API BOOL __HP_CALL SYS_Utf8ToUnicode(const char szSrc[], WCHAR szDest[], int* piDestLength);
-// UNICODE -> UTF8
-HPSOCKET_API BOOL __HP_CALL SYS_UnicodeToUtf8(const WCHAR szSrc[], char szDest[], int* piDestLength);
-// GBK -> UTF8
-HPSOCKET_API BOOL __HP_CALL SYS_GbkToUtf8(const char szSrc[], char szDest[], int* piDestLength);
-// UTF8 -> GBK
-HPSOCKET_API BOOL __HP_CALL SYS_Utf8ToGbk(const char szSrc[], char szDest[], int* piDestLength);
+// 计算 Base64 编码后长度
+HPSOCKET_API DWORD __HP_CALL SYS_GuessBase64EncodeBound(DWORD dwSrcLen);
+// 计算 Base64 解码后长度
+HPSOCKET_API DWORD __HP_CALL SYS_GuessBase64DecodeBound(const BYTE* lpszSrc, DWORD dwSrcLen);
+// Base64 编码（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
+HPSOCKET_API int __HP_CALL SYS_Base64Encode(const BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen);
+// Base64 解码（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
+HPSOCKET_API int __HP_CALL SYS_Base64Decode(const BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen);
+
+// 计算 URL 编码后长度
+HPSOCKET_API DWORD __HP_CALL SYS_GuessUrlEncodeBound(const BYTE* lpszSrc, DWORD dwSrcLen);
+// 计算 URL 解码后长度
+HPSOCKET_API DWORD __HP_CALL SYS_GuessUrlDecodeBound(const BYTE* lpszSrc, DWORD dwSrcLen);
+// URL 编码（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
+HPSOCKET_API int __HP_CALL SYS_UrlEncode(BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen);
+// URL 解码（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
+HPSOCKET_API int __HP_CALL SYS_UrlDecode(BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen);
 
 #ifdef _ZLIB_SUPPORT
 
@@ -1755,23 +1765,38 @@ HPSOCKET_API DWORD __HP_CALL SYS_GZipGuessUncompressBound(const BYTE* lpszSrc, D
 
 #endif
 
-// 计算 Base64 编码后长度
-HPSOCKET_API DWORD __HP_CALL SYS_GuessBase64EncodeBound(DWORD dwSrcLen);
-// 计算 Base64 解码后长度
-HPSOCKET_API DWORD __HP_CALL SYS_GuessBase64DecodeBound(const BYTE* lpszSrc, DWORD dwSrcLen);
-// Base64 编码（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
-HPSOCKET_API int __HP_CALL SYS_Base64Encode(const BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen);
-// Base64 解码（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
-HPSOCKET_API int __HP_CALL SYS_Base64Decode(const BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen);
+#ifdef _BROTLI_SUPPORT
 
-// 计算 URL 编码后长度
-HPSOCKET_API DWORD __HP_CALL SYS_GuessUrlEncodeBound(const BYTE* lpszSrc, DWORD dwSrcLen);
-// 计算 URL 解码后长度
-HPSOCKET_API DWORD __HP_CALL SYS_GuessUrlDecodeBound(const BYTE* lpszSrc, DWORD dwSrcLen);
-// URL 编码（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
-HPSOCKET_API int __HP_CALL SYS_UrlEncode(BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen);
-// URL 解码（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
-HPSOCKET_API int __HP_CALL SYS_UrlDecode(BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen);
+// Brotli 压缩（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
+HPSOCKET_API int __HP_CALL SYS_BrotliCompress(const BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen);
+// Brotli 高级压缩（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
+//（默认参数：iQuality -> 11，iWindow -> 22，iMode -> 0）
+HPSOCKET_API int __HP_CALL SYS_BrotliCompressEx(const BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen, int iQuality, int iWindow, int iMode);
+// Brotli 解压（返回值：0 -> 成功，-3 -> 输入数据不正确，-5 -> 输出缓冲区不足）
+HPSOCKET_API int __HP_CALL SYS_BrotliUncompress(const BYTE* lpszSrc, DWORD dwSrcLen, BYTE* lpszDest, DWORD* pdwDestLen);
+// Brotli 推测压缩结果长度
+HPSOCKET_API DWORD __HP_CALL SYS_BrotliGuessCompressBound(DWORD dwSrcLen);
+
+#endif
+
+#ifdef _ICONV_SUPPORT
+
+// Charset A -> Charset B
+HPSOCKET_API BOOL __HP_CALL SYS_CharsetConvert(LPCSTR lpszFromCharset, LPCSTR lpszToCharset, LPCSTR lpszInBuf, int iInBufLen, LPSTR lpszOutBuf, int* piOutBufLen);
+// GBK -> UNICODE
+HPSOCKET_API BOOL __HP_CALL SYS_GbkToUnicode(const char szSrc[], WCHAR szDest[], int* piDestLength);
+// UNICODE -> GBK
+HPSOCKET_API BOOL __HP_CALL SYS_UnicodeToGbk(const WCHAR szSrc[], char szDest[], int* piDestLength);
+// UTF8 -> UNICODE
+HPSOCKET_API BOOL __HP_CALL SYS_Utf8ToUnicode(const char szSrc[], WCHAR szDest[], int* piDestLength);
+// UNICODE -> UTF8
+HPSOCKET_API BOOL __HP_CALL SYS_UnicodeToUtf8(const WCHAR szSrc[], char szDest[], int* piDestLength);
+// GBK -> UTF8
+HPSOCKET_API BOOL __HP_CALL SYS_GbkToUtf8(const char szSrc[], char szDest[], int* piDestLength);
+// UTF8 -> GBK
+HPSOCKET_API BOOL __HP_CALL SYS_Utf8ToGbk(const char szSrc[], char szDest[], int* piDestLength);
+
+#endif
 
 /*****************************************************************************************************************************************************/
 /******************************************************************** HTTP Exports *******************************************************************/
@@ -1879,8 +1904,8 @@ HPSOCKET_API HP_HttpServer __HP_CALL Create_HP_HttpServer(HP_HttpServerListener 
 HPSOCKET_API HP_HttpAgent __HP_CALL Create_HP_HttpAgent(HP_HttpAgentListener pListener);
 // 创建 HP_HttpClient 对象
 HPSOCKET_API HP_HttpClient __HP_CALL Create_HP_HttpClient(HP_HttpClientListener pListener);
-// 创建 HP_HttpSyncClient 对象
-HPSOCKET_API HP_HttpSyncClient __HP_CALL Create_HP_HttpSyncClient(HP_HttpClientListener pListener);
+// 创建 HP_HttpSyncClient 对象（pListener 参数可传入 nullptr）
+HPSOCKET_API HP_HttpSyncClient __HP_CALL Create_HP_HttpSyncClient(HP_HttpClientListener pListener /*= nullptr*/);
 
 // 销毁 HP_HttpServer 对象
 HPSOCKET_API void __HP_CALL Destroy_HP_HttpServer(HP_HttpServer pServer);
@@ -2019,7 +2044,7 @@ HPSOCKET_API BOOL __HP_CALL HP_HttpServer_SendLocalFile(HP_HttpServer pServer, H
 /*
 * 名称：发送 Chunked 数据分片
 * 描述：向对端发送 Chunked 数据分片
-*		
+*
 * 参数：		dwConnID		-- 连接 ID
 *			pData			-- Chunked 数据分片
 *			iLength			-- 数据分片长度（为 0 表示结束分片）
@@ -2062,7 +2087,7 @@ HPSOCKET_API BOOL __HP_CALL HP_HttpServer_Release(HP_HttpServer pServer, HP_CONN
 /*
 * 名称：启动 HTTP 通信
 * 描述：当通信组件设置为非自动启动 HTTP 通信时，需要调用本方法启动 HTTP 通信
-*		
+*
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
 */
@@ -2167,7 +2192,7 @@ HPSOCKET_API BOOL __HP_CALL HP_HttpAgent_SendLocalFile(HP_HttpAgent pAgent, HP_C
 /*
 * 名称：发送 Chunked 数据分片
 * 描述：向对端发送 Chunked 数据分片
-*		
+*
 * 参数：		dwConnID		-- 连接 ID
 *			pData			-- Chunked 数据分片
 *			iLength			-- 数据分片长度（为 0 表示结束分片）
@@ -2220,7 +2245,7 @@ HPSOCKET_API BOOL __HP_CALL HP_HttpAgent_SendWSMessage(HP_HttpAgent pAgent, HP_C
 /*
 * 名称：启动 HTTP 通信
 * 描述：当通信组件设置为非自动启动 HTTP 通信时，需要调用本方法启动 HTTP 通信
-*		
+*
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
 */
@@ -2318,7 +2343,7 @@ HPSOCKET_API BOOL __HP_CALL HP_HttpClient_SendLocalFile(HP_HttpClient pClient, L
 /*
 * 名称：发送 Chunked 数据分片
 * 描述：向对端发送 Chunked 数据分片
-*		
+*
 * 参数：		pData			-- Chunked 数据分片
 *			iLength			-- 数据分片长度（为 0 表示结束分片）
 *			lpszExtensions	-- 扩展属性（默认：nullptr）
@@ -2369,7 +2394,7 @@ HPSOCKET_API BOOL __HP_CALL HP_HttpClient_SendWSMessage(HP_HttpClient pClient, B
 /*
 * 名称：启动 HTTP 通信
 * 描述：当通信组件设置为非自动启动 HTTP 通信时，需要调用本方法启动 HTTP 通信
-*		
+*
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
 */
@@ -2519,11 +2544,30 @@ HPSOCKET_API int __HP_CALL HP_HttpCookie_HLP_ExpiresToMaxAge(__time64_t tmExpire
 /**************************************************************** Thread Pool Exports ****************************************************************/
 /*****************************************************************************************************************************************************/
 
+/* Thread Pool 回调函数 */
+typedef void (__HP_CALL *HP_FN_ThreadPool_OnStartup)			(HP_ThreadPool pThreadPool);
+typedef void (__HP_CALL *HP_FN_ThreadPool_OnShutdown)			(HP_ThreadPool pThreadPool);
+typedef void (__HP_CALL *HP_FN_ThreadPool_OnWorkerThreadStart)	(HP_ThreadPool pThreadPool, THR_ID dwThreadID);
+typedef void (__HP_CALL *HP_FN_ThreadPool_OnWorkerThreadEnd)	(HP_ThreadPool pThreadPool, THR_ID dwThreadID);
+
+/**********************************************************************************/
+/************************** Thread Pool 回调函数设置方法 ***************************/
+
+HPSOCKET_API void __HP_CALL HP_Set_FN_ThreadPool_OnStartup(HP_ThreadPoolListener pListener				, HP_FN_ThreadPool_OnStartup fn);
+HPSOCKET_API void __HP_CALL HP_Set_FN_ThreadPool_OnShutdown(HP_ThreadPoolListener pListener				, HP_FN_ThreadPool_OnShutdown fn);
+HPSOCKET_API void __HP_CALL HP_Set_FN_ThreadPool_OnWorkerThreadStart(HP_ThreadPoolListener pListener	, HP_FN_ThreadPool_OnWorkerThreadStart fn);
+HPSOCKET_API void __HP_CALL HP_Set_FN_ThreadPool_OnWorkerThreadEnd(HP_ThreadPoolListener pListener		, HP_FN_ThreadPool_OnWorkerThreadEnd fn);
+
 /****************************************************/
 /******************* 对象创建函数 ********************/
 
-// 创建 IHPThreadPool 对象
-HPSOCKET_API HP_ThreadPool __HP_CALL Create_HP_ThreadPool();
+// 创建 IHPThreadPoolListener 对象
+HPSOCKET_API HP_ThreadPoolListener __HP_CALL Create_HP_ThreadPoolListener();
+// 销毁 IHPThreadPoolListener 对象
+HPSOCKET_API void __HP_CALL Destroy_HP_ThreadPoolListener(HP_ThreadPoolListener pListener);
+
+// 创建 IHPThreadPool 对象（pListener 参数可传入 nullptr）
+HPSOCKET_API HP_ThreadPool __HP_CALL Create_HP_ThreadPool(HP_ThreadPoolListener pListener /*= nullptr*/);
 // 销毁 IHPThreadPool 对象
 HPSOCKET_API void __HP_CALL Destroy_HP_ThreadPool(HP_ThreadPool pThreadPool);
 
@@ -2542,7 +2586,7 @@ HPSOCKET_API void __HP_CALL Destroy_HP_ThreadPool(HP_ThreadPool pThreadPool);
 *							TBT_REFER	：（浅拷贝）pBuffer 不复制到 TSocketTask 对象，需确保 TSocketTask 对象生命周期内 pBuffer 必须有效
 *											-> 适用于 pBuffer 较大或 pBuffer 可重用，并且 pBuffer 生命周期受控的场景
 *							TBT_ATTACH	：（附属）执行浅拷贝，但 TSocketTask 对象会获得 pBuffer 的所有权，并负责释放 pBuffer，避免多次缓冲区拷贝
-*											-> 注意：pBuffer 必须由 SYS_Malloc() 函数分配才能使用本类型，否则可能会发生内存访问错误
+*											-> 注意：pBuffer 必须由 SYS_Malloc()/SYS_Calloc() 函数分配才能使用本类型，否则可能会发生内存访问错误
 *			wParam		-- 自定义参数
 *			lParam		-- 自定义参数
 * 返回值：	HP_LPTSocketTask
@@ -2626,7 +2670,7 @@ HPSOCKET_API BOOL __HP_CALL HP_ThreadPool_AdjustThreadCount(HP_ThreadPool pThrea
 /*
 * 名称：等待
 * 描述：等待线程池组件停止运行
-*		
+*
 * 参数：		dwMilliseconds	-- 超时时间（毫秒，默认：-1，永不超时）
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取错误代码
@@ -2649,4 +2693,4 @@ HPSOCKET_API DWORD __HP_CALL HP_ThreadPool_GetThreadCount(HP_ThreadPool pThreadP
 /* 获取任务队列最大容量 */
 HPSOCKET_API DWORD __HP_CALL HP_ThreadPool_GetMaxQueueSize(HP_ThreadPool pThreadPool);
 /* 获取任务拒绝处理策略 */
-HPSOCKET_API EnRejectedPolicy __HP_CALL HP_ThreadPool_GetRejectedPolicy(HP_ThreadPool pThreadPool);
+HPSOCKET_API En_HP_RejectedPolicy __HP_CALL HP_ThreadPool_GetRejectedPolicy(HP_ThreadPool pThreadPool);

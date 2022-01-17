@@ -18,12 +18,18 @@
     <ClInclude Include="include\Communication.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\message.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Communication.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\proto\Message2Clients.pb.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\proto\Message2Server.pb.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\proto\MessageType.pb.cc">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

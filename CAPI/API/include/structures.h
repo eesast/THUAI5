@@ -4,6 +4,7 @@
 
 #include <cstdint>
 #include <array>
+#include <map>
 
 namespace THUAI5
 {
@@ -80,7 +81,7 @@ namespace THUAI5
     /// 被动技能
     /// </summary>
     enum class PassiveSkillType :unsigned char 
-    {
+    { 
         NullPassiveSkillType = 0,
         RecoverAfterBattle = 1,
         SpeedUpWhenLeavingGrass = 2,
@@ -137,8 +138,8 @@ namespace THUAI5
         PropType prop;                                  // 所持有的道具
         PlaceType place;                                // 人物所在位置
         BulletType bulletType;                          // 子弹类型
-        PassiveSkillType PassiveSkillType;              // 持有的被动技能 
-        ActiveSkillType ActiveSkillType;                // 持有的主动技能
+        PassiveSkillType passiveSkillType;              // 持有的被动技能 
+        ActiveSkillType activeSkillType;                // 持有的主动技能
     };
 
     /// <summary>
@@ -185,6 +186,77 @@ namespace THUAI5
 
         BulletType type;                                // 子弹种类
         PlaceType place;                                // 放置位置
+    };
+
+    // debug方便使用。名称可以改动
+
+    inline std::map<THUAI5::PropType, std::string> prop_dict
+    {
+        { PropType::NullPropType,"NullPropType"},
+        { PropType::addHP,"addHP"},
+        { PropType::addAP,"addAP"},
+        { PropType::addSpeed,"addSpeed"},
+        { PropType::addLIFE ,"addLIFE "},
+        { PropType::minusCD ,"minusCD "},
+        { PropType::Gem ,"Gem "},
+        { PropType::Shield ,"Shield "},
+        { PropType::Spear ,"Spear "},
+        { PropType::minusSpeed ,"minusSpeed "},
+        { PropType::minusAP ,"minusAP "},
+        { PropType::addCD ,"addCD "}
+    };
+
+    inline std::map<THUAI5::PlaceType, std::string> place_dict
+    {
+        { PlaceType::NullPlaceType ,"NullPlaceType "},
+        { PlaceType::Land ,"Land "},
+        { PlaceType::Grass1 ,"Grass1 "},
+        { PlaceType::Grass2 ,"Grass2 "},
+        { PlaceType::Grass3 ,"Grass3 "},
+        { PlaceType::Invisible ,"Invisible "}
+    };
+
+    inline std::map<THUAI5::BuffType, std::string> buff_dict
+    {
+        { BuffType::NullBuffType ,"NullBuffType "},
+        { BuffType::MoveSpeed ,"MoveSpeed "},
+        { BuffType::AP ,"AP "},
+        { BuffType::CD ,"CD "},
+        { BuffType::AddLIFE ,"AddLIFE "},
+        { BuffType::ShieldBuff ,"ShieldBuff "},
+        { BuffType::SpearBuff ,"SpearBuff "},
+    };
+
+    inline std::map<THUAI5::BulletType, std::string> bullet_dict
+    {
+        { BulletType::NullBulletType ,"NullBulletType "},
+        { BulletType::CommonBullet1 ,"CommonBullet1 "},
+        { BulletType::CommonBullet2 ,"CommonBullet2 "},
+        { BulletType::FastBullet ,"FastBullet "},
+        { BulletType::OrdinaryBullet ,"OrdinaryBullet "},
+        { BulletType::AtomBomb ,"AtomBomb "}
+    };
+
+    inline std::map<THUAI5::ActiveSkillType, std::string> active_dict
+    {
+        { ActiveSkillType::NullActiveSkillType ,"NullActiveSkillType "},
+        { ActiveSkillType::BecomeVampire ,"BecomeVampire "},
+        { ActiveSkillType::BecomeAssassin ,"BecomeAssassin "},
+        { ActiveSkillType::NuclearWeapon ,"NuclearWeapon "},
+        { ActiveSkillType::SuperFast ,"SuperFast "},
+        { ActiveSkillType::ASkill4 ,"ASkill4 "},
+        { ActiveSkillType::ASkill5 ,"ASkill5 "}
+    };
+
+    inline std::map<THUAI5::PassiveSkillType, std::string> passive_dict
+    {
+        { PassiveSkillType::NullPassiveSkillType ,"NullPassiveSkillType "},
+        { PassiveSkillType::RecoverAfterBattle ,"RecoverAfterBattle "},
+        { PassiveSkillType::SpeedUpWhenLeavingGrass ,"SpeedUpWhenLeavingGrass "},
+        { PassiveSkillType::Vampire ,"Vampire "},
+        { PassiveSkillType::PSkill3 ,"PSkill3 "},
+        { PassiveSkillType::PSkill4 ,"PSkill4 "},
+        { PassiveSkillType::PSkill5 ,"PSkill5 "}
     };
 }
 

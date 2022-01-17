@@ -4,6 +4,8 @@
 #ifndef GOOGLE_PROTOBUF_INCLUDED_Message2Clients_2eproto
 #define GOOGLE_PROTOBUF_INCLUDED_Message2Clients_2eproto
 
+#define PROTOBUF_USE_DLLS
+
 #include <limits>
 #include <string>
 
@@ -229,9 +231,10 @@ class MessageOfCharacter final :
     kPassiveSkillTypeFieldNumber = 16,
     kActiveSkillTypeFieldNumber = 17,
     kGuidFieldNumber = 18,
+    kRadiusFieldNumber = 20,
     kIsResettingFieldNumber = 15,
     kCanMoveFieldNumber = 19,
-    kRadiusFieldNumber = 20,
+    kIsInvisibleFieldNumber = 26,
     kCDFieldNumber = 21,
     kLifeNumFieldNumber = 22,
     kTeamIDFieldNumber = 24,
@@ -391,6 +394,15 @@ class MessageOfCharacter final :
   void _internal_set_guid(int64_t value);
   public:
 
+  // int32 radius = 20;
+  void clear_radius();
+  int32_t radius() const;
+  void set_radius(int32_t value);
+  private:
+  int32_t _internal_radius() const;
+  void _internal_set_radius(int32_t value);
+  public:
+
   // bool isResetting = 15;
   void clear_isresetting();
   bool isresetting() const;
@@ -409,13 +421,13 @@ class MessageOfCharacter final :
   void _internal_set_canmove(bool value);
   public:
 
-  // int32 radius = 20;
-  void clear_radius();
-  int32_t radius() const;
-  void set_radius(int32_t value);
+  // bool isInvisible = 26;
+  void clear_isinvisible();
+  bool isinvisible() const;
+  void set_isinvisible(bool value);
   private:
-  int32_t _internal_radius() const;
-  void _internal_set_radius(int32_t value);
+  bool _internal_isinvisible() const;
+  void _internal_set_isinvisible(bool value);
   public:
 
   // int32 CD = 21;
@@ -487,9 +499,10 @@ class MessageOfCharacter final :
   int passiveskilltype_;
   int activeskilltype_;
   int64_t guid_;
+  int32_t radius_;
   bool isresetting_;
   bool canmove_;
-  int32_t radius_;
+  bool isinvisible_;
   int32_t cd_;
   int32_t lifenum_;
   int64_t teamid_;
@@ -2167,6 +2180,26 @@ inline void MessageOfCharacter::_internal_set_playerid(int64_t value) {
 inline void MessageOfCharacter::set_playerid(int64_t value) {
   _internal_set_playerid(value);
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.playerID)
+}
+
+// bool isInvisible = 26;
+inline void MessageOfCharacter::clear_isinvisible() {
+  isinvisible_ = false;
+}
+inline bool MessageOfCharacter::_internal_isinvisible() const {
+  return isinvisible_;
+}
+inline bool MessageOfCharacter::isinvisible() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfCharacter.isInvisible)
+  return _internal_isinvisible();
+}
+inline void MessageOfCharacter::_internal_set_isinvisible(bool value) {
+  
+  isinvisible_ = value;
+}
+inline void MessageOfCharacter::set_isinvisible(bool value) {
+  _internal_set_isinvisible(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.isInvisible)
 }
 
 // -------------------------------------------------------------------

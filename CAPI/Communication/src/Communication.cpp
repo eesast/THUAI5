@@ -3,6 +3,87 @@
 #include <thread>
 #include <chrono>
 
+
+namespace GameMessage
+{
+	/// <summary>
+	/// 供little endian使用的枚举值
+	/// </summary>
+	enum class PacketType
+	{
+		MessageToServer = 0,
+		MessageToOneClient = 1,
+		MessageToClient = 2,
+		MessageToInitialize = 3
+	};
+
+	static const int MessageToServerNum = int(PacketType::MessageToServer);
+
+	/// <summary>
+	/// 反序列化
+	/// </summary>
+	/// <param name="data">需要进行反序列化的数据</param>
+	/// <param name="length">序列长度</param>
+	pointer_m2c Deserialize(const unsigned char* data, int length)
+	{
+		/// 解析前四位以获取数据类型
+		uint32_t type = (uint32_t)data[0];
+		for (int i = 1; i < 4; i++)
+		{
+			type |= ((uint32_t)data[i]) << (8 * i);
+		}
+		pointer_m2c pm2c;
+		switch (type)
+		{
+			case int(PacketType::MessageToOneClient) :
+			{
+				std::shared_ptr<Protobuf::MessageToOneClient> p = std::make_shared<Protobuf::MessageToOneClient>();
+				p->ParseFromArray(data + 4, length - 4);
+				pm2c = p;
+				break;
+			}
+
+			case int(PacketType::MessageToClient) :
+			{
+				std::shared_ptr<Protobuf::MessageToClient> p = std::make_shared<Protobuf::MessageToClient>();
+				p->ParseFromArray(data + 4, length - 4);
+				pm2c = p;
+				break;
+			}
+
+			case int(PacketType::MessageToInitialize) :
+			{
+				std::shared_ptr<Protobuf::MessageToInitialize> p = std::make_shared<Protobuf::MessageToInitialize>();
+				p->ParseFromArray(data + 4, length - 4);
+				pm2c = p;
+				break;
+			}
+
+			default:
+			{
+				pm2c = nullptr;
+			}
+		}
+		return pm2c;
+	}
+
+	/// <summary>
+	/// 序列化
+	/// </summary>
+	/// <param name="data"></param>
+	void Serialize(unsigned char* data, const Protobuf::MessageToServer& m2s)
+	{
+		// 设置前四位为数据类型
+		for (int i = 0; i < 4; i++)
+		{
+			data[i] = (int(PacketType::MessageToServer) >> (8 * i)) & 0xff;
+		}
+		int msg_size = m2s.ByteSizeLong();
+		m2s.SerializeToArray(data + 4, msg_size);
+	}
+
+};
+
 EnHandleResult ClientCommunication::OnConnect(ITcpClient* pSender, CONNID dwConnID)
 {
     comm.OnConnect();
@@ -41,7 +122,7 @@ void ClientCommunication::Send(const Protobuf::MessageToServer& m2s)
 {
 	unsigned char data[max_length];
 	int msgSize = m2s.ByteSizeLong();
-	GameMessage::Serialize(data,m2s);
+    GameMessage::Serialize(data, m2s);
 	if (!pclient->Send(data, msgSize))
 	{
 		std::cerr << "Failed to send the message. Error code:";
@@ -90,7 +171,10 @@ void MultiThreadClientCommunication::init()
 
 void MultiThreadClientCommunication::UnBlock()
 {
-	blocking = false;
+	{
+		std::lock_guard<std::mutex> lock(mtx);
+		blocking = false;
+	}
 	cv.notify_one(); // 唤醒一个线程
 }
 

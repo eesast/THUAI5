@@ -6,12 +6,13 @@
 #include <Message2Clients.pb.h>
 #include <Message2Server.pb.h>
 #include <concurrent_queue.hpp>
-#include "message.hpp"
 
 // third-party libraries
 #include <google/protobuf/message.h>
 #include <HPSocket.h>
 #include <SocketInterface.h>
+#include <HPSocket-SSL.h>
+#include <HPTypeDef.h>
 
 // C++ standard libraries
 #include <variant> 
@@ -28,6 +29,10 @@
 // 3.ClientCommunication依赖于MultiThreadClientCommunication的接口，而MultiThreadClientCommunication依赖于ClientCommunication的实体
 // 在THUAI4中，从MultiThreadClientCommunication(THUAI4中名为Communication)构造ClientCommunication(THUAI4中名为CAPI)中，又用到了大量的回调函数
 // 所以不妨将ClientCommunication依赖于MultiThreadClientCommunication的部分抽取为一个接口ICommunication
+using pointer_m2c = std::variant<std::shared_ptr<Protobuf::MessageToClient>, std::shared_ptr<Protobuf::MessageToOneClient>, std::shared_ptr<Protobuf::MessageToInitialize>, std::nullptr_t>; // 类型安全的联合体
+#define TYPEM2C 0
+#define TYPEM2OC 1
+#define TYPEM2I 2
 
 /// <summary>
 /// 信息的委托接口，是指ClientCommunication依赖于MultiThreadClientCommunication的部分
@@ -64,7 +69,7 @@ private:
     /// <summary>
     /// 信息流的最大长度
     /// </summary>
-    static const constexpr int max_length = 1000;
+    static const constexpr int max_length = 500;
 
     /// <summary>
     /// tcp-client组件
@@ -83,20 +88,20 @@ public:
     /// <summary>
     /// 构造函数
     /// </summary>
-    ClientCommunication(ICommunication& comm):comm(comm) {}
+    ClientCommunication(ICommunication& comm):comm(comm), pclient(this) {}
 
     /// <summary>
     /// 连接server
     /// </summary>
-    /// <param name="address"></param>
-    /// <param name="part"></param>
+    /// <param name="address">ip地址</param>
+    /// <param name="part">端口</param>
     /// <returns></returns>
     bool Connect(const char* address, uint16_t port);
 
     /// <summary>
     /// 发送信息
     /// </summary>
-    /// <param name="m2s"></param>
+    /// <param name="m2s">需要发送的信息</param>
     void Send(const Protobuf::MessageToServer& m2s);
 
     /// <summary>
@@ -156,22 +161,22 @@ public:
     ~MultiThreadClientCommunication() {};
 
     /// <summary>
-    /// 在MultiThreadClientCommunication对象构造完毕后设置std::unique_ptr<ClientCommunication> capi的内容
+    /// 在MultiThreadClientCommunication对象构造完毕后设置std::unique_ptr/<ClientCommunication/> capi的内容
     /// </summary>
     void init();
 
     /// <summary>
     /// 连接Server，成功返回真且启动PM线程，否则返回假且不启动线程
     /// </summary>
-    /// <param name="address"></param>
-    /// <param name="port"></param>
+    /// <param name="address">ip地址</param>
+    /// <param name="port">端口</param>
     /// <returns></returns>
     bool Start(const char* address, uint16_t port);
 
     /// <summary>
     /// 发送信息
     /// </summary>
-    /// <param name="m2s"></param>
+    /// <param name="m2s">需要发送的信息</param>
     /// <returns></returns>
     bool Send(const Protobuf::MessageToServer& m2s);
 
