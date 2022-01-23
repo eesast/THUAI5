@@ -379,7 +379,7 @@ namespace Server
                     int i = 0, j = 0;
                     using (StreamReader sr = new StreamReader(options.mapResource))
                     {
-                        while (!sr.EndOfStream && i < GameData.rows && j < GameData.cols)
+                        while (!sr.EndOfStream && i < GameData.rows)
                         {
                             if ((line = sr.ReadLine()) != null)
                             {
@@ -391,9 +391,10 @@ namespace Server
                                     if (j >= GameData.cols)
                                     {
                                         j = 0;
-                                        i++;
+                                        break;
                                     }
                                 }
+                                i++;
                             }
                         }
                     }

@@ -41,7 +41,6 @@ namespace Client
             playerData = new List<MessageToClient.Types.GameObjMessage>();
             bulletData = new List<MessageToClient.Types.GameObjMessage>();
             propData = new List<MessageToClient.Types.GameObjMessage>();
-            myMessages = new();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             communicator = new ClientCommunication();
             communicator.OnReceive += OnReceive;
@@ -613,7 +612,6 @@ namespace Client
         private object drawPicLock = new object();
         private MessageToClient.Types.GameObjMessage? myInfo = null;  //这个client自己的message
 
-        private Stack<string>? myMessages;
 
         /// <summary>
         /// 50*50
