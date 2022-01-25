@@ -37,15 +37,14 @@ namespace Server
         protected readonly object addPlayerLock = new();
         private bool AddPlayer(MessageToServer msg)
         {
-            if (game.GameMap.Timer.IsGaming)  //游戏运行中，不能添加玩家
+            if (msg.PlayerID >= spectatorMinPlayerID && msg.TeamID >= spectatorMinTeamID)
             {
-                if (msg.PlayerID >= spectatorMinPlayerID && msg.TeamID >= spectatorMinTeamID)
-                {
-                    //观战模式
-                    Console.WriteLine("A new spectator comes to watch this game.");
-                }
+                //观战模式
+                Console.WriteLine("A new spectator comes to watch this game.");
                 return false;
             }
+            if (game.GameMap.Timer.IsGaming)  //游戏运行中，不能添加玩家
+                return false;
             if (!ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))  //玩家id是否正确
                 return false;
             if (communicationToGameID[msg.TeamID, msg.PlayerID] != GameObj.invalidID)  //是否已经添加了该玩家
