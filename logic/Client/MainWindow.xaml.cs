@@ -103,6 +103,11 @@ namespace Client
                             rectangle.Fill = Brushes.Green;
                             rectangle.Stroke = Brushes.Green;
                             break;
+                        case 13:
+                            rectangle.Fill = Brushes.LightPink;
+                            rectangle.Stroke= Brushes.LightPink;
+                            break;
+
                     }
                     UnderLayerOfMap.Children.Add(rectangle);
                 }
