@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayBack", "PlayBack\PlayBa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaybackForUnity", "PlaybackForUnity\PlaybackForUnity.csproj", "{48E539A3-0331-4AA2-9EEF-E5D3B2DCAFDB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proto", "..\communication\Proto\Proto.csproj", "{6780F41E-9073-4D28-A79D-BA61AA195D15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{48E539A3-0331-4AA2-9EEF-E5D3B2DCAFDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48E539A3-0331-4AA2-9EEF-E5D3B2DCAFDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48E539A3-0331-4AA2-9EEF-E5D3B2DCAFDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6780F41E-9073-4D28-A79D-BA61AA195D15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6780F41E-9073-4D28-A79D-BA61AA195D15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6780F41E-9073-4D28-A79D-BA61AA195D15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6780F41E-9073-4D28-A79D-BA61AA195D15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
