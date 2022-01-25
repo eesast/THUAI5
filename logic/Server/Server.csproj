@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,7 @@
     <ProjectReference Include="..\..\communication\ClientCommunication\ClientCommunication.csproj" />
     <ProjectReference Include="..\..\communication\Proto\Proto.csproj" />
     <ProjectReference Include="..\..\communication\ServerCommunication\ServerCommunication.csproj" />
+    <ProjectReference Include="..\..\playback\PlayBack\PlayBack.csproj" />
     <ProjectReference Include="..\GameClass\GameClass.csproj" />
     <ProjectReference Include="..\Gaming\Gaming.csproj" />
   </ItemGroup>

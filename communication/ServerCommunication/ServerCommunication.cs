@@ -8,18 +8,18 @@ using System.Threading;
 
 namespace Communication.ServerCommunication
 {
-    public delegate void OnReceiveCallback(); 
+    public delegate void OnReceiveCallback();
     public delegate void OnConnectCallback();
 
-    public sealed class ServerCommunication:IDisposable // 提供释放资源的接口
+    public sealed class ServerCommunication : IDisposable // 提供释放资源的接口
     {
-        private static readonly ConcurrentDictionary<uint, IntPtr> playerDict = new ConcurrentDictionary<uint, IntPtr>(); // 储存当前所有玩家的id
+        private static readonly ConcurrentDictionary<long, IntPtr> playerDict = new(); // 储存当前所有玩家的id
         // 本来加这个字典的目的是为了防止子弹和道具的重复构造，但了解了guid的机制后，感觉没什么必要...
         // private static readonly ConcurrentDictionary<int, GameObjType> instanceDict = new ConcurrentDictionary<int, GameObjType>(); // 储存所有的子弹和道具信息
-        private static AutoResetEvent allConnectionClosed = new AutoResetEvent(false); // 是否所有玩家都已经断开了连接
+        private static readonly AutoResetEvent allConnectionClosed = new(false); // 是否所有玩家都已经断开了连接
 
-        private BlockingCollection<IGameMessage> msgQueue; // 储存信息的线程安全队列 
-        private TcpPackServer server;
+        private readonly BlockingCollection<IGameMessage> msgQueue; // 储存信息的线程安全队列 
+        private readonly TcpPackServer server;
         public event OnReceiveCallback OnReceive;      // 用于赋给server的事件 发送信息时
         public event OnConnectCallback OnConnect;      // 收到client的请求连接信息时
 
@@ -32,19 +32,16 @@ namespace Communication.ServerCommunication
             server.OnAccept += delegate (IServer sender, IntPtr connId, IntPtr client)
             {
                 OnConnect?.Invoke();
-#if DEBUG
-                Console.WriteLine($"Now the connect number is {server.ConnectionCount} (Maybe there are repeated clients.)");
-#endif 
                 return HandleResult.Ok;
             };
 
             // 原先的想法是，在server.OnAccept()中加入对人数和是否有玩家重复的信息
             // 但这一操作只能判断人数，不能判别人的具体信息，还是要在OnReceive中进行，这样通信负载是不是有些过大?
-            
+
 
             server.OnReceive += delegate (IServer sender, IntPtr connId, byte[] bytes)
             {
-                Message message = new Message();
+                Message message = new();
                 // 信息解析
                 message.Deserialize(bytes);
 
@@ -57,10 +54,10 @@ namespace Communication.ServerCommunication
                     lock (this)
                     {
                         // 不太理解原来为什么是<<32.感觉<<16就够用了。可能和dotnet版本有关，之前的写法会报警告
-                        uint key = ((uint)m2s.PlayerID | (uint)m2s.TeamID << 16);
-                        MessageToOneClient messageToOneClient = new MessageToOneClient();
-                        messageToOneClient.PlayerID = (int)m2s.PlayerID;
-                        messageToOneClient.TeamID = (int)m2s.TeamID;
+                        long key = (m2s.PlayerID | (m2s.TeamID << 16));
+                        MessageToOneClient messageToOneClient = new();
+                        messageToOneClient.PlayerID = m2s.PlayerID;
+                        messageToOneClient.TeamID = m2s.TeamID;
 
                         if (playerDict.ContainsKey(key))
                         {
@@ -72,6 +69,7 @@ namespace Communication.ServerCommunication
                         else
                         {
                             playerDict.TryAdd(key, connId);
+                            Console.WriteLine($"Now the connect number is {playerDict.Count}");
                             messageToOneClient.MessageType = MessageType.ValidPlayer;
                             SendToClient(messageToOneClient);
                         }
@@ -80,7 +78,7 @@ namespace Communication.ServerCommunication
 
                 try
                 {
-                    msgQueue.Add(message); 
+                    msgQueue.Add(message);
                 }
                 catch (Exception e)
                 {
@@ -93,7 +91,7 @@ namespace Communication.ServerCommunication
             // 有玩家退出时的操作(不知道这个原先在Agent中的功能迁移到Server中是否还有必要)
             server.OnClose += delegate (IServer sender, IntPtr connId, SocketOperation socketOperation, int errorCode)
             {
-                foreach(uint id in playerDict.Keys)
+                foreach (long id in playerDict.Keys)
                 {
                     if (playerDict[id] == connId)
                     {
@@ -101,15 +99,13 @@ namespace Communication.ServerCommunication
                         {
                             return HandleResult.Error;
                         }
-                        // 关于此处连接数（上文也一样的问题），实际上此处应该加一个mutex，但不加也无伤大雅
                         Console.WriteLine($"Player {id >> 16} {id & 0xffff} closed the connection");
                         break;
                     }
                 }
-                // 虽然有着重复队伍名称和玩家编号的client确实收不到信息，但还是会连在server上，这里的ConnectionCount也有谜之bug...
-#if DEBUG
-                Console.WriteLine($"Now the connect number is { server.ConnectionCount }");
-#endif
+
+                Console.WriteLine($"Now the connect number is { playerDict.Count }");
+
                 if (playerDict.IsEmpty)
                 {
                     allConnectionClosed.Set();
@@ -125,9 +121,9 @@ namespace Communication.ServerCommunication
         {
             server.Port = port;
             bool isListenning = server.Start();
-            if(isListenning)
+            if (isListenning)
             {
-                Console.WriteLine($"The Csharp server starts to listenning to port {port}");
+                Console.WriteLine($"The Csharp server starts to listen to port {port}");
             }
             else
             {
@@ -149,13 +145,13 @@ namespace Communication.ServerCommunication
         /// <returns></returns>
         public void SendToClient(MessageToOneClient m21c)
         {
-            Message message = new Message();
+            Message message = new();
             message.Content = m21c;
             message.PacketType = PacketType.MessageToOneClient;
 
             // 判断对应的玩家编号是否存在，不存在就报错
             // 关于THUAI4这里为什么要使用ulong?
-            uint key = (uint)m21c.PlayerID | ((uint)m21c.TeamID << 16);
+            long key = m21c.PlayerID | (m21c.TeamID << 16);
             byte[] bytes;
             message.Serialize(out bytes); // 生成字节流
             SendOperationUniCast(bytes, key);
@@ -167,7 +163,7 @@ namespace Communication.ServerCommunication
         /// <param name="m21c"></param>
         public void SendToClient(MessageToOneClient m21c, IntPtr connId)
         {
-            Message message = new Message();
+            Message message = new();
             message.Content = m21c;
             message.PacketType = PacketType.MessageToOneClient;
 
@@ -182,7 +178,7 @@ namespace Communication.ServerCommunication
         /// <param name="m2i">初始化信息</param>
         public void SendToClient(MessageToInitialize m2i)
         {
-            Message message = new Message();
+            Message message = new();
             message.Content = m2i;
             message.PacketType = PacketType.MessageToInitialize;
 
@@ -194,7 +190,7 @@ namespace Communication.ServerCommunication
 
         public void SendToClient(MessageToClient m2c)
         {
-            Message message = new Message();
+            Message message = new();
             message.Content = m2c;
             message.PacketType = PacketType.MessageToClient;
 
@@ -273,13 +269,13 @@ namespace Communication.ServerCommunication
         /// </summary>
         /// <param name="bytes">由对象信息转化而来的字节流</param>
         /// <param name="key">某玩家在字典中对应的键</param>
-        private void SendOperationUniCast(byte[] bytes,uint key)
+        private void SendOperationUniCast(byte[] bytes, long key)
         {
             IntPtr connId;
-            playerDict.TryGetValue(key, out connId);
+            _ = playerDict.TryGetValue(key, out connId);
             if (server.Send(connId, bytes, bytes.Length))
             {
-                Console.WriteLine($"Only send to {key >> 16} {key & 0xffff} with connId {connId}");    
+                Console.WriteLine($"Only send to {key >> 16} {key & 0xffff} with connId {connId}");
             }
             else
             {
@@ -292,7 +288,7 @@ namespace Communication.ServerCommunication
         /// </summary>
         /// <param name="bytes">要发送的字节流信息</param>
         /// <param name="connId">client的连接Id</param>
-        private void SendOperationUniCast(byte[] bytes,IntPtr connId)
+        private void SendOperationUniCast(byte[] bytes, IntPtr connId)
         {
             if (!server.Send(connId, bytes, bytes.Length))
             {
@@ -318,7 +314,7 @@ namespace Communication.ServerCommunication
                 return false;
             }
         }
-       
+
         /// <summary>
         /// 以返回值形式返回信息
         /// </summary>

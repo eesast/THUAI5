@@ -9,8 +9,8 @@ enum MessageType
     Move = 1;
     Attack = 2;         //注：所有人物都用子弹攻击
     Pick = 3;
-    Use = 4;
-    Throw = 5;
+    UseProp = 4;
+    ThrowProp = 5;
     Send = 6;
     InvalidPlayer = 7;
     ValidPlayer = 8;
@@ -20,6 +20,8 @@ enum MessageType
     UseCommonSkill = 12;   //使用CommonSkill
     UseUltimateSkill = 13;   //使用UltimateSkill。UltimateSkill极有可能不会有，即人物极有可能只有PassiveSkill和CommonSkill。
     InitialLized = 14;  //Server给Client发送初始化消息十分关键，因此这里用StartGame-MessageToInitialize-InitialLized三次握手确认该操作的成功。
+    UseGem=15;
+    ThrowGem=16;
 }
 
 enum GameObjType
@@ -32,6 +34,7 @@ enum GameObjType
     BirthPoint = 5;
     OutOfBoundBlock = 6;
     Grass = 7;
+    GemWell=8;
 }
 enum ShapeType
 {
@@ -46,7 +49,6 @@ enum PlaceType  //位置标志，包括陆地，草丛，以及角色技能带�
     Grass1 = 2;
     Grass2 = 3;
     Grass3 = 4;
-    Invisible = 5;
 }
 enum PropType    // 道具的类型
 {
@@ -98,8 +100,8 @@ enum BulletType  //会有不同类型的子弹，现在只实现了“原子弹�
     NullBulletType = 0;
     CommonBullet1=1;
     CommonBullet2=2;
-    CommonBullet3=3;
-    CommonBullet4=4;
+    FastBullet=3;
+    OrdinaryBullet=4;
     AtomBomb=5;
 }
 //先偷懒把枚举类型粘在这里

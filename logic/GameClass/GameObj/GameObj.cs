@@ -8,8 +8,8 @@ namespace GameClass.GameObj
     /// 一切游戏元素的总基类，与THUAI4不同，继承IMoveable接口（出于一切物体其实都是可运动的指导思想）——LHR
     /// </summary>
     public abstract class GameObj : IMoveable
-    {   
-        protected readonly object gameObjLock = new object();
+    {
+        protected readonly object gameObjLock = new();
         /// <summary>
         /// 可移动物体专用锁
         /// </summary>
@@ -133,16 +133,7 @@ namespace GameClass.GameObj
         /// </summary>
         private int orgMoveSpeed;
         public int OrgMoveSpeed { get => orgMoveSpeed; protected set { orgMoveSpeed = value; } }
-        public virtual bool CanSee(GameObj obj)
-        {
-            if (obj.Place == PlaceType.Invisible) //先判断是否隐身
-                return false;
-            if (obj.Place == PlaceType.Land)
-                return true;
-            if (obj.Place == this.Place)
-                return true;
-            return false;
-        }
+
         // 移动，改变坐标
         public long Move(Vector moveVec)
         {
@@ -152,7 +143,7 @@ namespace GameClass.GameObj
                 FacingDirection = moveVec.angle;
                 this.Position += XYVec;
             }
-            return (long)(XYVec.ToVector2() * new Vector2(0, 0));
+            return (long)(XYVec.ToVector2() * XYVec.ToVector2());
         }
         /// <summary>
         /// 设置位置
@@ -192,11 +183,15 @@ namespace GameClass.GameObj
         /// <returns> 依具体类及该方法参数而定，默认为false </returns> 
         protected virtual bool IgnoreCollideExecutor(IGameObj targetObj) => false;
         bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
-        public GameObj(XYPosition initPos,int initRadius,PlaceType initPlace)
+        public GameObj(XYPosition initPos, int initRadius, PlaceType initPlace)
         {
-            this.birthPos = initPos;
-            this.Radius = initRadius;
-            this.place = initPlace;
+            lock (gameObjLock)
+            {
+                this.birthPos = initPos;
+                this.Position = initPos;
+                this.Radius = initRadius;
+                this.place = initPlace;
+            }
             ID = Interlocked.Increment(ref currentMaxID);
         }
     }

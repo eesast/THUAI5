@@ -22,7 +22,7 @@ namespace Client
         public ErrorDisplayer(string s)
         {
             InitializeComponent();
-            errorDisplayer.Text = s;
+            errorDisplayer.Text = s+" Time:"+DateTime.Now.ToString();
         }
         private void DragWindow(object sender, RoutedEventArgs e)
         {

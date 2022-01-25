@@ -24,35 +24,35 @@ namespace Communication.Proto {
     static MessageTypeReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChFNZXNzYWdlVHlwZS5wcm90bxIIUHJvdG9idWYq4gEKC01lc3NhZ2VUeXBl",
+            "ChFNZXNzYWdlVHlwZS5wcm90bxIIUHJvdG9idWYqhAIKC01lc3NhZ2VUeXBl",
             "Eg0KCUFkZFBsYXllchAAEggKBE1vdmUQARIKCgZBdHRhY2sQAhIICgRQaWNr",
-            "EAMSBwoDVXNlEAQSCQoFVGhyb3cQBRIICgRTZW5kEAYSEQoNSW52YWxpZFBs",
-            "YXllchAHEg8KC1ZhbGlkUGxheWVyEAgSDQoJU3RhcnRHYW1lEAkSCgoGR2Ft",
-            "aW5nEAoSCwoHRW5kR2FtZRALEhIKDlVzZUNvbW1vblNraWxsEAwSFAoQVXNl",
-            "VWx0aW1hdGVTa2lsbBANEhAKDEluaXRpYWxMaXplZBAOKoEBCgtHYW1lT2Jq",
-            "VHlwZRITCg9OdWxsR2FtZU9ialR5cGUQABINCglDaGFyYWN0ZXIQARIICgRX",
-            "YWxsEAISCAoEUHJvcBADEgoKBkJ1bGxldBAEEg4KCkJpcnRoUG9pbnQQBRIT",
-            "Cg9PdXRPZkJvdW5kQmxvY2sQBhIJCgVHcmFzcxAHKjYKCVNoYXBlVHlwZRIR",
-            "Cg1OdWxsU2hhcGVUeXBlEAASCgoGQ2lyY2xlEAESCgoGU3F1YXJlEAIqWwoJ",
-            "UGxhY2VUeXBlEhEKDU51bGxQbGFjZVR5cGUQABIICgRMYW5kEAESCgoGR3Jh",
-            "c3MxEAISCgoGR3Jhc3MyEAMSCgoGR3Jhc3MzEAQSDQoJSW52aXNpYmxlEAUq",
-            "ogEKCFByb3BUeXBlEhAKDE51bGxQcm9wVHlwZRAAEgkKBWFkZEhQEAESCQoF",
-            "YWRkQVAQAhIMCghhZGRTcGVlZBADEgsKB2FkZExJRkUQBBILCgdtaW51c0NE",
-            "EAUSBwoDR2VtEAYSCgoGU2hpZWxkEAcSCQoFU3BlYXIQCBIOCgptaW51c1Nw",
-            "ZWVkEAkSCwoHbWludXNBUBAKEgkKBWFkZENEEAsqlQEKEFBhc3NpdmVTa2ls",
-            "bFR5cGUSGAoUTnVsbFBhc3NpdmVTa2lsbFR5cGUQABIWChJSZWNvdmVyQWZ0",
-            "ZXJCYXR0bGUQARIbChdTcGVlZFVwV2hlbkxlYXZpbmdHcmFzcxACEgsKB1Zh",
-            "bXBpcmUQAxILCgdQU2tpbGwzEAQSCwoHUFNraWxsNBAFEgsKB1BTa2lsbDUQ",
-            "BiqNAQoPQWN0aXZlU2tpbGxUeXBlEhcKE051bGxBY3RpdmVTa2lsbFR5cGUQ",
-            "ABIRCg1CZWNvbWVWYW1waXJlEAESEgoOQmVjb21lQXNzYXNzaW4QAhIRCg1O",
-            "dWNsZWFyV2VhcG9uEAMSDQoJU3VwZXJGYXN0EAQSCwoHQVNraWxsNBAFEgsK",
-            "B0FTa2lsbDUQBipnCghCdWZmVHlwZRIQCgxOdWxsQnVmZlR5cGUQABINCglN",
-            "b3ZlU3BlZWQQARIGCgJBUBACEgYKAkNEEAMSCwoHQWRkTElGRRAEEg4KClNo",
-            "aWVsZEJ1ZmYQBRINCglTcGVhckJ1ZmYQBip6CgpCdWxsZXRUeXBlEhIKDk51",
-            "bGxCdWxsZXRUeXBlEAASEQoNQ29tbW9uQnVsbGV0MRABEhEKDUNvbW1vbkJ1",
-            "bGxldDIQAhIRCg1Db21tb25CdWxsZXQzEAMSEQoNQ29tbW9uQnVsbGV0NBAE",
-            "EgwKCEF0b21Cb21iEAVCFqoCE0NvbW11bmljYXRpb24uUHJvdG9iBnByb3Rv",
-            "Mw=="));
+            "EAMSCwoHVXNlUHJvcBAEEg0KCVRocm93UHJvcBAFEggKBFNlbmQQBhIRCg1J",
+            "bnZhbGlkUGxheWVyEAcSDwoLVmFsaWRQbGF5ZXIQCBINCglTdGFydEdhbWUQ",
+            "CRIKCgZHYW1pbmcQChILCgdFbmRHYW1lEAsSEgoOVXNlQ29tbW9uU2tpbGwQ",
+            "DBIUChBVc2VVbHRpbWF0ZVNraWxsEA0SEAoMSW5pdGlhbExpemVkEA4SCgoG",
+            "VXNlR2VtEA8SDAoIVGhyb3dHZW0QECqOAQoLR2FtZU9ialR5cGUSEwoPTnVs",
+            "bEdhbWVPYmpUeXBlEAASDQoJQ2hhcmFjdGVyEAESCAoEV2FsbBACEggKBFBy",
+            "b3AQAxIKCgZCdWxsZXQQBBIOCgpCaXJ0aFBvaW50EAUSEwoPT3V0T2ZCb3Vu",
+            "ZEJsb2NrEAYSCQoFR3Jhc3MQBxILCgdHZW1XZWxsEAgqNgoJU2hhcGVUeXBl",
+            "EhEKDU51bGxTaGFwZVR5cGUQABIKCgZDaXJjbGUQARIKCgZTcXVhcmUQAipM",
+            "CglQbGFjZVR5cGUSEQoNTnVsbFBsYWNlVHlwZRAAEggKBExhbmQQARIKCgZH",
+            "cmFzczEQAhIKCgZHcmFzczIQAxIKCgZHcmFzczMQBCqiAQoIUHJvcFR5cGUS",
+            "EAoMTnVsbFByb3BUeXBlEAASCQoFYWRkSFAQARIJCgVhZGRBUBACEgwKCGFk",
+            "ZFNwZWVkEAMSCwoHYWRkTElGRRAEEgsKB21pbnVzQ0QQBRIHCgNHZW0QBhIK",
+            "CgZTaGllbGQQBxIJCgVTcGVhchAIEg4KCm1pbnVzU3BlZWQQCRILCgdtaW51",
+            "c0FQEAoSCQoFYWRkQ0QQCyqVAQoQUGFzc2l2ZVNraWxsVHlwZRIYChROdWxs",
+            "UGFzc2l2ZVNraWxsVHlwZRAAEhYKElJlY292ZXJBZnRlckJhdHRsZRABEhsK",
+            "F1NwZWVkVXBXaGVuTGVhdmluZ0dyYXNzEAISCwoHVmFtcGlyZRADEgsKB1BT",
+            "a2lsbDMQBBILCgdQU2tpbGw0EAUSCwoHUFNraWxsNRAGKo0BCg9BY3RpdmVT",
+            "a2lsbFR5cGUSFwoTTnVsbEFjdGl2ZVNraWxsVHlwZRAAEhEKDUJlY29tZVZh",
+            "bXBpcmUQARISCg5CZWNvbWVBc3Nhc3NpbhACEhEKDU51Y2xlYXJXZWFwb24Q",
+            "AxINCglTdXBlckZhc3QQBBILCgdBU2tpbGw0EAUSCwoHQVNraWxsNRAGKmcK",
+            "CEJ1ZmZUeXBlEhAKDE51bGxCdWZmVHlwZRAAEg0KCU1vdmVTcGVlZBABEgYK",
+            "AkFQEAISBgoCQ0QQAxILCgdBZGRMSUZFEAQSDgoKU2hpZWxkQnVmZhAFEg0K",
+            "CVNwZWFyQnVmZhAGKngKCkJ1bGxldFR5cGUSEgoOTnVsbEJ1bGxldFR5cGUQ",
+            "ABIRCg1Db21tb25CdWxsZXQxEAESEQoNQ29tbW9uQnVsbGV0MhACEg4KCkZh",
+            "c3RCdWxsZXQQAxISCg5PcmRpbmFyeUJ1bGxldBAEEgwKCEF0b21Cb21iEAVC",
+            "FqoCE0NvbW11bmljYXRpb24uUHJvdG9iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Communication.Proto.MessageType), typeof(global::Communication.Proto.GameObjType), typeof(global::Communication.Proto.ShapeType), typeof(global::Communication.Proto.PlaceType), typeof(global::Communication.Proto.PropType), typeof(global::Communication.Proto.PassiveSkillType), typeof(global::Communication.Proto.ActiveSkillType), typeof(global::Communication.Proto.BuffType), typeof(global::Communication.Proto.BulletType), }, null, null));
@@ -69,8 +69,8 @@ namespace Communication.Proto {
     /// </summary>
     [pbr::OriginalName("Attack")] Attack = 2,
     [pbr::OriginalName("Pick")] Pick = 3,
-    [pbr::OriginalName("Use")] Use = 4,
-    [pbr::OriginalName("Throw")] Throw = 5,
+    [pbr::OriginalName("UseProp")] UseProp = 4,
+    [pbr::OriginalName("ThrowProp")] ThrowProp = 5,
     [pbr::OriginalName("Send")] Send = 6,
     [pbr::OriginalName("InvalidPlayer")] InvalidPlayer = 7,
     [pbr::OriginalName("ValidPlayer")] ValidPlayer = 8,
@@ -89,6 +89,8 @@ namespace Communication.Proto {
     ///Server给Client发送初始化消息十分关键，因此这里用StartGame-MessageToInitialize-InitialLized三次握手确认该操作的成功。
     /// </summary>
     [pbr::OriginalName("InitialLized")] InitialLized = 14,
+    [pbr::OriginalName("UseGem")] UseGem = 15,
+    [pbr::OriginalName("ThrowGem")] ThrowGem = 16,
   }
 
   public enum GameObjType {
@@ -100,6 +102,7 @@ namespace Communication.Proto {
     [pbr::OriginalName("BirthPoint")] BirthPoint = 5,
     [pbr::OriginalName("OutOfBoundBlock")] OutOfBoundBlock = 6,
     [pbr::OriginalName("Grass")] Grass = 7,
+    [pbr::OriginalName("GemWell")] GemWell = 8,
   }
 
   public enum ShapeType {
@@ -117,7 +120,6 @@ namespace Communication.Proto {
     [pbr::OriginalName("Grass1")] Grass1 = 2,
     [pbr::OriginalName("Grass2")] Grass2 = 3,
     [pbr::OriginalName("Grass3")] Grass3 = 4,
-    [pbr::OriginalName("Invisible")] Invisible = 5,
   }
 
   public enum PropType {
@@ -172,8 +174,8 @@ namespace Communication.Proto {
     [pbr::OriginalName("NullBulletType")] NullBulletType = 0,
     [pbr::OriginalName("CommonBullet1")] CommonBullet1 = 1,
     [pbr::OriginalName("CommonBullet2")] CommonBullet2 = 2,
-    [pbr::OriginalName("CommonBullet3")] CommonBullet3 = 3,
-    [pbr::OriginalName("CommonBullet4")] CommonBullet4 = 4,
+    [pbr::OriginalName("FastBullet")] FastBullet = 3,
+    [pbr::OriginalName("OrdinaryBullet")] OrdinaryBullet = 4,
     [pbr::OriginalName("AtomBomb")] AtomBomb = 5,
   }
 

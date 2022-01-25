@@ -23,7 +23,7 @@ message MessageOfCharacter
     int32 gemNum = 9;//可见
     BuffType buff = 10;//可见
     PropType prop = 11;//可见
-    PlaceType place = 12;//人物背景框颜色
+    PlaceType place = 12;//人物所在位置
     double vampire=13;//吸血率
     BulletType bulletType = 14;//子弹类型
     bool isResetting=15;//是否在复活中
@@ -34,7 +34,11 @@ message MessageOfCharacter
     bool canMove=19;
     int32 radius=20;
     int32 CD=21;
-    int32 lifeNum = 23;		//第几次复活
+    int32 lifeNum = 22;		//第几次复活
+    int32 score=23;
+    int64 teamID=24;
+    int64 playerID=25;
+    bool isInvisible=26;
 }
 
 message MessageOfProp
@@ -44,6 +48,8 @@ message MessageOfProp
     int32 y = 3;
     double facingDirection=4;
     int64 guid=5;
+    int32 size=6;  //宝石大小
+    PlaceType place = 7;
 }
 
 message MessageOfBullet
@@ -53,12 +59,14 @@ message MessageOfBullet
     int32 y=3;
     double facingDirection=4;
     int64 guid=5;
+    int64 parentTeamID=6;
+    PlaceType place = 7;
 }
 
-message MessageToInitialize //初始化信息，只在Server接收Client的开始游戏信息后发送，内容是在整局游戏里不变的数据
+message MessageToInitialize 
 {
     int32 MapSerial = 1; //应该是地图的编号
-    int32 NumberOfValidPlayer = 2;
+    MessageType messageType = 2;
 }
 
 //每帧server发给client的信息
@@ -74,6 +82,7 @@ message MessageToClient
         }    
     }    
     repeated GameObjMessage gameObjMessage=1;
+    MessageType messageType = 2;
 }
 
 message MessageToOneClient
@@ -83,9 +92,9 @@ message MessageToOneClient
     MessageType messageType = 3;
     int64 guid = 4;             //自己的guid
     string message = 5;         //如果 messageType 为 Send，则为要发送的消息
-} //继承自THUIAI4
+} //继承自THUAI4
 //注：转换函数还没写好
-//! fix by wyj: server 和 client中的playerID、TeamID类型应该一样吧！
+
 
 //这些先弃用了↓
 

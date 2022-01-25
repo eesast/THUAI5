@@ -8,17 +8,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Preparation", "Preparation\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameEngine", "GameEngine\GameEngine.csproj", "{C1CEF591-E65C-4E16-A369-F5F9EA46F978}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B8283859-DF60-4CF2-A6DE-794BC974253E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{40F12DBD-0FBA-4768-BCAF-66832556B7EB}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrameRateTask", "FrameRateTask\FrameRateTask.csproj", "{1307F310-A240-4E10-ACB2-5F187D70F74D}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B8283859-DF60-4CF2-A6DE-794BC974253E}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameClass", "GameClass\GameClass.csproj", "{C46AFFCE-AC47-480B-A823-C1DB948AAE8D}"
 EndProject
@@ -31,6 +26,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientCommunication", "..\communication\ClientCommunication\ClientCommunication.csproj", "{AEF527D4-D34E-4092-842D-86ECAF82C063}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Proto", "..\communication\Proto\Proto.csproj", "{24F55F75-5BA5-4463-AE19-D14666391BAA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{420A5C66-0C61-4459-B59E-33E17180D81F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayBack", "..\playback\PlayBack\PlayBack.csproj", "{89E86365-7A9A-4BD5-A8D3-C5D1DAA77439}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +77,14 @@ Global
 		{24F55F75-5BA5-4463-AE19-D14666391BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24F55F75-5BA5-4463-AE19-D14666391BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24F55F75-5BA5-4463-AE19-D14666391BAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{420A5C66-0C61-4459-B59E-33E17180D81F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{420A5C66-0C61-4459-B59E-33E17180D81F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{420A5C66-0C61-4459-B59E-33E17180D81F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{420A5C66-0C61-4459-B59E-33E17180D81F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89E86365-7A9A-4BD5-A8D3-C5D1DAA77439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89E86365-7A9A-4BD5-A8D3-C5D1DAA77439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89E86365-7A9A-4BD5-A8D3-C5D1DAA77439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89E86365-7A9A-4BD5-A8D3-C5D1DAA77439}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

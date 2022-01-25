@@ -1,13 +1,14 @@
 ﻿using Preparation.GameData;
 using Preparation.Interface;
 using Preparation.Utility;
+using System;
 
 namespace GameClass.GameObj
 {
     public partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...
     {
-        public readonly object propLock = new object();
-        private object beAttackedLock = new object();
+        public readonly object propLock = new();
+        private readonly object beAttackedLock = new();
         public object PropLock => propLock;
         #region 角色的基本属性及方法，包括与道具、子弹的交互方法
         /// <summary>
@@ -29,7 +30,7 @@ namespace GameClass.GameObj
         public int OrgCD { get; protected set; }
         protected int maxBulletNum;
         public int MaxBulletNum => maxBulletNum;	// 人物最大子弹数
-        protected int bulletNum;	
+        protected int bulletNum;
         public int BulletNum => bulletNum;  // 目前持有的子弹数
         public int MaxHp { get; protected set; }    // 最大血量
         protected int hp;
@@ -42,7 +43,7 @@ namespace GameClass.GameObj
                     hp = value;
             }
         }
-        private int deathCount = 0;       
+        private int deathCount = 0;
         public int DeathCount => deathCount;  // 玩家的死亡次数
 
         protected int ap;   // 当前攻击力
@@ -61,9 +62,12 @@ namespace GameClass.GameObj
         public int OrgAp { get; protected set; }    // 原初攻击力
 
         private int score = 0;
-        public int Score => score;  // 当前分数
+        public int Score
+        {
+            get => score;
+        }
 
-        private double attackRange;
+        private readonly double attackRange;
         public double AttackRange => attackRange;
 
         private double vampire = 0; // 回血率：0-1之间
@@ -73,7 +77,7 @@ namespace GameClass.GameObj
             set
             {
                 if (value > 1)
-                    lock(gameObjLock)
+                    lock (gameObjLock)
                         vampire = 1;
                 else if (value < 0)
                     lock (gameObjLock)
@@ -91,7 +95,7 @@ namespace GameClass.GameObj
             get => level;
             set
             {
-                lock(gameObjLock)
+                lock (gameObjLock)
                     level = value;
             }
         }
@@ -127,7 +131,7 @@ namespace GameClass.GameObj
             get => gemNum;
             set
             {
-                lock(gameObjLock)
+                lock (gameObjLock)
                 {
                     gemNum = value;
                 }
@@ -163,6 +167,22 @@ namespace GameClass.GameObj
         }
 
         /// <summary>
+        /// 是否在隐身
+        /// </summary>
+        private bool isInvisible = false;
+        public bool IsInvisible
+        {
+            get => isInvisible;
+            set
+            {
+                lock(gameObjLock)
+                {
+                    isInvisible = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// 进行一次远程攻击
         /// </summary>
         /// <param name="posOffset">子弹初始位置偏差值</param>
@@ -174,7 +194,7 @@ namespace GameClass.GameObj
         }
         protected Bullet ProduceOneBullet(XYPosition initPos)
         {
-            var newBullet = this.bulletOfPlayer.Clone();
+            var newBullet = this.bulletOfPlayer.Clone(this);
             newBullet.SetPosition(initPos);
             return newBullet;
         }
@@ -183,7 +203,7 @@ namespace GameClass.GameObj
         /// 尝试将子弹数量减1
         /// </summary>
         /// <returns>减操作是否成功</returns>
-        private bool TrySubBulletNum()	
+        private bool TrySubBulletNum()
         {
             lock (gameObjLock)
             {
@@ -218,7 +238,7 @@ namespace GameClass.GameObj
         /// <returns>加操作是否成功</returns>
         public bool TryAddHp(int add)
         {
-            if(hp < MaxHp)
+            if (hp < MaxHp)
             {
                 lock (gameObjLock)
                     hp = MaxHp > hp + add ? hp + add : MaxHp;
@@ -233,10 +253,10 @@ namespace GameClass.GameObj
         /// <param name="sub">减血量</param>
         /// <returns>减操作是否成功</returns>
         public bool TrySubHp(int sub)
-        {            
+        {
             if (hp > 0)
             {
-                lock(gameObjLock)
+                lock (gameObjLock)
                     hp = 0 >= hp - sub ? 0 : hp - sub;
                 Debugger.Output(this, " hp has subed to: " + hp.ToString());
                 return true;
@@ -264,7 +284,7 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 score += add;
-                //Debugger.Output(this, " 's score has been added to: " + score.ToString());
+                Debugger.Output(this, " 's score has been added to: " + score.ToString());
             }
         }
         /// <summary>
@@ -276,7 +296,7 @@ namespace GameClass.GameObj
             lock (gameObjLock)
             {
                 score -= sub;
-                //Debugger.Output(this, " 's score has been subed to: " + score.ToString());
+                Debugger.Output(this, " 's score has been subed to: " + score.ToString());
             }
         }
         /// <summary>
@@ -288,16 +308,26 @@ namespace GameClass.GameObj
         /// <returns>人物在受到攻击后死了吗</returns>
         public bool BeAttack(Bullet bullet)
         {
+
             lock (beAttackedLock)
             {
                 if (hp <= 0) return false;  //原来已经死了
                 if (bullet.Parent.TeamID != this.TeamID)
                 {
-                    if (HasShield)
-                        if (bullet.HasSpear)
-                            TrySubHp(bullet.AP);
-                        else return false;
 
+                    if (HasShield)
+                    {
+                        if (bullet.HasSpear)
+                            _ = TrySubHp(bullet.AP);
+                        else return false;
+                    }
+                    else
+                    {
+                        TrySubHp(bullet.AP);
+                    }
+#if DEBUG
+                    Console.WriteLine($"PlayerID:{ID} is being shot! Now his hp is {hp}.");
+#endif
                     if (hp <= 0) TryActivatingLIFE();  //如果有复活甲
                 }
                 return hp <= 0;
@@ -317,7 +347,7 @@ namespace GameClass.GameObj
                 if (hp <= 0) return false;
                 if (!(bouncer?.TeamID == this.TeamID))
                 {
-                    if (hasSpear || !HasShield) TrySubHp(subHP);
+                    if (hasSpear || !HasShield) _ = TrySubHp(subHP);
                     if (hp <= 0) TryActivatingLIFE();
                 }
                 return hp <= 0;
@@ -337,6 +367,18 @@ namespace GameClass.GameObj
                 {
                     teamID = value;
                     Debugger.Output(this, " joins in the team: " + value.ToString());
+                }
+            }
+        }
+        private long playerID = long.MaxValue;
+        public long PlayerID
+        {
+            get => playerID;
+            set
+            {
+                lock(gameObjLock)
+                {
+                    playerID = value;
                 }
             }
         }
@@ -381,25 +423,27 @@ namespace GameClass.GameObj
             }
         }
         #endregion
-        public override void Reset()
+        public override void Reset()  //要加锁吗？有点晕了
         {
-            AddDeathCount();
+            _ = AddDeathCount();
             base.Reset();
             this.moveSpeed = OrgMoveSpeed;
             hp = MaxHp;
             ap = OrgAp;
-            PropInventory = null;
+            propInventory = null;
             bulletNum = maxBulletNum / 2;
             buffManeger.ClearAll();
+            isInvisible = false;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj is BirthPoint && object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))    // 自己的出生点可以忽略碰撞
-            {
-                return true;
-            }
+            if (targetObj is BirthPoint)
+                if (object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))    // 自己的出生点可以忽略碰撞
+                {
+                    return true;
+                }
             else if (targetObj is DebuffMine && ((DebuffMine)targetObj).Parent?.TeamID == TeamID)   // 自己队的地雷忽略碰撞
             {
                 return true;

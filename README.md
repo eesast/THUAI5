@@ -6,6 +6,10 @@ THUAI5：清华大学第五届人工智能挑战赛电子系赛道（原电子�
 
 待定
 
+## 比赛规则
+
+比赛规则参见 [game-rules](./logic/GameRules.md)  
+
 ## 软件架构
 
 计划架构如下：  
@@ -39,6 +43,11 @@ THUAI5：清华大学第五届人工智能挑战赛电子系赛道（原电子�
 + dev：各个小组开发工作最新进展，需要 1 reviewer
 
 ## 开发规则
+
+### 关于社区开发者
+
++ 社区开发者开发时请遵循 [THUAI5 社区开发者贡献指南](./CONTRIBUTING.md)  
++ 社区开发者贡献的代码请遵循 [Contributor Covenant Code of Conduct](./CODE_OF_CONDUCT.md)  
 
 ### 使用 Git 与 Github 进行开发的流程
 

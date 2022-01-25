@@ -1,34 +1,38 @@
 ﻿using System;
 using System.Threading;
-using System.Collections.Generic;
+using Preparation.GameData;
 using Timothy.FrameRateTask;
 using Gaming;
 using Communication.Proto;
 using GameClass.GameObj;
+using System.IO;
+using Playback;
 
 namespace Server
 {
-    public class GameServer: ServerBase
+    public class GameServer : ServerBase
     {
         protected readonly Game game;
         public override int TeamCount => options.TeamCount;
         protected long[,] communicationToGameID; //通信用的ID映射到游戏内的ID,[i,j]表示team：i，player：j的id。
-        private readonly object messageToAllClientsLock = new object();
-        private long SendMessageToClientIntervalInMilliseconds = 50;
-        private Semaphore endGameInfoSema = new Semaphore(0, 1);
+        private readonly object messageToAllClientsLock = new();
+        public static readonly long SendMessageToClientIntervalInMilliseconds = 50;
+        private readonly Semaphore endGameInfoSema = new(0, 1);
+        private MessageWriter? mwr = null;
         public override int GetTeamScore(long teamID)
         {
             return game.GetTeamScore(teamID);
         }
         public override void WaitForGame()
         {
-            endGameInfoSema.WaitOne();  //开始等待游戏开始
+            _ = endGameInfoSema.WaitOne();  //开始等待游戏开始
+            mwr?.Dispose();
         }
         private uint GetBirthPointIdx(long teamID, long playerID)       //获取出生点位置
         {
-            return (uint)(teamID * options.PlayerCountPerTeam + playerID);
+            return (uint)((teamID * options.PlayerCountPerTeam) + playerID);
         }
-        protected readonly object addPlayerLock = new object();
+        protected readonly object addPlayerLock = new();
         private bool AddPlayer(MessageToServer msg)
         {
             if (game.GameMap.Timer.IsGaming)  //游戏运行中，不能添加玩家
@@ -39,7 +43,7 @@ namespace Server
                 return false;
 
             Preparation.Utility.PassiveSkillType passiveSkill;
-            switch(msg.PSkill)
+            switch (msg.PSkill)
             {
                 case PassiveSkillType.Vampire:
                     passiveSkill = Preparation.Utility.PassiveSkillType.Vampire;
@@ -55,7 +59,7 @@ namespace Server
                     break;
             }
             Preparation.Utility.ActiveSkillType commonSkill;
-            switch(msg.ASkill1)
+            switch (msg.ASkill1)
             {
                 case ActiveSkillType.SuperFast:
                     commonSkill = Preparation.Utility.ActiveSkillType.SuperFast;
@@ -75,7 +79,7 @@ namespace Server
             }
             lock (addPlayerLock)
             {
-                Game.PlayerInitInfo playerInitInfo = new Game.PlayerInitInfo(GetBirthPointIdx(msg.TeamID, msg.PlayerID), msg.TeamID, passiveSkill, commonSkill);
+                Game.PlayerInitInfo playerInitInfo = new(GetBirthPointIdx(msg.TeamID, msg.PlayerID), msg.TeamID, msg.PlayerID, passiveSkill, commonSkill);
                 long newPlayerID = game.AddPlayer(playerInitInfo);
                 if (newPlayerID == GameObj.invalidID)
                     return false;
@@ -83,32 +87,13 @@ namespace Server
             }
             return true;
         }
-        private void SendAddPlayerResponse(MessageToServer msgRecieve, bool isValid)
+        private void ReadyToStart(MessageToServer msgRecieve, bool isValid)
         {
-            //if(msgRecieve.PlayerID==2021&&msgRecieve.TeamID==2021)
-            //{
-            //    //观战模式
-            //}
-
-            
-
-            MessageToOneClient msgSend = new MessageToOneClient();
-            
-            //这里应该是long，怎么成int了？
-            msgSend.PlayerID = (int)msgRecieve.PlayerID;
-            msgSend.TeamID = (int)msgRecieve.TeamID;
-
-            msgSend.MessageType = MessageType.InitialLized;  //应该要发个信息回去告诉client连上了吗,proto没写好，要改
-            //这里proto没写好，得改
-            serverCommunicator.SendToClient(msgSend);
-            
-            if (isValid)
+            if(msgRecieve.PlayerID==2021&&msgRecieve.TeamID==2021)
             {
-                Console.WriteLine("A new player with teamID {0} and playerID {1} joined the game.", msgRecieve.TeamID, msgRecieve.PlayerID);
-            }
-            else
-            {
-                Console.WriteLine("The request of a player declaring to have teamID {0} and playerID {1} to join the game has been rejected.", msgRecieve.TeamID, msgRecieve.PlayerID);
+                //观战模式
+                Console.WriteLine("A new spectator comes to watch this game.");
+                return;
             }
 
             lock (addPlayerLock)
@@ -131,19 +116,19 @@ namespace Server
             if (double.IsNaN(msg.Angle) || double.IsInfinity(msg.Angle))
                 msg.Angle = 0.0;
 
-            switch(msg.MessageType)
+            switch (msg.MessageType)
             {
                 case MessageType.AddPlayer:
-                    SendAddPlayerResponse(msg, AddPlayer(msg));
+                    ReadyToStart(msg, AddPlayer(msg));
                     break;
                 case MessageType.Move:
                     if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
                     {
-                        game.MovePlayer(communicationToGameID[msg.TeamID, msg.PlayerID], msg.TimeInMilliseconds, msg.Angle);
+                        game.MovePlayer(communicationToGameID[msg.TeamID, msg.PlayerID], (int)msg.TimeInMilliseconds, msg.Angle);
                     }
                     break;
                 case MessageType.Attack:
-                    if(ValidTeamIDAndPlayerID(msg.TeamID,msg.PlayerID))
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
                     {
                         game.Attack(communicationToGameID[msg.TeamID, msg.PlayerID], msg.Angle);
                     }
@@ -155,36 +140,111 @@ namespace Server
                         bool isSuccess = game.UseCommonSkill(communicationToGameID[msg.TeamID, msg.PlayerID]);
                     }
                     break;
-
-                //可能还有很多类型，只是我不知道该怎么写，先写着这一点先
+                case MessageType.Send:
+                    SendMessageToTeammate(msg);
+                    break;
+                case MessageType.Pick:
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
+                    {
+                        if (msg.PropType == Communication.Proto.PropType.Gem)
+                            game.PickGem(communicationToGameID[msg.TeamID, msg.PlayerID]);
+                        else
+                        {
+                            game.PickProp(communicationToGameID[msg.TeamID, msg.PlayerID], ProtoProp2UtilityProp(msg.PropType));
+                        }
+                    }
+                    break;
+                case MessageType.UseGem:
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
+                    {
+                        game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID], msg.GemSize);
+                    }
+                    break;
+                case MessageType.UseProp:
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
+                    {
+                        game.UseProp(communicationToGameID[msg.TeamID, msg.PlayerID]);
+                    }
+                    break;
+                case MessageType.ThrowGem:
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
+                    {
+                        game.ThrowGem(communicationToGameID[msg.TeamID, msg.PlayerID],(int)msg.TimeInMilliseconds ,msg.Angle, msg.GemSize);
+                    }
+                    break;
+                case MessageType.ThrowProp:
+                    if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
+                    {
+                        game.ThrowProp(communicationToGameID[msg.TeamID, msg.PlayerID], (int)msg.TimeInMilliseconds, msg.Angle);
+                    }
+                    break;
                 default:
                     break;
             }
         }
-        private bool ValidTeamIDAndPlayerID(long teamID,long playerID)
+        private bool ValidTeamIDAndPlayerID(long teamID, long playerID)
         {
             return teamID >= 0 && teamID < options.TeamCount && playerID >= 0 && playerID < options.PlayerCountPerTeam;
         }
-        private void SendMessageToAllClients(MessageType msgType, bool requiredGaming=true)
+        private void SendMessageToAllClients(MessageType msgType, bool requiredGaming = true)
         {
-            var gameObjList=game.GetGameObj();
-            Google.Protobuf.Collections.RepeatedField<MessageToRefresh> messageToRefresh = new Google.Protobuf.Collections.RepeatedField<MessageToRefresh>();
+            if (requiredGaming && !game.GameMap.Timer.IsGaming)
+                return;
+            var gameObjList = game.GetGameObj();
 
-            /*
-            proto要改，这部分先放着，proto改好才能写。
-            其他的大致已经写好了
-            */
+            lock (messageToAllClientsLock)
+            {
+                switch (msgType)
+                {
+                    case MessageType.Gaming:
+                    case MessageType.StartGame:
+                    case MessageType.EndGame:
+                        MessageToClient messageToClient = new();
+                        foreach (GameObj gameObj in gameObjList)
+                        {
+                            messageToClient.GameObjMessage.Add(CopyInfo.Auto(gameObj));
+                        }
+                        messageToClient.MessageType = msgType;
+                        serverCommunicator.SendToClient(messageToClient);
+                        mwr?.WriteOne(messageToClient);
+                        break;
+                    case MessageType.InitialLized:
+                        MessageToInitialize messageToInitialize = new();
+                        messageToInitialize.MessageType = MessageType.InitialLized;
+                        messageToInitialize.MapSerial = 1; //地图编号，应该是随机数，这里先设为1
+                        serverCommunicator.SendToClient(messageToInitialize);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        private void SendMessageToTeammate(MessageToServer msgToServer)
+        {
+            if (!ValidTeamIDAndPlayerID(msgToServer.TeamID, msgToServer.PlayerID))
+                return;
+            if (msgToServer.Message.Length > 64)
+            {
+#if DEBUG
+                Console.WriteLine("Message string is too long!");
+#endif
+            }
+            else
+            {
+                MessageToOneClient msg = new MessageToOneClient();
+                msg.PlayerID = msgToServer.ToPlayerID;
+                msg.TeamID = msgToServer.TeamID;
+                msg.Message = msgToServer.Message;
+                msg.MessageType = MessageType.Send;
+                serverCommunicator.SendToClient(msg);
+            }
 
-
-
-
-
-
-
+            return;
         }
         private void OnGameEnd()
         {
             SendMessageToAllClients(MessageType.EndGame, false);
+            mwr?.Flush();
 #if DEBUG
             //跑起来时测试用
             for (int i = 0; i < TeamCount; i++)
@@ -200,30 +260,40 @@ namespace Server
             {
                 if (id == GameObj.invalidID) return;     //如果有未初始化的玩家，不开始游戏
             }
+
+            SendMessageToAllClients(MessageType.InitialLized); //发送初始化信息
+            Thread.Sleep((int)GameData.frameDuration); //发送信息后，暂停一帧时间
+
             new Thread
             (
                 () =>
                 {
+#if DEBUG
+                    Console.WriteLine("Game Start!");
+#endif
                     game.StartGame((int)options.GameTimeInSecond * 1000);
                     OnGameEnd();
                 }
             )
             { IsBackground = true }.Start();
 
-            while (!game.GameMap.Timer.IsGaming) 
+            while (!game.GameMap.Timer.IsGaming)
                 Thread.Sleep(1); //游戏未开始，等待
-            SendMessageToAllClients(MessageType.StartGame);     //发送开始游戏信息
 
+            SendMessageToAllClients(MessageType.StartGame);     //发送开始游戏信息
+            game.AllPlayerUsePassiveSkill();
             //定时向client发送游戏情况
             new Thread
             (
                 () =>
                 {
                     //用一次frameratetask膜一次 ↓
-                    FrameRateTaskExecutor<int> xfgg = new FrameRateTaskExecutor<int>
-                    (
+                    FrameRateTaskExecutor<int> xfgg = new(
                         () => game.GameMap.Timer.IsGaming,
-                        () => SendMessageToAllClients(MessageType.Gaming),
+                        () =>
+                        {
+                            SendMessageToAllClients(MessageType.Gaming);
+                        },
                         SendMessageToClientIntervalInMilliseconds,
                         () => 0
                     )
@@ -264,31 +334,97 @@ namespace Server
             )
             { IsBackground = true }.Start();
         }
-        public GameServer(ArgumentOptions options): base(options)
+        private Preparation.Utility.PropType ProtoProp2UtilityProp(Communication.Proto.PropType propType)
         {
-            this.game = new Game(MapInfo.defaultMap, options.TeamCount);
+            switch(propType)
+            {
+                case PropType.AddAp:
+                    return Preparation.Utility.PropType.addAP;
+                case PropType.AddCd:
+                    return Preparation.Utility.PropType.addCD;
+                case PropType.AddHp:
+                    return Preparation.Utility.PropType.addHP;
+                case PropType.AddLife:
+                    return Preparation.Utility.PropType.addLIFE;
+                case PropType.AddSpeed:
+                    return Preparation.Utility.PropType.addSpeed;
+                case PropType.Gem:
+                    return Preparation.Utility.PropType.Gem;
+                case PropType.MinusAp:
+                    return Preparation.Utility.PropType.minusAP;
+                case PropType.MinusCd:
+                    return Preparation.Utility.PropType.minusCD;
+                case PropType.MinusSpeed:
+                    return Preparation.Utility.PropType.minusSpeed;
+                case PropType.NullPropType:
+                    return Preparation.Utility.PropType.Null;
+                case PropType.Shield:
+                    return Preparation.Utility.PropType.Shield;
+                case PropType.Spear:
+                    return Preparation.Utility.PropType.Spear;
+                default:
+                    return Preparation.Utility.PropType.Null;
+            }
+        }
+        public GameServer(ArgumentOptions options) : base(options)
+        {
+            if (options.mapResource == DefaultArgumentOptions.MapResource)
+                this.game = new Game(MapInfo.defaultMap, options.TeamCount);
+            else
+            {
+                uint[,] map = new uint[GameData.rows, GameData.cols];
+                try
+                {
+                    string? line;
+                    int i = 0, j = 0;
+                    using (StreamReader sr = new StreamReader(options.mapResource))
+                    {
+                        while (!sr.EndOfStream && i < GameData.rows && j < GameData.cols)
+                        {
+                            if ((line = sr.ReadLine()) != null)
+                            {
+                                string[] nums = line.Split(' ');
+                                foreach (string item in nums)
+                                {
+                                    map[i, j] = (uint)int.Parse(item);
+                                    j++;
+                                    if (j >= GameData.cols)
+                                    {
+                                        j = 0;
+                                        i++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    map = MapInfo.defaultMap;
+                }
+                finally { this.game = new Game(map, options.TeamCount); }
+            }
             communicationToGameID = new long[options.TeamCount, options.PlayerCountPerTeam];
             //创建server时先设定待加入人物都是invalid
-            for(int i=0;i<communicationToGameID.GetLength(0);i++)
+            for (int i = 0; i < communicationToGameID.GetLength(0); i++)
             {
-                for(int j=0;j<communicationToGameID.GetLength(j);j++)
+                for (int j = 0; j < communicationToGameID.GetLength(1); j++)
                 {
                     communicationToGameID[i, j] = GameObj.invalidID;
                 }
             }
 
-            //只要跑起来的话，这部分好像用不到，而且我还不会...
-            //if (options.FileName != DefaultArgumentOptions.FileName)
-            //{
-            //    try
-            //    {
-            //        mwr = new MessageWriter(options.FileName, options.TeamCount, options.PlayerCountPerTeam);
-            //    }
-            //    catch
-            //    {
-            //        Console.WriteLine($"Error: Cannot create the playback file: {options.FileName}!");
-            //    }
-            //}
+            if (options.FileName != DefaultArgumentOptions.FileName)
+            {
+                try
+                {
+                    mwr = new MessageWriter(options.FileName, options.TeamCount, options.PlayerCountPerTeam);
+                }
+                catch
+                {
+                    Console.WriteLine($"Error: Cannot create the playback file: {options.FileName}!");
+                }
+            }
 
             //if (options.Token != DefaultArgumentOptions.Token && options.Url != DefaultArgumentOptions.Url)
             //{
