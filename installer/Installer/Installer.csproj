@@ -4,6 +4,15 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+	  <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="eesast_logo.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="eesast_logo.jpg" />
+  </ItemGroup>
 
 </Project>
