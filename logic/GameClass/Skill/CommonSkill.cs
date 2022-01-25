@@ -254,7 +254,7 @@ namespace GameClass.Skill
         private const int moveSpeed = GameData.basicMoveSpeed;
         public int MoveSpeed => moveSpeed;
 
-        private const int maxHp = GameData.basicHp;
+        private const int maxHp = (int)(0.6 * GameData.basicHp);
         public int MaxHp => maxHp;
 
         private const int cd = GameData.basicCD;
