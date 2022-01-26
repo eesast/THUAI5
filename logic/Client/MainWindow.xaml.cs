@@ -35,9 +35,11 @@ namespace Client
             };
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
+            SetStatusBar();
             DrawMap();
             timer.Start();
             isClientStocked = true;
+            drawPicLock = new();
             playerData = new List<MessageToClient.Types.GameObjMessage>();
             bulletData = new List<MessageToClient.Types.GameObjMessage>();
             propData = new List<MessageToClient.Types.GameObjMessage>();
@@ -49,6 +51,13 @@ namespace Client
             //被动技能和buff在人物编号后用彩色文字注明
         }
 
+        private void SetStatusBar()
+        {
+            for(int i=0;i<8;i++)
+            {
+                StatusBars[i] = new(MainGrid,2+80*(i%2),40+171*(i/2),764+78*(i%2),513-169*(i/2));
+            }
+        }
         //基础窗口函数
         private void ClickToClose(object sender, RoutedEventArgs e)
         {
@@ -67,18 +76,7 @@ namespace Client
         {
             DragMove();
         }
-        private void Attack(object sender,RoutedEventArgs e)
-        {
-            MessageToServer msgJ = new MessageToServer();
-            msgJ.MessageType = MessageType.Attack;
-            msgJ.PlayerID = playerID;
-            msgJ.TeamID = teamID;
-            foreach(var i in playerData)
-            {
-                //待补充
-            }
-            communicator.SendMessage(msgJ);
-        }
+
         private void DrawMap()
         {
             for (int i = 0; i < defaultMap.GetLength(0); i++)
@@ -124,8 +122,20 @@ namespace Client
             }
             else
             {
-                isClientStocked = false;
-                PorC.Content = "⏸";
+                try
+                {
+                    if (communicator.Client.IsConnected)
+                    {
+                        isClientStocked = false;
+                        PorC.Content = "⏸";
+                    }
+                    else throw new Exception("Unconnected");
+                }
+                catch (Exception ex)
+                {
+                    ErrorDisplayer error = new("发生错误。以下是系统报告:\n" + ex.ToString());
+                    error.Show();
+                }
             }
         }
 
@@ -204,7 +214,7 @@ namespace Client
 #pragma warning disable CS8602 // 解引用可能出现空引用。
                         string[] comInfo = sr.ReadLine().Split(' ');
 #pragma warning restore CS8602 // 解引用可能出现空引用。
-                        if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == ""|| comInfo[4] == ""|| comInfo[5] == "")
+                        if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == "" || comInfo[4] == "" || comInfo[5] == "")
                         {
                             throw new Exception("Input data not sufficent");
                         }
@@ -223,7 +233,7 @@ namespace Client
                             msg.MessageType = MessageType.AddPlayer;
                             msg.PlayerID = playerID;
                             msg.TeamID = teamID;
-                            switch(Convert.ToInt64(comInfo[4]))
+                            switch (Convert.ToInt64(comInfo[4]))
                             {
                                 case 0:
                                     msg.PSkill = PassiveSkillType.NullPassiveSkillType;
@@ -247,7 +257,7 @@ namespace Client
                                     msg.PSkill = PassiveSkillType.Pskill5;
                                     break;
                             }
-                            switch(Convert.ToInt64(comInfo[5]))
+                            switch (Convert.ToInt64(comInfo[5]))
                             {
                                 case 0:
                                     msg.ASkill1 = ActiveSkillType.NullActiveSkillType;
@@ -287,7 +297,7 @@ namespace Client
                 }
                 catch (Exception exc)
                 {
-                    if (exc.Message == "Length<4")
+                    if (exc.Message == "Input data not sufficent")
                     {
                         ConnectRegister crg = new();
                         crg.State.Text = "配置非法，请重新输入或检查配置文件。";
@@ -298,23 +308,14 @@ namespace Client
                         ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
                         error.Show();
                         Connect.Background = Brushes.Aqua;
-                        if (communicator != null)
-                        {
-                            if (communicator.Client.IsConnected)
-                            {
-                                _ = communicator.Stop();
-                            }
-                            communicator.Dispose();
-                            communicator = null;
-                        }
                     }
                 }
             }
             else
             {
-                //_=communicator.Stop();
-                //Connect.Background = Brushes.Aqua;
-                MessageBox.Show("您已连接服务器！");
+                _ = communicator.Stop();
+                Connect.Background = Brushes.Aqua;
+
             }
         }
 
@@ -418,12 +419,13 @@ namespace Client
                             break;
                         case MessageType.StartGame:
                             foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
-                            {   
+                            {
                                 switch (obj.ObjCase)
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
                                         if (obj.MessageOfCharacter.PlayerID == playerID && obj.MessageOfCharacter.TeamID == teamID)
                                             myInfo = obj;
+                                        StatusBars[obj.MessageOfCharacter.TeamID * 4 + obj.MessageOfCharacter.PlayerID].SetValue(obj.MessageOfCharacter);
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -444,6 +446,7 @@ namespace Client
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
                                         if (obj.MessageOfCharacter.PlayerID == playerID && obj.MessageOfCharacter.TeamID == teamID)
                                             myInfo = obj;
+                                        StatusBars[obj.MessageOfCharacter.TeamID * 4 + obj.MessageOfCharacter.PlayerID].SetValue(obj.MessageOfCharacter);
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -461,6 +464,7 @@ namespace Client
                                 switch (obj.ObjCase)
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
+                                        StatusBars[obj.MessageOfCharacter.TeamID * 4 + obj.MessageOfCharacter.PlayerID].SetValue(obj.MessageOfCharacter);
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -597,13 +601,16 @@ namespace Client
                     ErrorDisplayer error = new("发生错误。以下是系统报告\n" + exc.ToString());
                     error.Show();
                     isClientStocked = true;
-                    PorC.Content = "\\xfgg/";
+                    PorC.Content = "▶";
                 }
             }
+            counter++;
         }
         //定时器事件，刷新地图
         //以下为Mainwindow自定义属性
         private DispatcherTimer timer;//定时器
+        private Int64 counter;//预留的取时间变量
+        private StatusBar[] StatusBars = new StatusBar[8];
         private ClientCommunication communicator;
 
         private bool isClientStocked;

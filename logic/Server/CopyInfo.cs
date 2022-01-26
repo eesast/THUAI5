@@ -1,4 +1,4 @@
-﻿using Communication.Proto;
+using Communication.Proto;
 using GameClass.GameObj;
 
 namespace Server

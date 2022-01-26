@@ -11,7 +11,7 @@
         <ImageBrush x:Key="Logo" ImageSource="Logo.png"/>
 
     </Window.Resources>
-    <Grid RenderTransformOrigin="0.902,0.078" HorizontalAlignment="Center" Width="910" Height="720" VerticalAlignment="Top">
+    <Grid Name="MainGrid" RenderTransformOrigin="0.902,0.078" HorizontalAlignment="Center" Width="910" Height="720" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
 
         </Grid.ColumnDefinitions>
@@ -33,6 +33,7 @@
                 <Button Content="天梯信息(L)" Height="40" Width="93" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToCheckLadder"/>
             </ToolBar>
         </ToolBarTray>
+    <!--
         <Canvas Name="Bar1" Background="White" Margin="2,40,841,513" >
             <ProgressBar Height="15" Canvas.Top="150" Width="65" Background="Green"/>
             <TextBox Height="15" Text="⭐：" TextWrapping="Wrap" Width="65" FontSize="12" BorderBrush="White" Canvas.Top="130" RenderTransformOrigin="0.478,1.459" IsReadOnly="True"/>
@@ -89,6 +90,7 @@
             <TextBox Height="15" Canvas.Top="115" Text="Scores:" TextWrapping="Wrap" Width="65" FontSize="12" BorderBrush="White" IsReadOnly="True"/>
             <TextBox Height="42" Text="👥1🧓1&#xA;职1/职2" TextWrapping="Wrap" Width="65" FontSize="12" BorderBrush="White" RenderTransformOrigin="0.478,1.459" IsReadOnly="True"/>
         </Canvas>
+         --> 
         <Border BorderThickness="1" Background="Black" BorderBrush="Black" HorizontalAlignment="Left" Height="674" Margin="148,45,0,0" VerticalAlignment="Top" Width="2" RenderTransformOrigin="0.5,0.5">
             <Border.RenderTransform>
                 <TransformGroup>
@@ -100,7 +102,7 @@
             </Border.RenderTransform>
         </Border>
         <Button Content=" 帮&#xA; 助&#xA;(H)" HorizontalAlignment="Left" Height="84" Margin="859,170,0,0" VerticalAlignment="Top" Width="42" Background="Ivory" Click="ClickForHelp"/>
-        <Grid x:Name="UpperLayerOfMap" HorizontalAlignment="Left" Height="650" Margin="182,45,0,0" VerticalAlignment="Top" Width="650" MouseLeftButtonDown="Attack">
+        <Grid x:Name="UpperLayerOfMap" HorizontalAlignment="Left" Height="650" Margin="182,45,0,0" VerticalAlignment="Top" Width="650">
         </Grid>
         <Button Name="Connect" Content="🔗" HorizontalAlignment="Left" Margin="832,53,0,0" VerticalAlignment="Top" Width="20" Background="Aqua" Click="ClickToConnect"/>
     </Grid>
