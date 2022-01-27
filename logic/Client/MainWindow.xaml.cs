@@ -425,7 +425,6 @@ namespace Client
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
                                         if (obj.MessageOfCharacter.PlayerID == playerID && obj.MessageOfCharacter.TeamID == teamID)
                                             myInfo = obj;
-                                        StatusBars[obj.MessageOfCharacter.TeamID * 4 + obj.MessageOfCharacter.PlayerID].SetValue(obj.MessageOfCharacter);
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -446,7 +445,6 @@ namespace Client
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
                                         if (obj.MessageOfCharacter.PlayerID == playerID && obj.MessageOfCharacter.TeamID == teamID)
                                             myInfo = obj;
-                                        StatusBars[obj.MessageOfCharacter.TeamID * 4 + obj.MessageOfCharacter.PlayerID].SetValue(obj.MessageOfCharacter);
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -464,7 +462,6 @@ namespace Client
                                 switch (obj.ObjCase)
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
-                                        StatusBars[obj.MessageOfCharacter.TeamID * 4 + obj.MessageOfCharacter.PlayerID].SetValue(obj.MessageOfCharacter);
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -539,6 +536,7 @@ namespace Client
                         {
                             foreach (var data in playerData)
                             {
+                                StatusBars[data.MessageOfCharacter.TeamID * 4 + data.MessageOfCharacter.PlayerID].SetValue(data.MessageOfCharacter);
                                 if (CanSee(data.MessageOfCharacter))
                                 {
                                     Ellipse icon = new Ellipse();
