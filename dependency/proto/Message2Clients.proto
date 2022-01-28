@@ -36,14 +36,10 @@ message MessageOfCharacter
     int32 CD=21;
     int32 lifeNum = 22;		//第几次复活
     int32 score=23;
-<<<<<<< HEAD
-    int64 ID=24;
-    int64 teamID=25;
-=======
     int64 teamID=24;
     int64 playerID=25;
+    bool isInvisible=26;
 }
->>>>>>> 127c18da360d88ffb1bac452b359510fcb76b04e
 
 message MessageOfProp
 {
@@ -96,7 +92,7 @@ message MessageToOneClient
     MessageType messageType = 3;
     int64 guid = 4;             //自己的guid
     string message = 5;         //如果 messageType 为 Send，则为要发送的消息
-} //继承自THUIAI4
+} //继承自THUAI4
 //注：转换函数还没写好
 
 

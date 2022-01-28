@@ -7,12 +7,14 @@ using Timothy.FrameRateTask;
 
 namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结束
 {
-    public class RecoverAfterBattle : PassiveSkill  //脱战回血，普通子弹
+    public class RecoverAfterBattle : IPassiveSkill  //脱战回血，普通子弹
     {
         private readonly Bullet initBullet = new OrdinaryBullet(new XYPosition(0, 0));
-        public override Bullet InitBullet => initBullet;
+        public Bullet InitBullet => initBullet;
+        private const double attackRange = GameData.basicAttackRange;
+        public double AttackRange => attackRange;
         //以上参数以后再改
-        public override void SkillEffect(Character player)
+        public void SkillEffect(Character player)
         {
             const int recoverDegree = 1;  //每帧回复血量
             int nowHP = player.HP;
@@ -66,12 +68,14 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
             { IsBackground = true }.Start();
         }
     }
-    public class SpeedUpWhenLeavingGrass : PassiveSkill //出草丛时加速并免疫减速，但隐身时出草丛不会有该效果，快子弹
+    public class SpeedUpWhenLeavingGrass : IPassiveSkill //出草丛时加速并免疫减速，但隐身时出草丛不会有该效果，快子弹
     {
         private readonly Bullet initBullet = new FastBullet(new XYPosition(0, 0));
-        public override Bullet InitBullet => initBullet;
+        public Bullet InitBullet => initBullet;
+        private const double attackRange = GameData.basicAttackRange;
+        public double AttackRange => attackRange;
         //以上参数以后再改
-        public override void SkillEffect(Character player)
+        public void SkillEffect(Character player)
         {
             PlaceType nowPlace = player.Place;
             PlaceType lastPlace = nowPlace;
@@ -133,23 +137,27 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
             { IsBackground = true }.Start();
         }
     }
-    public class Vampire : PassiveSkill  //被动就是吸血，普通子弹
+    public class Vampire : IPassiveSkill  //被动就是吸血，普通子弹
     {
-        private readonly Bullet initBullet = new OrdinaryBullet(new XYPosition(0, 0));
-        public override Bullet InitBullet => initBullet;
+        private readonly Bullet initBullet = new LineBullet(new XYPosition(0, 0));
+        public Bullet InitBullet => initBullet;
+        private const double attackRange = 0.1 * GameData.basicAttackRange;
+        public double AttackRange => attackRange;
         //以上参数以后再改
-        public override void SkillEffect(Character player)
+        public void SkillEffect(Character player)
         {
             player.oriVampire = 0.1;
         }
     }
 
-    public class NoPassiveSkill : PassiveSkill  //没技能，这种情况不应该发生，先定义着以防意外
+    public class NoPassiveSkill : IPassiveSkill  //没技能，这种情况不应该发生，先定义着以防意外
     {
         private readonly Bullet initBullet = new OrdinaryBullet(new XYPosition(0, 0));
-        public override Bullet InitBullet => initBullet;
+        public Bullet InitBullet => initBullet;
+        private const double attackRange = GameData.basicAttackRange;
+        public double AttackRange => attackRange;
         //以上参数以后再改
-        public override void SkillEffect(Character player)
+        public void SkillEffect(Character player)
         {
 
         }

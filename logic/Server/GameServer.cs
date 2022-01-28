@@ -6,17 +6,21 @@ using Gaming;
 using Communication.Proto;
 using GameClass.GameObj;
 using System.IO;
+using Playback;
 
 namespace Server
 {
     public class GameServer : ServerBase
     {
         protected readonly Game game;
+        private uint spectatorMinTeamID = 2022;
+        private uint spectatorMinPlayerID = 2022;
         public override int TeamCount => options.TeamCount;
         protected long[,] communicationToGameID; //通信用的ID映射到游戏内的ID,[i,j]表示team：i，player：j的id。
         private readonly object messageToAllClientsLock = new();
-        private readonly long SendMessageToClientIntervalInMilliseconds = 50;
+        public static readonly long SendMessageToClientIntervalInMilliseconds = 50;
         private readonly Semaphore endGameInfoSema = new(0, 1);
+        private MessageWriter? mwr = null;
         public override int GetTeamScore(long teamID)
         {
             return game.GetTeamScore(teamID);
@@ -24,6 +28,7 @@ namespace Server
         public override void WaitForGame()
         {
             _ = endGameInfoSema.WaitOne();  //开始等待游戏开始
+            mwr?.Dispose();
         }
         private uint GetBirthPointIdx(long teamID, long playerID)       //获取出生点位置
         {
@@ -32,6 +37,12 @@ namespace Server
         protected readonly object addPlayerLock = new();
         private bool AddPlayer(MessageToServer msg)
         {
+            if (msg.PlayerID >= spectatorMinPlayerID && msg.TeamID >= spectatorMinTeamID)
+            {
+                //观战模式
+                Console.WriteLine("A new spectator comes to watch this game.");
+                return false;
+            }
             if (game.GameMap.Timer.IsGaming)  //游戏运行中，不能添加玩家
                 return false;
             if (!ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))  //玩家id是否正确
@@ -86,11 +97,6 @@ namespace Server
         }
         private void ReadyToStart(MessageToServer msgRecieve, bool isValid)
         {
-            //if(msgRecieve.PlayerID==2021&&msgRecieve.TeamID==2021)
-            //{
-            //    //观战模式
-            //}
-
             lock (addPlayerLock)
             {
                 CheckStart();       //检查是否该开始游戏了
@@ -194,13 +200,14 @@ namespace Server
                     case MessageType.Gaming:
                     case MessageType.StartGame:
                     case MessageType.EndGame:
-                        MessageToClient messageToClient = new();
+                        MessageToClient messageToClient = new MessageToClient();
                         foreach (GameObj gameObj in gameObjList)
                         {
                             messageToClient.GameObjMessage.Add(CopyInfo.Auto(gameObj));
                         }
                         messageToClient.MessageType = msgType;
                         serverCommunicator.SendToClient(messageToClient);
+                        mwr?.WriteOne(messageToClient);
                         break;
                     case MessageType.InitialLized:
                         MessageToInitialize messageToInitialize = new();
@@ -238,6 +245,7 @@ namespace Server
         private void OnGameEnd()
         {
             SendMessageToAllClients(MessageType.EndGame, false);
+            mwr?.Flush();
 #if DEBUG
             //跑起来时测试用
             for (int i = 0; i < TeamCount; i++)
@@ -372,7 +380,7 @@ namespace Server
                     int i = 0, j = 0;
                     using (StreamReader sr = new StreamReader(options.mapResource))
                     {
-                        while (!sr.EndOfStream && i < GameData.rows && j < GameData.cols)
+                        while (!sr.EndOfStream && i < GameData.rows)
                         {
                             if ((line = sr.ReadLine()) != null)
                             {
@@ -384,9 +392,10 @@ namespace Server
                                     if (j >= GameData.cols)
                                     {
                                         j = 0;
-                                        i++;
+                                        break;
                                     }
                                 }
+                                i++;
                             }
                         }
                     }
@@ -407,18 +416,17 @@ namespace Server
                 }
             }
 
-            //只要跑起来的话，这部分好像用不到，而且我还不会...
-            //if (options.FileName != DefaultArgumentOptions.FileName)
-            //{
-            //    try
-            //    {
-            //        mwr = new MessageWriter(options.FileName, options.TeamCount, options.PlayerCountPerTeam);
-            //    }
-            //    catch
-            //    {
-            //        Console.WriteLine($"Error: Cannot create the playback file: {options.FileName}!");
-            //    }
-            //}
+            if (options.FileName != DefaultArgumentOptions.FileName)
+            {
+                try
+                {
+                    mwr = new MessageWriter(options.FileName, options.TeamCount, options.PlayerCountPerTeam);
+                }
+                catch
+                {
+                    Console.WriteLine($"Error: Cannot create the playback file: {options.FileName}!");
+                }
+            }
 
             //if (options.Token != DefaultArgumentOptions.Token && options.Url != DefaultArgumentOptions.Url)
             //{

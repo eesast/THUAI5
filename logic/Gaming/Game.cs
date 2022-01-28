@@ -72,8 +72,8 @@ namespace Gaming
                         {
                             if (!newPlayer.IsResetting)
                             {
-                                if (newPlayer.Place != PlaceType.Invisible)
-                                    newPlayer.Place = gameMap.GetPlaceType(newPlayer.Position);
+                                //if (newPlayer.Place != PlaceType.Invisible)
+                                newPlayer.Place = gameMap.GetPlaceType(newPlayer.Position);
 
                                 long nowTime = Environment.TickCount64;
                                 if (nowTime - lastTime >= newPlayer.CD)

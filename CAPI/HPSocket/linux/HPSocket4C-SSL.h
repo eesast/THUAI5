@@ -102,10 +102,10 @@ HPSOCKET_API void __HP_CALL Destroy_HP_SSLPackClient(HP_SSLPackClient pClient);
 /*
 * 名称：SNI 默认回调函数
 * 描述：HP_SSLServer_SetupSSLContext 方法中如果不指定 SNI 回调函数则使用此 SNI 默认回调函数
-*		
+*
 * 参数：		lpszServerName	-- 请求域名
 *			pContext		-- SSL Context 对象
-* 
+*
 * 返回值：SNI 主机证书对应的索引
 */
 HPSOCKET_API int __HP_CALL HP_SSL_DefaultServerNameCallback(LPCTSTR lpszServerName, PVOID pContext);
@@ -120,18 +120,18 @@ HPSOCKET_API int __HP_CALL HP_SSL_DefaultServerNameCallback(LPCTSTR lpszServerNa
 * 
 * 返回值：无
 */
-HPSOCKET_API void __HP_CALL HP_SSL_RemoveThreadLocalState(DWORD dwThreadID);
+HPSOCKET_API void __HP_CALL HP_SSL_RemoveThreadLocalState(THR_ID dwThreadID);
 
 /*
 * 名称：初始化通信组件 SSL 环境参数
 * 描述：SSL 环境参数必须在 SSL 通信组件启动前完成初始化，否则启动失败
 *		
-* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 En_HP_SSLVerifyMode）
 *			lpszPemCertFile			-- 证书文件
 *			lpszPemKeyFile			-- 私钥文件
 *			lpszKeyPassword			-- 私钥密码（没有密码则为空）
 *			lpszCAPemCertFileOrPath	-- CA 证书文件或目录（单向验证或客户端可选）
-*			fnServerNameCallback	-- SNI 回调函数指针（可选，如果为 nullptr 则使用 SNI 默认回调函数）
+*			fnServerNameCallback	-- SNI 回调函数指针（可选）
 *
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
@@ -142,7 +142,7 @@ HPSOCKET_API BOOL __HP_CALL HP_SSLServer_SetupSSLContext(HP_SSLServer pServer, i
 * 名称：初始化通信组件 SSL 环境参数（通过内存加载证书）
 * 描述：SSL 环境参数必须在 SSL 通信组件启动前完成初始化，否则启动失败
 *		
-* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 En_HP_SSLVerifyMode）
 *			lpszPemCert				-- 证书内容
 *			lpszPemKey				-- 私钥内容
 *			lpszKeyPassword			-- 私钥密码（没有密码则为空）
@@ -158,7 +158,7 @@ HPSOCKET_API BOOL __HP_CALL HP_SSLServer_SetupSSLContextByMemory(HP_SSLServer pS
 * 名称：增加 SNI 主机证书
 * 描述：SSL 服务端在 SetupSSLContext() 成功后可以调用本方法增加多个 SNI 主机证书
 *		
-* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 En_HP_SSLVerifyMode）
 *			lpszPemCertFile			-- 证书文件
 *			lpszPemKeyFile			-- 私钥文件
 *			lpszKeyPassword			-- 私钥密码（没有密码则为空）
@@ -173,7 +173,7 @@ HPSOCKET_API int __HP_CALL HP_SSLServer_AddSSLContext(HP_SSLServer pServer, int 
 * 名称：增加 SNI 主机证书（通过内存加载证书）
 * 描述：SSL 服务端在 SetupSSLContext() 成功后可以调用本方法增加多个 SNI 主机证书
 *		
-* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 En_HP_SSLVerifyMode）
 *			lpszPemCert				-- 证书内容
 *			lpszPemKey				-- 私钥内容
 *			lpszKeyPassword			-- 私钥密码（没有密码则为空）
@@ -187,7 +187,7 @@ HPSOCKET_API int __HP_CALL HP_SSLServer_AddSSLContextByMemory(HP_SSLServer pServ
 /*
 * 名称：绑定 SNI 主机域名
 * 描述：SSL 服务端在 AddSSLContext() 成功后可以调用本方法绑定主机域名到 SNI 主机证书
-*		
+*
 * 参数：		lpszServerName		-- 主机域名
 *			iContextIndex		-- SNI 主机证书对应的索引
 *
@@ -212,7 +212,7 @@ HPSOCKET_API void __HP_CALL HP_SSLServer_CleanupSSLContext(HP_SSLServer pServer)
 * 名称：初始化通信组件 SSL 环境参数
 * 描述：SSL 环境参数必须在 SSL 通信组件启动前完成初始化，否则启动失败
 *		
-* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 En_HP_SSLVerifyMode）
 *			lpszPemCertFile			-- 证书文件（客户端可选）
 *			lpszPemKeyFile			-- 私钥文件（客户端可选）
 *			lpszKeyPassword			-- 私钥密码（没有密码则为空）
@@ -227,7 +227,7 @@ HPSOCKET_API BOOL __HP_CALL HP_SSLAgent_SetupSSLContext(HP_SSLAgent pAgent, int 
 * 名称：初始化通信组件 SSL 环境参数（通过内存加载证书）
 * 描述：SSL 环境参数必须在 SSL 通信组件启动前完成初始化，否则启动失败
 *		
-* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 En_HP_SSLVerifyMode）
 *			lpszPemCert				-- 证书内容
 *			lpszPemKey				-- 私钥内容
 *			lpszKeyPassword			-- 私钥密码（没有密码则为空）
@@ -254,7 +254,7 @@ HPSOCKET_API void __HP_CALL HP_SSLAgent_CleanupSSLContext(HP_SSLAgent pAgent);
 * 名称：初始化通信组件 SSL 环境参数
 * 描述：SSL 环境参数必须在 SSL 通信组件启动前完成初始化，否则启动失败
 *		
-* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 En_HP_SSLVerifyMode）
 *			lpszPemCertFile			-- 证书文件（客户端可选）
 *			lpszPemKeyFile			-- 私钥文件（客户端可选）
 *			lpszKeyPassword			-- 私钥密码（没有密码则为空）
@@ -269,7 +269,7 @@ HPSOCKET_API BOOL __HP_CALL HP_SSLClient_SetupSSLContext(HP_SSLClient pClient, i
 * 名称：初始化通信组件 SSL 环境参数（通过内存加载证书）
 * 描述：SSL 环境参数必须在 SSL 通信组件启动前完成初始化，否则启动失败
 *		
-* 参数：		iVerifyMode				-- SSL 验证模式（参考 EnSSLVerifyMode）
+* 参数：		iVerifyMode				-- SSL 验证模式（参考 En_HP_SSLVerifyMode）
 *			lpszPemCert				-- 证书内容
 *			lpszPemKey				-- 私钥内容
 *			lpszKeyPassword			-- 私钥密码（没有密码则为空）
@@ -298,7 +298,7 @@ HPSOCKET_API void __HP_CALL HP_SSLClient_CleanupSSLContext(HP_SSLClient pClient)
 /*
 * 名称：启动 SSL 握手
 * 描述：当通信组件设置为非自动握手时，需要调用本方法启动 SSL 握手
-*		
+*
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
 */
@@ -326,7 +326,7 @@ HPSOCKET_API BOOL __HP_CALL HP_SSLServer_GetSSLSessionInfo(HP_SSLServer pServer,
 /*
 * 名称：启动 SSL 握手
 * 描述：当通信组件设置为非自动握手时，需要调用本方法启动 SSL 握手
-*		
+*
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
 */
@@ -354,7 +354,7 @@ HPSOCKET_API BOOL __HP_CALL HP_SSLAgent_GetSSLSessionInfo(HP_SSLAgent pAgent, HP
 /*
 * 名称：启动 SSL 握手
 * 描述：当通信组件设置为非自动握手时，需要调用本方法启动 SSL 握手
-*		
+*
 * 返回值：	TRUE	-- 成功
 *			FALSE	-- 失败，可通过 SYS_GetLastError() 获取失败原因
 */
@@ -394,8 +394,8 @@ HPSOCKET_API HP_HttpsServer __HP_CALL Create_HP_HttpsServer(HP_HttpServerListene
 HPSOCKET_API HP_HttpsAgent __HP_CALL Create_HP_HttpsAgent(HP_HttpAgentListener pListener);
 // 创建 HP_HttpsClient 对象
 HPSOCKET_API HP_HttpsClient __HP_CALL Create_HP_HttpsClient(HP_HttpClientListener pListener);
-// 创建 HP_HttpsSyncClient 对象
-HPSOCKET_API HP_HttpsSyncClient __HP_CALL Create_HP_HttpsSyncClient(HP_HttpClientListener pListener);
+// 创建 HP_HttpsSyncClient 对象（pListener 参数可传入 nullptr）
+HPSOCKET_API HP_HttpsSyncClient __HP_CALL Create_HP_HttpsSyncClient(HP_HttpClientListener pListener /*= nullptr*/);
 
 // 销毁 HP_HttpsServer 对象
 HPSOCKET_API void __HP_CALL Destroy_HP_HttpsServer(HP_HttpsServer pServer);

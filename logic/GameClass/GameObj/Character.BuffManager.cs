@@ -12,7 +12,7 @@ namespace GameClass.GameObj
     {
         private readonly BuffManeger buffManeger;
         /// <summary>
-        /// 角色携带的buff管理器，目前为全抄THUAI4（佐以修改部分变量名，变uint为int）
+        /// 角色携带的buff管理器
         /// </summary>
         private class BuffManeger
         {

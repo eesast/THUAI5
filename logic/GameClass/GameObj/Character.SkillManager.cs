@@ -41,8 +41,8 @@ namespace GameClass.GameObj
             this.score = 0;
             this.propInventory = null;
             this.buffManeger = new BuffManeger();
-            PassiveSkill pSkill;
-            CommonSkill cSkill;
+            IPassiveSkill pSkill;
+            ICommonSkill cSkill;
             switch (passiveSkillType)
             {
                 case PassiveSkillType.RecoverAfterBattle:
@@ -76,7 +76,8 @@ namespace GameClass.GameObj
                     cSkill = new NoCommonSkill();
                     break;
             }
-            this.attackRange = cSkill.AttackRange;
+            this.attackRange = pSkill.AttackRange;
+            this.MaxHp = cSkill.MaxHp;
             this.hp = cSkill.MaxHp;
             this.OrgMoveSpeed = cSkill.MoveSpeed;
             this.moveSpeed = cSkill.MoveSpeed;

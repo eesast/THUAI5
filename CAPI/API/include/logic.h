@@ -9,48 +9,57 @@
 #include <condition_variable>
 #include <tuple>
 #include <atomic>
+#include <fstream>
 
 #include <Message2Clients.pb.h>
 #include <Message2Server.pb.h>
+#include <concurrent_queue.hpp>
 
 #include "state.h"
-#include "CAPI.h"
+#include "Communication.h"
 #include "API.h"
-#include <concurrent_queue.hpp>
+#include "constants.h"
+#include "AI.h"
+
+// 使用oneof语法所需要的宏
+#define MESSAGE_OF_CHARACTER 1
+#define MESSAGE_OF_BULLET 2
+#define MESSAGE_OF_PROP 3
 
 /// <summary>
 /// 封装了通信组件和AI对象进行操作
 /// </summary>
-class Logic
+class Logic: public ISubscripter, public ILogic
 {
 private:
-    std::unique_ptr<ClientCommunication> pComm; // 通信组件指针
-    //std::unique_ptr<AIBase> pAI; // 玩家指针
-    //std::shared_ptr<int> xx; // 玩家状态
+    // ID记录
+    int teamID;
+    int playerID;
 
-    std::thread tAI; // 需要对玩家单开线程
+    // 记录一场游戏中所有玩家的全部GUID信息
+    std::vector<int64_t> playerGUIDS;
+
+    std::unique_ptr<MultiThreadClientCommunication> pComm; // 通信组件指针
+    std::unique_ptr<IAI> pAI; // 玩家指针
+    std::shared_ptr<IAPI_For_Logic> pAPI; // API指针
+
+    std::thread tAI; // 需要对玩家单开线程 
 
     // 互斥锁
-    std::mutex mtx_ai;
-    std::mutex mtx_state;
-    std::mutex mtx_buffer;
+    mutable std::mutex mtx_ai;
+    mutable std::mutex mtx_state;
+    mutable std::mutex mtx_buffer;
 
     // 条件变量
     std::condition_variable cv_buffer;
     std::condition_variable cv_ai;
 
-    // 信息队列
+    // 信息队列（队友发来的字符串）
     thuai::concurrency::concurrent_queue<std::string> MessageStorage;
 
     // 记录状态和缓冲区数(可能和线程有关)
     int counter_state = 0;
     int counter_buffer = 0;
-
-    // 此时是否应该循环执行player()
-    std::atomic_bool AI_loop = true;
-
-    // buffer更新是否完毕
-    std::atomic_bool buffer_updated = true;
 
     // 储存状态：现行状态和缓冲区
     State state[2];
@@ -59,8 +68,37 @@ private:
     State* pState;
     State* pBuffer;
 
+    // 此时是否应该循环执行player()
+    std::atomic_bool AI_loop = true;
+
+    // buffer更新是否完毕
+    bool buffer_updated = true;
+
+    // 是否可以启用当前状态
+    bool current_state_accessed = false;
+
     // 是否应该启动AI
     bool AI_start = false;
+
+    int GetCounter() const override;
+    std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
+    std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
+    std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const override;
+    std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const override;
+    std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
+
+    uint32_t GetTeamScore() const override;
+    const std::vector<int64_t> GetPlayerGUIDs() const override;
+
+    // 重写的委托
+    Protobuf::MessageToServer OnConnect() override;
+    void OnReceive(pointer_m2c p2M) override;
+    void OnClose() override;
+
+    bool SendInfo(Protobuf::MessageToServer&) override;
+    bool Empty() override;
+    std::optional<std::string> GetInfo() override;
+    bool WaitThread() override;
 
     /// <summary>
     /// 执行AI线程
@@ -90,7 +128,7 @@ private:
     /// 处理信息Part3 初始化
     /// </summary>
     /// <param name=""></param>
-    void ProcessMessageToInitialize(std::shared_ptr<Protobuf::MessageToInitialize>);
+    // void ProcessMessageToInitialize(std::shared_ptr<Protobuf::MessageToInitialize>);
 
     /// <summary>
     /// 加载到buffer
@@ -113,11 +151,12 @@ private:
     /// </summary>
     /// <returns></returns>
     void Update() noexcept;
-   
+  
 public:
-    Logic();
+
+    Logic(int teamID, int playerID);
     ~Logic() = default;
-    void Main();
+    void Main(const char* address, uint16_t port, int32_t playerID, int32_t teamID, THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType, CreateAIFunc f, int debuglevel, std::string filename);
 };
 
 #endif

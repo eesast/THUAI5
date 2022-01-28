@@ -42,11 +42,14 @@ constexpr MessageOfCharacter::MessageOfCharacter(
   , activeskilltype_(0)
 
   , guid_(int64_t{0})
+  , radius_(0)
   , isresetting_(false)
   , canmove_(false)
-  , radius_(0)
+  , isinvisible_(false)
   , cd_(0)
   , lifenum_(0)
+  , teamid_(int64_t{0})
+  , playerid_(int64_t{0})
   , score_(0){}
 struct MessageOfCharacterDefaultTypeInternal {
   constexpr MessageOfCharacterDefaultTypeInternal()
@@ -63,10 +66,11 @@ constexpr MessageOfProp::MessageOfProp(
 
   , x_(0)
   , facingdirection_(0)
-  , guid_(int64_t{0})
   , y_(0)
   , size_(0)
-  , parentid_(int64_t{0}){}
+  , guid_(int64_t{0})
+  , place_(0)
+{}
 struct MessageOfPropDefaultTypeInternal {
   constexpr MessageOfPropDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -83,8 +87,10 @@ constexpr MessageOfBullet::MessageOfBullet(
   , x_(0)
   , facingdirection_(0)
   , guid_(int64_t{0})
-  , parentid_(int64_t{0})
-  , y_(0){}
+  , y_(0)
+  , place_(0)
+
+  , parentteamid_(int64_t{0}){}
 struct MessageOfBulletDefaultTypeInternal {
   constexpr MessageOfBulletDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -186,6 +192,9 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, cd_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, lifenum_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, score_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, teamid_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, playerid_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, isinvisible_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -197,8 +206,8 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, y_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, facingdirection_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, guid_),
-  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, parentid_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, size_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, place_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBullet, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -210,7 +219,8 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBullet, y_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBullet, facingdirection_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBullet, guid_),
-  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBullet, parentid_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBullet, parentteamid_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBullet, place_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToInitialize, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -251,12 +261,12 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::Protobuf::MessageOfCharacter)},
-  { 29, -1, -1, sizeof(::Protobuf::MessageOfProp)},
-  { 42, -1, -1, sizeof(::Protobuf::MessageOfBullet)},
-  { 54, -1, -1, sizeof(::Protobuf::MessageToInitialize)},
-  { 62, -1, -1, sizeof(::Protobuf::MessageToClient_GameObjMessage)},
-  { 72, -1, -1, sizeof(::Protobuf::MessageToClient)},
-  { 80, -1, -1, sizeof(::Protobuf::MessageToOneClient)},
+  { 32, -1, -1, sizeof(::Protobuf::MessageOfProp)},
+  { 45, -1, -1, sizeof(::Protobuf::MessageOfBullet)},
+  { 58, -1, -1, sizeof(::Protobuf::MessageToInitialize)},
+  { 66, -1, -1, sizeof(::Protobuf::MessageToClient_GameObjMessage)},
+  { 76, -1, -1, sizeof(::Protobuf::MessageToClient)},
+  { 84, -1, -1, sizeof(::Protobuf::MessageToOneClient)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -271,7 +281,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\025Message2Clients.proto\022\010Protobuf\032\021Messa"
-  "geType.proto\"\314\004\n\022MessageOfCharacter\022\t\n\001x"
+  "geType.proto\"\203\005\n\022MessageOfCharacter\022\t\n\001x"
   "\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\023\n\013attackRange\030\003 \001(\001\022\021"
   "\n\tbulletNum\030\004 \001(\005\022\r\n\005speed\030\005 \001(\005\022\014\n\004life"
   "\030\006 \001(\005\022%\n\035timeUntilCommonSkillAvailable\030"
@@ -286,35 +296,38 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
   "\021 \001(\0162\031.Protobuf.ActiveSkillType\022\014\n\004guid"
   "\030\022 \001(\003\022\017\n\007canMove\030\023 \001(\010\022\016\n\006radius\030\024 \001(\005\022"
   "\n\n\002CD\030\025 \001(\005\022\017\n\007lifeNum\030\026 \001(\005\022\r\n\005score\030\027 "
-  "\001(\005\"\216\001\n\rMessageOfProp\022 \n\004type\030\001 \001(\0162\022.Pr"
-  "otobuf.PropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n"
-  "\017facingDirection\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\020\n\010"
-  "parentID\030\006 \001(\003\022\014\n\004size\030\007 \001(\005\"\204\001\n\017Message"
-  "OfBullet\022\"\n\004type\030\001 \001(\0162\024.Protobuf.Bullet"
-  "Type\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDire"
-  "ction\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\020\n\010parentID\030\006 "
-  "\001(\003\"T\n\023MessageToInitialize\022\021\n\tMapSerial\030"
-  "\001 \001(\005\022*\n\013messageType\030\002 \001(\0162\025.Protobuf.Me"
-  "ssageType\"\275\002\n\017MessageToClient\022@\n\016gameObj"
-  "Message\030\001 \003(\0132(.Protobuf.MessageToClient"
-  ".GameObjMessage\022*\n\013messageType\030\002 \001(\0162\025.P"
-  "rotobuf.MessageType\032\273\001\n\016GameObjMessage\022:"
-  "\n\022messageOfCharacter\030\001 \001(\0132\034.Protobuf.Me"
-  "ssageOfCharacterH\000\0224\n\017messageOfBullet\030\002 "
-  "\001(\0132\031.Protobuf.MessageOfBulletH\000\0220\n\rmess"
-  "ageOfProp\030\003 \001(\0132\027.Protobuf.MessageOfProp"
-  "H\000B\005\n\003obj\"\201\001\n\022MessageToOneClient\022\020\n\010play"
-  "erID\030\001 \001(\003\022\016\n\006teamID\030\002 \001(\003\022*\n\013messageTyp"
-  "e\030\003 \001(\0162\025.Protobuf.MessageType\022\014\n\004guid\030\004"
-  " \001(\003\022\017\n\007message\030\005 \001(\tB\026\252\002\023Communication."
-  "Protob\006proto3"
+  "\001(\005\022\016\n\006teamID\030\030 \001(\003\022\020\n\010playerID\030\031 \001(\003\022\023\n"
+  "\013isInvisible\030\032 \001(\010\"\240\001\n\rMessageOfProp\022 \n\004"
+  "type\030\001 \001(\0162\022.Protobuf.PropType\022\t\n\001x\030\002 \001("
+  "\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDirection\030\004 \001(\001\022\014\n"
+  "\004guid\030\005 \001(\003\022\014\n\004size\030\006 \001(\005\022\"\n\005place\030\007 \001(\016"
+  "2\023.Protobuf.PlaceType\"\254\001\n\017MessageOfBulle"
+  "t\022\"\n\004type\030\001 \001(\0162\024.Protobuf.BulletType\022\t\n"
+  "\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDirection\030\004"
+  " \001(\001\022\014\n\004guid\030\005 \001(\003\022\024\n\014parentTeamID\030\006 \001(\003"
+  "\022\"\n\005place\030\007 \001(\0162\023.Protobuf.PlaceType\"T\n\023"
+  "MessageToInitialize\022\021\n\tMapSerial\030\001 \001(\005\022*"
+  "\n\013messageType\030\002 \001(\0162\025.Protobuf.MessageTy"
+  "pe\"\275\002\n\017MessageToClient\022@\n\016gameObjMessage"
+  "\030\001 \003(\0132(.Protobuf.MessageToClient.GameOb"
+  "jMessage\022*\n\013messageType\030\002 \001(\0162\025.Protobuf"
+  ".MessageType\032\273\001\n\016GameObjMessage\022:\n\022messa"
+  "geOfCharacter\030\001 \001(\0132\034.Protobuf.MessageOf"
+  "CharacterH\000\0224\n\017messageOfBullet\030\002 \001(\0132\031.P"
+  "rotobuf.MessageOfBulletH\000\0220\n\rmessageOfPr"
+  "op\030\003 \001(\0132\027.Protobuf.MessageOfPropH\000B\005\n\003o"
+  "bj\"\201\001\n\022MessageToOneClient\022\020\n\010playerID\030\001 "
+  "\001(\003\022\016\n\006teamID\030\002 \001(\003\022*\n\013messageType\030\003 \001(\016"
+  "2\025.Protobuf.MessageType\022\014\n\004guid\030\004 \001(\003\022\017\n"
+  "\007message\030\005 \001(\tB\026\252\002\023Communication.Protob\006"
+  "proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Message2Clients_2eproto_deps[1] = {
   &::descriptor_table_MessageType_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Clients_2eproto = {
-  false, false, 1493, descriptor_table_protodef_Message2Clients_2eproto, "Message2Clients.proto", 
+  false, false, 1606, descriptor_table_protodef_Message2Clients_2eproto, "Message2Clients.proto", 
   &descriptor_table_Message2Clients_2eproto_once, descriptor_table_Message2Clients_2eproto_deps, 1, 7,
   schemas, file_default_instances, TableStruct_Message2Clients_2eproto::offsets,
   file_level_metadata_Message2Clients_2eproto, file_level_enum_descriptors_Message2Clients_2eproto, file_level_service_descriptors_Message2Clients_2eproto,
@@ -587,6 +600,30 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         } else
           goto handle_unusual;
         continue;
+      // int64 teamID = 24;
+      case 24:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 192)) {
+          teamid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // int64 playerID = 25;
+      case 25:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 200)) {
+          playerid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // bool isInvisible = 26;
+      case 26:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 208)) {
+          isinvisible_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
       default:
         goto handle_unusual;
     }  // switch
@@ -776,6 +813,24 @@ uint8_t* MessageOfCharacter::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(23, this->_internal_score(), target);
   }
 
+  // int64 teamID = 24;
+  if (this->_internal_teamid() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(24, this->_internal_teamid(), target);
+  }
+
+  // int64 playerID = 25;
+  if (this->_internal_playerid() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(25, this->_internal_playerid(), target);
+  }
+
+  // bool isInvisible = 26;
+  if (this->_internal_isinvisible() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(26, this->_internal_isinvisible(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -901,6 +956,13 @@ size_t MessageOfCharacter::ByteSizeLong() const {
         this->_internal_guid());
   }
 
+  // int32 radius = 20;
+  if (this->_internal_radius() != 0) {
+    total_size += 2 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_radius());
+  }
+
   // bool isResetting = 15;
   if (this->_internal_isresetting() != 0) {
     total_size += 1 + 1;
@@ -911,11 +973,9 @@ size_t MessageOfCharacter::ByteSizeLong() const {
     total_size += 2 + 1;
   }
 
-  // int32 radius = 20;
-  if (this->_internal_radius() != 0) {
-    total_size += 2 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_radius());
+  // bool isInvisible = 26;
+  if (this->_internal_isinvisible() != 0) {
+    total_size += 2 + 1;
   }
 
   // int32 CD = 21;
@@ -930,6 +990,20 @@ size_t MessageOfCharacter::ByteSizeLong() const {
     total_size += 2 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_lifenum());
+  }
+
+  // int64 teamID = 24;
+  if (this->_internal_teamid() != 0) {
+    total_size += 2 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64Size(
+        this->_internal_teamid());
+  }
+
+  // int64 playerID = 25;
+  if (this->_internal_playerid() != 0) {
+    total_size += 2 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64Size(
+        this->_internal_playerid());
   }
 
   // int32 score = 23;
@@ -1028,20 +1102,29 @@ void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
   if (from._internal_guid() != 0) {
     _internal_set_guid(from._internal_guid());
   }
+  if (from._internal_radius() != 0) {
+    _internal_set_radius(from._internal_radius());
+  }
   if (from._internal_isresetting() != 0) {
     _internal_set_isresetting(from._internal_isresetting());
   }
   if (from._internal_canmove() != 0) {
     _internal_set_canmove(from._internal_canmove());
   }
-  if (from._internal_radius() != 0) {
-    _internal_set_radius(from._internal_radius());
+  if (from._internal_isinvisible() != 0) {
+    _internal_set_isinvisible(from._internal_isinvisible());
   }
   if (from._internal_cd() != 0) {
     _internal_set_cd(from._internal_cd());
   }
   if (from._internal_lifenum() != 0) {
     _internal_set_lifenum(from._internal_lifenum());
+  }
+  if (from._internal_teamid() != 0) {
+    _internal_set_teamid(from._internal_teamid());
+  }
+  if (from._internal_playerid() != 0) {
+    _internal_set_playerid(from._internal_playerid());
   }
   if (from._internal_score() != 0) {
     _internal_set_score(from._internal_score());
@@ -1096,16 +1179,16 @@ MessageOfProp::MessageOfProp(const MessageOfProp& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&type_, &from.type_,
-    static_cast<size_t>(reinterpret_cast<char*>(&parentid_) -
-    reinterpret_cast<char*>(&type_)) + sizeof(parentid_));
+    static_cast<size_t>(reinterpret_cast<char*>(&place_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(place_));
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageOfProp)
 }
 
 inline void MessageOfProp::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&type_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&parentid_) -
-    reinterpret_cast<char*>(&type_)) + sizeof(parentid_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&place_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(place_));
 }
 
 MessageOfProp::~MessageOfProp() {
@@ -1136,8 +1219,8 @@ void MessageOfProp::Clear() {
   (void) cached_has_bits;
 
   ::memset(&type_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&parentid_) -
-      reinterpret_cast<char*>(&type_)) + sizeof(parentid_));
+      reinterpret_cast<char*>(&place_) -
+      reinterpret_cast<char*>(&type_)) + sizeof(place_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1188,19 +1271,20 @@ const char* MessageOfProp::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
         } else
           goto handle_unusual;
         continue;
-      // int64 parentID = 6;
+      // int32 size = 6;
       case 6:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
-          parentid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // int32 size = 7;
+      // .Protobuf.PlaceType place = 7;
       case 7:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56)) {
-          size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
+          _internal_set_place(static_cast<::Protobuf::PlaceType>(val));
         } else
           goto handle_unusual;
         continue;
@@ -1268,16 +1352,17 @@ uint8_t* MessageOfProp::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(5, this->_internal_guid(), target);
   }
 
-  // int64 parentID = 6;
-  if (this->_internal_parentid() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(6, this->_internal_parentid(), target);
-  }
-
-  // int32 size = 7;
+  // int32 size = 6;
   if (this->_internal_size() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(7, this->_internal_size(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(6, this->_internal_size(), target);
+  }
+
+  // .Protobuf.PlaceType place = 7;
+  if (this->_internal_place() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      7, this->_internal_place(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1316,24 +1401,25 @@ size_t MessageOfProp::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  // int64 guid = 5;
-  if (this->_internal_guid() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_guid());
-  }
-
   // int32 y = 3;
   if (this->_internal_y() != 0) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_y());
   }
 
-  // int32 size = 7;
+  // int32 size = 6;
   if (this->_internal_size() != 0) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_size());
   }
 
-  // int64 parentID = 6;
-  if (this->_internal_parentid() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_parentid());
+  // int64 guid = 5;
+  if (this->_internal_guid() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_guid());
+  }
+
+  // .Protobuf.PlaceType place = 7;
+  if (this->_internal_place() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_place());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -1371,17 +1457,17 @@ void MessageOfProp::MergeFrom(const MessageOfProp& from) {
   if (raw_facingdirection != 0) {
     _internal_set_facingdirection(from._internal_facingdirection());
   }
-  if (from._internal_guid() != 0) {
-    _internal_set_guid(from._internal_guid());
-  }
   if (from._internal_y() != 0) {
     _internal_set_y(from._internal_y());
   }
   if (from._internal_size() != 0) {
     _internal_set_size(from._internal_size());
   }
-  if (from._internal_parentid() != 0) {
-    _internal_set_parentid(from._internal_parentid());
+  if (from._internal_guid() != 0) {
+    _internal_set_guid(from._internal_guid());
+  }
+  if (from._internal_place() != 0) {
+    _internal_set_place(from._internal_place());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1401,8 +1487,8 @@ void MessageOfProp::InternalSwap(MessageOfProp* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(MessageOfProp, parentid_)
-      + sizeof(MessageOfProp::parentid_)
+      PROTOBUF_FIELD_OFFSET(MessageOfProp, place_)
+      + sizeof(MessageOfProp::place_)
       - PROTOBUF_FIELD_OFFSET(MessageOfProp, type_)>(
           reinterpret_cast<char*>(&type_),
           reinterpret_cast<char*>(&other->type_));
@@ -1433,16 +1519,16 @@ MessageOfBullet::MessageOfBullet(const MessageOfBullet& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&type_, &from.type_,
-    static_cast<size_t>(reinterpret_cast<char*>(&y_) -
-    reinterpret_cast<char*>(&type_)) + sizeof(y_));
+    static_cast<size_t>(reinterpret_cast<char*>(&parentteamid_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(parentteamid_));
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageOfBullet)
 }
 
 inline void MessageOfBullet::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&type_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&y_) -
-    reinterpret_cast<char*>(&type_)) + sizeof(y_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&parentteamid_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(parentteamid_));
 }
 
 MessageOfBullet::~MessageOfBullet() {
@@ -1473,8 +1559,8 @@ void MessageOfBullet::Clear() {
   (void) cached_has_bits;
 
   ::memset(&type_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&y_) -
-      reinterpret_cast<char*>(&type_)) + sizeof(y_));
+      reinterpret_cast<char*>(&parentteamid_) -
+      reinterpret_cast<char*>(&type_)) + sizeof(parentteamid_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1525,11 +1611,20 @@ const char* MessageOfBullet::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         } else
           goto handle_unusual;
         continue;
-      // int64 parentID = 6;
+      // int64 parentTeamID = 6;
       case 6:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
-          parentid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          parentteamid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .Protobuf.PlaceType place = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_place(static_cast<::Protobuf::PlaceType>(val));
         } else
           goto handle_unusual;
         continue;
@@ -1597,10 +1692,17 @@ uint8_t* MessageOfBullet::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(5, this->_internal_guid(), target);
   }
 
-  // int64 parentID = 6;
-  if (this->_internal_parentid() != 0) {
+  // int64 parentTeamID = 6;
+  if (this->_internal_parentteamid() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(6, this->_internal_parentid(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(6, this->_internal_parentteamid(), target);
+  }
+
+  // .Protobuf.PlaceType place = 7;
+  if (this->_internal_place() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      7, this->_internal_place(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1644,14 +1746,20 @@ size_t MessageOfBullet::ByteSizeLong() const {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_guid());
   }
 
-  // int64 parentID = 6;
-  if (this->_internal_parentid() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_parentid());
-  }
-
   // int32 y = 3;
   if (this->_internal_y() != 0) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_y());
+  }
+
+  // .Protobuf.PlaceType place = 7;
+  if (this->_internal_place() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_place());
+  }
+
+  // int64 parentTeamID = 6;
+  if (this->_internal_parentteamid() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_parentteamid());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -1692,11 +1800,14 @@ void MessageOfBullet::MergeFrom(const MessageOfBullet& from) {
   if (from._internal_guid() != 0) {
     _internal_set_guid(from._internal_guid());
   }
-  if (from._internal_parentid() != 0) {
-    _internal_set_parentid(from._internal_parentid());
-  }
   if (from._internal_y() != 0) {
     _internal_set_y(from._internal_y());
+  }
+  if (from._internal_place() != 0) {
+    _internal_set_place(from._internal_place());
+  }
+  if (from._internal_parentteamid() != 0) {
+    _internal_set_parentteamid(from._internal_parentteamid());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1716,8 +1827,8 @@ void MessageOfBullet::InternalSwap(MessageOfBullet* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(MessageOfBullet, y_)
-      + sizeof(MessageOfBullet::y_)
+      PROTOBUF_FIELD_OFFSET(MessageOfBullet, parentteamid_)
+      + sizeof(MessageOfBullet::parentteamid_)
       - PROTOBUF_FIELD_OFFSET(MessageOfBullet, type_)>(
           reinterpret_cast<char*>(&type_),
           reinterpret_cast<char*>(&other->type_));

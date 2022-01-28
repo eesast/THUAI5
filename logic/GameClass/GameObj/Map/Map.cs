@@ -11,25 +11,26 @@ namespace GameClass.GameObj
     {
         private readonly List<ICharacter> playerList;
         public List<ICharacter> PlayerList => playerList;
-
         private readonly ReaderWriterLockSlim playerListLock;
         public ReaderWriterLockSlim PlayerListLock => playerListLock;
 
         private readonly List<IObjOfCharacter> bulletList;
         public List<IObjOfCharacter> BulletList => bulletList;
-
         private readonly ReaderWriterLockSlim bulletListLock;
         public ReaderWriterLockSlim BulletListLock => bulletListLock;
 
+        private readonly List<IGameObj> mapObjList;
+        public List<IGameObj> MapObjList => mapObjList;
+        private readonly ReaderWriterLockSlim mapObjListLock;
+        public ReaderWriterLockSlim MapObjListLock => mapObjListLock;
+
         private readonly List<IObjOfCharacter> propList;
         public List<IObjOfCharacter> PropList => propList;
-
         private readonly ReaderWriterLockSlim propListLock;
         public ReaderWriterLockSlim PropListLock => propListLock;
 
         private readonly List<IObjOfCharacter> gemList;
         public List<IObjOfCharacter> GemList => gemList;
-
         private readonly ReaderWriterLockSlim gemListLock;
         public ReaderWriterLockSlim GemListLock => gemListLock;
 
@@ -49,14 +50,6 @@ namespace GameClass.GameObj
             else
                 return PlaceType.Land;  //其他情况均返回land
         }
-        // 出生点列表暂不需要锁
-        public bool IsWall(XYPosition pos)
-        {
-            if (pos.x / GameData.numOfPosGridPerCell >= GameData.rows || pos.x / GameData.numOfPosGridPerCell < 0
-                || pos.y / GameData.numOfPosGridPerCell >= GameData.cols || pos.y / GameData.numOfPosGridPerCell < 0)
-                return true;
-            return ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 1;
-        }
         public bool IsOutOfBound(IGameObj obj)
         {
             return obj.Position.x >= GameData.lengthOfMap - obj.Radius
@@ -69,33 +62,6 @@ namespace GameClass.GameObj
             return new OutOfBoundBlock(pos);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <returns>若为null，则是空地</returns>
-        public IGameObj? GetCell(XYPosition pos)
-        {
-            XYPosition cellPos = new XYPosition(pos.x / GameData.numOfPosGridPerCell * GameData.numOfPosGridPerCell + GameData.numOfPosGridPerCell / 2, pos.y / GameData.numOfPosGridPerCell* GameData.numOfPosGridPerCell + GameData.numOfPosGridPerCell / 2);
-            if (pos.x / GameData.numOfPosGridPerCell >= GameData.rows || pos.x / GameData.numOfPosGridPerCell < 0
-                || pos.y / GameData.numOfPosGridPerCell >= GameData.cols || pos.y / GameData.numOfPosGridPerCell < 0)
-                return new OutOfBoundBlock(cellPos);
-            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 0)
-                return null; //这可能有问题，但是还没想好怎么写
-            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 1)
-                return new Wall(cellPos);
-            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 2)
-                return new Grass1(cellPos);
-            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 3)
-                return new Grass2(cellPos);
-            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 4)
-                return new Grass3(cellPos);
-            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] < 13)
-                return new BirthPoint(cellPos);
-            else if (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell] == 13)
-                return new GemWell(cellPos);
-            else return new OutOfBoundBlock(cellPos);
-        }
         public PlaceType GetPlaceType(XYPosition pos)
         {
             switch (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell])
@@ -147,10 +113,12 @@ namespace GameClass.GameObj
             playerList = new List<ICharacter>();
             propList = new List<IObjOfCharacter>();
             gemList = new List<IObjOfCharacter>();
+            mapObjList = new List<IGameObj>();
             bulletListLock = new ReaderWriterLockSlim();
             playerListLock = new ReaderWriterLockSlim();
             propListLock = new ReaderWriterLockSlim();
             gemListLock = new ReaderWriterLockSlim();
+            mapObjListLock = new ReaderWriterLockSlim();
 
             ProtoGameMap = new uint[mapResource.GetLength(0), mapResource.GetLength(1)];
             Array.Copy(mapResource, ProtoGameMap, mapResource.Length);
@@ -172,6 +140,19 @@ namespace GameClass.GameObj
                 {
                     switch (mapResource[i, j])
                     {
+                        case (uint)MapInfo.MapInfoObjType.Wall:
+                            {
+                                mapObjListLock.EnterWriteLock();
+                                try
+                                {
+                                    lock (mapObjListLock)
+                                    {
+                                        mapObjList.Add(new Wall(GameData.GetCellCenterPos(i, j)));
+                                    }
+                                }
+                                finally { mapObjListLock.ExitWriteLock(); }
+                                break;
+                            }
                         case (uint)MapInfo.MapInfoObjType.BirthPoint1:
                         case (uint)MapInfo.MapInfoObjType.BirthPoint2:
                         case (uint)MapInfo.MapInfoObjType.BirthPoint3:
@@ -181,8 +162,17 @@ namespace GameClass.GameObj
                         case (uint)MapInfo.MapInfoObjType.BirthPoint7:
                         case (uint)MapInfo.MapInfoObjType.BirthPoint8:
                             {
-                                BirthPoint newBirthPoint = new BirthPoint(new XYPosition(i * 1000, j * 1000));
+                                BirthPoint newBirthPoint = new BirthPoint(GameData.GetCellCenterPos(i, j));
                                 birthPointList.Add(MapInfo.BirthPointEnumToIdx((MapInfo.MapInfoObjType)mapResource[i, j]), newBirthPoint);
+                                mapObjListLock.EnterWriteLock();
+                                try
+                                {
+                                    lock (mapObjListLock)
+                                    {
+                                        mapObjList.Add(newBirthPoint);
+                                    }
+                                }
+                                finally { mapObjListLock.ExitWriteLock(); }
                                 break;
                             }
                     }
