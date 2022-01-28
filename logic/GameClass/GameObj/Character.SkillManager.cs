@@ -76,7 +76,8 @@ namespace GameClass.GameObj
                     cSkill = new NoCommonSkill();
                     break;
             }
-            this.attackRange = cSkill.AttackRange;
+            this.attackRange = pSkill.AttackRange;
+            this.MaxHp = cSkill.MaxHp;
             this.hp = cSkill.MaxHp;
             this.OrgMoveSpeed = cSkill.MoveSpeed;
             this.moveSpeed = cSkill.MoveSpeed;

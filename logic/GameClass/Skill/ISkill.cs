@@ -5,11 +5,11 @@ namespace GameClass.Skill
     public interface IPassiveSkill
     {
         public Bullet InitBullet { get; }
+        public double AttackRange { get; }
         public void SkillEffect(Character player);
     }
     public interface ICommonSkill
     {
-        public double AttackRange { get; }
         public int MoveSpeed { get; }
         public int MaxHp { get; }
         public int CD { get; }

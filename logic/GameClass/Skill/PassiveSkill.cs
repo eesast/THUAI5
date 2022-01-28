@@ -11,6 +11,8 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
     {
         private readonly Bullet initBullet = new OrdinaryBullet(new XYPosition(0, 0));
         public Bullet InitBullet => initBullet;
+        private const double attackRange = GameData.basicAttackRange;
+        public double AttackRange => attackRange;
         //以上参数以后再改
         public void SkillEffect(Character player)
         {
@@ -70,6 +72,8 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
     {
         private readonly Bullet initBullet = new FastBullet(new XYPosition(0, 0));
         public Bullet InitBullet => initBullet;
+        private const double attackRange = GameData.basicAttackRange;
+        public double AttackRange => attackRange;
         //以上参数以后再改
         public void SkillEffect(Character player)
         {
@@ -135,8 +139,10 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
     }
     public class Vampire : IPassiveSkill  //被动就是吸血，普通子弹
     {
-        private readonly Bullet initBullet = new OrdinaryBullet(new XYPosition(0, 0));
+        private readonly Bullet initBullet = new LineBullet(new XYPosition(0, 0));
         public Bullet InitBullet => initBullet;
+        private const double attackRange = 0.1 * GameData.basicAttackRange;
+        public double AttackRange => attackRange;
         //以上参数以后再改
         public void SkillEffect(Character player)
         {
@@ -148,6 +154,8 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
     {
         private readonly Bullet initBullet = new OrdinaryBullet(new XYPosition(0, 0));
         public Bullet InitBullet => initBullet;
+        private const double attackRange = GameData.basicAttackRange;
+        public double AttackRange => attackRange;
         //以上参数以后再改
         public void SkillEffect(Character player)
         {
