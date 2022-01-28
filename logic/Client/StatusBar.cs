@@ -44,7 +44,7 @@ namespace Client
             status.BorderBrush = Brushes.White;
             status.IsReadOnly = true;
             backGround.Children.Add(status);
-            Canvas.SetTop(status, 47);
+            Canvas.SetTop(status, 51);
 
             scores.Height = 15;
             scores.Text = "Scores：";
@@ -56,7 +56,7 @@ namespace Client
             backGround.Children.Add(scores);
             Canvas.SetTop(scores, 115);
 
-            serial.Height = 42;
+            serial.Height = 46;
             serial.Text = "👥null🧓null\n职业：";
             serial.TextWrapping = System.Windows.TextWrapping.Wrap;
             serial.Width = 65;
@@ -110,10 +110,6 @@ namespace Client
                 + "\n🏃：" + Convert.ToString(obj.Speed)
                 + "\n♥：" + Convert.ToString(obj.Life);
             scores.Text="Scores:"+Convert.ToString(obj.Score);
-        }
-        public void Test(Int64 i)
-        {
-            progressBar.Value = i%100;
         }
         public void SetValue(MessageOfCharacter obj)
         {
