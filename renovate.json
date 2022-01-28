@@ -11,7 +11,7 @@
       "matchPackageNames": [
         "hpsocket.net"
       ],
-      "enabled": false
+      "allowedVersions": "<=5.8.4.1"
     }
   ]
 }
