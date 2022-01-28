@@ -78,6 +78,20 @@ namespace Client
             DragMove();
         }
 
+        private void Attack(object sender,RoutedEventArgs e)
+        {
+            if (communicator.Client.IsConnected)
+            {
+                MessageToServer msgJ = new MessageToServer();
+                msgJ.MessageType = MessageType.Attack;
+                msgJ.PlayerID = playerID;
+                msgJ.TeamID = teamID;
+                double mouseX = Mouse.GetPosition(UpperLayerOfMap).X * 13 / 1000;
+                double mouseY = Mouse.GetPosition(UpperLayerOfMap).Y * 13 / 1000;
+                msgJ.Angle = Math.Atan2(mouseX - myInfo.MessageOfCharacter.X, mouseY - myInfo.MessageOfCharacter.Y);
+                communicator.SendMessage(msgJ);
+            }
+        }
         private void DrawMap()
         {
             for (int i = 0; i < defaultMap.GetLength(0); i++)
@@ -487,6 +501,7 @@ namespace Client
                 return false;
             return true;
         }
+        
         //定时器事件，刷新地图
         private void Refresh(object? sender, EventArgs e)
         {

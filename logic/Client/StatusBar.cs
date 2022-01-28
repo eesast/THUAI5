@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using Communication.Proto;
 using System;
+
 namespace Client
 {
     internal class StatusBar
@@ -72,23 +73,28 @@ namespace Client
             {
                 case ActiveSkillType.BecomeVampire:
                     coolTime = 30000;
-                    serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" + Convert.ToString(obj.PlayerID) + "\n职业：Vampaire";
+                    serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓"
+                        + Convert.ToString(obj.PlayerID) + "\n职业：Vampaire";
                     break;
                 case ActiveSkillType.SuperFast:
                     coolTime = 30000;
-                    serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" + Convert.ToString(obj.PlayerID) + "\n职业：SuperFast";
+                    serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" 
+                        + Convert.ToString(obj.PlayerID) + "\n职业：SuperFast";
                     break;
                 case ActiveSkillType.NuclearWeapon:
                     coolTime = 30000;
-                    serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" + Convert.ToString(obj.PlayerID) + "\n职业：Nuclear";
+                    serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" 
+                        + Convert.ToString(obj.PlayerID) + "\n职业：Nuclear";
                     break;
                 case ActiveSkillType.BecomeAssassin:
                     coolTime = 30000;
-                    serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" + Convert.ToString(obj.PlayerID) + "\n职业：Assassin";
+                    serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" 
+                        + Convert.ToString(obj.PlayerID) + "\n职业：Assassin";
                     break;
                 case ActiveSkillType.NullActiveSkillType:
                     coolTime = 30000;
-                    serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" + Convert.ToString(obj.PlayerID) + "\n职业：Null";
+                    serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" 
+                        + Convert.ToString(obj.PlayerID) + "\n职业：Null";
                     break;
             }
             initialized = true;
@@ -97,7 +103,12 @@ namespace Client
         {
             progressBar.Value = obj.TimeUntilCommonSkillAvailable / coolTime * 100;
             star.Text = "⭐：" + Convert.ToString(obj.GemNum);
-            status.Text = "🗡："+Convert.ToString(obj.AttackRange)+"\n🏹："+Convert.ToString(obj.BulletNum) +"\n🏃："+Convert.ToString(obj.Speed)+"\n♥："+Convert.ToString(obj.Life);
+            status.Text = "🗡："
+                + Convert.ToString(obj.AttackRange)
+                + "\n🏹："
+                + Convert.ToString(obj.BulletNum)
+                + "\n🏃：" + Convert.ToString(obj.Speed)
+                + "\n♥：" + Convert.ToString(obj.Life);
             scores.Text="Scores:"+Convert.ToString(obj.Score);
         }
         public void Test(Int64 i)
