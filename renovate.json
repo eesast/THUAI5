@@ -8,7 +8,7 @@
   "labels": ["dependencies", "bot"],
   "packageRules": [
     {
-      "packageNames": [
+      "matchPackageNames": [
         "hpsocket.net"
       ],
       "enabled": false
