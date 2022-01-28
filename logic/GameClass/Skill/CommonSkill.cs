@@ -8,9 +8,6 @@ namespace GameClass.Skill
 {
     public class BecomeVampire : ICommonSkill  //化身吸血鬼：1*标准技能cd，1*标准持续时间
     {
-        private const double attackRange = GameData.basicAttackRange;
-        public double AttackRange => attackRange;
-
         private const int moveSpeed = GameData.basicMoveSpeed;
         public int MoveSpeed => moveSpeed;
 
@@ -88,9 +85,6 @@ namespace GameClass.Skill
     }
     public class BecomeAssassin : ICommonSkill  //化身刺客，隐身：1*标准技能cd，1*标准持续时间
     {
-        private const double attackRange = GameData.basicAttackRange;
-        public double AttackRange => attackRange;
-
         private const int moveSpeed = GameData.basicMoveSpeed;
         public int MoveSpeed => moveSpeed;
 
@@ -167,9 +161,6 @@ namespace GameClass.Skill
     }
     public class NuclearWeapon : ICommonSkill  //核武器：1*标准技能cd，0.5*标准持续时间
     {
-        private const double attackRange = GameData.basicAttackRange;
-        public double AttackRange => attackRange;
-
         private const int moveSpeed = GameData.basicMoveSpeed;
         public int MoveSpeed => moveSpeed;
 
@@ -245,12 +236,8 @@ namespace GameClass.Skill
             }
         }
     }
-
     public class SuperFast : ICommonSkill  //3倍速：1*标准技能cd，1*标准持续时间
     {
-        private const double attackRange = GameData.basicAttackRange;
-        public double AttackRange => attackRange;
-
         private const int moveSpeed = GameData.basicMoveSpeed;
         public int MoveSpeed => moveSpeed;
 
@@ -327,9 +314,6 @@ namespace GameClass.Skill
     }
     public class NoCommonSkill : ICommonSkill  //这种情况不该发生，定义着以防意外
     {
-        private const double attackRange = GameData.basicAttackRange;
-        public double AttackRange => attackRange;
-
         private const int moveSpeed = GameData.basicMoveSpeed;
         public int MoveSpeed => moveSpeed;
 
