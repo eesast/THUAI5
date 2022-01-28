@@ -423,7 +423,7 @@ namespace GameClass.GameObj
             }
         }
         #endregion
-        public override void Reset()  //要加锁吗？有点晕了
+        public override void Reset()  //要加锁吗？
         {
             _ = AddDeathCount();
             base.Reset();

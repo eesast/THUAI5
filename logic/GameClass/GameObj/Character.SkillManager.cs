@@ -77,6 +77,7 @@ namespace GameClass.GameObj
                     break;
             }
             this.attackRange = cSkill.AttackRange;
+            this.MaxHp = cSkill.MaxHp;
             this.hp = cSkill.MaxHp;
             this.OrgMoveSpeed = cSkill.MoveSpeed;
             this.moveSpeed = cSkill.MoveSpeed;

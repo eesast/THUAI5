@@ -1,6 +1,7 @@
 ﻿using Preparation.GameData;
 using Preparation.Interface;
 using Preparation.Utility;
+using System;
 
 namespace GameClass.GameObj
 {
@@ -94,10 +95,10 @@ namespace GameClass.GameObj
         public override BulletType TypeOfBullet => BulletType.OrdinaryBullet;
     }
 
-    internal sealed class FastBullet: Bullet //1倍攻击范围，0.5倍攻击力，2倍速
+    internal sealed class FastBullet: Bullet //1倍攻击范围，0.2倍攻击力，2倍速
     {
         public FastBullet(XYPosition initPos, int radius = GameData.bulletRadius, bool hasSpear = false) : base(initPos, radius, hasSpear) { }
-        public FastBullet(Character player, int initSpeed, int radius = GameData.bulletRadius) : base(player, radius) { }
+        public FastBullet(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
         public override double BulletBombRange => GameData.basicBulletBombRange;
         public override int AP => (int)(0.2 * GameData.basicAp);
         public override int Speed => 2 * GameData.basicBulletMoveSpeed;
@@ -115,6 +116,51 @@ namespace GameClass.GameObj
         }
         public override BulletType TypeOfBullet => BulletType.FastBullet;
     }
-    
-    //我还想搞个不是圆形攻击范围的...
+
+    internal sealed class LineBullet : Bullet //直线爆炸，宽度1格，长度为2倍攻击范围，1倍攻击力，1倍速
+    {
+        public LineBullet(XYPosition initPos, int radius = GameData.bulletRadius, bool hasSpear = false) : base(initPos, radius, hasSpear) { }
+        public LineBullet(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
+        public override double BulletBombRange => 2 * GameData.basicBulletBombRange;
+        public override int AP => GameData.basicAp;
+        public override int Speed =>  GameData.basicBulletMoveSpeed;
+
+        public override bool CanAttack(GameObj target)
+        {
+            this.FacingDirection = Preparation.Utility.Tools.CorrectAngle(this.FacingDirection);
+            if (this.FacingDirection == Math.PI / 2)
+            {
+                if (target.Position.y - this.Position.y > BulletBombRange)
+                    return false;
+                if (target.Position.x < this.Position.x + GameData.numOfPosGridPerCell / 2 && target.Position.x > this.Position.x - GameData.numOfPosGridPerCell / 2)
+                    return true;
+                return false;
+            }
+            else if(this.FacingDirection == Math.PI * 3 / 2)
+            {
+                if (target.Position.y - this.Position.y < -BulletBombRange)
+                    return false;
+                if (target.Position.x < this.Position.x + GameData.numOfPosGridPerCell / 2 && target.Position.x > this.Position.x - GameData.numOfPosGridPerCell / 2)
+                    return true;
+                return false;
+            }
+            double vertical = Math.Tan(this.FacingDirection + Math.PI);
+            double dist;
+            dist = Math.Abs(vertical * (target.Position.x - this.Position.x) - (target.Position.y - this.Position.y)) / (Math.Sqrt(1 + vertical * vertical));
+            if (dist > BulletBombRange)
+                return false;
+            vertical = Math.Tan(this.FacingDirection);
+            dist = Math.Abs(vertical * (target.Position.x - this.Position.x) - (target.Position.y - this.Position.y)) / (Math.Sqrt(1 + vertical * vertical));
+            if (dist > GameData.numOfPosGridPerCell / 2)
+                return false;
+            return true;
+        }
+        public override LineBullet Clone(Character parent)
+        {
+            LineBullet a = new LineBullet(this.Position, this.Radius, this.HasSpear);
+            a.Parent = parent;
+            return a;
+        }
+        public override BulletType TypeOfBullet => BulletType.LineBullet;
+    }
 }
