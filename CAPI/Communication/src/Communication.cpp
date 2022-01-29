@@ -3,6 +3,19 @@
 #include <thread>
 #include <chrono>
 
+#ifdef COMMUNICATION_DEBUG
+const std::string toHexString(const unsigned char* input, const int datasize)
+{
+	std::string output;
+	char ch[3];
+	for (int i = 0; i < datasize; ++i)
+	{
+		sprintf_s(ch, 3, "%02x", input[i]);
+		output += ch;
+	}
+	return output;
+}
+#endif
 
 namespace GameMessage
 {
@@ -79,9 +92,15 @@ namespace GameMessage
 			data[i] = (int(PacketType::MessageToServer) >> (8 * i)) & 0xff;
 		}
 		int msg_size = m2s.ByteSizeLong();
+#ifdef COMMUNICATION_DEBUG
+		std::cout << "the length is " << msg_size << std::endl;
+		std::cout << "the content is " << m2s.DebugString() << std::endl;
+#endif
 		m2s.SerializeToArray(data + 4, msg_size);
+#ifdef COMMUNICATION_DEBUG
+		std::cout << "after serialize: " << toHexString(data, msg_size) << std::endl;
+#endif
 	}
-
 };
 
 EnHandleResult ClientCommunication::OnConnect(ITcpClient* pSender, CONNID dwConnID)
@@ -123,6 +142,14 @@ void ClientCommunication::Send(const Protobuf::MessageToServer& m2s)
 	unsigned char data[max_length];
 	int msgSize = m2s.ByteSizeLong();
     GameMessage::Serialize(data, m2s);
+//#ifdef COMMUNICATION_DEBUG
+//	std::cout << "the serialized data: " << std::endl;
+//	for (int i = 0; i < 20; i++)
+//	{
+//		std::cout << data[i] << ' ';
+//	}
+//	std::cout << std::endl;
+//#endif
 	if (!pclient->Send(data, msgSize))
 	{
 		std::cerr << "Failed to send the message. Error code:";
