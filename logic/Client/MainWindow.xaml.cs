@@ -77,6 +77,20 @@ namespace Client
             DragMove();
         }
 
+        private void Attack(object sender,RoutedEventArgs e)
+        {
+            if (communicator.Client.IsConnected)
+            {
+                MessageToServer msgJ = new MessageToServer();
+                msgJ.MessageType = MessageType.Attack;
+                msgJ.PlayerID = playerID;
+                msgJ.TeamID = teamID;
+                double mouseY = Mouse.GetPosition(UpperLayerOfMap).X * 1000 / 13;
+                double mouseX = Mouse.GetPosition(UpperLayerOfMap).Y * 1000 / 13;
+                msgJ.Angle = Math.Atan2(mouseY - myInfo.MessageOfCharacter.Y, mouseX - myInfo.MessageOfCharacter.X);
+                communicator.SendMessage(msgJ);
+            }
+        }
         private void DrawMap()
         {
             for (int i = 0; i < defaultMap.GetLength(0); i++)
@@ -141,7 +155,8 @@ namespace Client
 
         private void ClickToSetMode(object sender, RoutedEventArgs e)
         {
-
+            log = new(" ");
+            log.Show();
         }
 
         //其他比赛信息
@@ -211,10 +226,13 @@ namespace Client
                 {
                     using (var sr = new StreamReader(".\\ConnectInfo.txt"))
                     {
-#pragma warning disable CS8602 // 解引用可能出现空引用。
                         string[] comInfo = sr.ReadLine().Split(' ');
-#pragma warning restore CS8602 // 解引用可能出现空引用。
-                        if (comInfo[0] == "" || comInfo[1] == "" || comInfo[2] == "" || comInfo[3] == "" || comInfo[4] == "" || comInfo[5] == "")
+                        if (comInfo[0] == "" ||
+                            comInfo[1] == "" ||
+                            comInfo[2] == "" ||
+                            comInfo[3] == "" ||
+                            comInfo[4] == "" ||
+                            comInfo[5] == "")
                         {
                             throw new Exception("Input data not sufficent");
                         }
@@ -289,7 +307,7 @@ namespace Client
                                     break;
                             }
                             communicator.SendMessage(msg);
-                            Connect.Background = Brushes.Green;
+                            Connect.Background = Brushes.Transparent;
                             isClientStocked = false;
                             PorC.Content = "⏸";
                         }//建立连接的同时加入人物
@@ -525,6 +543,15 @@ namespace Client
             {
                 try
                 {
+                    if (log != null)
+                    {
+                        string temp = "";
+                        for (int i = 0; i < playerData.Count(); i++)
+                        {
+                            temp += Convert.ToString(playerData[i].MessageOfCharacter.TeamID) + "\n";
+                        }
+                        log.Content = temp; 
+                    }
                     UpperLayerOfMap.Children.Clear();
                     if (!communicator.Client.IsConnected)
                     {
@@ -621,7 +648,7 @@ namespace Client
         private List<MessageToClient.Types.GameObjMessage> propData;
         private object drawPicLock = new object();
         private MessageToClient.Types.GameObjMessage? myInfo = null;  //这个client自己的message
-
+        private ErrorDisplayer log;
 
         /// <summary>
         /// 50*50
@@ -690,3 +717,5 @@ namespace Client
 //更改显示方式，现在会在底层图层加载地图；为更新侧边栏人物信息和鼠标点击攻击做好了准备，但缺少ID属性；报错现在会显示时间，程序不再检测communicator是否为空，而是检测是否已连接；
 //放弃了log窗口设计；可以注册主动技能和被动技能，主动技能2号暂不采用；messageToServer弃用，改为包装后立刻发送。。
 //下一步的更新目标:引入生成地图机制；更新侧边栏人物信息和鼠标点击攻击；快捷键；未完成的按钮。
+//2022-1-28
+//加入状态栏；加入鼠标双击攻击（测试功能）
