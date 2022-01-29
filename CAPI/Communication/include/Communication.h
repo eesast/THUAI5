@@ -156,7 +156,7 @@ private:
     /// <summary>
     /// 处理信息（需要单开一个子线程）
     /// </summary>
-    void ProcessMessage();
+    void ProcessMessageQueue();
 
 public:
     MultiThreadClientCommunication(ISubscripter& subscripter) :subscripter(subscripter) {}

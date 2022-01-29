@@ -51,6 +51,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         cmd.add(warning);
 
         cmd.parse(argc, argv);
+        extern const async
         extern const THUAI5::ActiveSkillType playerActiveSkill; // Extern variable, actually defined in AI.cpp
         extern const THUAI5::PassiveSkillType playerPassiveSkill;
         pID = playerID.getValue();
@@ -75,6 +76,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
     }
     Logic logic(tID, pID);
     std::cout << "*******************basic info*******************" << std::endl;
+    std::cout << "asynchronous: " << asynchronous << std::endl;
     std::cout << "server IP: " << sIP.c_str() << std::endl;
     std::cout << "server port: " << sPort << std::endl;
     std::cout << "team ID: " << tID << std::endl;

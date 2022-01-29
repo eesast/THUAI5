@@ -3,7 +3,24 @@
 #include <thread>
 #include <chrono>
 
+#ifdef _MSC_VER
+#pragma warning(disable:4996)
+#endif
+
 #ifdef COMMUNICATION_DEBUG
+#ifdef __linux__
+const std::string toHexString(const unsigned char* input, const int datasize)
+{
+	std::string output;
+	char ch[3];
+	for (int i = 0; i < datasize; ++i)
+	{
+		sprintf(ch, "%02x", input[i]);
+		output += ch;
+	}
+	return output;
+}
+#else
 const std::string toHexString(const unsigned char* input, const int datasize)
 {
 	std::string output;
@@ -15,6 +32,7 @@ const std::string toHexString(const unsigned char* input, const int datasize)
 	}
 	return output;
 }
+#endif
 #endif
 
 namespace GameMessage
@@ -125,15 +143,23 @@ EnHandleResult ClientCommunication::OnClose(ITcpClient* pSender, CONNID dwConnID
 bool ClientCommunication::Connect(const char* address, uint16_t port)
 {
 	std::cout << "Connecting......" << std::endl;
+#ifdef COMMUNICATION_DEBUG
+    std::cout << "pclient->IsConnected(): " << pclient->IsConnected() << std::endl;
+#endif
 	while (!pclient->IsConnected())
 	{
-		if (!pclient->Start(address,port))
+#ifdef __linux__ // issue中会提到这里的bug
+        bool is_started = pclient->Start(address,port);
+        std::cout << "is_started: " << is_started << std::endl;
+#endif
+		if (!is_started)
 		{
 			std::cerr << "Failed to connect with the server" << std::endl;
 			return false;
 		}
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
+    std::cout << "Successfully connect to the server!" << std::endl;
 	return true;
 }
 
@@ -205,7 +231,7 @@ void MultiThreadClientCommunication::UnBlock()
 	cv.notify_one(); // 唤醒一个线程
 }
 
-void MultiThreadClientCommunication::ProcessMessage()
+void MultiThreadClientCommunication::ProcessMessageQueue()
 {
 	pointer_m2c pm2c;
 	while (loop)
@@ -233,7 +259,7 @@ void MultiThreadClientCommunication::ProcessMessage()
 
 bool MultiThreadClientCommunication::Start(const char* address, uint16_t port)
 {
-	tPM = std::thread(&MultiThreadClientCommunication::ProcessMessage, this); // 单开一个线程处理信息
+	tPM = std::thread(&MultiThreadClientCommunication::ProcessMessageQueue, this); // 单开一个线程处理信息
 	if (!capi->Connect(address, port))
 	{
 		std::cerr << "unable to connect to server!" << std::endl;

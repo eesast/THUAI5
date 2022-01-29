@@ -1,6 +1,6 @@
 #include "../include/logic.h"
 
-// 这样写可以吗
+extern const bool asynchronous;
 extern const THUAI5::ActiveSkillType playerActiveSkill;
 extern const THUAI5::PassiveSkillType playerPassiveSkill;
 
@@ -184,7 +184,7 @@ std::shared_ptr<const THUAI5::Character> Logic::GetSelfInfo() const
     return pState->self;
 }
 
-uint32_t Logic::GetTeamScore()const
+uint32_t Logic::GetTeamScore() const
 {
     std::unique_lock<std::mutex> lock(mtx_buffer);
     return pState->teamScore;
@@ -238,8 +238,7 @@ std::optional<std::string> Logic::GetInfo()
 
 bool Logic::WaitThread()
 {
-    std::unique_lock<std::mutex> lck_buffer(mtx_buffer);
-    cv_buffer.wait(lck_buffer, [this]() {return buffer_updated; });
+    
     Update();
     return true;
 }
@@ -360,7 +359,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
         pBuffer->props.clear();
         pBuffer->bullets.clear();
 
-        // 2.信息不能全盘接受，要根据现有的视野范围接受（话说是这么用吗...）
+        // 2.信息不能全盘接受，要根据现有的视野范围接受
         for (auto it = pm2c->gameobjmessage().begin(); it != pm2c->gameobjmessage().end(); it++)
         {
             if (it->has_messageofcharacter())
@@ -401,21 +400,23 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                 std::cerr << "invalid gameobjtype (not character, prop or bullet)" << std::endl;
             }
         }
-        /*pBuffer->teamScore = pm2c->gameobjmessage(MESSAGE_OF_CHARACTER).messageofcharacter().score();
-        pBuffer->self = Protobuf2THUAI5_C(pm2c->gameobjmessage(MESSAGE_OF_CHARACTER).messageofcharacter());*/
 
-
-        buffer_updated = true;
-        counter_buffer += 1;
-
-        // 判断state是否被player访问
-        // 如果已经被访问，则控制state的mutex已经被上锁
-        // 如果还没有被访问，则没有被上锁。注意在更新时也需要对state上锁！
-        if (mtx_state.try_lock())
+        if (asynchronous)
         {
-            Update();
-            mtx_state.unlock();
+            {
+                std::lock_guard<std::mutex> lck(mtx_state);
+                State* temp = pState;
+                pState = pBuffer;
+                pBuffer = pState;
+            }
+            freshed = true;  
         }
+        else
+        {
+            buffer_updated = true;
+        }
+
+        counter_buffer += 1;
     }
     // 唤醒由于buffer未更新而被阻塞的线程
     cv_buffer.notify_one();
@@ -453,15 +454,33 @@ void Logic::UnBlockBuffer()
 
 void Logic::Update() noexcept
 {
-    // 交换两个指针的位置
-    State* temp = pState;
-    pState = pBuffer;
-    pBuffer = temp;
+    {
+        std::unique_lock<std::mutex> lck_buffer(mtx_buffer);
 
-    // pBuffer已经指向访问过的，无用的pState
-    buffer_updated = false;
-    counter_state = counter_buffer;
-    current_state_accessed = false;
+        // 缓冲区被使用才需要更新，否则等待下一帧
+        cv_buffer.wait(lck_buffer, [this]()
+                       { return buffer_updated; });
+
+        // 交换两个指针的位置
+        State *temp = pState;
+        pState = pBuffer;
+        pBuffer = temp;
+
+        // pBuffer已经指向访问过的，无用的pState
+        buffer_updated = false;
+        counter_state = counter_buffer;
+        current_state_accessed = false;
+    }
+}
+
+void Logic::Wait() noexcept
+{
+    freshed = false;
+    {
+        std::unique_lock<std::mutex> lck_state(mtx_state);
+        cv_buffer.wait(lck_state, [this]()
+                       { return freshed.load(); });
+    }
 }
 
 void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t teamID, THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType, CreateAIFunc f, int debuglevel, std::string filename)
@@ -495,19 +514,19 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
     // 构造AI线程函数
     auto AI_execute = [this]()
     {
-        std::lock_guard<std::mutex> lock_state(mtx_state);
-        if (!current_state_accessed)
+        if (asynchronous) // 这里是不是用if constexpr会更好
         {
-            current_state_accessed = true;
+            Wait();
             pAPI->StartTimer();
             pAI->play(*pAPI);
             pAPI->EndTimer();
         }
         else
         {
-            std::unique_lock<std::mutex> lock_buffer(mtx_buffer);
-            cv_buffer.wait(lock_buffer, [this]() {return buffer_updated; });
             Update();
+            pAPI->StartTimer();
+            pAI->play(*pAPI);
+            pAPI->EndTimer();
         }
     };
 

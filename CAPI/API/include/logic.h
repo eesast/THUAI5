@@ -80,6 +80,9 @@ private:
     // 是否应该启动AI
     bool AI_start = false;
 
+    // asynchronous = true 时控制内容更新的变量
+    std::atomic_bool freshed = false;
+
     int GetCounter() const override;
     std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
     std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
@@ -147,10 +150,16 @@ private:
     void UnBlockAI();
 
     /// <summary>
-    /// 更新目前的状态(上锁时调用)
+    /// 更新状态(仅在asynchronous = false时调用！！)
     /// </summary>
     /// <returns></returns>
     void Update() noexcept;
+
+    /// <summary>
+    /// 更新状态(仅在asynchronous = true时调用！！)
+    /// </summary>
+    /// <returns></returns>
+    void Wait() noexcept;
   
 public:
 
