@@ -23,6 +23,8 @@
 #include <atomic>
 #include <memory>
 
+#define COMMUNICATION_DEBUG
+
 // 首先解释一下ClientCommunication和MultiThreadClientCommunication之间的联系：
 // 1.ClientCommunication侧重于HPSOCKET中委托和事件的构造
 // 2.MultiThreadClientCommunication侧重于对多线程的处理
@@ -154,7 +156,7 @@ private:
     /// <summary>
     /// 处理信息（需要单开一个子线程）
     /// </summary>
-    void ProcessMessage();
+    void ProcessMessageQueue();
 
 public:
     MultiThreadClientCommunication(ISubscripter& subscripter) :subscripter(subscripter) {}

@@ -12,6 +12,15 @@ namespace Time
     }
 }
 
+namespace Space
+{
+    inline bool InSameCell(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2)
+    {
+        return (x1 / Constants::Map::numOfGridPerCell == x2 / Constants::Map::numOfGridPerCell) ||
+               (y1 / Constants::Map::numOfGridPerCell == y2 / Constants::Map::numOfGridPerCell);
+    }
+}
+
 bool API::MovePlayer(uint32_t timeInMilliseconds, double angleInRadian)
 {
     Protobuf::MessageToServer message;
@@ -247,7 +256,10 @@ bool DebugAPI::UseCommonSkill()
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        // 饼：查看commonskill是否冷却完毕
+        if(!CanUseActiveSkill())
+        {
+            return false;
+        }
     }
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::UseCommonSkill);
@@ -465,10 +477,26 @@ int DebugAPI::GetFrameCount() const
 
 bool DebugAPI::CanPick(THUAI5::PropType propType)
 {
-    return true;
+    std::vector<std::shared_ptr<const THUAI5::Prop>> props = GetProps();
+    std::shared_ptr<const THUAI5::Character> selfinfo = GetSelfInfo();
+    for (auto it : props)
+	{
+		if (Space::InSameCell(selfinfo->x, selfinfo->y, it->x, it->y) && propType == it->type)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
-bool DebugAPI::CanUseActiveSkill(THUAI5::ActiveSkillType activeSkillType)
+bool DebugAPI::CanUseActiveSkill()
 {
-    return true;
+    std::shared_ptr<const THUAI5::Character> selfinfo = GetSelfInfo();
+    double timeUntilCommonSkillAvailable = selfinfo->timeUntilCommonSkillAvailable;
+    if(timeUntilCommonSkillAvailable==0.0)
+    {
+        return true;
+    }
+    Out << "[Warning: common skill is not available, please wait for " << timeUntilCommonSkillAvailable << " s.]" << std::endl;  
+    return false;
 }

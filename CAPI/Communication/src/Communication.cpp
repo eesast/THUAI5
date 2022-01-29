@@ -3,6 +3,19 @@
 #include <thread>
 #include <chrono>
 
+#ifdef COMMUNICATION_DEBUG
+const std::string toHexString(const unsigned char* input, const int datasize)
+{
+	std::string output;
+	char ch[3];
+	for (int i = 0; i < datasize; ++i)
+	{
+		snprintf(ch, 3, "%02x", input[i]);
+		output += ch;
+	}
+	return output;
+}
+#endif
 
 namespace GameMessage
 {
@@ -79,9 +92,15 @@ namespace GameMessage
 			data[i] = (int(PacketType::MessageToServer) >> (8 * i)) & 0xff;
 		}
 		int msg_size = m2s.ByteSizeLong();
+#ifdef COMMUNICATION_DEBUG
+		std::cout << "the length is " << msg_size << std::endl;
+		std::cout << "the content is " << m2s.DebugString() << std::endl;
+#endif
 		m2s.SerializeToArray(data + 4, msg_size);
+#ifdef COMMUNICATION_DEBUG
+		std::cout << "after serialize: " << toHexString(data, msg_size) << std::endl;
+#endif
 	}
-
 };
 
 EnHandleResult ClientCommunication::OnConnect(ITcpClient* pSender, CONNID dwConnID)
@@ -106,15 +125,24 @@ EnHandleResult ClientCommunication::OnClose(ITcpClient* pSender, CONNID dwConnID
 bool ClientCommunication::Connect(const char* address, uint16_t port)
 {
 	std::cout << "Connecting......" << std::endl;
+#ifdef COMMUNICATION_DEBUG
+    std::cout << "pclient->IsConnected(): " << pclient->IsConnected() << std::endl;
+#endif
 	while (!pclient->IsConnected())
 	{
-		if (!pclient->Start(address,port))
+
+        bool is_started = pclient->Start(address,port);
+#ifdef COMMUNICATION_DEBUG
+        std::cout << "is_started: " << is_started << std::endl;
+#endif
+		if (!is_started)
 		{
 			std::cerr << "Failed to connect with the server" << std::endl;
 			return false;
 		}
 		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
+    std::cout << "Successfully connect to the server!" << std::endl;
 	return true;
 }
 
@@ -123,6 +151,14 @@ void ClientCommunication::Send(const Protobuf::MessageToServer& m2s)
 	unsigned char data[max_length];
 	int msgSize = m2s.ByteSizeLong();
     GameMessage::Serialize(data, m2s);
+//#ifdef COMMUNICATION_DEBUG
+//	std::cout << "the serialized data: " << std::endl;
+//	for (int i = 0; i < 20; i++)
+//	{
+//		std::cout << data[i] << ' ';
+//	}
+//	std::cout << std::endl;
+//#endif
 	if (!pclient->Send(data, msgSize))
 	{
 		std::cerr << "Failed to send the message. Error code:";
@@ -178,7 +214,7 @@ void MultiThreadClientCommunication::UnBlock()
 	cv.notify_one(); // 唤醒一个线程
 }
 
-void MultiThreadClientCommunication::ProcessMessage()
+void MultiThreadClientCommunication::ProcessMessageQueue()
 {
 	pointer_m2c pm2c;
 	while (loop)
@@ -206,7 +242,7 @@ void MultiThreadClientCommunication::ProcessMessage()
 
 bool MultiThreadClientCommunication::Start(const char* address, uint16_t port)
 {
-	tPM = std::thread(&MultiThreadClientCommunication::ProcessMessage, this); // 单开一个线程处理信息
+	tPM = std::thread(&MultiThreadClientCommunication::ProcessMessageQueue, this); // 单开一个线程处理信息
 	if (!capi->Connect(address, port))
 	{
 		std::cerr << "unable to connect to server!" << std::endl;
