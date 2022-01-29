@@ -13,6 +13,8 @@ namespace Server
     public class GameServer : ServerBase
     {
         protected readonly Game game;
+        private uint spectatorMinTeamID = 2022;
+        private uint spectatorMinPlayerID = 2022;
         public override int TeamCount => options.TeamCount;
         protected long[,] communicationToGameID; //通信用的ID映射到游戏内的ID,[i,j]表示team：i，player：j的id。
         private readonly object messageToAllClientsLock = new();
@@ -35,6 +37,12 @@ namespace Server
         protected readonly object addPlayerLock = new();
         private bool AddPlayer(MessageToServer msg)
         {
+            if (msg.PlayerID >= spectatorMinPlayerID && msg.TeamID >= spectatorMinTeamID)
+            {
+                //观战模式
+                Console.WriteLine("A new spectator comes to watch this game.");
+                return false;
+            }
             if (game.GameMap.Timer.IsGaming)  //游戏运行中，不能添加玩家
                 return false;
             if (!ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))  //玩家id是否正确
@@ -89,13 +97,6 @@ namespace Server
         }
         private void ReadyToStart(MessageToServer msgRecieve, bool isValid)
         {
-            if(msgRecieve.PlayerID==2021&&msgRecieve.TeamID==2021)
-            {
-                //观战模式
-                Console.WriteLine("A new spectator comes to watch this game.");
-                return;
-            }
-
             lock (addPlayerLock)
             {
                 CheckStart();       //检查是否该开始游戏了
@@ -199,7 +200,7 @@ namespace Server
                     case MessageType.Gaming:
                     case MessageType.StartGame:
                     case MessageType.EndGame:
-                        MessageToClient messageToClient = new();
+                        MessageToClient messageToClient = new MessageToClient();
                         foreach (GameObj gameObj in gameObjList)
                         {
                             messageToClient.GameObjMessage.Add(CopyInfo.Auto(gameObj));
@@ -379,7 +380,7 @@ namespace Server
                     int i = 0, j = 0;
                     using (StreamReader sr = new StreamReader(options.mapResource))
                     {
-                        while (!sr.EndOfStream && i < GameData.rows && j < GameData.cols)
+                        while (!sr.EndOfStream && i < GameData.rows)
                         {
                             if ((line = sr.ReadLine()) != null)
                             {
@@ -391,9 +392,10 @@ namespace Server
                                     if (j >= GameData.cols)
                                     {
                                         j = 0;
-                                        i++;
+                                        break;
                                     }
                                 }
+                                i++;
                             }
                         }
                     }

@@ -36,7 +36,8 @@ namespace Preparation.Utility
         Null = 0,
         OrdinaryBullet = 1,    //普通子弹
         AtomBomb = 2,     //原子弹
-        FastBullet=3      //快速子弹
+        FastBullet = 3,      //快速子弹
+        LineBullet = 4      //直线子弹
     }
     public enum PropType    // 道具的类型
     {
