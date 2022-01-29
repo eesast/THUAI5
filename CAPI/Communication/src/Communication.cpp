@@ -3,36 +3,18 @@
 #include <thread>
 #include <chrono>
 
-#ifdef _MSC_VER
-#pragma warning(disable:4996)
-#endif
-
 #ifdef COMMUNICATION_DEBUG
-#ifdef __linux__
 const std::string toHexString(const unsigned char* input, const int datasize)
 {
 	std::string output;
 	char ch[3];
 	for (int i = 0; i < datasize; ++i)
 	{
-		sprintf(ch, "%02x", input[i]);
+		snprintf(ch, 3, "%02x", input[i]);
 		output += ch;
 	}
 	return output;
 }
-#else
-const std::string toHexString(const unsigned char* input, const int datasize)
-{
-	std::string output;
-	char ch[3];
-	for (int i = 0; i < datasize; ++i)
-	{
-		sprintf_s(ch, 3, "%02x", input[i]);
-		output += ch;
-	}
-	return output;
-}
-#endif
 #endif
 
 namespace GameMessage
