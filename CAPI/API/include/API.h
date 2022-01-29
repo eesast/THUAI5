@@ -8,10 +8,14 @@
 #include <Message2Server.pb.h>
 #include <Message2Clients.pb.h>
 #include <MessageType.pb.h>
+
 #include "state.h"
+#include "constants.h"
 
 
+#ifdef _MSC_VER
 #pragma warning(disable:4996)
+#endif
 
 /// <summary>
 /// API中依赖Logic的部分
@@ -262,7 +266,7 @@ public:
 
 private:
     bool CanPick(THUAI5::PropType propType);
-    bool CanUseActiveSkill(THUAI5::ActiveSkillType activeSkillType);
+    bool CanUseActiveSkill();
 
     bool ExamineValidity;
     std::ostream& Out;
