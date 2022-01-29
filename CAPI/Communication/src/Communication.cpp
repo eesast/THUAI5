@@ -148,8 +148,9 @@ bool ClientCommunication::Connect(const char* address, uint16_t port)
 #endif
 	while (!pclient->IsConnected())
 	{
-#ifdef __linux__ // issue中会提到这里的bug
+
         bool is_started = pclient->Start(address,port);
+#ifdef COMMUNICATION_DEBUG
         std::cout << "is_started: " << is_started << std::endl;
 #endif
 		if (!is_started)
