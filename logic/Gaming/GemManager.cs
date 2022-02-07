@@ -52,10 +52,10 @@ namespace Gaming
                                 int rand = r.Next(0, len);
                                 XYPosition randPos = gemWellList[rand];
                                 bool flag = false;  //是否已经有宝石在指定位置了？
-                                gameMap.GemListLock.EnterReadLock();
+                                gameMap.GameObjLockDict[GameObjIdx.Gem].EnterReadLock();
                                 try
                                 {
-                                    foreach (Gem gem in gameMap.GemList)
+                                    foreach (Gem gem in gameMap.GameObjDict[GameObjIdx.Gem])
                                     {
                                         if (gem.Position.x == randPos.x && gem.Position.y == randPos.y)
                                         {
@@ -65,17 +65,17 @@ namespace Gaming
                                         }
                                     }
                                 }
-                                finally { gameMap.GemListLock.ExitReadLock(); }
+                                finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitReadLock(); }
 
                                 if (!flag)
                                 {
                                     Gem newGem = new Gem(randPos);
-                                    gameMap.GemListLock.EnterWriteLock();
+                                    gameMap.GameObjLockDict[GameObjIdx.Gem].EnterWriteLock();
                                     try
                                     {
-                                        gameMap.GemList.Add(newGem);
+                                        gameMap.GameObjDict[GameObjIdx.Gem].Add(newGem);
                                     }
-                                    finally { gameMap.GemListLock.ExitWriteLock(); }
+                                    finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitWriteLock(); }
                                 }
                             },
                             GameData.GemProduceTime,
@@ -93,12 +93,12 @@ namespace Gaming
             {
                 if (gem != null)
                 {
-                    gameMap.GemListLock.EnterWriteLock();
+                    gameMap.GameObjLockDict[GameObjIdx.Gem].EnterWriteLock();
                     try
                     {
-                        gameMap.GemList.Remove(gem);
+                        gameMap.GameObjDict[GameObjIdx.Gem].Remove(gem);
                     }
-                    finally { gameMap.GemListLock.ExitWriteLock(); }
+                    finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitWriteLock(); }
                 }
             }
             public bool PickGem(Character player)
@@ -106,10 +106,10 @@ namespace Gaming
                 if (!player.IsAvailable)
                     return false;
                 Gem? gem = null;
-                gameMap.GemListLock.EnterReadLock();
+                gameMap.GameObjLockDict[GameObjIdx.Gem].EnterReadLock();
                 try
                 {
-                    foreach (Gem g in gameMap.GemList)
+                    foreach (Gem g in gameMap.GameObjDict[GameObjIdx.Gem])
                     {
                         if (GameData.IsInTheSameCell(g.Position,player.Position))
                         {
@@ -118,7 +118,7 @@ namespace Gaming
                         }
                     }
                 }
-                finally { gameMap.GemListLock.ExitReadLock(); }
+                finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitReadLock(); }
 
                 RemoveGem(gem);
 
@@ -137,12 +137,12 @@ namespace Gaming
                 if (size > player.GemNum || size <= 0)
                     return;
                 Gem gem = new Gem(player.Position, size);
-                gameMap.GemListLock.EnterWriteLock();
+                gameMap.GameObjLockDict[GameObjIdx.Gem].EnterWriteLock();
                 try
                 {
-                    gameMap.GemList.Add(gem);
+                    gameMap.GameObjDict[GameObjIdx.Gem].Add(gem);
                 }
-                finally { gameMap.GemListLock.ExitWriteLock(); }
+                finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitWriteLock(); }
                 moveEngine.MoveObj(gem, moveMillisecondTime, angle);
             }
 

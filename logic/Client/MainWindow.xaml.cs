@@ -115,6 +115,17 @@ namespace Client
                             rectangle.Fill = Brushes.Green;
                             rectangle.Stroke = Brushes.Green;
                             break;
+                        case 5:
+                        case 6:
+                        case 7:
+                        case 8:
+                        case 9:
+                        case 10:
+                        case 11:
+                        case 12:
+                            rectangle.Fill = Brushes.Yellow;
+                            rectangle.Stroke = Brushes.Yellow;
+                            break;
                         case 13:
                             rectangle.Fill = Brushes.LightPink;
                             rectangle.Stroke= Brushes.LightPink;

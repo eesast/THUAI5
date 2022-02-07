@@ -20,7 +20,7 @@ namespace Protobuf {
 }  // namespace Protobuf
 static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_MessageType_2eproto[9];
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_MessageType_2eproto = nullptr;
-const uint32_t TableStruct_MessageType_2eproto::offsets[1] = {};
+const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_MessageType_2eproto::offsets[1] = {};
 static constexpr ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema* schemas = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::Message* const* file_default_instances = nullptr;
 
@@ -53,15 +53,15 @@ const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARI
   "Fast\020\004\022\013\n\007ASkill4\020\005\022\013\n\007ASkill5\020\006*g\n\010Buff"
   "Type\022\020\n\014NullBuffType\020\000\022\r\n\tMoveSpeed\020\001\022\006\n"
   "\002AP\020\002\022\006\n\002CD\020\003\022\013\n\007AddLIFE\020\004\022\016\n\nShieldBuff"
-  "\020\005\022\r\n\tSpearBuff\020\006*x\n\nBulletType\022\022\n\016NullB"
-  "ulletType\020\000\022\021\n\rCommonBullet1\020\001\022\021\n\rCommon"
-  "Bullet2\020\002\022\016\n\nFastBullet\020\003\022\022\n\016OrdinaryBul"
-  "let\020\004\022\014\n\010AtomBomb\020\005B\026\252\002\023Communication.Pr"
-  "otob\006proto3"
+  "\020\005\022\r\n\tSpearBuff\020\006*u\n\nBulletType\022\022\n\016NullB"
+  "ulletType\020\000\022\016\n\nLineBullet\020\001\022\021\n\rCommonBul"
+  "let2\020\002\022\016\n\nFastBullet\020\003\022\022\n\016OrdinaryBullet"
+  "\020\004\022\014\n\010AtomBomb\020\005B\026\252\002\023Communication.Proto"
+  "b\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_MessageType_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_MessageType_2eproto = {
-  false, false, 1291, descriptor_table_protodef_MessageType_2eproto, "MessageType.proto", 
+  false, false, 1288, descriptor_table_protodef_MessageType_2eproto, "MessageType.proto", 
   &descriptor_table_MessageType_2eproto_once, nullptr, 0, 0,
   schemas, file_default_instances, TableStruct_MessageType_2eproto::offsets,
   nullptr, file_level_enum_descriptors_MessageType_2eproto, file_level_service_descriptors_MessageType_2eproto,

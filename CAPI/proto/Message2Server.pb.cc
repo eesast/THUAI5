@@ -50,7 +50,7 @@ static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Message2Server_2epr
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_Message2Server_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_Message2Server_2eproto = nullptr;
 
-const uint32_t TableStruct_Message2Server_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Message2Server_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -130,9 +130,6 @@ MessageToServer::MessageToServer(const MessageToServer& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    message_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_message().empty()) {
     message_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_message(), 
       GetArenaForAllocation());
@@ -143,11 +140,8 @@ MessageToServer::MessageToServer(const MessageToServer& from)
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageToServer)
 }
 
-inline void MessageToServer::SharedCtor() {
+void MessageToServer::SharedCtor() {
 message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  message_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&playerid_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&askill2_) -
@@ -178,7 +172,7 @@ void MessageToServer::SetCachedSize(int size) const {
 
 void MessageToServer::Clear() {
 // @@protoc_insertion_point(message_clear_start:Protobuf.MessageToServer)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -192,13 +186,13 @@ void MessageToServer::Clear() {
 const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
-    uint32_t tag;
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // .Protobuf.MessageType messageType = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_messagetype(static_cast<::Protobuf::MessageType>(val));
         } else
@@ -206,7 +200,7 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // int64 playerID = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
           playerid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -214,7 +208,7 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // int64 teamID = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
           teamid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -222,8 +216,8 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // .Protobuf.PropType propType = 4;
       case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_proptype(static_cast<::Protobuf::PropType>(val));
         } else
@@ -231,7 +225,7 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // int64 timeInMilliseconds = 5;
       case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 40)) {
           timeinmilliseconds_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -239,7 +233,7 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // double angle = 6;
       case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 49)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 49)) {
           angle_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
@@ -247,15 +241,15 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // int32 gemSize = 7;
       case 7:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56)) {
-          gemsize_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 56)) {
+          gemsize_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int64 ToPlayerID = 8;
       case 8:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 64)) {
           toplayerid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -263,7 +257,7 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // string message = 9;
       case 9:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 74)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 74)) {
           auto str = _internal_mutable_message();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "Protobuf.MessageToServer.message"));
@@ -273,8 +267,8 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // .Protobuf.PassiveSkillType pSkill = 10;
       case 10:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 80)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 80)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_pskill(static_cast<::Protobuf::PassiveSkillType>(val));
         } else
@@ -282,8 +276,8 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // .Protobuf.ActiveSkillType aSkill1 = 11;
       case 11:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 88)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 88)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_askill1(static_cast<::Protobuf::ActiveSkillType>(val));
         } else
@@ -291,8 +285,8 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // .Protobuf.ActiveSkillType aSkill2 = 12;
       case 12:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 96)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 96)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_askill2(static_cast<::Protobuf::ActiveSkillType>(val));
         } else
@@ -321,10 +315,10 @@ failure:
 #undef CHK_
 }
 
-uint8_t* MessageToServer::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+::PROTOBUF_NAMESPACE_ID::uint8* MessageToServer::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageToServer)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .Protobuf.MessageType messageType = 1;
@@ -360,11 +354,7 @@ uint8_t* MessageToServer::_InternalSerialize(
   }
 
   // double angle = 6;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_angle = this->_internal_angle();
-  uint64_t raw_angle;
-  memcpy(&raw_angle, &tmp_angle, sizeof(tmp_angle));
-  if (raw_angle != 0) {
+  if (!(this->_internal_angle() <= 0 && this->_internal_angle() >= 0)) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(6, this->_internal_angle(), target);
   }
@@ -424,7 +414,7 @@ size_t MessageToServer::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageToServer)
   size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -463,11 +453,7 @@ size_t MessageToServer::ByteSizeLong() const {
   }
 
   // double angle = 6;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_angle = this->_internal_angle();
-  uint64_t raw_angle;
-  memcpy(&raw_angle, &tmp_angle, sizeof(tmp_angle));
-  if (raw_angle != 0) {
+  if (!(this->_internal_angle() <= 0 && this->_internal_angle() >= 0)) {
     total_size += 1 + 8;
   }
 
@@ -518,7 +504,7 @@ void MessageToServer::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
 void MessageToServer::MergeFrom(const MessageToServer& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageToServer)
   GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_message().empty()) {
@@ -539,11 +525,7 @@ void MessageToServer::MergeFrom(const MessageToServer& from) {
   if (from._internal_timeinmilliseconds() != 0) {
     _internal_set_timeinmilliseconds(from._internal_timeinmilliseconds());
   }
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_angle = from._internal_angle();
-  uint64_t raw_angle;
-  memcpy(&raw_angle, &tmp_angle, sizeof(tmp_angle));
-  if (raw_angle != 0) {
+  if (!(from._internal_angle() <= 0 && from._internal_angle() >= 0)) {
     _internal_set_angle(from._internal_angle());
   }
   if (from._internal_toplayerid() != 0) {

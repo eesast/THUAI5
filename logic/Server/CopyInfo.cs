@@ -159,6 +159,9 @@ namespace Server
                 case Preparation.Utility.BulletType.FastBullet:
                     msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.FastBullet;
                     break;
+                case Preparation.Utility.BulletType.LineBullet:
+                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.LineBullet;
+                    break;
                 default:
                     msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.NullBulletType;
                     break;
@@ -184,6 +187,9 @@ namespace Server
                 case Preparation.Utility.BulletType.FastBullet:
                     msg.MessageOfBullet.Type = Communication.Proto.BulletType.FastBullet;
                     break;
+                case Preparation.Utility.BulletType.LineBullet:
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.LineBullet;
+                    break;
                 default:
                     msg.MessageOfBullet.Type = Communication.Proto.BulletType.NullBulletType;
                     break;
@@ -206,9 +212,6 @@ namespace Server
                 case Preparation.Utility.PlaceType.Grass3:
                     msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass3;
                     break;
-                //case Preparation.Utility.PlaceType.Invisible:
-                //    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Invisible;
-                //    break;
                 default:
                     msg.MessageOfBullet.Place = Communication.Proto.PlaceType.NullPlaceType;
                     break;
@@ -284,9 +287,6 @@ namespace Server
                 case Preparation.Utility.PlaceType.Grass3:
                     msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass3;
                     break;
-                //case Preparation.Utility.PlaceType.Invisible:
-                //    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Invisible;
-                //    break;
                 default:
                     msg.MessageOfProp.Place = Communication.Proto.PlaceType.NullPlaceType;
                     break;

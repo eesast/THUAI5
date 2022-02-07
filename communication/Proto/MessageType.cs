@@ -49,10 +49,10 @@ namespace Communication.Proto {
             "AxINCglTdXBlckZhc3QQBBILCgdBU2tpbGw0EAUSCwoHQVNraWxsNRAGKmcK",
             "CEJ1ZmZUeXBlEhAKDE51bGxCdWZmVHlwZRAAEg0KCU1vdmVTcGVlZBABEgYK",
             "AkFQEAISBgoCQ0QQAxILCgdBZGRMSUZFEAQSDgoKU2hpZWxkQnVmZhAFEg0K",
-            "CVNwZWFyQnVmZhAGKngKCkJ1bGxldFR5cGUSEgoOTnVsbEJ1bGxldFR5cGUQ",
-            "ABIRCg1Db21tb25CdWxsZXQxEAESEQoNQ29tbW9uQnVsbGV0MhACEg4KCkZh",
-            "c3RCdWxsZXQQAxISCg5PcmRpbmFyeUJ1bGxldBAEEgwKCEF0b21Cb21iEAVC",
-            "FqoCE0NvbW11bmljYXRpb24uUHJvdG9iBnByb3RvMw=="));
+            "CVNwZWFyQnVmZhAGKnUKCkJ1bGxldFR5cGUSEgoOTnVsbEJ1bGxldFR5cGUQ",
+            "ABIOCgpMaW5lQnVsbGV0EAESEQoNQ29tbW9uQnVsbGV0MhACEg4KCkZhc3RC",
+            "dWxsZXQQAxISCg5PcmRpbmFyeUJ1bGxldBAEEgwKCEF0b21Cb21iEAVCFqoC",
+            "E0NvbW11bmljYXRpb24uUHJvdG9iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Communication.Proto.MessageType), typeof(global::Communication.Proto.GameObjType), typeof(global::Communication.Proto.ShapeType), typeof(global::Communication.Proto.PlaceType), typeof(global::Communication.Proto.PropType), typeof(global::Communication.Proto.PassiveSkillType), typeof(global::Communication.Proto.ActiveSkillType), typeof(global::Communication.Proto.BuffType), typeof(global::Communication.Proto.BulletType), }, null, null));
@@ -172,7 +172,7 @@ namespace Communication.Proto {
 
   public enum BulletType {
     [pbr::OriginalName("NullBulletType")] NullBulletType = 0,
-    [pbr::OriginalName("CommonBullet1")] CommonBullet1 = 1,
+    [pbr::OriginalName("LineBullet")] LineBullet = 1,
     [pbr::OriginalName("CommonBullet2")] CommonBullet2 = 2,
     [pbr::OriginalName("FastBullet")] FastBullet = 3,
     [pbr::OriginalName("OrdinaryBullet")] OrdinaryBullet = 4,
