@@ -9,13 +9,14 @@ namespace GameClass.GameObj
 {
     public partial class Map : IMap
     {
+        
         private readonly Dictionary<uint, BirthPoint> birthPointList;   // 出生点列表
         public Dictionary<uint, BirthPoint> BirthPointList => birthPointList;
 
-        private Dictionary<String, IList<IGameObj>> gameObjDict;
-        public Dictionary<String, IList<IGameObj>> GameObjDict => gameObjDict;
-        private Dictionary<String, ReaderWriterLockSlim> gameObjLockDict;
-        public Dictionary<String, ReaderWriterLockSlim> GameObjLockDict => gameObjLockDict;
+        private Dictionary<GameObjIdx, IList<IGameObj>> gameObjDict;
+        public Dictionary<GameObjIdx, IList<IGameObj>> GameObjDict => gameObjDict;
+        private Dictionary<GameObjIdx, ReaderWriterLockSlim> gameObjLockDict;
+        public Dictionary<GameObjIdx, ReaderWriterLockSlim> GameObjLockDict => gameObjLockDict;
 
         public readonly uint[,] ProtoGameMap;
         public PlaceType GetPlaceType(GameObj obj)
@@ -71,10 +72,10 @@ namespace GameClass.GameObj
         public Character? FindPlayer(long playerID)
         {
             Character? player = null;
-            gameObjLockDict["player"].EnterReadLock();
+            gameObjLockDict[GameObjIdx.Player].EnterReadLock();
             try
             {
-                foreach (Character person in gameObjDict["player"])
+                foreach (Character person in gameObjDict[GameObjIdx.Player])
                 {
                     if (playerID == person.ID)
                     {
@@ -83,24 +84,23 @@ namespace GameClass.GameObj
                     }
                 }
             }
-            finally { gameObjLockDict["player"].ExitReadLock(); }
+            finally { gameObjLockDict[GameObjIdx.Player].ExitReadLock(); }
             return player;
         }
         public Map(uint[,] mapResource)
         {
-            //the two dicts must have same keys
-            gameObjDict = new Dictionary<string, IList<IGameObj>>();
-            gameObjLockDict = new Dictionary<string, ReaderWriterLockSlim>();
-            gameObjDict.Add("player", new List<IGameObj>());
-            gameObjLockDict.Add("player", new ReaderWriterLockSlim());
-            gameObjDict.Add("bullet", new List<IGameObj>());
-            gameObjLockDict.Add("bullet", new ReaderWriterLockSlim());
-            gameObjDict.Add("prop", new List<IGameObj>());
-            gameObjLockDict.Add("prop", new ReaderWriterLockSlim());
-            gameObjDict.Add("gem", new List<IGameObj>());
-            gameObjLockDict.Add("gem", new ReaderWriterLockSlim());
-            gameObjDict.Add("map", new List<IGameObj>());
-            gameObjLockDict.Add("map", new ReaderWriterLockSlim());
+            gameObjDict = new Dictionary<GameObjIdx, IList<IGameObj>>();
+            gameObjLockDict = new Dictionary<GameObjIdx, ReaderWriterLockSlim>();
+            gameObjDict.Add(GameObjIdx.Player, new List<IGameObj>());
+            gameObjLockDict.Add(GameObjIdx.Player, new ReaderWriterLockSlim());
+            gameObjDict.Add(GameObjIdx.Bullet, new List<IGameObj>());
+            gameObjLockDict.Add(GameObjIdx.Bullet, new ReaderWriterLockSlim());
+            gameObjDict.Add(GameObjIdx.Prop, new List<IGameObj>());
+            gameObjLockDict.Add(GameObjIdx.Prop, new ReaderWriterLockSlim());
+            gameObjDict.Add(GameObjIdx.Gem, new List<IGameObj>());
+            gameObjLockDict.Add(GameObjIdx.Gem, new ReaderWriterLockSlim());
+            gameObjDict.Add(GameObjIdx.Map, new List<IGameObj>());
+            gameObjLockDict.Add(GameObjIdx.Map, new ReaderWriterLockSlim());
 
             ProtoGameMap = new uint[mapResource.GetLength(0), mapResource.GetLength(1)];
             Array.Copy(mapResource, ProtoGameMap, mapResource.Length);
@@ -124,15 +124,15 @@ namespace GameClass.GameObj
                     {
                         case (uint)MapInfo.MapInfoObjType.Wall:
                             {
-                                GameObjLockDict["map"].EnterWriteLock();
+                                GameObjLockDict[GameObjIdx.Map].EnterWriteLock();
                                 try
                                 {
-                                    lock (GameObjLockDict["map"])
+                                    lock (GameObjLockDict[GameObjIdx.Map])
                                     {
-                                        GameObjDict["map"].Add(new Wall(GameData.GetCellCenterPos(i, j)));
+                                        GameObjDict[GameObjIdx.Map].Add(new Wall(GameData.GetCellCenterPos(i, j)));
                                     }
                                 }
-                                finally { GameObjLockDict["map"].ExitWriteLock(); }
+                                finally { GameObjLockDict[GameObjIdx.Map].ExitWriteLock(); }
                                 break;
                             }
                         case (uint)MapInfo.MapInfoObjType.BirthPoint1:
@@ -146,15 +146,15 @@ namespace GameClass.GameObj
                             {
                                 BirthPoint newBirthPoint = new BirthPoint(GameData.GetCellCenterPos(i, j));
                                 birthPointList.Add(MapInfo.BirthPointEnumToIdx((MapInfo.MapInfoObjType)mapResource[i, j]), newBirthPoint);
-                                GameObjLockDict["map"].EnterWriteLock();
+                                GameObjLockDict[GameObjIdx.Map].EnterWriteLock();
                                 try
                                 {
-                                    lock (GameObjLockDict["map"])
+                                    lock (GameObjLockDict[GameObjIdx.Map])
                                     {
-                                        GameObjDict["map"].Add(newBirthPoint);
+                                        GameObjDict[GameObjIdx.Map].Add(newBirthPoint);
                                     }
                                 }
-                                finally { GameObjLockDict["map"].ExitWriteLock(); }
+                                finally { GameObjLockDict[GameObjIdx.Map].ExitWriteLock(); }
                                 break;
                             }
                     }

@@ -44,16 +44,16 @@ namespace Gaming
             //Console.WriteLine($"x,y: {pos.x},{pos.y}");
             Character newPlayer = new(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.passiveSkill, playerInitInfo.commonSkill);
             gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
-            gameMap.GameObjLockDict["player"].EnterWriteLock();
+            gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
             try
             {
-                gameMap.GameObjDict["player"].Add(newPlayer);
+                gameMap.GameObjDict[GameObjIdx.Player].Add(newPlayer);
             }
             finally
             {
-                gameMap.GameObjLockDict["player"].ExitWriteLock();
+                gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock();
             }
-            //Console.WriteLine($"GameObjDict["player"] length:{gameMap.GameObjDict["player"].Count}");
+            //Console.WriteLine($"GameObjDict[GameObjIdx.Player] length:{gameMap.GameObjDict[GameObjIdx.Player].Count}");
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
             newPlayer.TeamID = playerInitInfo.teamID;
             newPlayer.PlayerID = playerInitInfo.playerID;
@@ -104,17 +104,17 @@ namespace Gaming
         {
             if (gameMap.Timer.IsGaming)
                 return false;
-            gameMap.GameObjLockDict["player"].EnterReadLock();
+            gameMap.GameObjLockDict[GameObjIdx.Player].EnterReadLock();
             try
             {
-                foreach (Character player in gameMap.GameObjDict["player"])
+                foreach (Character player in gameMap.GameObjDict[GameObjIdx.Player])
                 {
                     player.CanMove = true;
 
                     player.AddShield(GameData.shieldTimeAtBirth);
                 }
             }
-            finally { gameMap.GameObjLockDict["player"].ExitReadLock(); }
+            finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitReadLock(); }
 
 
             propManager.StartProducing();
@@ -128,15 +128,15 @@ namespace Gaming
                         loopCondition: () => gameMap.Timer.IsGaming,
                         loopToDo: () =>
                         {
-                            gameMap.GameObjLockDict["bullet"].EnterWriteLock();  //检查子弹位置
+                            gameMap.GameObjLockDict[GameObjIdx.Bullet].EnterWriteLock();  //检查子弹位置
                             try
                             {
-                                foreach(var bullet in gameMap.GameObjDict["bullet"])
+                                foreach(var bullet in gameMap.GameObjDict[GameObjIdx.Bullet])
                                 {
                                     bullet.Place = gameMap.GetPlaceType(bullet.Position);
                                 }
                             }
-                            finally { gameMap.GameObjLockDict["bullet"].ExitWriteLock(); }
+                            finally { gameMap.GameObjLockDict[GameObjIdx.Bullet].ExitWriteLock(); }
                         },
                         timeInterval: GameData.checkInterval,
                         finallyReturn: () => 0
@@ -156,14 +156,14 @@ namespace Gaming
             //清除所有非地图对象
             foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                if (keyValuePair.Key != "map")
+                if (keyValuePair.Key != GameObjIdx.Map)
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
                     try
                     {
-                        if (keyValuePair.Key == "player")
+                        if (keyValuePair.Key == GameObjIdx.Player)
                         {
-                            foreach (Character player in gameMap.GameObjDict["player"])
+                            foreach (Character player in gameMap.GameObjDict[GameObjIdx.Player])
                             {
                                 player.CanMove = false;
                             }
@@ -179,16 +179,16 @@ namespace Gaming
 
         public void EndGame()
         {
-            gameMap.GameObjLockDict["player"].EnterWriteLock();
+            gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
             try
             {
-                foreach (var player in gameMap.GameObjDict["player"])  //这里始终运行不下去，为什么？？？
+                foreach (var player in gameMap.GameObjDict[GameObjIdx.Player])  //这里始终运行不下去，为什么？？？
                 {
                     gemManager.UseAllGem((Character)player);
                     Console.WriteLine("Fuck");
                 }
             }
-            finally { gameMap.GameObjLockDict["player"].ExitWriteLock(); }
+            finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
 
         }
         public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
@@ -301,15 +301,15 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            gameMap.GameObjLockDict["player"].EnterWriteLock();
+            gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
             try
             {
-                foreach (Character player in gameMap.GameObjDict["player"])
+                foreach (Character player in gameMap.GameObjDict[GameObjIdx.Player])
                 {
                     skillManager.UsePassiveSkill(player);
                 }
             }
-            finally { gameMap.GameObjLockDict["player"].ExitWriteLock(); }
+            finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
         }
 
         public int GetTeamScore(long teamID)
@@ -321,7 +321,7 @@ namespace Gaming
             var gameObjList = new List<IGameObj>();
             foreach(var keyValuePair in gameMap.GameObjDict)
             {
-                if(keyValuePair.Key != "map")
+                if(keyValuePair.Key != GameObjIdx.Map)
                 {
                     gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
                     try
