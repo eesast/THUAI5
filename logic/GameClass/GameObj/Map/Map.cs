@@ -91,16 +91,14 @@ namespace GameClass.GameObj
         {
             gameObjDict = new Dictionary<GameObjIdx, IList<IGameObj>>();
             gameObjLockDict = new Dictionary<GameObjIdx, ReaderWriterLockSlim>();
-            gameObjDict.Add(GameObjIdx.Player, new List<IGameObj>());
-            gameObjLockDict.Add(GameObjIdx.Player, new ReaderWriterLockSlim());
-            gameObjDict.Add(GameObjIdx.Bullet, new List<IGameObj>());
-            gameObjLockDict.Add(GameObjIdx.Bullet, new ReaderWriterLockSlim());
-            gameObjDict.Add(GameObjIdx.Prop, new List<IGameObj>());
-            gameObjLockDict.Add(GameObjIdx.Prop, new ReaderWriterLockSlim());
-            gameObjDict.Add(GameObjIdx.Gem, new List<IGameObj>());
-            gameObjLockDict.Add(GameObjIdx.Gem, new ReaderWriterLockSlim());
-            gameObjDict.Add(GameObjIdx.Map, new List<IGameObj>());
-            gameObjLockDict.Add(GameObjIdx.Map, new ReaderWriterLockSlim());
+            foreach(GameObjIdx idx in Enum.GetValues(typeof(GameObjIdx)))
+            {
+                if (idx != GameObjIdx.None)
+                {
+                    gameObjDict.Add(idx, new List<IGameObj>());
+                    gameObjLockDict.Add(idx, new ReaderWriterLockSlim());
+                }
+            }
 
             ProtoGameMap = new uint[mapResource.GetLength(0), mapResource.GetLength(1)];
             Array.Copy(mapResource, ProtoGameMap, mapResource.Length);
