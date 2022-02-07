@@ -47,10 +47,10 @@ namespace Gaming
                 Prop? pickProp = null;
                 if(propType==PropType.Null)  //自动检查有无道具可捡
                 {
-                    gameMap.PropListLock.EnterReadLock();
+                    gameMap.GameObjLockDict["prop"].EnterReadLock();
                     try
                     {
-                        foreach(Prop prop in gameMap.PropList)
+                        foreach(Prop prop in gameMap.GameObjDict["prop"])
                         {
                             if(GameData.IsInTheSameCell(prop.Position,player.Position))
                             {
@@ -58,14 +58,14 @@ namespace Gaming
                             }
                         }
                     }
-                    finally { gameMap.PropListLock.ExitReadLock(); }
+                    finally { gameMap.GameObjLockDict["prop"].ExitReadLock(); }
                 }
                 else
                 {
-                    gameMap.PropListLock.EnterReadLock();
+                    gameMap.GameObjLockDict["prop"].EnterReadLock();
                     try
                     {
-                        foreach(Prop prop in gameMap.PropList)
+                        foreach(Prop prop in gameMap.GameObjDict["prop"])
                         {
                             if(prop.GetPropType()==propType)
                             {
@@ -76,18 +76,18 @@ namespace Gaming
                             }
                         }
                     }
-                    finally { gameMap.PropListLock.ExitReadLock(); }
+                    finally { gameMap.GameObjLockDict["prop"].ExitReadLock(); }
                 }
 
                 if (pickProp != null)
                 {
                     player.PropInventory = pickProp;
-                    gameMap.PropListLock.EnterWriteLock();
+                    gameMap.GameObjLockDict["prop"].EnterWriteLock();
                     try
                     {
-                        gameMap.PropList.Remove(pickProp);
+                        gameMap.GameObjDict["prop"].Remove(pickProp);
                     }
-                    finally { gameMap.PropListLock.ExitWriteLock(); }
+                    finally { gameMap.GameObjLockDict["prop"].ExitWriteLock(); }
                     return true;
                 }
                 else return false;
@@ -101,12 +101,12 @@ namespace Gaming
                     return;
                 Prop prop = player.PropInventory;
                 player.PropInventory = null;
-                gameMap.PropListLock.EnterWriteLock();
+                gameMap.GameObjLockDict["prop"].EnterWriteLock();
                 try
                 {
-                    gameMap.PropList.Add(prop);
+                    gameMap.GameObjDict["prop"].Add(prop);
                 }
-                finally { gameMap.PropListLock.ExitWriteLock(); }
+                finally { gameMap.GameObjLockDict["prop"].ExitWriteLock(); }
                 moveEngine.MoveObj(prop, timeInMilliseconds, angle);
             }
             private void ProduceProp()
@@ -125,46 +125,46 @@ namespace Gaming
                                 int rand = r.Next(0, len);
                                 XYPosition randPos = availableCellForGenerateProp[rand];
 
-                                gameMap.PropListLock.EnterWriteLock();
+                                gameMap.GameObjLockDict["prop"].EnterWriteLock();
                                 try
                                 {
                                     switch (r.Next(0, 10))
                                     {
                                         case 0:
-                                            gameMap.PropList.Add(new AddAP(randPos));
+                                            gameMap.GameObjDict["prop"].Add(new AddAP(randPos));
                                             break;
                                         case 1:
-                                            gameMap.PropList.Add(new AddCD(randPos));
+                                            gameMap.GameObjDict["prop"].Add(new AddCD(randPos));
                                             break;
                                         case 2:
-                                            gameMap.PropList.Add(new AddHP(randPos));
+                                            gameMap.GameObjDict["prop"].Add(new AddHP(randPos));
                                             break;
                                         case 3:
-                                            gameMap.PropList.Add(new AddLIFE(randPos));
+                                            gameMap.GameObjDict["prop"].Add(new AddLIFE(randPos));
                                             break;
                                         case 4:
-                                            gameMap.PropList.Add(new AddSpeed(randPos));
+                                            gameMap.GameObjDict["prop"].Add(new AddSpeed(randPos));
                                             break;
                                         case 5:
-                                            gameMap.PropList.Add(new MinusAP(randPos));
+                                            gameMap.GameObjDict["prop"].Add(new MinusAP(randPos));
                                             break;
                                         case 6:
-                                            gameMap.PropList.Add(new MinusCD(randPos));
+                                            gameMap.GameObjDict["prop"].Add(new MinusCD(randPos));
                                             break;
                                         case 7:
-                                            gameMap.PropList.Add(new MinusSpeed(randPos));
+                                            gameMap.GameObjDict["prop"].Add(new MinusSpeed(randPos));
                                             break;
                                         case 8:
-                                            gameMap.PropList.Add(new Shield(randPos));
+                                            gameMap.GameObjDict["prop"].Add(new Shield(randPos));
                                             break;
                                         case 9:
-                                            gameMap.PropList.Add(new Spear(randPos));
+                                            gameMap.GameObjDict["prop"].Add(new Spear(randPos));
                                             break;
                                         default:
                                             break;
                                     }
                                 }
-                                finally { gameMap.PropListLock.ExitWriteLock(); }
+                                finally { gameMap.GameObjLockDict["prop"].ExitWriteLock(); }
                             },
                             GameData.PropProduceTime,
                             () => 0

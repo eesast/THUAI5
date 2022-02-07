@@ -217,12 +217,12 @@ namespace GameEngine
         public CollisionChecker(IMap gameMap)
         {
             this.gameMap = gameMap;
-            lists = new Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>[]
+            lists = new Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>[gameMap.GameObjDict.Count];
+            int i = 0;
+            foreach(var keyValuePair in gameMap.GameObjDict)
             {
-                new Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>(gameMap.BulletList, gameMap.BulletListLock),
-                new Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>(gameMap.PlayerList, gameMap.PlayerListLock),
-                new Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>(gameMap.MapObjList, gameMap.MapObjListLock)
-            };
+                lists[i++] = new Tuple<IEnumerable<IGameObj>, ReaderWriterLockSlim>(keyValuePair.Value as IList<IGameObj>, gameMap.GameObjLockDict[keyValuePair.Key]); 
+            }
         }
     }
 }

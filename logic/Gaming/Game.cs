@@ -44,16 +44,16 @@ namespace Gaming
             //Console.WriteLine($"x,y: {pos.x},{pos.y}");
             Character newPlayer = new(pos, GameData.characterRadius, gameMap.GetPlaceType(pos), playerInitInfo.passiveSkill, playerInitInfo.commonSkill);
             gameMap.BirthPointList[playerInitInfo.birthPointIndex].Parent = newPlayer;
-            gameMap.PlayerListLock.EnterWriteLock();
+            gameMap.GameObjLockDict["player"].EnterWriteLock();
             try
             {
-                gameMap.PlayerList.Add(newPlayer);
+                gameMap.GameObjDict["player"].Add(newPlayer);
             }
             finally
             {
-                gameMap.PlayerListLock.ExitWriteLock();
+                gameMap.GameObjLockDict["player"].ExitWriteLock();
             }
-            //Console.WriteLine($"Playerlist length:{gameMap.PlayerList.Count}");
+            //Console.WriteLine($"GameObjDict["player"] length:{gameMap.GameObjDict["player"].Count}");
             teamList[(int)playerInitInfo.teamID].AddPlayer(newPlayer);
             newPlayer.TeamID = playerInitInfo.teamID;
             newPlayer.PlayerID = playerInitInfo.playerID;
@@ -104,17 +104,17 @@ namespace Gaming
         {
             if (gameMap.Timer.IsGaming)
                 return false;
-            gameMap.PlayerListLock.EnterReadLock();
+            gameMap.GameObjLockDict["player"].EnterReadLock();
             try
             {
-                foreach (Character player in gameMap.PlayerList)
+                foreach (Character player in gameMap.GameObjDict["player"])
                 {
                     player.CanMove = true;
 
                     player.AddShield(GameData.shieldTimeAtBirth);
                 }
             }
-            finally { gameMap.PlayerListLock.ExitReadLock(); }
+            finally { gameMap.GameObjLockDict["player"].ExitReadLock(); }
 
 
             propManager.StartProducing();
@@ -128,15 +128,15 @@ namespace Gaming
                         loopCondition: () => gameMap.Timer.IsGaming,
                         loopToDo: () =>
                         {
-                            gameMap.BulletListLock.EnterWriteLock();  //检查子弹位置
+                            gameMap.GameObjLockDict["bullet"].EnterWriteLock();  //检查子弹位置
                             try
                             {
-                                foreach(var bullet in gameMap.BulletList)
+                                foreach(var bullet in gameMap.GameObjDict["bullet"])
                                 {
                                     bullet.Place = gameMap.GetPlaceType(bullet.Position);
                                 }
                             }
-                            finally { gameMap.BulletListLock.ExitWriteLock(); }
+                            finally { gameMap.GameObjLockDict["bullet"].ExitWriteLock(); }
                         },
                         timeInterval: GameData.checkInterval,
                         finallyReturn: () => 0
@@ -154,50 +154,50 @@ namespace Gaming
             EndGame(); //游戏结束时要做的事
 
             //清除所有对象
-            gameMap.PlayerListLock.EnterWriteLock();
+            gameMap.GameObjLockDict["player"].EnterWriteLock();
             try
             {
-                foreach (Character player in gameMap.PlayerList)
+                foreach (Character player in gameMap.GameObjDict["player"])
                 {
                     player.CanMove = false;
                 }
-                gameMap.PlayerList.Clear();
+                gameMap.GameObjDict["player"].Clear();
             }
-            finally { gameMap.PlayerListLock.ExitWriteLock(); }
-            gameMap.BulletListLock.EnterWriteLock();
+            finally { gameMap.GameObjLockDict["player"].ExitWriteLock(); }
+            gameMap.GameObjLockDict["bullet"].EnterWriteLock();
             try
             {
-                gameMap.BulletList.Clear();
+                gameMap.GameObjDict["bullet"].Clear();
             }
-            finally { gameMap.BulletListLock.ExitWriteLock(); }
-            gameMap.PropListLock.EnterWriteLock();
+            finally { gameMap.GameObjLockDict["bullet"].ExitWriteLock(); }
+            gameMap.GameObjLockDict["prop"].EnterWriteLock();
             try
             {
-                gameMap.PropList.Clear();
+                gameMap.GameObjDict["prop"].Clear();
             }
-            finally { gameMap.PropListLock.ExitWriteLock(); }
-            gameMap.GemListLock.EnterWriteLock();
+            finally { gameMap.GameObjLockDict["prop"].ExitWriteLock(); }
+            gameMap.GameObjLockDict["gem"].EnterWriteLock();
             try
             {
-                gameMap.GemList.Clear();
+                gameMap.GameObjDict["gem"].Clear();
             }
-            finally { gameMap.GemListLock.ExitWriteLock(); }
+            finally { gameMap.GameObjLockDict["gem"].ExitWriteLock(); }
 
             return true;
         }
 
         public void EndGame()
         {
-            gameMap.PlayerListLock.EnterWriteLock();
+            gameMap.GameObjLockDict["player"].EnterWriteLock();
             try
             {
-                foreach (var player in gameMap.PlayerList)  //这里始终运行不下去，为什么？？？
+                foreach (var player in gameMap.GameObjDict["player"])  //这里始终运行不下去，为什么？？？
                 {
                     gemManager.UseAllGem((Character)player);
                     Console.WriteLine("Fuck");
                 }
             }
-            finally { gameMap.PlayerListLock.ExitWriteLock(); }
+            finally { gameMap.GameObjLockDict["player"].ExitWriteLock(); }
 
         }
         public void MovePlayer(long playerID, int moveTimeInMilliseconds, double angle)
@@ -310,15 +310,15 @@ namespace Gaming
         {
             if (!gameMap.Timer.IsGaming)
                 return;
-            gameMap.PlayerListLock.EnterWriteLock();
+            gameMap.GameObjLockDict["player"].EnterWriteLock();
             try
             {
-                foreach (Character player in gameMap.PlayerList)
+                foreach (Character player in gameMap.GameObjDict["player"])
                 {
                     skillManager.UsePassiveSkill(player);
                 }
             }
-            finally { gameMap.PlayerListLock.ExitWriteLock(); }
+            finally { gameMap.GameObjLockDict["player"].ExitWriteLock(); }
         }
 
         public int GetTeamScore(long teamID)
@@ -328,33 +328,33 @@ namespace Gaming
         public List<IGameObj> GetGameObj()
         {
             var gameObjList = new List<IGameObj>();
-            gameMap.PlayerListLock.EnterReadLock();
+            gameMap.GameObjLockDict["player"].EnterReadLock();
             try
             {
-                gameObjList.AddRange(gameMap.PlayerList);
+                gameObjList.AddRange(gameMap.GameObjDict["player"]);
             }
-            finally { gameMap.PlayerListLock.ExitReadLock(); }
+            finally { gameMap.GameObjLockDict["player"].ExitReadLock(); }
 
-            gameMap.BulletListLock.EnterReadLock();
+            gameMap.GameObjLockDict["bullet"].EnterReadLock();
             try
             {
-                gameObjList.AddRange(gameMap.BulletList);
+                gameObjList.AddRange(gameMap.GameObjDict["bullet"]);
             }
-            finally { gameMap.BulletListLock.ExitReadLock(); }
+            finally { gameMap.GameObjLockDict["bullet"].ExitReadLock(); }
 
-            gameMap.PropListLock.EnterReadLock();
+            gameMap.GameObjLockDict["prop"].EnterReadLock();
             try
             {
-                gameObjList.AddRange(gameMap.PropList);
+                gameObjList.AddRange(gameMap.GameObjDict["prop"]);
             }
-            finally { gameMap.PropListLock.ExitReadLock(); }
+            finally { gameMap.GameObjLockDict["prop"].ExitReadLock(); }
 
-            gameMap.GemListLock.EnterReadLock();
+            gameMap.GameObjLockDict["gem"].EnterReadLock();
             try
             {
-                gameObjList.AddRange(gameMap.GemList);
+                gameObjList.AddRange(gameMap.GameObjDict["gem"]);
             }
-            finally { gameMap.GemListLock.ExitReadLock(); }
+            finally { gameMap.GameObjLockDict["gem"].ExitReadLock(); }
 
             return gameObjList;
         }

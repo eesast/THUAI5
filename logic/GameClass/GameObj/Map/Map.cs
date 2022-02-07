@@ -9,33 +9,13 @@ namespace GameClass.GameObj
 {
     public partial class Map : IMap
     {
-        private readonly List<ICharacter> playerList;
-        public List<ICharacter> PlayerList => playerList;
-        private readonly ReaderWriterLockSlim playerListLock;
-        public ReaderWriterLockSlim PlayerListLock => playerListLock;
-
-        private readonly List<IObjOfCharacter> bulletList;
-        public List<IObjOfCharacter> BulletList => bulletList;
-        private readonly ReaderWriterLockSlim bulletListLock;
-        public ReaderWriterLockSlim BulletListLock => bulletListLock;
-
-        private readonly List<IGameObj> mapObjList;
-        public List<IGameObj> MapObjList => mapObjList;
-        private readonly ReaderWriterLockSlim mapObjListLock;
-        public ReaderWriterLockSlim MapObjListLock => mapObjListLock;
-
-        private readonly List<IObjOfCharacter> propList;
-        public List<IObjOfCharacter> PropList => propList;
-        private readonly ReaderWriterLockSlim propListLock;
-        public ReaderWriterLockSlim PropListLock => propListLock;
-
-        private readonly List<IObjOfCharacter> gemList;
-        public List<IObjOfCharacter> GemList => gemList;
-        private readonly ReaderWriterLockSlim gemListLock;
-        public ReaderWriterLockSlim GemListLock => gemListLock;
-
         private readonly Dictionary<uint, BirthPoint> birthPointList;   // 出生点列表
         public Dictionary<uint, BirthPoint> BirthPointList => birthPointList;
+
+        private Dictionary<String, IList<IGameObj>> gameObjDict;
+        public Dictionary<String, IList<IGameObj>> GameObjDict => gameObjDict;
+        private Dictionary<String, ReaderWriterLockSlim> gameObjLockDict;
+        public Dictionary<String, ReaderWriterLockSlim> GameObjLockDict => gameObjLockDict;
 
         public readonly uint[,] ProtoGameMap;
         public PlaceType GetPlaceType(GameObj obj)
@@ -91,10 +71,10 @@ namespace GameClass.GameObj
         public Character? FindPlayer(long playerID)
         {
             Character? player = null;
-            playerListLock.EnterReadLock();
+            gameObjLockDict["player"].EnterReadLock();
             try
             {
-                foreach (Character person in playerList)
+                foreach (Character person in gameObjDict["player"])
                 {
                     if (playerID == person.ID)
                     {
@@ -103,22 +83,23 @@ namespace GameClass.GameObj
                     }
                 }
             }
-            finally { playerListLock.ExitReadLock(); }
+            finally { gameObjLockDict["player"].ExitReadLock(); }
             return player;
         }
         public Map(uint[,] mapResource)
         {
-            //创建列表
-            bulletList = new List<IObjOfCharacter>();
-            playerList = new List<ICharacter>();
-            propList = new List<IObjOfCharacter>();
-            gemList = new List<IObjOfCharacter>();
-            mapObjList = new List<IGameObj>();
-            bulletListLock = new ReaderWriterLockSlim();
-            playerListLock = new ReaderWriterLockSlim();
-            propListLock = new ReaderWriterLockSlim();
-            gemListLock = new ReaderWriterLockSlim();
-            mapObjListLock = new ReaderWriterLockSlim();
+            gameObjDict = new Dictionary<string, IList<IGameObj>>();
+            gameObjLockDict = new Dictionary<string, ReaderWriterLockSlim>();
+            gameObjDict.Add("player", new List<IGameObj>());
+            gameObjLockDict.Add("player", new ReaderWriterLockSlim());
+            gameObjDict.Add("bullet", new List<IGameObj>());
+            gameObjLockDict.Add("bullet", new ReaderWriterLockSlim());
+            gameObjDict.Add("prop", new List<IGameObj>());
+            gameObjLockDict.Add("prop", new ReaderWriterLockSlim());
+            gameObjDict.Add("gem", new List<IGameObj>());
+            gameObjLockDict.Add("gem", new ReaderWriterLockSlim());
+            gameObjDict.Add("map", new List<IGameObj>());
+            gameObjLockDict.Add("map", new ReaderWriterLockSlim());
 
             ProtoGameMap = new uint[mapResource.GetLength(0), mapResource.GetLength(1)];
             Array.Copy(mapResource, ProtoGameMap, mapResource.Length);
@@ -142,15 +123,15 @@ namespace GameClass.GameObj
                     {
                         case (uint)MapInfo.MapInfoObjType.Wall:
                             {
-                                mapObjListLock.EnterWriteLock();
+                                GameObjLockDict["map"].EnterWriteLock();
                                 try
                                 {
-                                    lock (mapObjListLock)
+                                    lock (GameObjLockDict["map"])
                                     {
-                                        mapObjList.Add(new Wall(GameData.GetCellCenterPos(i, j)));
+                                        GameObjDict["map"].Add(new Wall(GameData.GetCellCenterPos(i, j)));
                                     }
                                 }
-                                finally { mapObjListLock.ExitWriteLock(); }
+                                finally { GameObjLockDict["map"].ExitWriteLock(); }
                                 break;
                             }
                         case (uint)MapInfo.MapInfoObjType.BirthPoint1:
@@ -164,20 +145,21 @@ namespace GameClass.GameObj
                             {
                                 BirthPoint newBirthPoint = new BirthPoint(GameData.GetCellCenterPos(i, j));
                                 birthPointList.Add(MapInfo.BirthPointEnumToIdx((MapInfo.MapInfoObjType)mapResource[i, j]), newBirthPoint);
-                                mapObjListLock.EnterWriteLock();
+                                GameObjLockDict["map"].EnterWriteLock();
                                 try
                                 {
-                                    lock (mapObjListLock)
+                                    lock (GameObjLockDict["map"])
                                     {
-                                        mapObjList.Add(newBirthPoint);
+                                        GameObjDict["map"].Add(newBirthPoint);
                                     }
                                 }
-                                finally { mapObjListLock.ExitWriteLock(); }
+                                finally { GameObjLockDict["map"].ExitWriteLock(); }
                                 break;
                             }
                     }
                 }
             }
+            
         }
     }
 }
