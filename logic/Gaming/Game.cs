@@ -153,35 +153,26 @@ namespace Gaming
 
             EndGame(); //游戏结束时要做的事
 
-            //清除所有对象
-            gameMap.GameObjLockDict["player"].EnterWriteLock();
-            try
+            //清除所有非地图对象
+            foreach (var keyValuePair in gameMap.GameObjDict)
             {
-                foreach (Character player in gameMap.GameObjDict["player"])
+                if (keyValuePair.Key != "map")
                 {
-                    player.CanMove = false;
+                    gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
+                    try
+                    {
+                        if (keyValuePair.Key == "player")
+                        {
+                            foreach (Character player in gameMap.GameObjDict["player"])
+                            {
+                                player.CanMove = false;
+                            }
+                        }
+                        gameMap.GameObjDict[keyValuePair.Key].Clear();
+                    }
+                    finally { gameMap.GameObjLockDict[keyValuePair.Key].ExitReadLock(); }
                 }
-                gameMap.GameObjDict["player"].Clear();
             }
-            finally { gameMap.GameObjLockDict["player"].ExitWriteLock(); }
-            gameMap.GameObjLockDict["bullet"].EnterWriteLock();
-            try
-            {
-                gameMap.GameObjDict["bullet"].Clear();
-            }
-            finally { gameMap.GameObjLockDict["bullet"].ExitWriteLock(); }
-            gameMap.GameObjLockDict["prop"].EnterWriteLock();
-            try
-            {
-                gameMap.GameObjDict["prop"].Clear();
-            }
-            finally { gameMap.GameObjLockDict["prop"].ExitWriteLock(); }
-            gameMap.GameObjLockDict["gem"].EnterWriteLock();
-            try
-            {
-                gameMap.GameObjDict["gem"].Clear();
-            }
-            finally { gameMap.GameObjLockDict["gem"].ExitWriteLock(); }
 
             return true;
         }
@@ -328,34 +319,18 @@ namespace Gaming
         public List<IGameObj> GetGameObj()
         {
             var gameObjList = new List<IGameObj>();
-            gameMap.GameObjLockDict["player"].EnterReadLock();
-            try
+            foreach(var keyValuePair in gameMap.GameObjDict)
             {
-                gameObjList.AddRange(gameMap.GameObjDict["player"]);
+                if(keyValuePair.Key != "map")
+                {
+                    gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
+                    try
+                    {
+                        gameObjList.AddRange(gameMap.GameObjDict[keyValuePair.Key]);
+                    }
+                    finally { gameMap.GameObjLockDict[keyValuePair.Key].ExitReadLock(); }
+                }
             }
-            finally { gameMap.GameObjLockDict["player"].ExitReadLock(); }
-
-            gameMap.GameObjLockDict["bullet"].EnterReadLock();
-            try
-            {
-                gameObjList.AddRange(gameMap.GameObjDict["bullet"]);
-            }
-            finally { gameMap.GameObjLockDict["bullet"].ExitReadLock(); }
-
-            gameMap.GameObjLockDict["prop"].EnterReadLock();
-            try
-            {
-                gameObjList.AddRange(gameMap.GameObjDict["prop"]);
-            }
-            finally { gameMap.GameObjLockDict["prop"].ExitReadLock(); }
-
-            gameMap.GameObjLockDict["gem"].EnterReadLock();
-            try
-            {
-                gameObjList.AddRange(gameMap.GameObjDict["gem"]);
-            }
-            finally { gameMap.GameObjLockDict["gem"].ExitReadLock(); }
-
             return gameObjList;
         }
         public Game(uint[,] mapResource, int numOfTeam)

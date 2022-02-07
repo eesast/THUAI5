@@ -88,6 +88,7 @@ namespace GameClass.GameObj
         }
         public Map(uint[,] mapResource)
         {
+            //the two dicts must have same keys
             gameObjDict = new Dictionary<string, IList<IGameObj>>();
             gameObjLockDict = new Dictionary<string, ReaderWriterLockSlim>();
             gameObjDict.Add("player", new List<IGameObj>());
