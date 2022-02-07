@@ -9,9 +9,9 @@
   "packageRules": [
     {
       "matchPackageNames": [
-        "hpsocket.net"
+        "HPSocket.Net"
       ],
-      "allowedVersions": "<=5.8.4.1"
+      "allowedVersions": "<5.8.5"
     }
   ]
 }
