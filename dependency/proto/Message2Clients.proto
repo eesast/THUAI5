@@ -63,6 +63,14 @@ message MessageOfBullet
     PlaceType place = 7;
 }
 
+message MessageOfBombedBullet  //for Unity
+{
+    BulletType type = 1;
+    int32 x=2;
+    int32 y=3;
+    double facingDirection=4;
+}
+
 message MessageToInitialize 
 {
     int32 MapSerial = 1; //应该是地图的编号
@@ -79,6 +87,7 @@ message MessageToClient
             MessageOfCharacter messageOfCharacter = 1;
             MessageOfBullet messageOfBullet = 2;
             MessageOfProp messageOfProp = 3;
+            MessageOfBombedBullet MessageOfBombedBullet=4;
         }    
     }    
     repeated GameObjMessage gameObjMessage=1;

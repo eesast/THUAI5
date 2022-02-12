@@ -105,6 +105,12 @@ namespace Gaming
                     {
                         if (_bullet.ID == bullet.ID)
                         {
+                            gameMap.GameObjLockDict[GameObjIdx.BombedBullet].EnterWriteLock();
+                            try
+                            {
+                                gameMap.GameObjDict[GameObjIdx.BombedBullet].Add(new BombedBullet(bullet));
+                            }
+                            finally { gameMap.GameObjLockDict[GameObjIdx.BombedBullet].ExitWriteLock(); }
                             _ = gameMap.GameObjDict[GameObjIdx.Bullet].Remove(_bullet);
                             break;
                         }

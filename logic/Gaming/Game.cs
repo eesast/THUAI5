@@ -283,7 +283,7 @@ namespace Gaming
             }
             return false;
         }
-
+        
         public bool UseCommonSkill(long playerID)
         {
             if (!gameMap.Timer.IsGaming)
@@ -309,6 +309,16 @@ namespace Gaming
                 }
             }
             finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
+        }
+
+        public void ClearBombedBulletList()
+         {
+            gameMap.GameObjLockDict[GameObjIdx.BombedBullet].EnterWriteLock();
+            try
+            {
+                gameMap.GameObjDict[GameObjIdx.BombedBullet].Clear();
+            }
+            finally { gameMap.GameObjLockDict[GameObjIdx.BombedBullet].ExitWriteLock(); }
         }
 
         public int GetTeamScore(long teamID)

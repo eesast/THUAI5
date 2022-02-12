@@ -219,6 +219,8 @@ namespace Server
                         break;
                 }
             }
+
+            game.ClearBombedBulletList();
         }
         private void SendMessageToTeammate(MessageToServer msgToServer)
         {

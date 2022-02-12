@@ -46,10 +46,9 @@ namespace GameClass.GameObj
             this.moveSpeed = this.Speed;
             this.hasSpear = player.HasSpear;
         }
-        public Bullet(XYPosition initPos, Bullet bullet) : base(initPos, bullet.Radius, PlaceType.Null) { }
         public override bool IsRigid => true;	// 默认为true
         public override ShapeType Shape => ShapeType.Circle;	// 默认为圆形
-        public abstract BulletType TypeOfBullet { get; }
+        public abstract BulletType TypeOfBullet { get;}
         public abstract Bullet Clone(Character parent);  //深复制子弹
     }
 
@@ -69,6 +68,7 @@ namespace GameClass.GameObj
         {
             AtomBomb a = new AtomBomb(this.Position, this.Radius, this.HasSpear);
             a.Parent = parent;
+            a.FacingDirection = this.FacingDirection;
             return a;
         }
         public override BulletType TypeOfBullet => BulletType.AtomBomb;
@@ -90,6 +90,7 @@ namespace GameClass.GameObj
         {
             OrdinaryBullet a= new OrdinaryBullet(this.Position, this.Radius, this.HasSpear);
             a.Parent = parent;
+            a.FacingDirection = this.FacingDirection;
             return a;
         }
         public override BulletType TypeOfBullet => BulletType.OrdinaryBullet;
@@ -112,6 +113,7 @@ namespace GameClass.GameObj
         {
             FastBullet a = new FastBullet(this.Position, this.Radius, this.HasSpear);
             a.Parent = parent;
+            a.FacingDirection = this.FacingDirection;
             return a;
         }
         public override BulletType TypeOfBullet => BulletType.FastBullet;
@@ -159,6 +161,7 @@ namespace GameClass.GameObj
         {
             LineBullet a = new LineBullet(this.Position, this.Radius, this.HasSpear);
             a.Parent = parent;
+            a.FacingDirection = this.FacingDirection;
             return a;
         }
         public override BulletType TypeOfBullet => BulletType.LineBullet;
