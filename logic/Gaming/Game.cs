@@ -182,10 +182,9 @@ namespace Gaming
             gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
             try
             {
-                foreach (var player in gameMap.GameObjDict[GameObjIdx.Player])  //这里始终运行不下去，为什么？？？
+                foreach (var player in gameMap.GameObjDict[GameObjIdx.Player])  
                 {
                     gemManager.UseAllGem((Character)player);
-                    Console.WriteLine("Fuck");
                 }
             }
             finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
