@@ -100,6 +100,22 @@ struct MessageOfBulletDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MessageOfBulletDefaultTypeInternal _MessageOfBullet_default_instance_;
+constexpr MessageOfBombedBullet::MessageOfBombedBullet(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : type_(0)
+
+  , x_(0)
+  , facingdirection_(0)
+  , y_(0){}
+struct MessageOfBombedBulletDefaultTypeInternal {
+  constexpr MessageOfBombedBulletDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~MessageOfBombedBulletDefaultTypeInternal() {}
+  union {
+    MessageOfBombedBullet _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MessageOfBombedBulletDefaultTypeInternal _MessageOfBombedBullet_default_instance_;
 constexpr MessageToInitialize::MessageToInitialize(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : mapserial_(0)
@@ -158,7 +174,7 @@ struct MessageToOneClientDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MessageToOneClientDefaultTypeInternal _MessageToOneClient_default_instance_;
 }  // namespace Protobuf
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Message2Clients_2eproto[7];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Message2Clients_2eproto[8];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_Message2Clients_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_Message2Clients_2eproto = nullptr;
 
@@ -222,6 +238,16 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Message2Clients_2eproto::offse
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBullet, parentteamid_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBullet, place_),
   ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBombedBullet, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBombedBullet, type_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBombedBullet, x_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBombedBullet, y_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBombedBullet, facingdirection_),
+  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToInitialize, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
@@ -235,6 +261,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Message2Clients_2eproto::offse
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToClient_GameObjMessage, _oneof_case_[0]),
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
@@ -263,16 +290,18 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 0, -1, -1, sizeof(::Protobuf::MessageOfCharacter)},
   { 32, -1, -1, sizeof(::Protobuf::MessageOfProp)},
   { 45, -1, -1, sizeof(::Protobuf::MessageOfBullet)},
-  { 58, -1, -1, sizeof(::Protobuf::MessageToInitialize)},
-  { 66, -1, -1, sizeof(::Protobuf::MessageToClient_GameObjMessage)},
-  { 76, -1, -1, sizeof(::Protobuf::MessageToClient)},
-  { 84, -1, -1, sizeof(::Protobuf::MessageToOneClient)},
+  { 58, -1, -1, sizeof(::Protobuf::MessageOfBombedBullet)},
+  { 68, -1, -1, sizeof(::Protobuf::MessageToInitialize)},
+  { 76, -1, -1, sizeof(::Protobuf::MessageToClient_GameObjMessage)},
+  { 87, -1, -1, sizeof(::Protobuf::MessageToClient)},
+  { 95, -1, -1, sizeof(::Protobuf::MessageToOneClient)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageOfCharacter_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageOfProp_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageOfBullet_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageOfBombedBullet_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageToInitialize_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageToClient_GameObjMessage_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageToClient_default_instance_),
@@ -305,30 +334,34 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
   "t\022\"\n\004type\030\001 \001(\0162\024.Protobuf.BulletType\022\t\n"
   "\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDirection\030\004"
   " \001(\001\022\014\n\004guid\030\005 \001(\003\022\024\n\014parentTeamID\030\006 \001(\003"
-  "\022\"\n\005place\030\007 \001(\0162\023.Protobuf.PlaceType\"T\n\023"
-  "MessageToInitialize\022\021\n\tMapSerial\030\001 \001(\005\022*"
-  "\n\013messageType\030\002 \001(\0162\025.Protobuf.MessageTy"
-  "pe\"\275\002\n\017MessageToClient\022@\n\016gameObjMessage"
-  "\030\001 \003(\0132(.Protobuf.MessageToClient.GameOb"
-  "jMessage\022*\n\013messageType\030\002 \001(\0162\025.Protobuf"
-  ".MessageType\032\273\001\n\016GameObjMessage\022:\n\022messa"
-  "geOfCharacter\030\001 \001(\0132\034.Protobuf.MessageOf"
-  "CharacterH\000\0224\n\017messageOfBullet\030\002 \001(\0132\031.P"
-  "rotobuf.MessageOfBulletH\000\0220\n\rmessageOfPr"
-  "op\030\003 \001(\0132\027.Protobuf.MessageOfPropH\000B\005\n\003o"
-  "bj\"\201\001\n\022MessageToOneClient\022\020\n\010playerID\030\001 "
-  "\001(\003\022\016\n\006teamID\030\002 \001(\003\022*\n\013messageType\030\003 \001(\016"
-  "2\025.Protobuf.MessageType\022\014\n\004guid\030\004 \001(\003\022\017\n"
-  "\007message\030\005 \001(\tB\026\252\002\023Communication.Protob\006"
-  "proto3"
+  "\022\"\n\005place\030\007 \001(\0162\023.Protobuf.PlaceType\"j\n\025"
+  "MessageOfBombedBullet\022\"\n\004type\030\001 \001(\0162\024.Pr"
+  "otobuf.BulletType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022"
+  "\027\n\017facingDirection\030\004 \001(\001\"T\n\023MessageToIni"
+  "tialize\022\021\n\tMapSerial\030\001 \001(\005\022*\n\013messageTyp"
+  "e\030\002 \001(\0162\025.Protobuf.MessageType\"\377\002\n\017Messa"
+  "geToClient\022@\n\016gameObjMessage\030\001 \003(\0132(.Pro"
+  "tobuf.MessageToClient.GameObjMessage\022*\n\013"
+  "messageType\030\002 \001(\0162\025.Protobuf.MessageType"
+  "\032\375\001\n\016GameObjMessage\022:\n\022messageOfCharacte"
+  "r\030\001 \001(\0132\034.Protobuf.MessageOfCharacterH\000\022"
+  "4\n\017messageOfBullet\030\002 \001(\0132\031.Protobuf.Mess"
+  "ageOfBulletH\000\0220\n\rmessageOfProp\030\003 \001(\0132\027.P"
+  "rotobuf.MessageOfPropH\000\022@\n\025MessageOfBomb"
+  "edBullet\030\004 \001(\0132\037.Protobuf.MessageOfBombe"
+  "dBulletH\000B\005\n\003obj\"\201\001\n\022MessageToOneClient\022"
+  "\020\n\010playerID\030\001 \001(\003\022\016\n\006teamID\030\002 \001(\003\022*\n\013mes"
+  "sageType\030\003 \001(\0162\025.Protobuf.MessageType\022\014\n"
+  "\004guid\030\004 \001(\003\022\017\n\007message\030\005 \001(\tB\026\252\002\023Communi"
+  "cation.Protob\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Message2Clients_2eproto_deps[1] = {
   &::descriptor_table_MessageType_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Clients_2eproto = {
-  false, false, 1606, descriptor_table_protodef_Message2Clients_2eproto, "Message2Clients.proto", 
-  &descriptor_table_Message2Clients_2eproto_once, descriptor_table_Message2Clients_2eproto_deps, 1, 7,
+  false, false, 1780, descriptor_table_protodef_Message2Clients_2eproto, "Message2Clients.proto", 
+  &descriptor_table_Message2Clients_2eproto_once, descriptor_table_Message2Clients_2eproto_deps, 1, 8,
   schemas, file_default_instances, TableStruct_Message2Clients_2eproto::offsets,
   file_level_metadata_Message2Clients_2eproto, file_level_enum_descriptors_Message2Clients_2eproto, file_level_service_descriptors_Message2Clients_2eproto,
 };
@@ -1770,6 +1803,265 @@ void MessageOfBullet::InternalSwap(MessageOfBullet* other) {
 
 // ===================================================================
 
+class MessageOfBombedBullet::_Internal {
+ public:
+};
+
+MessageOfBombedBullet::MessageOfBombedBullet(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:Protobuf.MessageOfBombedBullet)
+}
+MessageOfBombedBullet::MessageOfBombedBullet(const MessageOfBombedBullet& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::memcpy(&type_, &from.type_,
+    static_cast<size_t>(reinterpret_cast<char*>(&y_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(y_));
+  // @@protoc_insertion_point(copy_constructor:Protobuf.MessageOfBombedBullet)
+}
+
+void MessageOfBombedBullet::SharedCtor() {
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&type_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&y_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(y_));
+}
+
+MessageOfBombedBullet::~MessageOfBombedBullet() {
+  // @@protoc_insertion_point(destructor:Protobuf.MessageOfBombedBullet)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void MessageOfBombedBullet::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void MessageOfBombedBullet::ArenaDtor(void* object) {
+  MessageOfBombedBullet* _this = reinterpret_cast< MessageOfBombedBullet* >(object);
+  (void)_this;
+}
+void MessageOfBombedBullet::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void MessageOfBombedBullet::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void MessageOfBombedBullet::Clear() {
+// @@protoc_insertion_point(message_clear_start:Protobuf.MessageOfBombedBullet)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&type_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&y_) -
+      reinterpret_cast<char*>(&type_)) + sizeof(y_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* MessageOfBombedBullet::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .Protobuf.BulletType type = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_type(static_cast<::Protobuf::BulletType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 x = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 y = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+          y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // double facingDirection = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 33)) {
+          facingdirection_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* MessageOfBombedBullet::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageOfBombedBullet)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .Protobuf.BulletType type = 1;
+  if (this->_internal_type() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      1, this->_internal_type(), target);
+  }
+
+  // int32 x = 2;
+  if (this->_internal_x() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_x(), target);
+  }
+
+  // int32 y = 3;
+  if (this->_internal_y() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_y(), target);
+  }
+
+  // double facingDirection = 4;
+  if (!(this->_internal_facingdirection() <= 0 && this->_internal_facingdirection() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_facingdirection(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Protobuf.MessageOfBombedBullet)
+  return target;
+}
+
+size_t MessageOfBombedBullet::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageOfBombedBullet)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .Protobuf.BulletType type = 1;
+  if (this->_internal_type() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_type());
+  }
+
+  // int32 x = 2;
+  if (this->_internal_x() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_x());
+  }
+
+  // double facingDirection = 4;
+  if (!(this->_internal_facingdirection() <= 0 && this->_internal_facingdirection() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // int32 y = 3;
+  if (this->_internal_y() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_y());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MessageOfBombedBullet::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    MessageOfBombedBullet::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*MessageOfBombedBullet::GetClassData() const { return &_class_data_; }
+
+void MessageOfBombedBullet::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<MessageOfBombedBullet *>(to)->MergeFrom(
+      static_cast<const MessageOfBombedBullet &>(from));
+}
+
+
+void MessageOfBombedBullet::MergeFrom(const MessageOfBombedBullet& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageOfBombedBullet)
+  GOOGLE_DCHECK_NE(&from, this);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_type() != 0) {
+    _internal_set_type(from._internal_type());
+  }
+  if (from._internal_x() != 0) {
+    _internal_set_x(from._internal_x());
+  }
+  if (!(from._internal_facingdirection() <= 0 && from._internal_facingdirection() >= 0)) {
+    _internal_set_facingdirection(from._internal_facingdirection());
+  }
+  if (from._internal_y() != 0) {
+    _internal_set_y(from._internal_y());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void MessageOfBombedBullet::CopyFrom(const MessageOfBombedBullet& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Protobuf.MessageOfBombedBullet)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool MessageOfBombedBullet::IsInitialized() const {
+  return true;
+}
+
+void MessageOfBombedBullet::InternalSwap(MessageOfBombedBullet* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(MessageOfBombedBullet, y_)
+      + sizeof(MessageOfBombedBullet::y_)
+      - PROTOBUF_FIELD_OFFSET(MessageOfBombedBullet, type_)>(
+          reinterpret_cast<char*>(&type_),
+          reinterpret_cast<char*>(&other->type_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata MessageOfBombedBullet::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
+      file_level_metadata_Message2Clients_2eproto[3]);
+}
+
+// ===================================================================
+
 class MessageToInitialize::_Internal {
  public:
 };
@@ -1980,7 +2272,7 @@ void MessageToInitialize::InternalSwap(MessageToInitialize* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata MessageToInitialize::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
-      file_level_metadata_Message2Clients_2eproto[3]);
+      file_level_metadata_Message2Clients_2eproto[4]);
 }
 
 // ===================================================================
@@ -1990,6 +2282,7 @@ class MessageToClient_GameObjMessage::_Internal {
   static const ::Protobuf::MessageOfCharacter& messageofcharacter(const MessageToClient_GameObjMessage* msg);
   static const ::Protobuf::MessageOfBullet& messageofbullet(const MessageToClient_GameObjMessage* msg);
   static const ::Protobuf::MessageOfProp& messageofprop(const MessageToClient_GameObjMessage* msg);
+  static const ::Protobuf::MessageOfBombedBullet& messageofbombedbullet(const MessageToClient_GameObjMessage* msg);
 };
 
 const ::Protobuf::MessageOfCharacter&
@@ -2003,6 +2296,10 @@ MessageToClient_GameObjMessage::_Internal::messageofbullet(const MessageToClient
 const ::Protobuf::MessageOfProp&
 MessageToClient_GameObjMessage::_Internal::messageofprop(const MessageToClient_GameObjMessage* msg) {
   return *msg->obj_.messageofprop_;
+}
+const ::Protobuf::MessageOfBombedBullet&
+MessageToClient_GameObjMessage::_Internal::messageofbombedbullet(const MessageToClient_GameObjMessage* msg) {
+  return *msg->obj_.messageofbombedbullet_;
 }
 void MessageToClient_GameObjMessage::set_allocated_messageofcharacter(::Protobuf::MessageOfCharacter* messageofcharacter) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
@@ -2049,6 +2346,21 @@ void MessageToClient_GameObjMessage::set_allocated_messageofprop(::Protobuf::Mes
   }
   // @@protoc_insertion_point(field_set_allocated:Protobuf.MessageToClient.GameObjMessage.messageOfProp)
 }
+void MessageToClient_GameObjMessage::set_allocated_messageofbombedbullet(::Protobuf::MessageOfBombedBullet* messageofbombedbullet) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  clear_obj();
+  if (messageofbombedbullet) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::Protobuf::MessageOfBombedBullet>::GetOwningArena(messageofbombedbullet);
+    if (message_arena != submessage_arena) {
+      messageofbombedbullet = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, messageofbombedbullet, submessage_arena);
+    }
+    set_has_messageofbombedbullet();
+    obj_.messageofbombedbullet_ = messageofbombedbullet;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Protobuf.MessageToClient.GameObjMessage.MessageOfBombedBullet)
+}
 MessageToClient_GameObjMessage::MessageToClient_GameObjMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
@@ -2073,6 +2385,10 @@ MessageToClient_GameObjMessage::MessageToClient_GameObjMessage(const MessageToCl
     }
     case kMessageOfProp: {
       _internal_mutable_messageofprop()->::Protobuf::MessageOfProp::MergeFrom(from._internal_messageofprop());
+      break;
+    }
+    case kMessageOfBombedBullet: {
+      _internal_mutable_messageofbombedbullet()->::Protobuf::MessageOfBombedBullet::MergeFrom(from._internal_messageofbombedbullet());
       break;
     }
     case OBJ_NOT_SET: {
@@ -2131,6 +2447,12 @@ void MessageToClient_GameObjMessage::clear_obj() {
       }
       break;
     }
+    case kMessageOfBombedBullet: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete obj_.messageofbombedbullet_;
+      }
+      break;
+    }
     case OBJ_NOT_SET: {
       break;
     }
@@ -2175,6 +2497,14 @@ const char* MessageToClient_GameObjMessage::_InternalParse(const char* ptr, ::PR
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
           ptr = ctx->ParseMessage(_internal_mutable_messageofprop(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .Protobuf.MessageOfBombedBullet MessageOfBombedBullet = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
+          ptr = ctx->ParseMessage(_internal_mutable_messageofbombedbullet(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2232,6 +2562,14 @@ failure:
         3, _Internal::messageofprop(this), target, stream);
   }
 
+  // .Protobuf.MessageOfBombedBullet MessageOfBombedBullet = 4;
+  if (_internal_has_messageofbombedbullet()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        4, _Internal::messageofbombedbullet(this), target, stream);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -2268,6 +2606,13 @@ size_t MessageToClient_GameObjMessage::ByteSizeLong() const {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *obj_.messageofprop_);
+      break;
+    }
+    // .Protobuf.MessageOfBombedBullet MessageOfBombedBullet = 4;
+    case kMessageOfBombedBullet: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *obj_.messageofbombedbullet_);
       break;
     }
     case OBJ_NOT_SET: {
@@ -2309,6 +2654,10 @@ void MessageToClient_GameObjMessage::MergeFrom(const MessageToClient_GameObjMess
       _internal_mutable_messageofprop()->::Protobuf::MessageOfProp::MergeFrom(from._internal_messageofprop());
       break;
     }
+    case kMessageOfBombedBullet: {
+      _internal_mutable_messageofbombedbullet()->::Protobuf::MessageOfBombedBullet::MergeFrom(from._internal_messageofbombedbullet());
+      break;
+    }
     case OBJ_NOT_SET: {
       break;
     }
@@ -2337,7 +2686,7 @@ void MessageToClient_GameObjMessage::InternalSwap(MessageToClient_GameObjMessage
 ::PROTOBUF_NAMESPACE_ID::Metadata MessageToClient_GameObjMessage::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
-      file_level_metadata_Message2Clients_2eproto[4]);
+      file_level_metadata_Message2Clients_2eproto[5]);
 }
 
 // ===================================================================
@@ -2551,7 +2900,7 @@ void MessageToClient::InternalSwap(MessageToClient* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata MessageToClient::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
-      file_level_metadata_Message2Clients_2eproto[5]);
+      file_level_metadata_Message2Clients_2eproto[6]);
 }
 
 // ===================================================================
@@ -2855,7 +3204,7 @@ void MessageToOneClient::InternalSwap(MessageToOneClient* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata MessageToOneClient::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
-      file_level_metadata_Message2Clients_2eproto[6]);
+      file_level_metadata_Message2Clients_2eproto[7]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -2869,6 +3218,9 @@ template<> PROTOBUF_NOINLINE ::Protobuf::MessageOfProp* Arena::CreateMaybeMessag
 }
 template<> PROTOBUF_NOINLINE ::Protobuf::MessageOfBullet* Arena::CreateMaybeMessage< ::Protobuf::MessageOfBullet >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Protobuf::MessageOfBullet >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Protobuf::MessageOfBombedBullet* Arena::CreateMaybeMessage< ::Protobuf::MessageOfBombedBullet >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Protobuf::MessageOfBombedBullet >(arena);
 }
 template<> PROTOBUF_NOINLINE ::Protobuf::MessageToInitialize* Arena::CreateMaybeMessage< ::Protobuf::MessageToInitialize >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Protobuf::MessageToInitialize >(arena);

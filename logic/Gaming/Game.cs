@@ -182,10 +182,9 @@ namespace Gaming
             gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
             try
             {
-                foreach (var player in gameMap.GameObjDict[GameObjIdx.Player])  //这里始终运行不下去，为什么？？？
+                foreach (var player in gameMap.GameObjDict[GameObjIdx.Player])  
                 {
                     gemManager.UseAllGem((Character)player);
-                    Console.WriteLine("Fuck");
                 }
             }
             finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
@@ -284,7 +283,7 @@ namespace Gaming
             }
             return false;
         }
-
+        
         public bool UseCommonSkill(long playerID)
         {
             if (!gameMap.Timer.IsGaming)
@@ -310,6 +309,16 @@ namespace Gaming
                 }
             }
             finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
+        }
+
+        public void ClearBombedBulletList()
+         {
+            gameMap.GameObjLockDict[GameObjIdx.BombedBullet].EnterWriteLock();
+            try
+            {
+                gameMap.GameObjDict[GameObjIdx.BombedBullet].Clear();
+            }
+            finally { gameMap.GameObjLockDict[GameObjIdx.BombedBullet].ExitWriteLock(); }
         }
 
         public int GetTeamScore(long teamID)
