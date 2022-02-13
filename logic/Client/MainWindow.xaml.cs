@@ -43,6 +43,7 @@ namespace Client
             playerData = new List<MessageToClient.Types.GameObjMessage>();
             bulletData = new List<MessageToClient.Types.GameObjMessage>();
             propData = new List<MessageToClient.Types.GameObjMessage>();
+            bombedBulletData = new List<MessageToClient.Types.GameObjMessage>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             communicator = new ClientCommunication();
             communicator.OnReceive += OnReceive;
@@ -441,6 +442,7 @@ namespace Client
                     playerData.Clear();
                     propData.Clear();
                     bulletData.Clear();
+                    bombedBulletData.Clear();
                     MessageToClient content = (MessageToClient)msg.Content;
                     switch (content.MessageType)
                     {
@@ -462,6 +464,9 @@ namespace Client
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
                                         propData.Add(obj);
                                         break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
+                                        bombedBulletData.Add(obj);
+                                        break;
                                 }
                             }
                             break;
@@ -482,6 +487,9 @@ namespace Client
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
                                         propData.Add(obj);
                                         break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
+                                        bombedBulletData.Add(obj);
+                                        break;
                                 }
                             }
                             break;
@@ -498,6 +506,9 @@ namespace Client
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
                                         propData.Add(obj);
+                                        break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
+                                        bombedBulletData.Add(obj);
                                         break;
                                 }
                             }
@@ -629,6 +640,65 @@ namespace Client
                                     }
                                 }
                             }
+                            foreach(var data in bombedBulletData)
+                            {
+                                switch(data.MessageOfBombedBullet.Type)
+                                {
+                                    case BulletType.FastBullet:
+                                        {
+                                            Ellipse icon = new Ellipse();
+                                            icon.Width = 65;
+                                            icon.Height = 65;
+                                            icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                            icon.VerticalAlignment = VerticalAlignment.Top;
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0, 0, 0);
+                                            icon.Fill = Brushes.Red;
+                                            UpperLayerOfMap.Children.Add(icon);
+                                            break;
+                                        }
+                                    case BulletType.AtomBomb:
+                                        {
+                                            Ellipse icon = new Ellipse();
+                                            icon.Width = 3 * 65;
+                                            icon.Height = 3 * 65;
+                                            icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                            icon.VerticalAlignment = VerticalAlignment.Top;
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0, 0, 0);
+                                            icon.Fill = Brushes.Red;
+                                            UpperLayerOfMap.Children.Add(icon);
+                                            break;
+                                        }
+                                    case BulletType.OrdinaryBullet:
+                                        {
+                                            Ellipse icon = new Ellipse();
+                                            icon.Width = 65;
+                                            icon.Height = 65;
+                                            icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                            icon.VerticalAlignment = VerticalAlignment.Top;
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0, 0, 0);
+                                            icon.Fill = Brushes.Red;
+                                            UpperLayerOfMap.Children.Add(icon);
+                                            break;
+                                        }
+                                    case BulletType.LineBullet:
+                                        {
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            Ellipse icon = new Ellipse();
+                                            icon.Width = 65;
+                                            icon.Height = 65;
+                                            icon.HorizontalAlignment = HorizontalAlignment.Left;
+                                            icon.VerticalAlignment = VerticalAlignment.Top;
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0, 0, 0);
+                                            icon.Fill = Brushes.Red;
+                                            UpperLayerOfMap.Children.Add(icon);
+                                            break;
+                                        }
+
+                                }
+                            }
                         }
                     }
                 }
@@ -657,6 +727,7 @@ namespace Client
         private List<MessageToClient.Types.GameObjMessage> playerData;
         private List<MessageToClient.Types.GameObjMessage> bulletData;
         private List<MessageToClient.Types.GameObjMessage> propData;
+        private List<MessageToClient.Types.GameObjMessage> bombedBulletData;
         private object drawPicLock = new object();
         private MessageToClient.Types.GameObjMessage? myInfo = null;  //这个client自己的message
         private ErrorDisplayer log;
