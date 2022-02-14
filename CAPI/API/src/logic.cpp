@@ -259,9 +259,6 @@ void Logic::ProcessMessage(pointer_m2c p2m)
     case 1:
         ProcessMessageToOneClient(std::get<std::shared_ptr<Protobuf::MessageToOneClient>>(p2m));
         break;
-    // case 2:
-    //     ProcessMessageToInitialize(std::get<std::shared_ptr<Protobuf::MessageToInitialize>>(p2m));
-    //     break;
     default:
         std::cerr << "No info type matches std::variant!" << std::endl;
     }
@@ -332,20 +329,6 @@ void Logic::ProcessMessageToOneClient(std::shared_ptr<Protobuf::MessageToOneClie
         std::cerr << "Invalid MessageType of MessageToOneClient!" << std::endl;
     }
 }
-
-// 这块还没想好怎么写
-
-//void Logic::ProcessMessageToInitialize(std::shared_ptr<Protobuf::MessageToInitialize> pm2i)
-//{
-//    switch (pm2i->messagetype())
-//    {
-//    case Protobuf::MessageType::StartGame:
-//        std::cout << "loading map.." << std::endl;
-//        pm2i->mapserial();
-//    default:
-//        break;
-//    }
-//}
 
 void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 {

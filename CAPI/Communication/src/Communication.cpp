@@ -27,7 +27,6 @@ namespace GameMessage
 		MessageToServer = 0,
 		MessageToOneClient = 1,
 		MessageToClient = 2,
-		MessageToInitialize = 3
 	};
 
 	static const int MessageToServerNum = int(PacketType::MessageToServer);
@@ -59,14 +58,6 @@ namespace GameMessage
 			case int(PacketType::MessageToClient) :
 			{
 				std::shared_ptr<Protobuf::MessageToClient> p = std::make_shared<Protobuf::MessageToClient>();
-				p->ParseFromArray(data + 4, length - 4);
-				pm2c = p;
-				break;
-			}
-
-			case int(PacketType::MessageToInitialize) :
-			{
-				std::shared_ptr<Protobuf::MessageToInitialize> p = std::make_shared<Protobuf::MessageToInitialize>();
 				p->ParseFromArray(data + 4, length - 4);
 				pm2c = p;
 				break;
