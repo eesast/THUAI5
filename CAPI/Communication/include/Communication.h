@@ -31,7 +31,7 @@
 // 3.ClientCommunication依赖于MultiThreadClientCommunication的接口，而MultiThreadClientCommunication依赖于ClientCommunication的实体
 // 在THUAI4中，从MultiThreadClientCommunication(THUAI4中名为Communication)构造ClientCommunication(THUAI4中名为CAPI)中，又用到了大量的回调函数
 // 所以不妨将ClientCommunication依赖于MultiThreadClientCommunication的部分抽取为一个接口ICommunication
-using pointer_m2c = std::variant<std::shared_ptr<Protobuf::MessageToClient>, std::shared_ptr<Protobuf::MessageToOneClient>, std::shared_ptr<Protobuf::MessageToInitialize>, std::nullptr_t>; // 类型安全的联合体
+using pointer_m2c = std::variant<std::shared_ptr<Protobuf::MessageToClient>, std::shared_ptr<Protobuf::MessageToOneClient>, std::nullptr_t>; // 类型安全的联合体
 #define TYPEM2C 0
 #define TYPEM2OC 1
 #define TYPEM2I 2
