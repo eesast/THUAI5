@@ -33,6 +33,9 @@
     <ClInclude Include="include\constants.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -54,6 +57,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="..\proto\MessageType.pb.cc">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DebugAPI.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

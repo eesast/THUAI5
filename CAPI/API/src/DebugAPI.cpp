@@ -54,7 +54,7 @@ bool DebugAPI::Attack(uint32_t timeInMilliseconds, double angleInRadian)
     Out << "Call Attack(" << timeInMilliseconds << "," << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        Out << "(Auto revoking)";
+        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting)
         {
@@ -80,7 +80,7 @@ bool DebugAPI::UseCommonSkill()
     Out << "Call UseCommonSkill() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        Out << "(Auto revoking)";
+        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting)
         {
@@ -130,7 +130,7 @@ bool DebugAPI::Pick(THUAI5::PropType proptype)
     Out << "Call Pick(" << THUAI5::prop_dict[proptype] << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        Out << "(Auto revoking)";
+        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting)
         {
@@ -155,7 +155,7 @@ bool DebugAPI::ThrowProp(uint32_t timeInMilliseconds, double angleInRadian)
     Out << "Call ThrowProp(" << timeInMilliseconds << "," << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        Out << "(Auto revoking)";
+        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting) // 正在复活中
         {
@@ -185,7 +185,7 @@ bool DebugAPI::UseProp()
     Out << "Call UseProp() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        Out << "(Auto revoking)";
+        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting) // 正在复活中
         {
@@ -213,7 +213,7 @@ bool DebugAPI::ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint3
     Out << "Call ThrowGem(" << timeInMilliseconds << angleInRadian << gemNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        Out << "(Auto revoking)";
+        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting) // 正在复活中
         {
@@ -240,7 +240,7 @@ bool DebugAPI::UseGem(uint32_t gemNum)
     Out << "Call UseGem(" << gemNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        Out << "(Auto revoking)";
+        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting) // 正在复活中
         {
