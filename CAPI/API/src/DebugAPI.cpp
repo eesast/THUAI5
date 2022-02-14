@@ -1,5 +1,6 @@
 #include "../include/API.h"
 #include "../include/utils.hpp"
+#include "../include/structures.h"
 
 const static double PI = 3.14159265358979323846;
 
@@ -66,7 +67,7 @@ bool DebugAPI::Attack(uint32_t timeInMilliseconds, double angleInRadian)
             return false;
         }
     }
-    
+
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Attack);
     message.set_timeinmilliseconds(timeInMilliseconds);
@@ -90,6 +91,10 @@ bool DebugAPI::UseCommonSkill()
         {
             return false;
         }
+        else
+        {
+            Out << "[Info: Using " << THUAI5::active_dict[selfInfo->activeSkillType] << ".]" << std::endl;
+        }
     }
 
     Protobuf::MessageToServer message;
@@ -106,6 +111,10 @@ bool DebugAPI::Send(int toPlayerID, std::string to_message)
         {
             Out << "[Error: Illegal player ID.]" << std::endl;
             return false;
+        }
+        else
+        {
+            Out << "[Info: The message is " << to_message << ".]" << std::endl;
         }
     }
 
@@ -158,6 +167,10 @@ bool DebugAPI::ThrowProp(uint32_t timeInMilliseconds, double angleInRadian)
             Out << "[Warning: You don't have any props.]" << std::endl;
             return false;
         }
+        else
+        {
+            Out << "[Info: Throw prop: " << THUAI5::prop_dict[selfInfo->prop] << ".]" << std::endl;
+        }
     }
 
     Protobuf::MessageToServer message;
@@ -183,6 +196,10 @@ bool DebugAPI::UseProp()
         {
             Out << "[Warning: You don't have any props.]" << std::endl;
             return false;
+        }
+        else
+        {
+            Out << "[Info: Use prop: " << THUAI5::prop_dict[selfInfo->prop] << ".]" << std::endl;
         }
     }
 
@@ -269,6 +286,10 @@ std::optional<std::string> DebugAPI::TryGetMessage()
         if (!info)
         {
             Out << "[Warning: Failed to get a message.]" << std::endl;
+        }
+        else
+        {
+            Out << "[Info: The message is: " << info.value() << ".]" << std::endl;
         }
     }
     return info;
