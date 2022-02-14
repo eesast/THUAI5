@@ -105,7 +105,6 @@ std::optional<std::string> Logic::GetInfo()
 
 bool Logic::WaitThread()
 {
-    
     Update();
     return true;
 }

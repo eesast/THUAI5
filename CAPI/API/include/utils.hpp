@@ -1,19 +1,31 @@
 // 供API和Logic使用的杂项函数
 #pragma once
-#ifndef UTILS_HPP_
-#define UTILS_HPP_
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <memory>
 #include <Message2Clients.pb.h>
 #include <Message2Server.pb.h>
+#include <MessageType.pb.h>
 
-#include "../include/structures.h"
+#include "structures.h"
+
+#define PROTO2THUAI_NAMESPACE_BEGIN namespace Proto2THUAI {
+#define PROTO2THUAI_NAMESPACE_END }
+
+#define TIME_NAMESPACE_BEGIN namespace Time {
+#define TIME_NAMESPACE_END }
+
+#define SPACE_NAMESPACE_BEGIN namespace Space {
+#define SPACE_NAMESPACE_END }
+
+#define VISION_NAMESPACE_BEGIN namespace Vision {
+#define VISION_NAMESPACE_END }
 
 /// <summary>
 /// 辅助函数：将Proto类转换为THUAI类
 /// </summary>
-namespace Proto2THUAI
-{
+PROTO2THUAI_NAMESPACE_BEGIN
     /// <summary>
     /// 将protobuf类转换为THUAI5命名空间的结构体（人物）
     /// </summary>
@@ -88,38 +100,35 @@ namespace Proto2THUAI
 
         return prop;
     }
-}
+PROTO2THUAI_NAMESPACE_END
 
 /// <summary>
 /// 辅助函数：管理游戏时间信息
 /// </summary>
-namespace Time
-{
+TIME_NAMESPACE_BEGIN
     double TimeSinceStart(const std::chrono::system_clock::time_point& sp)
     {
         std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
         std::chrono::duration<double, std::milli> time_span = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(tp - sp);
         return time_span.count();
     }
-}
+TIME_NAMESPACE_END
 
 /// <summary>
 /// 辅助函数：管理游戏空间信息
 /// </summary>
-namespace Space
-{
+SPACE_NAMESPACE_BEGIN
     inline bool InSameCell(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2)
     {
         return (x1 / Constants::Map::numOfGridPerCell == x2 / Constants::Map::numOfGridPerCell) ||
                (y1 / Constants::Map::numOfGridPerCell == y2 / Constants::Map::numOfGridPerCell);
     }
-}
+SPACE_NAMESPACE_END
 
 /// <summary>
 /// 辅助函数：判断是否可见
 /// </summary>
-namespace Vision
-{
+VISION_NAMESPACE_BEGIN
     /*
     * 人物是否可见的判定机制如下：
     * 1.若人物不在草丛里，则看不到技能隐身和在草丛里的玩家
@@ -168,6 +177,18 @@ namespace Vision
         uint64_t distanceSquared = dx * dx + dy * dy;
         return distanceSquared <= Constants::Map::sightRadiusSquared;
     }
-}
+VISION_NAMESPACE_END
 
-#endif // UTILS_HPP_
+#undef PROTO2THUAI_NAMESPACE_BEGIN 
+#undef PROTO2THUAI_NAMESPACE_END 
+
+#undef TIME_NAMESPACE_BEGIN 
+#undef TIME_NAMESPACE_END 
+
+#undef SPACE_NAMESPACE_BEGIN 
+#undef SPACE_NAMESPACE_END 
+
+#undef VISION_NAMESPACE_BEGIN 
+#undef VISION_NAMESPACE_END 
+
+#endif // UTILS_HPP
