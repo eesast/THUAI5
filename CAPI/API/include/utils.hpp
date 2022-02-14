@@ -31,7 +31,7 @@ PROTO2THUAI_NAMESPACE_BEGIN
     /// </summary>
     /// <param name=""></param>
     /// <returns></returns>
-    std::shared_ptr<THUAI5::Character> Protobuf2THUAI5_C(const Protobuf::MessageOfCharacter& c)
+    inline std::shared_ptr<THUAI5::Character> Protobuf2THUAI5_C(const Protobuf::MessageOfCharacter& c)
     {
         std::shared_ptr<THUAI5::Character> character = std::make_shared<THUAI5::Character>();
         character->activeSkillType = (THUAI5::ActiveSkillType)c.activeskilltype();
@@ -68,7 +68,7 @@ PROTO2THUAI_NAMESPACE_BEGIN
     /// </summary>
     /// <param name=""></param>
     /// <returns></returns>
-    std::shared_ptr<THUAI5::Bullet> Protobuf2THUAI5_B(const Protobuf::MessageOfBullet& b)
+    inline std::shared_ptr<THUAI5::Bullet> Protobuf2THUAI5_B(const Protobuf::MessageOfBullet& b)
     {
         std::shared_ptr<THUAI5::Bullet> bullet = std::make_shared<THUAI5::Bullet>();
         bullet->facingDirection = b.facingdirection();
@@ -87,7 +87,7 @@ PROTO2THUAI_NAMESPACE_BEGIN
     /// </summary>
     /// <param name=""></param>
     /// <returns></returns>
-    std::shared_ptr<THUAI5::Prop> Protobuf2THUAI5_P(const Protobuf::MessageOfProp& p)
+    inline std::shared_ptr<THUAI5::Prop> Protobuf2THUAI5_P(const Protobuf::MessageOfProp& p)
     {
         std::shared_ptr<THUAI5::Prop> prop = std::make_shared<THUAI5::Prop>();
         prop->facingDirection = p.facingdirection();
@@ -106,7 +106,7 @@ PROTO2THUAI_NAMESPACE_END
 /// 辅助函数：管理游戏时间信息
 /// </summary>
 TIME_NAMESPACE_BEGIN
-    double TimeSinceStart(const std::chrono::system_clock::time_point& sp)
+    inline double TimeSinceStart(const std::chrono::system_clock::time_point& sp)
     {
         std::chrono::system_clock::time_point tp = std::chrono::system_clock::now();
         std::chrono::duration<double, std::milli> time_span = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(tp - sp);
@@ -135,7 +135,7 @@ VISION_NAMESPACE_BEGIN
     * 2.若人物在草丛里，则可以看得到与自己位于同一草丛的玩家，但是看不到技能隐身的玩家
     */
 
-    static bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfCharacter& c)
+    inline bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfCharacter& c)
     {
         int64_t dx = self->x - c.x();
         int64_t dy = self->y - c.y();
@@ -162,7 +162,7 @@ VISION_NAMESPACE_BEGIN
         return true;
     }
 
-    static bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfBullet& b)
+    inline bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfBullet& b)
     {
         int64_t dx = self->x - b.x();
         int64_t dy = self->y - b.y();
@@ -170,7 +170,7 @@ VISION_NAMESPACE_BEGIN
         return distanceSquared <= Constants::Map::sightRadiusSquared;
     }
 
-    static bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfProp& p)
+    inline bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfProp& p)
     {
         int64_t dx = self->x - p.x();
         int64_t dy = self->y - p.y();

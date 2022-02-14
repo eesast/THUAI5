@@ -165,6 +165,7 @@
     <ClInclude Include="include\logic.h" />
     <ClInclude Include="include\state.h" />
     <ClInclude Include="include\structures.h" />
+    <ClInclude Include="include\utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\proto\Message2Clients.pb.cc" />
@@ -172,6 +173,7 @@
     <ClCompile Include="..\proto\MessageType.pb.cc" />
     <ClCompile Include="src\AI.cpp" />
     <ClCompile Include="src\API.cpp" />
+    <ClCompile Include="src\DebugAPI.cpp" />
     <ClCompile Include="src\logic.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
