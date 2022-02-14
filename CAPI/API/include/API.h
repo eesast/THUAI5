@@ -265,8 +265,8 @@ public:
     int GetFrameCount() const override;
 
 private:
-    bool CanPick(THUAI5::PropType propType);
-    bool CanUseActiveSkill();
+    bool CanPick(THUAI5::PropType propType, std::shared_ptr<const THUAI5::Character> &selfInfo);
+    bool CanUseActiveSkill(std::shared_ptr<const THUAI5::Character> &selfInfo);
 
     bool ExamineValidity;
     std::ostream& Out;

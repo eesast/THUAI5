@@ -53,17 +53,20 @@ bool DebugAPI::Attack(uint32_t timeInMilliseconds, double angleInRadian)
     Out << "Call Attack(" << timeInMilliseconds << "," << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        if (logic.GetSelfInfo()->isResetting)
+        Out << "(Auto revoking)";
+        auto selfInfo = logic.GetSelfInfo();
+        if (selfInfo->isResetting)
         {
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if (logic.GetSelfInfo()->bulletNum == 0)
+        if (selfInfo->bulletNum == 0)
         {
             Out << "[Warning: You are out of bullets.]" << std::endl;
             return false;
         }
     }
+    
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Attack);
     message.set_timeinmilliseconds(timeInMilliseconds);
@@ -76,16 +79,19 @@ bool DebugAPI::UseCommonSkill()
     Out << "Call UseCommonSkill() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        if (logic.GetSelfInfo()->isResetting)
+        Out << "(Auto revoking)";
+        auto selfInfo = logic.GetSelfInfo();
+        if (selfInfo->isResetting)
         {
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if(!CanUseActiveSkill())
+        if(!CanUseActiveSkill(selfInfo))
         {
             return false;
         }
     }
+
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::UseCommonSkill);
     return logic.SendInfo(message);
@@ -102,6 +108,7 @@ bool DebugAPI::Send(int toPlayerID, std::string to_message)
             return false;
         }
     }
+
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Send);
     message.set_toplayerid(toPlayerID);
@@ -114,17 +121,20 @@ bool DebugAPI::Pick(THUAI5::PropType proptype)
     Out << "Call Pick(" << THUAI5::prop_dict[proptype] << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        if (logic.GetSelfInfo()->isResetting)
+        Out << "(Auto revoking)";
+        auto selfInfo = logic.GetSelfInfo();
+        if (selfInfo->isResetting)
         {
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if (!CanPick(proptype))
+        if (!CanPick(proptype, selfInfo))
         {
             Out << "[Warning: No such property to pick within the cell.]" << std::endl;
             return false;
         }
     }
+
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Pick);
     message.set_proptype(Protobuf::PropType(proptype));
@@ -136,17 +146,20 @@ bool DebugAPI::ThrowProp(uint32_t timeInMilliseconds, double angleInRadian)
     Out << "Call ThrowProp(" << timeInMilliseconds << "," << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        if (logic.GetSelfInfo()->isResetting) // 正在复活中
+        Out << "(Auto revoking)";
+        auto selfInfo = logic.GetSelfInfo();
+        if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if (logic.GetSelfInfo()->prop == THUAI5::PropType::NullPropType)
+        if (selfInfo->prop == THUAI5::PropType::NullPropType)
         {
             Out << "[Warning: You don't have any props.]" << std::endl;
             return false;
         }
     }
+
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::ThrowProp);
     message.set_timeinmilliseconds(timeInMilliseconds);
@@ -159,17 +172,20 @@ bool DebugAPI::UseProp()
     Out << "Call UseProp() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        if (logic.GetSelfInfo()->isResetting) // 正在复活中
+        Out << "(Auto revoking)";
+        auto selfInfo = logic.GetSelfInfo();
+        if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if (logic.GetSelfInfo()->prop == THUAI5::PropType::NullPropType)
+        if (selfInfo->prop == THUAI5::PropType::NullPropType)
         {
             Out << "[Warning: You don't have any props.]" << std::endl;
             return false;
         }
     }
+
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::UseProp);
     return logic.SendInfo(message);
@@ -180,17 +196,20 @@ bool DebugAPI::ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint3
     Out << "Call ThrowGem(" << timeInMilliseconds << angleInRadian << gemNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        if (logic.GetSelfInfo()->isResetting) // 正在复活中
+        Out << "(Auto revoking)";
+        auto selfInfo = logic.GetSelfInfo();
+        if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if (logic.GetSelfInfo()->gemNum == 0)
+        if (selfInfo->gemNum == 0)
         {
             Out << "[Warning: You don't have any gems.]" << std::endl;
             return false;
         }
     }
+
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::ThrowGem);
     message.set_timeinmilliseconds(timeInMilliseconds);
@@ -204,17 +223,20 @@ bool DebugAPI::UseGem(uint32_t gemNum)
     Out << "Call UseGem(" << gemNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        if (logic.GetSelfInfo()->isResetting) // 正在复活中
+        Out << "(Auto revoking)";
+        auto selfInfo = logic.GetSelfInfo();
+        if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if (logic.GetSelfInfo()->gemNum == 0)
+        if (selfInfo->gemNum == 0)
         {
             Out << "[Warning: You don't have any gems.]" << std::endl;
             return false;
         }
     }
+
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::UseGem);
     message.set_gemsize(gemNum);
@@ -300,13 +322,13 @@ int DebugAPI::GetFrameCount() const
     return logic.GetCounter();
 }
 
-bool DebugAPI::CanPick(THUAI5::PropType propType)
+bool DebugAPI::CanPick(THUAI5::PropType propType, std::shared_ptr<const THUAI5::Character>& selfInfo)
 {
+    Out << "(Auto revoking)";
     std::vector<std::shared_ptr<const THUAI5::Prop>> props = GetProps();
-    std::shared_ptr<const THUAI5::Character> selfinfo = GetSelfInfo();
     for (auto it : props)
 	{
-		if (Space::InSameCell(selfinfo->x, selfinfo->y, it->x, it->y) && propType == it->type)
+		if (Space::InSameCell(selfInfo->x, selfInfo->y, it->x, it->y) && propType == it->type)
 		{
 			return true;
 		}
@@ -314,10 +336,9 @@ bool DebugAPI::CanPick(THUAI5::PropType propType)
 	return false;
 }
 
-bool DebugAPI::CanUseActiveSkill()
+bool DebugAPI::CanUseActiveSkill(std::shared_ptr<const THUAI5::Character>& selfInfo)
 {
-    std::shared_ptr<const THUAI5::Character> selfinfo = GetSelfInfo();
-    double timeUntilCommonSkillAvailable = selfinfo->timeUntilCommonSkillAvailable;
+    double timeUntilCommonSkillAvailable = selfInfo->timeUntilCommonSkillAvailable;
     if(timeUntilCommonSkillAvailable==0.0)
     {
         return true;
