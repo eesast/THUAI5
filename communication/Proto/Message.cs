@@ -1,4 +1,4 @@
-#define COMMUNICATION_DEBUG
+//#define COMMUNICATION_DEBUG
 
 using System;
 using System.IO;
