@@ -106,12 +106,13 @@ enum GameObjType : int {
   OutOfBoundBlock = 6,
   Grass = 7,
   GemWell = 8,
+  BombedBullet = 9,
   GameObjType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::min(),
   GameObjType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::PROTOBUF_NAMESPACE_ID::int32>::max()
 };
 bool GameObjType_IsValid(int value);
 constexpr GameObjType GameObjType_MIN = NullGameObjType;
-constexpr GameObjType GameObjType_MAX = GemWell;
+constexpr GameObjType GameObjType_MAX = BombedBullet;
 constexpr int GameObjType_ARRAYSIZE = GameObjType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* GameObjType_descriptor();

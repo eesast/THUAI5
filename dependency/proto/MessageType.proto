@@ -35,6 +35,7 @@ enum GameObjType
     OutOfBoundBlock = 6;
     Grass = 7;
     GemWell=8;
+    BombedBullet=9;
 }
 enum ShapeType
 {
