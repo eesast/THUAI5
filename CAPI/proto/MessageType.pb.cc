@@ -20,7 +20,7 @@ namespace Protobuf {
 }  // namespace Protobuf
 static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_MessageType_2eproto[9];
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_MessageType_2eproto = nullptr;
-const uint32_t TableStruct_MessageType_2eproto::offsets[1] = {};
+const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_MessageType_2eproto::offsets[1] = {};
 static constexpr ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema* schemas = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::Message* const* file_default_instances = nullptr;
 
@@ -32,36 +32,36 @@ const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARI
   "ayer\020\010\022\r\n\tStartGame\020\t\022\n\n\006Gaming\020\n\022\013\n\007End"
   "Game\020\013\022\022\n\016UseCommonSkill\020\014\022\024\n\020UseUltimat"
   "eSkill\020\r\022\020\n\014InitialLized\020\016\022\n\n\006UseGem\020\017\022\014"
-  "\n\010ThrowGem\020\020*\216\001\n\013GameObjType\022\023\n\017NullGame"
+  "\n\010ThrowGem\020\020*\240\001\n\013GameObjType\022\023\n\017NullGame"
   "ObjType\020\000\022\r\n\tCharacter\020\001\022\010\n\004Wall\020\002\022\010\n\004Pr"
   "op\020\003\022\n\n\006Bullet\020\004\022\016\n\nBirthPoint\020\005\022\023\n\017OutO"
-  "fBoundBlock\020\006\022\t\n\005Grass\020\007\022\013\n\007GemWell\020\010*6\n"
-  "\tShapeType\022\021\n\rNullShapeType\020\000\022\n\n\006Circle\020"
-  "\001\022\n\n\006Square\020\002*L\n\tPlaceType\022\021\n\rNullPlaceT"
-  "ype\020\000\022\010\n\004Land\020\001\022\n\n\006Grass1\020\002\022\n\n\006Grass2\020\003\022"
-  "\n\n\006Grass3\020\004*\242\001\n\010PropType\022\020\n\014NullPropType"
-  "\020\000\022\t\n\005addHP\020\001\022\t\n\005addAP\020\002\022\014\n\010addSpeed\020\003\022\013"
-  "\n\007addLIFE\020\004\022\013\n\007minusCD\020\005\022\007\n\003Gem\020\006\022\n\n\006Shi"
-  "eld\020\007\022\t\n\005Spear\020\010\022\016\n\nminusSpeed\020\t\022\013\n\007minu"
-  "sAP\020\n\022\t\n\005addCD\020\013*\225\001\n\020PassiveSkillType\022\030\n"
-  "\024NullPassiveSkillType\020\000\022\026\n\022RecoverAfterB"
-  "attle\020\001\022\033\n\027SpeedUpWhenLeavingGrass\020\002\022\013\n\007"
-  "Vampire\020\003\022\013\n\007PSkill3\020\004\022\013\n\007PSkill4\020\005\022\013\n\007P"
-  "Skill5\020\006*\215\001\n\017ActiveSkillType\022\027\n\023NullActi"
-  "veSkillType\020\000\022\021\n\rBecomeVampire\020\001\022\022\n\016Beco"
-  "meAssassin\020\002\022\021\n\rNuclearWeapon\020\003\022\r\n\tSuper"
-  "Fast\020\004\022\013\n\007ASkill4\020\005\022\013\n\007ASkill5\020\006*g\n\010Buff"
-  "Type\022\020\n\014NullBuffType\020\000\022\r\n\tMoveSpeed\020\001\022\006\n"
-  "\002AP\020\002\022\006\n\002CD\020\003\022\013\n\007AddLIFE\020\004\022\016\n\nShieldBuff"
-  "\020\005\022\r\n\tSpearBuff\020\006*u\n\nBulletType\022\022\n\016NullB"
-  "ulletType\020\000\022\016\n\nLineBullet\020\001\022\021\n\rCommonBul"
-  "let2\020\002\022\016\n\nFastBullet\020\003\022\022\n\016OrdinaryBullet"
-  "\020\004\022\014\n\010AtomBomb\020\005B\026\252\002\023Communication.Proto"
-  "b\006proto3"
+  "fBoundBlock\020\006\022\t\n\005Grass\020\007\022\013\n\007GemWell\020\010\022\020\n"
+  "\014BombedBullet\020\t*6\n\tShapeType\022\021\n\rNullShap"
+  "eType\020\000\022\n\n\006Circle\020\001\022\n\n\006Square\020\002*L\n\tPlace"
+  "Type\022\021\n\rNullPlaceType\020\000\022\010\n\004Land\020\001\022\n\n\006Gra"
+  "ss1\020\002\022\n\n\006Grass2\020\003\022\n\n\006Grass3\020\004*\242\001\n\010PropTy"
+  "pe\022\020\n\014NullPropType\020\000\022\t\n\005addHP\020\001\022\t\n\005addAP"
+  "\020\002\022\014\n\010addSpeed\020\003\022\013\n\007addLIFE\020\004\022\013\n\007minusCD"
+  "\020\005\022\007\n\003Gem\020\006\022\n\n\006Shield\020\007\022\t\n\005Spear\020\010\022\016\n\nmi"
+  "nusSpeed\020\t\022\013\n\007minusAP\020\n\022\t\n\005addCD\020\013*\225\001\n\020P"
+  "assiveSkillType\022\030\n\024NullPassiveSkillType\020"
+  "\000\022\026\n\022RecoverAfterBattle\020\001\022\033\n\027SpeedUpWhen"
+  "LeavingGrass\020\002\022\013\n\007Vampire\020\003\022\013\n\007PSkill3\020\004"
+  "\022\013\n\007PSkill4\020\005\022\013\n\007PSkill5\020\006*\215\001\n\017ActiveSki"
+  "llType\022\027\n\023NullActiveSkillType\020\000\022\021\n\rBecom"
+  "eVampire\020\001\022\022\n\016BecomeAssassin\020\002\022\021\n\rNuclea"
+  "rWeapon\020\003\022\r\n\tSuperFast\020\004\022\013\n\007ASkill4\020\005\022\013\n"
+  "\007ASkill5\020\006*g\n\010BuffType\022\020\n\014NullBuffType\020\000"
+  "\022\r\n\tMoveSpeed\020\001\022\006\n\002AP\020\002\022\006\n\002CD\020\003\022\013\n\007AddLI"
+  "FE\020\004\022\016\n\nShieldBuff\020\005\022\r\n\tSpearBuff\020\006*u\n\nB"
+  "ulletType\022\022\n\016NullBulletType\020\000\022\016\n\nLineBul"
+  "let\020\001\022\021\n\rCommonBullet2\020\002\022\016\n\nFastBullet\020\003"
+  "\022\022\n\016OrdinaryBullet\020\004\022\014\n\010AtomBomb\020\005B\026\252\002\023C"
+  "ommunication.Protob\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_MessageType_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_MessageType_2eproto = {
-  false, false, 1288, descriptor_table_protodef_MessageType_2eproto, "MessageType.proto", 
+  false, false, 1306, descriptor_table_protodef_MessageType_2eproto, "MessageType.proto", 
   &descriptor_table_MessageType_2eproto_once, nullptr, 0, 0,
   schemas, file_default_instances, TableStruct_MessageType_2eproto::offsets,
   nullptr, file_level_enum_descriptors_MessageType_2eproto, file_level_service_descriptors_MessageType_2eproto,
@@ -117,6 +117,7 @@ bool GameObjType_IsValid(int value) {
     case 6:
     case 7:
     case 8:
+    case 9:
       return true;
     default:
       return false;

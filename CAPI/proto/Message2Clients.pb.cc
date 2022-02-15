@@ -178,7 +178,7 @@ static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Message2Clients_2ep
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_Message2Clients_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_Message2Clients_2eproto = nullptr;
 
-const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -397,7 +397,7 @@ MessageOfCharacter::MessageOfCharacter(const MessageOfCharacter& from)
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageOfCharacter)
 }
 
-inline void MessageOfCharacter::SharedCtor() {
+void MessageOfCharacter::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&x_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&score_) -
@@ -427,7 +427,7 @@ void MessageOfCharacter::SetCachedSize(int size) const {
 
 void MessageOfCharacter::Clear() {
 // @@protoc_insertion_point(message_clear_start:Protobuf.MessageOfCharacter)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -440,28 +440,28 @@ void MessageOfCharacter::Clear() {
 const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
-    uint32_t tag;
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // int32 x = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int32 y = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // double attackRange = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 25)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 25)) {
           attackrange_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
@@ -469,31 +469,31 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // int32 bulletNum = 4;
       case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          bulletnum_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
+          bulletnum_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int32 speed = 5;
       case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          speed_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 40)) {
+          speed_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int32 life = 6;
       case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
-          life_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48)) {
+          life_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // double timeUntilCommonSkillAvailable = 7;
       case 7:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 57)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 57)) {
           timeuntilcommonskillavailable_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
@@ -501,7 +501,7 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // double timeUntilUltimateSkillAvailable = 8;
       case 8:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 65)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 65)) {
           timeuntilultimateskillavailable_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
@@ -509,16 +509,16 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // int32 gemNum = 9;
       case 9:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 72)) {
-          gemnum_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 72)) {
+          gemnum_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // .Protobuf.BuffType buff = 10;
       case 10:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 80)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 80)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_buff(static_cast<::Protobuf::BuffType>(val));
         } else
@@ -526,8 +526,8 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // .Protobuf.PropType prop = 11;
       case 11:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 88)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 88)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_prop(static_cast<::Protobuf::PropType>(val));
         } else
@@ -535,8 +535,8 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // .Protobuf.PlaceType place = 12;
       case 12:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 96)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 96)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_place(static_cast<::Protobuf::PlaceType>(val));
         } else
@@ -544,7 +544,7 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // double vampire = 13;
       case 13:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 105)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 105)) {
           vampire_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
@@ -552,8 +552,8 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // .Protobuf.BulletType bulletType = 14;
       case 14:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 112)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 112)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_bullettype(static_cast<::Protobuf::BulletType>(val));
         } else
@@ -561,7 +561,7 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // bool isResetting = 15;
       case 15:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 120)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 120)) {
           isresetting_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -569,8 +569,8 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // .Protobuf.PassiveSkillType PassiveSkillType = 16;
       case 16:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 128)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 128)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_passiveskilltype(static_cast<::Protobuf::PassiveSkillType>(val));
         } else
@@ -578,8 +578,8 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // .Protobuf.ActiveSkillType ActiveSkillType = 17;
       case 17:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 136)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 136)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_activeskilltype(static_cast<::Protobuf::ActiveSkillType>(val));
         } else
@@ -587,7 +587,7 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // int64 guid = 18;
       case 18:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 144)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 144)) {
           guid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -595,7 +595,7 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // bool canMove = 19;
       case 19:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 152)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 152)) {
           canmove_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -603,39 +603,39 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // int32 radius = 20;
       case 20:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 160)) {
-          radius_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 160)) {
+          radius_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int32 CD = 21;
       case 21:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 168)) {
-          cd_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 168)) {
+          cd_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int32 lifeNum = 22;
       case 22:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 176)) {
-          lifenum_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 176)) {
+          lifenum_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int32 score = 23;
       case 23:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 184)) {
-          score_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 184)) {
+          score_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int64 teamID = 24;
       case 24:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 192)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 192)) {
           teamid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -643,7 +643,7 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // int64 playerID = 25;
       case 25:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 200)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 200)) {
           playerid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -651,7 +651,7 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // bool isInvisible = 26;
       case 26:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 208)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 208)) {
           isinvisible_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -680,10 +680,10 @@ failure:
 #undef CHK_
 }
 
-uint8_t* MessageOfCharacter::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+::PROTOBUF_NAMESPACE_ID::uint8* MessageOfCharacter::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageOfCharacter)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // int32 x = 1;
@@ -699,11 +699,7 @@ uint8_t* MessageOfCharacter::_InternalSerialize(
   }
 
   // double attackRange = 3;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_attackrange = this->_internal_attackrange();
-  uint64_t raw_attackrange;
-  memcpy(&raw_attackrange, &tmp_attackrange, sizeof(tmp_attackrange));
-  if (raw_attackrange != 0) {
+  if (!(this->_internal_attackrange() <= 0 && this->_internal_attackrange() >= 0)) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_attackrange(), target);
   }
@@ -727,21 +723,13 @@ uint8_t* MessageOfCharacter::_InternalSerialize(
   }
 
   // double timeUntilCommonSkillAvailable = 7;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_timeuntilcommonskillavailable = this->_internal_timeuntilcommonskillavailable();
-  uint64_t raw_timeuntilcommonskillavailable;
-  memcpy(&raw_timeuntilcommonskillavailable, &tmp_timeuntilcommonskillavailable, sizeof(tmp_timeuntilcommonskillavailable));
-  if (raw_timeuntilcommonskillavailable != 0) {
+  if (!(this->_internal_timeuntilcommonskillavailable() <= 0 && this->_internal_timeuntilcommonskillavailable() >= 0)) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(7, this->_internal_timeuntilcommonskillavailable(), target);
   }
 
   // double timeUntilUltimateSkillAvailable = 8;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_timeuntilultimateskillavailable = this->_internal_timeuntilultimateskillavailable();
-  uint64_t raw_timeuntilultimateskillavailable;
-  memcpy(&raw_timeuntilultimateskillavailable, &tmp_timeuntilultimateskillavailable, sizeof(tmp_timeuntilultimateskillavailable));
-  if (raw_timeuntilultimateskillavailable != 0) {
+  if (!(this->_internal_timeuntilultimateskillavailable() <= 0 && this->_internal_timeuntilultimateskillavailable() >= 0)) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(8, this->_internal_timeuntilultimateskillavailable(), target);
   }
@@ -774,11 +762,7 @@ uint8_t* MessageOfCharacter::_InternalSerialize(
   }
 
   // double vampire = 13;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_vampire = this->_internal_vampire();
-  uint64_t raw_vampire;
-  memcpy(&raw_vampire, &tmp_vampire, sizeof(tmp_vampire));
-  if (raw_vampire != 0) {
+  if (!(this->_internal_vampire() <= 0 && this->_internal_vampire() >= 0)) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(13, this->_internal_vampire(), target);
   }
@@ -876,7 +860,7 @@ size_t MessageOfCharacter::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageOfCharacter)
   size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -891,11 +875,7 @@ size_t MessageOfCharacter::ByteSizeLong() const {
   }
 
   // double attackRange = 3;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_attackrange = this->_internal_attackrange();
-  uint64_t raw_attackrange;
-  memcpy(&raw_attackrange, &tmp_attackrange, sizeof(tmp_attackrange));
-  if (raw_attackrange != 0) {
+  if (!(this->_internal_attackrange() <= 0 && this->_internal_attackrange() >= 0)) {
     total_size += 1 + 8;
   }
 
@@ -910,11 +890,7 @@ size_t MessageOfCharacter::ByteSizeLong() const {
   }
 
   // double timeUntilCommonSkillAvailable = 7;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_timeuntilcommonskillavailable = this->_internal_timeuntilcommonskillavailable();
-  uint64_t raw_timeuntilcommonskillavailable;
-  memcpy(&raw_timeuntilcommonskillavailable, &tmp_timeuntilcommonskillavailable, sizeof(tmp_timeuntilcommonskillavailable));
-  if (raw_timeuntilcommonskillavailable != 0) {
+  if (!(this->_internal_timeuntilcommonskillavailable() <= 0 && this->_internal_timeuntilcommonskillavailable() >= 0)) {
     total_size += 1 + 8;
   }
 
@@ -929,11 +905,7 @@ size_t MessageOfCharacter::ByteSizeLong() const {
   }
 
   // double timeUntilUltimateSkillAvailable = 8;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_timeuntilultimateskillavailable = this->_internal_timeuntilultimateskillavailable();
-  uint64_t raw_timeuntilultimateskillavailable;
-  memcpy(&raw_timeuntilultimateskillavailable, &tmp_timeuntilultimateskillavailable, sizeof(tmp_timeuntilultimateskillavailable));
-  if (raw_timeuntilultimateskillavailable != 0) {
+  if (!(this->_internal_timeuntilultimateskillavailable() <= 0 && this->_internal_timeuntilultimateskillavailable() >= 0)) {
     total_size += 1 + 8;
   }
 
@@ -950,11 +922,7 @@ size_t MessageOfCharacter::ByteSizeLong() const {
   }
 
   // double vampire = 13;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_vampire = this->_internal_vampire();
-  uint64_t raw_vampire;
-  memcpy(&raw_vampire, &tmp_vampire, sizeof(tmp_vampire));
-  if (raw_vampire != 0) {
+  if (!(this->_internal_vampire() <= 0 && this->_internal_vampire() >= 0)) {
     total_size += 1 + 8;
   }
 
@@ -1065,7 +1033,7 @@ void MessageOfCharacter::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
 void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageOfCharacter)
   GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_x() != 0) {
@@ -1074,11 +1042,7 @@ void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
   if (from._internal_y() != 0) {
     _internal_set_y(from._internal_y());
   }
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_attackrange = from._internal_attackrange();
-  uint64_t raw_attackrange;
-  memcpy(&raw_attackrange, &tmp_attackrange, sizeof(tmp_attackrange));
-  if (raw_attackrange != 0) {
+  if (!(from._internal_attackrange() <= 0 && from._internal_attackrange() >= 0)) {
     _internal_set_attackrange(from._internal_attackrange());
   }
   if (from._internal_bulletnum() != 0) {
@@ -1087,11 +1051,7 @@ void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
   if (from._internal_speed() != 0) {
     _internal_set_speed(from._internal_speed());
   }
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_timeuntilcommonskillavailable = from._internal_timeuntilcommonskillavailable();
-  uint64_t raw_timeuntilcommonskillavailable;
-  memcpy(&raw_timeuntilcommonskillavailable, &tmp_timeuntilcommonskillavailable, sizeof(tmp_timeuntilcommonskillavailable));
-  if (raw_timeuntilcommonskillavailable != 0) {
+  if (!(from._internal_timeuntilcommonskillavailable() <= 0 && from._internal_timeuntilcommonskillavailable() >= 0)) {
     _internal_set_timeuntilcommonskillavailable(from._internal_timeuntilcommonskillavailable());
   }
   if (from._internal_life() != 0) {
@@ -1100,11 +1060,7 @@ void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
   if (from._internal_gemnum() != 0) {
     _internal_set_gemnum(from._internal_gemnum());
   }
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_timeuntilultimateskillavailable = from._internal_timeuntilultimateskillavailable();
-  uint64_t raw_timeuntilultimateskillavailable;
-  memcpy(&raw_timeuntilultimateskillavailable, &tmp_timeuntilultimateskillavailable, sizeof(tmp_timeuntilultimateskillavailable));
-  if (raw_timeuntilultimateskillavailable != 0) {
+  if (!(from._internal_timeuntilultimateskillavailable() <= 0 && from._internal_timeuntilultimateskillavailable() >= 0)) {
     _internal_set_timeuntilultimateskillavailable(from._internal_timeuntilultimateskillavailable());
   }
   if (from._internal_buff() != 0) {
@@ -1113,11 +1069,7 @@ void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
   if (from._internal_prop() != 0) {
     _internal_set_prop(from._internal_prop());
   }
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_vampire = from._internal_vampire();
-  uint64_t raw_vampire;
-  memcpy(&raw_vampire, &tmp_vampire, sizeof(tmp_vampire));
-  if (raw_vampire != 0) {
+  if (!(from._internal_vampire() <= 0 && from._internal_vampire() >= 0)) {
     _internal_set_vampire(from._internal_vampire());
   }
   if (from._internal_place() != 0) {
@@ -1217,7 +1169,7 @@ MessageOfProp::MessageOfProp(const MessageOfProp& from)
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageOfProp)
 }
 
-inline void MessageOfProp::SharedCtor() {
+void MessageOfProp::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&type_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&place_) -
@@ -1247,7 +1199,7 @@ void MessageOfProp::SetCachedSize(int size) const {
 
 void MessageOfProp::Clear() {
 // @@protoc_insertion_point(message_clear_start:Protobuf.MessageOfProp)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -1260,13 +1212,13 @@ void MessageOfProp::Clear() {
 const char* MessageOfProp::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
-    uint32_t tag;
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // .Protobuf.PropType type = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_type(static_cast<::Protobuf::PropType>(val));
         } else
@@ -1274,23 +1226,23 @@ const char* MessageOfProp::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
         continue;
       // int32 x = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int32 y = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+          y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // double facingDirection = 4;
       case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 33)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 33)) {
           facingdirection_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
@@ -1298,7 +1250,7 @@ const char* MessageOfProp::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
         continue;
       // int64 guid = 5;
       case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 40)) {
           guid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -1306,16 +1258,16 @@ const char* MessageOfProp::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
         continue;
       // int32 size = 6;
       case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
-          size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48)) {
+          size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // .Protobuf.PlaceType place = 7;
       case 7:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 56)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_place(static_cast<::Protobuf::PlaceType>(val));
         } else
@@ -1344,10 +1296,10 @@ failure:
 #undef CHK_
 }
 
-uint8_t* MessageOfProp::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+::PROTOBUF_NAMESPACE_ID::uint8* MessageOfProp::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageOfProp)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .Protobuf.PropType type = 1;
@@ -1370,11 +1322,7 @@ uint8_t* MessageOfProp::_InternalSerialize(
   }
 
   // double facingDirection = 4;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = this->_internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
+  if (!(this->_internal_facingdirection() <= 0 && this->_internal_facingdirection() >= 0)) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_facingdirection(), target);
   }
@@ -1410,7 +1358,7 @@ size_t MessageOfProp::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageOfProp)
   size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -1426,11 +1374,7 @@ size_t MessageOfProp::ByteSizeLong() const {
   }
 
   // double facingDirection = 4;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = this->_internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
+  if (!(this->_internal_facingdirection() <= 0 && this->_internal_facingdirection() >= 0)) {
     total_size += 1 + 8;
   }
 
@@ -1474,7 +1418,7 @@ void MessageOfProp::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
 void MessageOfProp::MergeFrom(const MessageOfProp& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageOfProp)
   GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_type() != 0) {
@@ -1483,11 +1427,7 @@ void MessageOfProp::MergeFrom(const MessageOfProp& from) {
   if (from._internal_x() != 0) {
     _internal_set_x(from._internal_x());
   }
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = from._internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
+  if (!(from._internal_facingdirection() <= 0 && from._internal_facingdirection() >= 0)) {
     _internal_set_facingdirection(from._internal_facingdirection());
   }
   if (from._internal_y() != 0) {
@@ -1557,7 +1497,7 @@ MessageOfBullet::MessageOfBullet(const MessageOfBullet& from)
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageOfBullet)
 }
 
-inline void MessageOfBullet::SharedCtor() {
+void MessageOfBullet::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&type_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&parentteamid_) -
@@ -1587,7 +1527,7 @@ void MessageOfBullet::SetCachedSize(int size) const {
 
 void MessageOfBullet::Clear() {
 // @@protoc_insertion_point(message_clear_start:Protobuf.MessageOfBullet)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -1600,13 +1540,13 @@ void MessageOfBullet::Clear() {
 const char* MessageOfBullet::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
-    uint32_t tag;
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // .Protobuf.BulletType type = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_type(static_cast<::Protobuf::BulletType>(val));
         } else
@@ -1614,23 +1554,23 @@ const char* MessageOfBullet::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // int32 x = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int32 y = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+          y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // double facingDirection = 4;
       case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 33)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 33)) {
           facingdirection_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
@@ -1638,7 +1578,7 @@ const char* MessageOfBullet::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // int64 guid = 5;
       case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 40)) {
           guid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -1646,7 +1586,7 @@ const char* MessageOfBullet::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // int64 parentTeamID = 6;
       case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 48)) {
           parentteamid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -1654,8 +1594,8 @@ const char* MessageOfBullet::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // .Protobuf.PlaceType place = 7;
       case 7:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 56)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_place(static_cast<::Protobuf::PlaceType>(val));
         } else
@@ -1684,10 +1624,10 @@ failure:
 #undef CHK_
 }
 
-uint8_t* MessageOfBullet::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+::PROTOBUF_NAMESPACE_ID::uint8* MessageOfBullet::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageOfBullet)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .Protobuf.BulletType type = 1;
@@ -1710,11 +1650,7 @@ uint8_t* MessageOfBullet::_InternalSerialize(
   }
 
   // double facingDirection = 4;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = this->_internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
+  if (!(this->_internal_facingdirection() <= 0 && this->_internal_facingdirection() >= 0)) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_facingdirection(), target);
   }
@@ -1750,7 +1686,7 @@ size_t MessageOfBullet::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageOfBullet)
   size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -1766,11 +1702,7 @@ size_t MessageOfBullet::ByteSizeLong() const {
   }
 
   // double facingDirection = 4;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = this->_internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
+  if (!(this->_internal_facingdirection() <= 0 && this->_internal_facingdirection() >= 0)) {
     total_size += 1 + 8;
   }
 
@@ -1814,7 +1746,7 @@ void MessageOfBullet::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
 void MessageOfBullet::MergeFrom(const MessageOfBullet& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageOfBullet)
   GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_type() != 0) {
@@ -1823,11 +1755,7 @@ void MessageOfBullet::MergeFrom(const MessageOfBullet& from) {
   if (from._internal_x() != 0) {
     _internal_set_x(from._internal_x());
   }
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = from._internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
+  if (!(from._internal_facingdirection() <= 0 && from._internal_facingdirection() >= 0)) {
     _internal_set_facingdirection(from._internal_facingdirection());
   }
   if (from._internal_guid() != 0) {
@@ -1897,7 +1825,7 @@ MessageOfBombedBullet::MessageOfBombedBullet(const MessageOfBombedBullet& from)
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageOfBombedBullet)
 }
 
-inline void MessageOfBombedBullet::SharedCtor() {
+void MessageOfBombedBullet::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&type_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&y_) -
@@ -1927,7 +1855,7 @@ void MessageOfBombedBullet::SetCachedSize(int size) const {
 
 void MessageOfBombedBullet::Clear() {
 // @@protoc_insertion_point(message_clear_start:Protobuf.MessageOfBombedBullet)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -1940,13 +1868,13 @@ void MessageOfBombedBullet::Clear() {
 const char* MessageOfBombedBullet::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
-    uint32_t tag;
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // .Protobuf.BulletType type = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_type(static_cast<::Protobuf::BulletType>(val));
         } else
@@ -1954,23 +1882,23 @@ const char* MessageOfBombedBullet::_InternalParse(const char* ptr, ::PROTOBUF_NA
         continue;
       // int32 x = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // int32 y = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+          y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // double facingDirection = 4;
       case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 33)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 33)) {
           facingdirection_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
@@ -1999,10 +1927,10 @@ failure:
 #undef CHK_
 }
 
-uint8_t* MessageOfBombedBullet::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+::PROTOBUF_NAMESPACE_ID::uint8* MessageOfBombedBullet::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageOfBombedBullet)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .Protobuf.BulletType type = 1;
@@ -2025,11 +1953,7 @@ uint8_t* MessageOfBombedBullet::_InternalSerialize(
   }
 
   // double facingDirection = 4;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = this->_internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
+  if (!(this->_internal_facingdirection() <= 0 && this->_internal_facingdirection() >= 0)) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_facingdirection(), target);
   }
@@ -2046,7 +1970,7 @@ size_t MessageOfBombedBullet::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageOfBombedBullet)
   size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -2062,11 +1986,7 @@ size_t MessageOfBombedBullet::ByteSizeLong() const {
   }
 
   // double facingDirection = 4;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = this->_internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
+  if (!(this->_internal_facingdirection() <= 0 && this->_internal_facingdirection() >= 0)) {
     total_size += 1 + 8;
   }
 
@@ -2094,7 +2014,7 @@ void MessageOfBombedBullet::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
 void MessageOfBombedBullet::MergeFrom(const MessageOfBombedBullet& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageOfBombedBullet)
   GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_type() != 0) {
@@ -2103,11 +2023,7 @@ void MessageOfBombedBullet::MergeFrom(const MessageOfBombedBullet& from) {
   if (from._internal_x() != 0) {
     _internal_set_x(from._internal_x());
   }
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = from._internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
+  if (!(from._internal_facingdirection() <= 0 && from._internal_facingdirection() >= 0)) {
     _internal_set_facingdirection(from._internal_facingdirection());
   }
   if (from._internal_y() != 0) {
@@ -2168,7 +2084,7 @@ MessageToInitialize::MessageToInitialize(const MessageToInitialize& from)
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageToInitialize)
 }
 
-inline void MessageToInitialize::SharedCtor() {
+void MessageToInitialize::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&mapserial_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&messagetype_) -
@@ -2198,7 +2114,7 @@ void MessageToInitialize::SetCachedSize(int size) const {
 
 void MessageToInitialize::Clear() {
 // @@protoc_insertion_point(message_clear_start:Protobuf.MessageToInitialize)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -2211,21 +2127,21 @@ void MessageToInitialize::Clear() {
 const char* MessageToInitialize::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
-    uint32_t tag;
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // int32 MapSerial = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          mapserial_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          mapserial_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
       // .Protobuf.MessageType messageType = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_messagetype(static_cast<::Protobuf::MessageType>(val));
         } else
@@ -2254,10 +2170,10 @@ failure:
 #undef CHK_
 }
 
-uint8_t* MessageToInitialize::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+::PROTOBUF_NAMESPACE_ID::uint8* MessageToInitialize::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageToInitialize)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // int32 MapSerial = 1;
@@ -2285,7 +2201,7 @@ size_t MessageToInitialize::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageToInitialize)
   size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -2319,7 +2235,7 @@ void MessageToInitialize::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
 void MessageToInitialize::MergeFrom(const MessageToInitialize& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageToInitialize)
   GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_mapserial() != 0) {
@@ -2482,7 +2398,7 @@ MessageToClient_GameObjMessage::MessageToClient_GameObjMessage(const MessageToCl
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageToClient.GameObjMessage)
 }
 
-inline void MessageToClient_GameObjMessage::SharedCtor() {
+void MessageToClient_GameObjMessage::SharedCtor() {
 clear_has_obj();
 }
 
@@ -2547,7 +2463,7 @@ void MessageToClient_GameObjMessage::clear_obj() {
 
 void MessageToClient_GameObjMessage::Clear() {
 // @@protoc_insertion_point(message_clear_start:Protobuf.MessageToClient.GameObjMessage)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -2558,12 +2474,12 @@ void MessageToClient_GameObjMessage::Clear() {
 const char* MessageToClient_GameObjMessage::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
-    uint32_t tag;
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // .Protobuf.MessageOfCharacter messageOfCharacter = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
           ptr = ctx->ParseMessage(_internal_mutable_messageofcharacter(), ptr);
           CHK_(ptr);
         } else
@@ -2571,7 +2487,7 @@ const char* MessageToClient_GameObjMessage::_InternalParse(const char* ptr, ::PR
         continue;
       // .Protobuf.MessageOfBullet messageOfBullet = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
           ptr = ctx->ParseMessage(_internal_mutable_messageofbullet(), ptr);
           CHK_(ptr);
         } else
@@ -2579,7 +2495,7 @@ const char* MessageToClient_GameObjMessage::_InternalParse(const char* ptr, ::PR
         continue;
       // .Protobuf.MessageOfProp messageOfProp = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
           ptr = ctx->ParseMessage(_internal_mutable_messageofprop(), ptr);
           CHK_(ptr);
         } else
@@ -2587,7 +2503,7 @@ const char* MessageToClient_GameObjMessage::_InternalParse(const char* ptr, ::PR
         continue;
       // .Protobuf.MessageOfBombedBullet MessageOfBombedBullet = 4;
       case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
           ptr = ctx->ParseMessage(_internal_mutable_messageofbombedbullet(), ptr);
           CHK_(ptr);
         } else
@@ -2616,10 +2532,10 @@ failure:
 #undef CHK_
 }
 
-uint8_t* MessageToClient_GameObjMessage::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+::PROTOBUF_NAMESPACE_ID::uint8* MessageToClient_GameObjMessage::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageToClient.GameObjMessage)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // .Protobuf.MessageOfCharacter messageOfCharacter = 1;
@@ -2666,7 +2582,7 @@ size_t MessageToClient_GameObjMessage::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageToClient.GameObjMessage)
   size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -2722,7 +2638,7 @@ void MessageToClient_GameObjMessage::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*
 void MessageToClient_GameObjMessage::MergeFrom(const MessageToClient_GameObjMessage& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageToClient.GameObjMessage)
   GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   switch (from.obj_case()) {
@@ -2797,7 +2713,7 @@ MessageToClient::MessageToClient(const MessageToClient& from)
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageToClient)
 }
 
-inline void MessageToClient::SharedCtor() {
+void MessageToClient::SharedCtor() {
 messagetype_ = 0;
 }
 
@@ -2824,7 +2740,7 @@ void MessageToClient::SetCachedSize(int size) const {
 
 void MessageToClient::Clear() {
 // @@protoc_insertion_point(message_clear_start:Protobuf.MessageToClient)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -2836,12 +2752,12 @@ void MessageToClient::Clear() {
 const char* MessageToClient::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
-    uint32_t tag;
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // repeated .Protobuf.MessageToClient.GameObjMessage gameObjMessage = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
           ptr -= 1;
           do {
             ptr += 1;
@@ -2854,8 +2770,8 @@ const char* MessageToClient::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         continue;
       // .Protobuf.MessageType messageType = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_messagetype(static_cast<::Protobuf::MessageType>(val));
         } else
@@ -2884,10 +2800,10 @@ failure:
 #undef CHK_
 }
 
-uint8_t* MessageToClient::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+::PROTOBUF_NAMESPACE_ID::uint8* MessageToClient::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageToClient)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // repeated .Protobuf.MessageToClient.GameObjMessage gameObjMessage = 1;
@@ -2917,7 +2833,7 @@ size_t MessageToClient::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageToClient)
   size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -2953,7 +2869,7 @@ void MessageToClient::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
 void MessageToClient::MergeFrom(const MessageToClient& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageToClient)
   GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   gameobjmessage_.MergeFrom(from.gameobjmessage_);
@@ -3006,9 +2922,6 @@ MessageToOneClient::MessageToOneClient(const MessageToOneClient& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    message_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_message().empty()) {
     message_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_message(), 
       GetArenaForAllocation());
@@ -3019,11 +2932,8 @@ MessageToOneClient::MessageToOneClient(const MessageToOneClient& from)
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageToOneClient)
 }
 
-inline void MessageToOneClient::SharedCtor() {
+void MessageToOneClient::SharedCtor() {
 message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  message_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&playerid_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&messagetype_) -
@@ -3054,7 +2964,7 @@ void MessageToOneClient::SetCachedSize(int size) const {
 
 void MessageToOneClient::Clear() {
 // @@protoc_insertion_point(message_clear_start:Protobuf.MessageToOneClient)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -3068,12 +2978,12 @@ void MessageToOneClient::Clear() {
 const char* MessageToOneClient::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
-    uint32_t tag;
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // int64 playerID = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
           playerid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -3081,7 +2991,7 @@ const char* MessageToOneClient::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // int64 teamID = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
           teamid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -3089,8 +2999,8 @@ const char* MessageToOneClient::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // .Protobuf.MessageType messageType = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
+          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_messagetype(static_cast<::Protobuf::MessageType>(val));
         } else
@@ -3098,7 +3008,7 @@ const char* MessageToOneClient::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // int64 guid = 4;
       case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
           guid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
@@ -3106,7 +3016,7 @@ const char* MessageToOneClient::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         continue;
       // string message = 5;
       case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
           auto str = _internal_mutable_message();
           ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "Protobuf.MessageToOneClient.message"));
@@ -3137,10 +3047,10 @@ failure:
 #undef CHK_
 }
 
-uint8_t* MessageToOneClient::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+::PROTOBUF_NAMESPACE_ID::uint8* MessageToOneClient::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageToOneClient)
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   // int64 playerID = 1;
@@ -3190,7 +3100,7 @@ size_t MessageToOneClient::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageToOneClient)
   size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
@@ -3241,7 +3151,7 @@ void MessageToOneClient::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
 void MessageToOneClient::MergeFrom(const MessageToOneClient& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageToOneClient)
   GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_message().empty()) {
