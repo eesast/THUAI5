@@ -26,6 +26,8 @@
 #define MESSAGE_OF_BULLET 2
 #define MESSAGE_OF_PROP 3
 
+#define LOGIC_DEBUG
+
 /// <summary>
 /// 封装了通信组件和AI对象进行操作
 /// </summary>
