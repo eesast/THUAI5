@@ -59,7 +59,7 @@ namespace CSharpInterface
             {
                 foreach (var data in playerData)
                 {
-                    if (CanSee(data.MessageOfCharacter))
+                    if (CanSee(data.MessageOfCharacter) && data.MessageOfCharacter.Guid != myInfo.MessageOfCharacter.Guid)
                     {
                         list.Add(data.MessageOfCharacter);
                     }
