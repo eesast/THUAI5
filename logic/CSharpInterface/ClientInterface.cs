@@ -54,37 +54,69 @@ namespace CSharpInterface
         public List<MessageOfCharacter> GetCharacters()
         {
             List<MessageOfCharacter> list = new List<MessageOfCharacter>();
-            foreach (var data in playerData)
+            playerDataLock.EnterReadLock();
+            try
             {
-                if (CanSee(data.MessageOfCharacter))
+                foreach (var data in playerData)
                 {
-                    list.Add(data.MessageOfCharacter);
+                    if (CanSee(data.MessageOfCharacter))
+                    {
+                        list.Add(data.MessageOfCharacter);
+                    }
                 }
             }
+            finally { playerDataLock.ExitReadLock();}
             return list;
         }
-        public List<MessageOfBullet> GetBullet()
+        public List<MessageOfBullet> GetBullets()
         {
             List<MessageOfBullet> list = new List<MessageOfBullet>();
-            foreach (var data in playerData)
+            bulletDataLock.EnterReadLock();
+            try
             {
-                if (CanSee(data.MessageOfBullet))
+                foreach (var data in playerData)
                 {
-                    list.Add(data.MessageOfBullet);
+                    if (CanSee(data.MessageOfBullet))
+                    {
+                        list.Add(data.MessageOfBullet);
+                    }
                 }
             }
+            finally { bulletDataLock.ExitReadLock();}
             return list;
         }
-        public List<MessageOfProp> GetProp()
+        public List<MessageOfProp> GetNoGemProps()
         {
             List<MessageOfProp> list = new List<MessageOfProp>();
-            foreach (var data in playerData)
+            propDataLock.EnterReadLock();
+            try
             {
-                if (CanSee(data.MessageOfProp))
+                foreach (var data in playerData)
                 {
-                    list.Add(data.MessageOfProp);
+                    if (CanSee(data.MessageOfProp) && data.MessageOfProp.Type != Communication.Proto.PropType.Gem)
+                    {
+                        list.Add(data.MessageOfProp);
+                    }
                 }
             }
+            finally { propDataLock.ExitReadLock();}
+            return list;
+        }
+        public List<MessageOfProp> GetGems()
+        {
+            List<MessageOfProp> list = new List<MessageOfProp>();
+            propDataLock.EnterReadLock();
+            try
+            {
+                foreach (var data in playerData)
+                {
+                    if (CanSee(data.MessageOfProp) && data.MessageOfProp.Type == Communication.Proto.PropType.Gem)
+                    {
+                        list.Add(data.MessageOfProp);
+                    }
+                }
+            }
+            finally { propDataLock.ExitReadLock(); }
             return list;
         }
         public List<Wall> GetWalls()

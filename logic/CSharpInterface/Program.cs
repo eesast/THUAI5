@@ -13,18 +13,23 @@ namespace CSharpInterface
         private List<MessageToClient.Types.GameObjMessage> bulletData;
         private List<MessageToClient.Types.GameObjMessage> propData;
         private MessageToClient.Types.GameObjMessage? myInfo = null;
-        private object takeMsgLock = new object();
+        private ReaderWriterLockSlim playerDataLock;
+        private ReaderWriterLockSlim bulletDataLock;
+        private ReaderWriterLockSlim propDataLock;
         private bool isGaming = false;
         private Int64 gameDuration;
         private ClientCommunication clientCommunication;
 
         private void MessageProcessing(MessageToClient content)
         {
-            lock (takeMsgLock)
+            playerData.Clear();
+            propData.Clear();
+            bulletData.Clear();
+            playerDataLock.EnterWriteLock();
+            bulletDataLock.EnterWriteLock();
+            propDataLock.EnterWriteLock();
+            try
             {
-                playerData.Clear();
-                propData.Clear();
-                bulletData.Clear();
                 switch (content.MessageType)
                 {
                     case MessageType.InitialLized:
@@ -71,6 +76,7 @@ namespace CSharpInterface
                         }
                         break;
                     case MessageType.EndGame:
+                        isGaming = false;
                         foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
                         {
                             switch (obj.ObjCase)
@@ -86,9 +92,14 @@ namespace CSharpInterface
                                     break;
                             }
                         }
-                        isGaming = false;
                         break;
                 }
+            }
+            finally 
+            {
+                playerDataLock.ExitWriteLock();
+                bulletDataLock.ExitWriteLock();
+                propDataLock.ExitWriteLock();
             }
         }
         private void main(string[] args)
@@ -100,6 +111,9 @@ namespace CSharpInterface
             playerData = new List<MessageToClient.Types.GameObjMessage>();
             bulletData = new List<MessageToClient.Types.GameObjMessage>();
             propData = new List<MessageToClient.Types.GameObjMessage>();
+            playerDataLock = new ReaderWriterLockSlim();
+            bulletDataLock = new ReaderWriterLockSlim();
+            propDataLock = new ReaderWriterLockSlim();
             try
             {
                 gameDuration = Convert.ToInt64(args[2]);
