@@ -137,6 +137,10 @@ VISION_NAMESPACE_BEGIN
 
     inline bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfCharacter& c)
     {
+        if(!self)
+        {
+            return false;
+        }
         int64_t dx = self->x - c.x();
         int64_t dy = self->y - c.y();
         uint64_t distanceSquared = dx * dx + dy * dy;
@@ -164,6 +168,10 @@ VISION_NAMESPACE_BEGIN
 
     inline bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfBullet& b)
     {
+        if(!self)
+        {
+            return false;
+        }
         int64_t dx = self->x - b.x();
         int64_t dy = self->y - b.y();
         uint64_t distanceSquared = dx * dx + dy * dy;
@@ -172,6 +180,10 @@ VISION_NAMESPACE_BEGIN
 
     inline bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfProp& p)
     {
+        if(!self)
+        {
+            return false;
+        }
         int64_t dx = self->x - p.x();
         int64_t dy = self->y - p.y();
         uint64_t distanceSquared = dx * dx + dy * dy;

@@ -200,6 +200,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 {
     // 更新buffer内容
     {
+        std::cout << "begin load buffer" << std::endl;
         std::lock_guard<std::mutex> lck(mtx_buffer);
 
         // 1.清除原有信息
@@ -275,7 +276,7 @@ void Logic::PlayerWrapper(std::function<void()> player)
 {
     {
         std::unique_lock<std::mutex> lock(mtx_ai);
-        cv_ai.wait(lock, [this]() {return AI_start; }); // 突然发现此处不能返回atomic_bool类型，所以THUAI4才会搞出另一个控制AI是否启动的标志值
+        cv_ai.wait(lock, [this]() {return AI_start; }); 
     }
     while (AI_loop)
     {
@@ -395,6 +396,7 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
         std::cout << "Connect to the server successfully, AI thread will be start." << std::endl;
         if (tAI.joinable())
         {
+            std::cout << "Join the AI thread." << std::endl;
             tAI.join();
         }
     }
