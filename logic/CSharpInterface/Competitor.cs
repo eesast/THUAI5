@@ -9,6 +9,7 @@ namespace CSharpInterface
         
         private void OperaionAtEachFrame()
         {
+            var chas = GetCharacters();
             MoveLeft(50);
             Attack(Math.PI / 4);
         }
