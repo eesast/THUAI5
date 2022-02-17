@@ -17,7 +17,6 @@ namespace CSharpInterface
         private ReaderWriterLockSlim bulletDataLock;
         private ReaderWriterLockSlim propDataLock;
         private bool isGaming = false;
-        private Int64 gameDuration;
         private ClientCommunication clientCommunication;
 
         private void MessageProcessing(MessageToClient content)
@@ -114,14 +113,6 @@ namespace CSharpInterface
             playerDataLock = new ReaderWriterLockSlim();
             bulletDataLock = new ReaderWriterLockSlim();
             propDataLock = new ReaderWriterLockSlim();
-            try
-            {
-                gameDuration = Convert.ToInt64(args[2]);
-            }
-            catch
-            {
-                gameDuration = 300000;
-            }
             MessageToServer messageToServer = new MessageToServer();
             messageToServer.MessageType = MessageType.AddPlayer;
             messageToServer.PlayerID = this.playerID;
@@ -178,11 +169,11 @@ namespace CSharpInterface
                 () => isGaming,
                 () =>
                 {
-                    OperaionAtEachFrame();
+                    Play();
                 },
                 50,
                 () => 0,
-                maxTotalDuration: gameDuration
+                maxTotalDuration: Constants.GameDuration
             )
             {
                 AllowTimeExceed = true
