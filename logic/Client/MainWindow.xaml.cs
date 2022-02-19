@@ -1,24 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Diagnostics;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Threading;
 using System.IO;
 using Communication.ClientCommunication;
 using Communication.Proto;
-using HPSocket;
 
 namespace Client
 {
@@ -79,12 +70,14 @@ namespace Client
 
         private void Attack(object sender,RoutedEventArgs e)
         {
-            if (communicator.Client.IsConnected)
+            if (communicator.Client.IsConnected&&myInfo!=null)
             {
-                MessageToServer msgJ = new MessageToServer();
-                msgJ.MessageType = MessageType.Attack;
-                msgJ.PlayerID = playerID;
-                msgJ.TeamID = teamID;
+                MessageToServer msgJ = new()
+                {
+                    MessageType = MessageType.Attack,
+                    PlayerID = playerID,
+                    TeamID = teamID
+                };
                 double mouseY = Mouse.GetPosition(UpperLayerOfMap).X * 1000 / 13;
                 double mouseX = Mouse.GetPosition(UpperLayerOfMap).Y * 1000 / 13;
                 msgJ.Angle = Math.Atan2(mouseY - myInfo.MessageOfCharacter.Y, mouseX - myInfo.MessageOfCharacter.X);
@@ -97,12 +90,14 @@ namespace Client
             {
                 for (int j = 0; j < defaultMap.GetLength(1); j++)
                 {
-                    Rectangle rectangle = new Rectangle();
-                    rectangle.Width = 13;
-                    rectangle.Height = 13;
-                    rectangle.HorizontalAlignment = HorizontalAlignment.Left;
-                    rectangle.VerticalAlignment = VerticalAlignment.Top;
-                    rectangle.Margin = new Thickness(13 * (j + 0.5), 13 * (i + 0.5), 0, 0);
+                    Rectangle rectangle = new()
+                    {
+                        Width = 13,
+                        Height = 13,
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        Margin = new Thickness(13 * (j + 0.5), 13 * (i + 0.5), 0, 0)
+                    };
                     switch (defaultMap[i, j])
                     {
                         case 1:
@@ -170,12 +165,12 @@ namespace Client
         //以下两个函数可能需要网站协助
         private void ClickToCheckLadder(object sender, RoutedEventArgs e)
         {
-
+            PleaseWait();
         }
 
         private void ClickForUpdate(object sender, RoutedEventArgs e)
         {
-
+            PleaseWait();
         }
 
         //杂项功能
@@ -190,9 +185,7 @@ namespace Client
                     throw ex;
                 }//创建路径文件 
                 using StreamReader sr = new("VSRoute.txt");
-#pragma warning disable CS8604 // 引用类型参数可能为 null。
                 _ = Process.Start(sr.ReadLine());
-#pragma warning restore CS8604 // 引用类型参数可能为 null。
             }
             catch (Exception exc)
             {
@@ -216,7 +209,7 @@ namespace Client
 
         private void ClickForHelp(object sender, RoutedEventArgs e)
         {
-
+            PleaseWait();
         }
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
@@ -251,30 +244,16 @@ namespace Client
                             msg.MessageType = MessageType.AddPlayer;
                             msg.PlayerID = playerID;
                             msg.TeamID = teamID;
-                            switch (Convert.ToInt64(comInfo[4]))
+                            msg.PSkill = Convert.ToInt64(comInfo[4]) switch
                             {
-                                case 0:
-                                    msg.PSkill = PassiveSkillType.NullPassiveSkillType;
-                                    break;
-                                case 1:
-                                    msg.PSkill = PassiveSkillType.RecoverAfterBattle;
-                                    break;
-                                case 2:
-                                    msg.PSkill = PassiveSkillType.SpeedUpWhenLeavingGrass;
-                                    break;
-                                case 3:
-                                    msg.PSkill = PassiveSkillType.Vampire;
-                                    break;
-                                case 4:
-                                    msg.PSkill = PassiveSkillType.Pskill3;
-                                    break;
-                                case 5:
-                                    msg.PSkill = PassiveSkillType.Pskill4;
-                                    break;
-                                default:
-                                    msg.PSkill = PassiveSkillType.Pskill5;
-                                    break;
-                            }
+                                0 => PassiveSkillType.NullPassiveSkillType,
+                                1 => PassiveSkillType.RecoverAfterBattle,
+                                2 => PassiveSkillType.SpeedUpWhenLeavingGrass,
+                                3 => PassiveSkillType.Vampire,
+                                4 => PassiveSkillType.Pskill3,
+                                5 => PassiveSkillType.Pskill4,
+                                _ => PassiveSkillType.Pskill5,
+                            };
                             switch (Convert.ToInt64(comInfo[5]))
                             {
                                 case 0:
@@ -342,79 +321,97 @@ namespace Client
             switch (e.Key)
             {
                 case Key.W:
-                    MessageToServer msgA = new MessageToServer();
-                    msgA.MessageType = MessageType.Move;
-                    msgA.PlayerID = playerID;
-                    msgA.TeamID = teamID;
-                    msgA.TimeInMilliseconds = 50;
-                    msgA.Angle = Math.PI;
+                    MessageToServer msgA = new()
+                    {
+                        MessageType = MessageType.Move,
+                        PlayerID = playerID,
+                        TeamID = teamID,
+                        TimeInMilliseconds = 50,
+                        Angle = Math.PI
+                    };
                     communicator.SendMessage(msgA);
                     break;
                 case Key.S:
-                    MessageToServer msgD = new MessageToServer();
-                    msgD.MessageType = MessageType.Move;
-                    msgD.PlayerID = playerID;
-                    msgD.TeamID = teamID;
-                    msgD.TimeInMilliseconds = 50;
-                    msgD.Angle = 0;
+                    MessageToServer msgD = new()
+                    {
+                        MessageType = MessageType.Move,
+                        PlayerID = playerID,
+                        TeamID = teamID,
+                        TimeInMilliseconds = 50,
+                        Angle = 0
+                    };
                     communicator.SendMessage(msgD);
                     break;
                 case Key.D:
-                    MessageToServer msgW = new MessageToServer();
-                    msgW.MessageType = MessageType.Move;
-                    msgW.PlayerID = playerID;
-                    msgW.TeamID = teamID;
-                    msgW.TimeInMilliseconds = 50;
-                    msgW.Angle = Math.PI / 2;
+                    MessageToServer msgW = new()
+                    {
+                        MessageType = MessageType.Move,
+                        PlayerID = playerID,
+                        TeamID = teamID,
+                        TimeInMilliseconds = 50,
+                        Angle = Math.PI / 2
+                    };
                     communicator.SendMessage(msgW);
                     break;
                 case Key.A:
-                    MessageToServer msgS = new MessageToServer();
-                    msgS.MessageType = MessageType.Move;
-                    msgS.PlayerID = playerID;
-                    msgS.TeamID = teamID;
-                    msgS.TimeInMilliseconds = 50;
-                    msgS.Angle = 3 * Math.PI / 2;
+                    MessageToServer msgS = new()
+                    {
+                        MessageType = MessageType.Move,
+                        PlayerID = playerID,
+                        TeamID = teamID,
+                        TimeInMilliseconds = 50,
+                        Angle = 3 * Math.PI / 2
+                    };
                     communicator.SendMessage(msgS);
                     break;
                 case Key.J:
-                    MessageToServer msgJ = new MessageToServer();
-                    msgJ.MessageType = MessageType.Attack;
-                    msgJ.PlayerID = playerID;
-                    msgJ.TeamID = teamID;
-                    msgJ.Angle = Math.PI;
+                    MessageToServer msgJ = new()
+                    {
+                        MessageType = MessageType.Attack,
+                        PlayerID = playerID,
+                        TeamID = teamID,
+                        Angle = Math.PI
+                    };
                     communicator.SendMessage(msgJ);
                     break;
                 case Key.U:
-                    MessageToServer msgU = new MessageToServer();
-                    msgU.MessageType = MessageType.UseCommonSkill;
-                    msgU.PlayerID = playerID;
-                    msgU.TeamID = teamID;
+                    MessageToServer msgU = new()
+                    {
+                        MessageType = MessageType.UseCommonSkill,
+                        PlayerID = playerID,
+                        TeamID = teamID
+                    };
                     communicator.SendMessage(msgU);
                     break;
                 case Key.K:
-                    MessageToServer msgK = new MessageToServer();
-                    msgK.MessageType = MessageType.UseGem;
-                    msgK.PlayerID = playerID;
-                    msgK.TeamID = teamID;
+                    MessageToServer msgK = new()
+                    {
+                        MessageType = MessageType.UseGem,
+                        PlayerID = playerID,
+                        TeamID = teamID
+                    };
                     communicator.SendMessage(msgK);
                     break;
                 case Key.L:
-                    MessageToServer msgL = new MessageToServer();
-                    msgL.MessageType = MessageType.ThrowGem;
-                    msgL.PlayerID = playerID;
-                    msgL.TeamID = teamID;
-                    msgL.GemSize = 1;
-                    msgL.TimeInMilliseconds = 3000;
-                    msgL.Angle = Math.PI;
+                    MessageToServer msgL = new()
+                    {
+                        MessageType = MessageType.ThrowGem,
+                        PlayerID = playerID,
+                        TeamID = teamID,
+                        GemSize = 1,
+                        TimeInMilliseconds = 3000,
+                        Angle = Math.PI
+                    };
                     communicator.SendMessage(msgL);
                     break;
                 case Key.P:
-                    MessageToServer msgP = new MessageToServer();
-                    msgP.MessageType = MessageType.Pick;
-                    msgP.PlayerID = playerID;
-                    msgP.TeamID = teamID;
-                    msgP.PropType = Communication.Proto.PropType.Gem;
+                    MessageToServer msgP = new()
+                    {
+                        MessageType = MessageType.Pick,
+                        PlayerID = playerID,
+                        TeamID = teamID,
+                        PropType = Communication.Proto.PropType.Gem
+                    };
                     communicator.SendMessage(msgP);
                     break;
                 default:
@@ -546,7 +543,7 @@ namespace Client
                     if (log != null)
                     {
                         string temp = "";
-                        for (int i = 0; i < playerData.Count(); i++)
+                        for (int i = 0; i < playerData.Count; i++)
                         {
                             temp += Convert.ToString(playerData[i].MessageOfCharacter.TeamID) + "\n";
                         }
@@ -566,13 +563,15 @@ namespace Client
                                 StatusBars[data.MessageOfCharacter.TeamID * 4 + data.MessageOfCharacter.PlayerID].SetValue(data.MessageOfCharacter);
                                 if (CanSee(data.MessageOfCharacter))
                                 {
-                                    Ellipse icon = new Ellipse();
-                                    icon.Width = 13;
-                                    icon.Height = 13;
-                                    icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                    icon.VerticalAlignment = VerticalAlignment.Top;
-                                    icon.Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0, data.MessageOfCharacter.X * 13.0 / 1000.0, 0, 0);
-                                    icon.Fill = Brushes.Black;
+                                    Ellipse icon = new()
+                                    {
+                                        Width = 13,
+                                        Height = 13,
+                                        HorizontalAlignment = HorizontalAlignment.Left,
+                                        VerticalAlignment = VerticalAlignment.Top,
+                                        Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0, data.MessageOfCharacter.X * 13.0 / 1000.0, 0, 0),
+                                        Fill = Brushes.Black
+                                    };
                                     UpperLayerOfMap.Children.Add(icon);
                                 }
                             }
@@ -580,13 +579,15 @@ namespace Client
                             {
                                 if (CanSee(data.MessageOfBullet))
                                 {
-                                    Ellipse icon = new Ellipse();
-                                    icon.Width = 10;
-                                    icon.Height = 10;
-                                    icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                    icon.VerticalAlignment = VerticalAlignment.Top;
-                                    icon.Margin = new Thickness(data.MessageOfBullet.Y * 13.0 / 1000.0, data.MessageOfBullet.X * 13.0 / 1000.0, 0, 0);
-                                    icon.Fill = Brushes.Red;
+                                    Ellipse icon = new()
+                                    {
+                                        Width = 10,
+                                        Height = 10,
+                                        HorizontalAlignment = HorizontalAlignment.Left,
+                                        VerticalAlignment = VerticalAlignment.Top,
+                                        Margin = new Thickness(data.MessageOfBullet.Y * 13.0 / 1000.0, data.MessageOfBullet.X * 13.0 / 1000.0, 0, 0),
+                                        Fill = Brushes.Red
+                                    };
                                     UpperLayerOfMap.Children.Add(icon);
                                 }
                             }
@@ -596,24 +597,28 @@ namespace Client
                                 {
                                     if (data.MessageOfProp.Type == PropType.Gem)
                                     {
-                                        Ellipse icon = new Ellipse();
-                                        icon.Width = 10;
-                                        icon.Height = 10;
-                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                        icon.VerticalAlignment = VerticalAlignment.Top;
-                                        icon.Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0);
-                                        icon.Fill = Brushes.Purple;
+                                        Ellipse icon = new()
+                                        {
+                                            Width = 10,
+                                            Height = 10,
+                                            HorizontalAlignment = HorizontalAlignment.Left,
+                                            VerticalAlignment = VerticalAlignment.Top,
+                                            Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0),
+                                            Fill = Brushes.Purple
+                                        };
                                         UpperLayerOfMap.Children.Add(icon);
                                     }
                                     else
                                     {
-                                        Ellipse icon = new Ellipse();
-                                        icon.Width = 10;
-                                        icon.Height = 10;
-                                        icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                        icon.VerticalAlignment = VerticalAlignment.Top;
-                                        icon.Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0);
-                                        icon.Fill = Brushes.Gray;
+                                        Ellipse icon = new()
+                                        {
+                                            Width = 10,
+                                            Height = 10,
+                                            HorizontalAlignment = HorizontalAlignment.Left,
+                                            VerticalAlignment = VerticalAlignment.Top,
+                                            Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0),
+                                            Fill = Brushes.Gray
+                                        };
                                         UpperLayerOfMap.Children.Add(icon);
                                     }
                                 }
@@ -632,21 +637,36 @@ namespace Client
             counter++;
         }
         //定时器事件，刷新地图
+        /// <summary>
+        ///敬请期待函数
+        /// </summary>
+        private void PleaseWait()
+        {
+            try
+            {
+                throw new Exception("敬请期待");
+            }
+            catch(Exception exc)    
+            {
+                ErrorDisplayer error = new(exc.Message);
+                error.Show();
+            }
+        }
         //以下为Mainwindow自定义属性
-        private DispatcherTimer timer;//定时器
-        private Int64 counter;//预留的取时间变量
-        private StatusBar[] StatusBars = new StatusBar[8];
-        private ClientCommunication communicator;
+        private readonly DispatcherTimer timer;//定时器
+        private long counter;//预留的取时间变量
+        private readonly StatusBar[] StatusBars = new StatusBar[8];
+        private readonly ClientCommunication communicator;
 
         private bool isClientStocked;
 
-        private Int64 playerID;
-        private Int64 teamID;
+        private long playerID;
+        private long teamID;
 
-        private List<MessageToClient.Types.GameObjMessage> playerData;
-        private List<MessageToClient.Types.GameObjMessage> bulletData;
-        private List<MessageToClient.Types.GameObjMessage> propData;
-        private object drawPicLock = new object();
+        private readonly List<MessageToClient.Types.GameObjMessage> playerData;
+        private readonly List<MessageToClient.Types.GameObjMessage> bulletData;
+        private readonly List<MessageToClient.Types.GameObjMessage> propData;
+        private readonly object drawPicLock = new();
         private MessageToClient.Types.GameObjMessage? myInfo = null;  //这个client自己的message
         private ErrorDisplayer log;
 
