@@ -23,13 +23,15 @@
 #include <atomic>
 #include <memory>
 
+#define COMMUNICATION_DEBUG
+
 // 首先解释一下ClientCommunication和MultiThreadClientCommunication之间的联系：
 // 1.ClientCommunication侧重于HPSOCKET中委托和事件的构造
 // 2.MultiThreadClientCommunication侧重于对多线程的处理
 // 3.ClientCommunication依赖于MultiThreadClientCommunication的接口，而MultiThreadClientCommunication依赖于ClientCommunication的实体
 // 在THUAI4中，从MultiThreadClientCommunication(THUAI4中名为Communication)构造ClientCommunication(THUAI4中名为CAPI)中，又用到了大量的回调函数
 // 所以不妨将ClientCommunication依赖于MultiThreadClientCommunication的部分抽取为一个接口ICommunication
-using pointer_m2c = std::variant<std::shared_ptr<Protobuf::MessageToClient>, std::shared_ptr<Protobuf::MessageToOneClient>, std::shared_ptr<Protobuf::MessageToInitialize>, std::nullptr_t>; // 类型安全的联合体
+using pointer_m2c = std::variant<std::shared_ptr<Protobuf::MessageToClient>, std::shared_ptr<Protobuf::MessageToOneClient>, std::nullptr_t>; // 类型安全的联合体
 #define TYPEM2C 0
 #define TYPEM2OC 1
 #define TYPEM2I 2
@@ -154,7 +156,7 @@ private:
     /// <summary>
     /// 处理信息（需要单开一个子线程）
     /// </summary>
-    void ProcessMessage();
+    void ProcessMessageQueue();
 
 public:
     MultiThreadClientCommunication(ISubscripter& subscripter) :subscripter(subscripter) {}

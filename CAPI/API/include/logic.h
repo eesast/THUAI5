@@ -26,6 +26,8 @@
 #define MESSAGE_OF_BULLET 2
 #define MESSAGE_OF_PROP 3
 
+#define LOGIC_DEBUG
+
 /// <summary>
 /// 封装了通信组件和AI对象进行操作
 /// </summary>
@@ -80,6 +82,9 @@ private:
     // 是否应该启动AI
     bool AI_start = false;
 
+    // asynchronous = true 时控制内容更新的变量
+    std::atomic_bool freshed = false;
+
     int GetCounter() const override;
     std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
     std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
@@ -125,12 +130,6 @@ private:
     void ProcessMessageToOneClient(std::shared_ptr<Protobuf::MessageToOneClient>);
 
     /// <summary>
-    /// 处理信息Part3 初始化
-    /// </summary>
-    /// <param name=""></param>
-    // void ProcessMessageToInitialize(std::shared_ptr<Protobuf::MessageToInitialize>);
-
-    /// <summary>
     /// 加载到buffer
     /// </summary>
     /// <param name=""></param>
@@ -147,10 +146,16 @@ private:
     void UnBlockAI();
 
     /// <summary>
-    /// 更新目前的状态(上锁时调用)
+    /// 更新状态(仅在asynchronous = false时调用！！)
     /// </summary>
     /// <returns></returns>
     void Update() noexcept;
+
+    /// <summary>
+    /// 更新状态(仅在asynchronous = true时调用！！)
+    /// </summary>
+    /// <returns></returns>
+    void Wait() noexcept;
   
 public:
 

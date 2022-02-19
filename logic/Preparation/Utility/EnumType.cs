@@ -14,7 +14,8 @@ namespace Preparation.Utility
         BirthPoint = 5,
         OutOfBoundBlock = 6,
         Grass = 7,
-        GemWell=8
+        GemWell = 8,
+        BombedBullet=9
     }
     public enum ShapeType
     {
@@ -84,15 +85,14 @@ namespace Preparation.Utility
         Shield = 5,
         Spear = 6
     }
-    /*public enum JobType : int   // 职业，废弃。——LHR
+    public enum GameObjIdx
     {
-        Job0 = 0,
-        Job1 = 1,
-        Job2 = 2,
-        Job3 = 3,
-        Job4 = 4,
-        Job5 = 5,
-        Job6 = 6,
-        InvalidJobType = int.MaxValue
-    }*/
+        None = 0,
+        Player = 1,
+        Bullet = 2,
+        Prop = 3,
+        Gem = 4,
+        Map = 5,
+        BombedBullet = 6
+    }
 }

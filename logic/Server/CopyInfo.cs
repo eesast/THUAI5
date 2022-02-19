@@ -13,6 +13,8 @@ namespace Server
                 return Bullet((Bullet)gameObj);
             else if (gameObj.Type == Preparation.Utility.GameObjType.Prop)
                 return Prop((Prop)gameObj);
+            else if (gameObj.Type == Preparation.Utility.GameObjType.BombedBullet)
+                return BombedBullet((BombedBullet)gameObj);
             else return null;  //先写着防报错
         }
         private static MessageToClient.Types.GameObjMessage Player(Character player)
@@ -159,6 +161,9 @@ namespace Server
                 case Preparation.Utility.BulletType.FastBullet:
                     msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.FastBullet;
                     break;
+                case Preparation.Utility.BulletType.LineBullet:
+                    msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.LineBullet;
+                    break;
                 default:
                     msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.NullBulletType;
                     break;
@@ -184,6 +189,9 @@ namespace Server
                 case Preparation.Utility.BulletType.FastBullet:
                     msg.MessageOfBullet.Type = Communication.Proto.BulletType.FastBullet;
                     break;
+                case Preparation.Utility.BulletType.LineBullet:
+                    msg.MessageOfBullet.Type = Communication.Proto.BulletType.LineBullet;
+                    break;
                 default:
                     msg.MessageOfBullet.Type = Communication.Proto.BulletType.NullBulletType;
                     break;
@@ -206,15 +214,13 @@ namespace Server
                 case Preparation.Utility.PlaceType.Grass3:
                     msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Grass3;
                     break;
-                //case Preparation.Utility.PlaceType.Invisible:
-                //    msg.MessageOfBullet.Place = Communication.Proto.PlaceType.Invisible;
-                //    break;
                 default:
                     msg.MessageOfBullet.Place = Communication.Proto.PlaceType.NullPlaceType;
                     break;
             }
             return msg;
         }
+
         private static MessageToClient.Types.GameObjMessage Prop(Prop prop)
         {
             MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
@@ -284,11 +290,37 @@ namespace Server
                 case Preparation.Utility.PlaceType.Grass3:
                     msg.MessageOfProp.Place = Communication.Proto.PlaceType.Grass3;
                     break;
-                //case Preparation.Utility.PlaceType.Invisible:
-                //    msg.MessageOfProp.Place = Communication.Proto.PlaceType.Invisible;
-                //    break;
                 default:
                     msg.MessageOfProp.Place = Communication.Proto.PlaceType.NullPlaceType;
+                    break;
+            }
+            return msg;
+        }
+
+        private static MessageToClient.Types.GameObjMessage BombedBullet(BombedBullet bombedBullet)
+        {
+            MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
+            msg.MessageOfBombedBullet = new MessageOfBombedBullet();
+
+            msg.MessageOfBombedBullet.FacingDirection = bombedBullet.FacingDirection;
+            msg.MessageOfBombedBullet.X = bombedBullet.bulletHasBombed.Position.x;
+            msg.MessageOfBombedBullet.Y = bombedBullet.bulletHasBombed.Position.y;
+            switch (bombedBullet.bulletHasBombed.TypeOfBullet)
+            {
+                case Preparation.Utility.BulletType.OrdinaryBullet:
+                    msg.MessageOfBombedBullet.Type = Communication.Proto.BulletType.OrdinaryBullet;
+                    break;
+                case Preparation.Utility.BulletType.AtomBomb:
+                    msg.MessageOfBombedBullet.Type = Communication.Proto.BulletType.AtomBomb;
+                    break;
+                case Preparation.Utility.BulletType.FastBullet:
+                    msg.MessageOfBombedBullet.Type = Communication.Proto.BulletType.FastBullet;
+                    break;
+                case Preparation.Utility.BulletType.LineBullet:
+                    msg.MessageOfBombedBullet.Type = Communication.Proto.BulletType.LineBullet;
+                    break;
+                default:
+                    msg.MessageOfBombedBullet.Type = Communication.Proto.BulletType.NullBulletType;
                     break;
             }
             return msg;

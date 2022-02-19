@@ -74,7 +74,9 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         return 1;
     }
     Logic logic(tID, pID);
+    extern const bool asynchronous;
     std::cout << "*******************basic info*******************" << std::endl;
+    std::cout << "asynchronous: " << asynchronous << std::endl;
     std::cout << "server IP: " << sIP.c_str() << std::endl;
     std::cout << "server port: " << sPort << std::endl;
     std::cout << "team ID: " << tID << std::endl;

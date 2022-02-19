@@ -1,3 +1,5 @@
+//#define COMMUNICATION_DEBUG
+
 using System;
 using System.IO;
 using Google.Protobuf;
@@ -35,6 +37,16 @@ namespace Communication.Proto
         private IMessage content;
         public IMessage Content { get => content; set => content = value; }
 
+        private string Byte2Str(byte[] a)
+        {
+            string text = "";
+            for (int i = 0; i < a.Length; i++)
+            {
+                text += a[i].ToString("X2");
+            }
+            return text;
+        }
+
         /// <summary>
         /// 反序列化字节流
         /// </summary>
@@ -48,15 +60,26 @@ namespace Communication.Proto
             string typename = null;
             // 由于枚举值增多，这里将“枚举转类型名称”改写成一种更加简洁的方式
             typename = "Communication.Proto." + Enum.GetName(typeof(PacketType), type);
-
+#if COMMUNICATION_DEBUG
+            Console.WriteLine($"the length of bytes is {bytes.Length}");
+            Console.WriteLine($"the content is {Byte2Str(bytes)}");
+#endif
             try
             {
                 CodedInputStream codedInputStream = new CodedInputStream(istream);
-                content = (IMessage)Activator.CreateInstance(Type.GetType(typename)); // 这里按照原来的写法写会报错，难道和版本有关?
-                content.MergeFrom(codedInputStream); // 这一步才是真正的反序列化过程
+                Content = Activator.CreateInstance(Type.GetType(typename)) as IMessage; // 这里按照原来的写法写会报错，难道和版本有关?
+                Content.MergeFrom(codedInputStream); // 这一步才是真正的反序列化过程
+            }
+            catch (Google.Protobuf.InvalidProtocolBufferException)
+            {
+                // 这只是为了让server控制台界面更清爽一点，所不得已用的办法！虽然当前代码会触发这个异常，但好像不影响运行，而且codedInputStream也确实可以被正确解码
+                // 迟早要解决的！
             }
             catch (Exception e)
             {
+#if COMMUNICATION_DEBUG
+                Console.WriteLine($"The content is {Content}");
+#endif
                 Console.WriteLine($"Unhandled exception while trying to deserialize packet: {e}");
             }
         }

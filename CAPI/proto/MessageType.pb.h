@@ -4,10 +4,9 @@
 #ifndef GOOGLE_PROTOBUF_INCLUDED_MessageType_2eproto
 #define GOOGLE_PROTOBUF_INCLUDED_MessageType_2eproto
 
-#define PROTOBUF_USE_DLLS
-
 #include <limits>
 #include <string>
+#define PROTOBUF_USE_DLLS
 
 #include <google/protobuf/port_def.inc>
 #if PROTOBUF_VERSION < 3019000
@@ -108,12 +107,13 @@ enum GameObjType : int {
   OutOfBoundBlock = 6,
   Grass = 7,
   GemWell = 8,
+  BombedBullet = 9,
   GameObjType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   GameObjType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool GameObjType_IsValid(int value);
 constexpr GameObjType GameObjType_MIN = NullGameObjType;
-constexpr GameObjType GameObjType_MAX = GemWell;
+constexpr GameObjType GameObjType_MAX = BombedBullet;
 constexpr int GameObjType_ARRAYSIZE = GameObjType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* GameObjType_descriptor();
@@ -311,7 +311,7 @@ inline bool BuffType_Parse(
 }
 enum BulletType : int {
   NullBulletType = 0,
-  CommonBullet1 = 1,
+  LineBullet = 1,
   CommonBullet2 = 2,
   FastBullet = 3,
   OrdinaryBullet = 4,
