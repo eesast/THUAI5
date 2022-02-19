@@ -116,12 +116,12 @@ namespace Client
             if(!initialized)SetStaticValue(obj);
             SetDynamicValue(obj);
         }
-        private Canvas backGround;
-        private ProgressBar progressBar;
-        private TextBox star;
-        private TextBox status;
-        private TextBox scores;
-        private TextBox serial;
+        private readonly Canvas backGround;
+        private readonly ProgressBar progressBar;
+        private readonly TextBox star;
+        private readonly TextBox status;
+        private readonly TextBox scores;
+        private readonly TextBox serial;
         private int coolTime;
         private bool initialized;
     }  
