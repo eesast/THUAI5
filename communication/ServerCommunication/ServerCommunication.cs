@@ -172,22 +172,6 @@ namespace Communication.ServerCommunication
             SendOperationUniCast(bytes, connId);
         }
 
-        /// <summary>
-        /// 需要发送的初始化信息
-        /// </summary>
-        /// <param name="m2i">初始化信息</param>
-        public void SendToClient(MessageToInitialize m2i)
-        {
-            Message message = new();
-            message.Content = m2i;
-            message.PacketType = PacketType.MessageToInitialize;
-
-            // 初始化应该不需要加太多判断的信息，即使加也应该在逻辑内容中加，所以我就直接发送了...
-            byte[] bytes;
-            message.Serialize(out bytes);
-            SendOperationBroadCast(bytes);
-        }
-
         public void SendToClient(MessageToClient m2c)
         {
             Message message = new();

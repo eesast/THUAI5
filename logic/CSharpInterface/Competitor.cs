@@ -10,6 +10,16 @@ namespace CSharpInterface
         {
             var chas = GetCharacters();
             var me = GetSelfInfo();
+            var map = GetMap();
+            bool f = map[41, 42] == 1;
+            if(f)
+            {
+
+            }
+            else
+            {
+
+            }
             foreach (var ch in chas)
             {
                 if (((ch.X - me.X) * (ch.X - me.X) + (ch.Y - me.Y) * (ch.Y - me.Y)) <= 10000 * 10000)
