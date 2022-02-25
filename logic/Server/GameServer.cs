@@ -187,12 +187,27 @@ namespace Server
         {
             return teamID >= 0 && teamID < options.TeamCount && playerID >= 0 && playerID < options.PlayerCountPerTeam;
         }
+        private MessageToClient.Types.GameObjMessage MapMsg(Map map)
+        {
+            MessageToClient.Types.GameObjMessage msgOfMap = new MessageToClient.Types.GameObjMessage();
+            msgOfMap.MessageOfMap = new MessageOfMap();
+            for (int i = 0; i < GameData.rows; i++)
+            {
+                msgOfMap.MessageOfMap.Row.Add(new MessageOfMap.Types.Row());
+                for (int j = 0; j < GameData.cols; j++)
+                {
+                    msgOfMap.MessageOfMap.Row[i].Col.Add((int)map.ProtoGameMap[i, j]);
+                }
+            }
+            return msgOfMap;
+        }
         private void SendMessageToAllClients(MessageType msgType, bool requiredGaming = true)
         {
             if (requiredGaming && !game.GameMap.Timer.IsGaming)
                 return;
             var gameObjList = game.GetGameObj();
-
+            MessageToClient messageToClient = new MessageToClient();
+            messageToClient.GameObjMessage.Add(MapMsg(game.GameMap));
             lock (messageToAllClientsLock)
             {
                 switch (msgType)
@@ -200,20 +215,12 @@ namespace Server
                     case MessageType.Gaming:
                     case MessageType.StartGame:
                     case MessageType.EndGame:
-                        MessageToClient messageToClient = new MessageToClient();
                         foreach (GameObj gameObj in gameObjList)
                         {
                             messageToClient.GameObjMessage.Add(CopyInfo.Auto(gameObj));
                         }
                         messageToClient.MessageType = msgType;
-                        serverCommunicator.SendToClient(messageToClient);
                         mwr?.WriteOne(messageToClient);
-                        break;
-                    case MessageType.InitialLized:
-                        MessageToInitialize messageToInitialize = new();
-                        messageToInitialize.MessageType = MessageType.InitialLized;
-                        messageToInitialize.MapSerial = 1; //地图编号，应该是随机数，这里先设为1
-                        serverCommunicator.SendToClient(messageToInitialize);
                         break;
                     default:
                         break;
@@ -221,6 +228,7 @@ namespace Server
             }
 
             game.ClearBombedBulletList();
+            serverCommunicator.SendToClient(messageToClient);
         }
         private void SendMessageToTeammate(MessageToServer msgToServer)
         {
@@ -264,7 +272,6 @@ namespace Server
                 if (id == GameObj.invalidID) return;     //如果有未初始化的玩家，不开始游戏
             }
 
-            SendMessageToAllClients(MessageType.InitialLized); //发送初始化信息
             Thread.Sleep((int)GameData.frameDuration); //发送信息后，暂停一帧时间
 
             new Thread

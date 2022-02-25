@@ -119,20 +119,18 @@ namespace CSharpInterface
             finally { propDataLock.ExitReadLock(); }
             return list;
         }
-        public List<Wall> GetWalls()
+
+        // 若地图未完全刷新，则返回null！
+        public int[,]? GetMap()
         {
-            List<Wall> list = new List<Wall>();
-            for(int i = 0;i<Map.map.GetLength(0);i++)
+            if (Map.flag)
             {
-                for(int j=0;j<Map.map.GetLength(1);j++)
-                {
-                    if(Map.map[i,j] ==1)
-                    {
-                        list.Add(new Wall(i * 1000 + 500, j * 1000 + 500));
-                    }
-                }
+                return Map.map;
             }
-            return list;
+            else
+            {
+                return null;
+            }
         }
         public List<BirthPoint> GetBirthPoints()
         {

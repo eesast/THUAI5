@@ -6,7 +6,6 @@
 
 #include <limits>
 #include <string>
-#define PROTOBUF_USE_DLLS
 
 #include <google/protobuf/port_def.inc>
 #if PROTOBUF_VERSION < 3019000

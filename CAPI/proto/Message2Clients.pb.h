@@ -6,7 +6,6 @@
 
 #include <limits>
 #include <string>
-#define PROTOBUF_USE_DLLS
 
 #include <google/protobuf/port_def.inc>
 #if PROTOBUF_VERSION < 3019000
@@ -48,7 +47,7 @@ struct TableStruct_Message2Clients_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[8]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[9]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -65,6 +64,12 @@ extern MessageOfBulletDefaultTypeInternal _MessageOfBullet_default_instance_;
 class MessageOfCharacter;
 struct MessageOfCharacterDefaultTypeInternal;
 extern MessageOfCharacterDefaultTypeInternal _MessageOfCharacter_default_instance_;
+class MessageOfMap;
+struct MessageOfMapDefaultTypeInternal;
+extern MessageOfMapDefaultTypeInternal _MessageOfMap_default_instance_;
+class MessageOfMap_Row;
+struct MessageOfMap_RowDefaultTypeInternal;
+extern MessageOfMap_RowDefaultTypeInternal _MessageOfMap_Row_default_instance_;
 class MessageOfProp;
 struct MessageOfPropDefaultTypeInternal;
 extern MessageOfPropDefaultTypeInternal _MessageOfProp_default_instance_;
@@ -74,9 +79,6 @@ extern MessageToClientDefaultTypeInternal _MessageToClient_default_instance_;
 class MessageToClient_GameObjMessage;
 struct MessageToClient_GameObjMessageDefaultTypeInternal;
 extern MessageToClient_GameObjMessageDefaultTypeInternal _MessageToClient_GameObjMessage_default_instance_;
-class MessageToInitialize;
-struct MessageToInitializeDefaultTypeInternal;
-extern MessageToInitializeDefaultTypeInternal _MessageToInitialize_default_instance_;
 class MessageToOneClient;
 struct MessageToOneClientDefaultTypeInternal;
 extern MessageToOneClientDefaultTypeInternal _MessageToOneClient_default_instance_;
@@ -85,10 +87,11 @@ PROTOBUF_NAMESPACE_OPEN
 template<> ::Protobuf::MessageOfBombedBullet* Arena::CreateMaybeMessage<::Protobuf::MessageOfBombedBullet>(Arena*);
 template<> ::Protobuf::MessageOfBullet* Arena::CreateMaybeMessage<::Protobuf::MessageOfBullet>(Arena*);
 template<> ::Protobuf::MessageOfCharacter* Arena::CreateMaybeMessage<::Protobuf::MessageOfCharacter>(Arena*);
+template<> ::Protobuf::MessageOfMap* Arena::CreateMaybeMessage<::Protobuf::MessageOfMap>(Arena*);
+template<> ::Protobuf::MessageOfMap_Row* Arena::CreateMaybeMessage<::Protobuf::MessageOfMap_Row>(Arena*);
 template<> ::Protobuf::MessageOfProp* Arena::CreateMaybeMessage<::Protobuf::MessageOfProp>(Arena*);
 template<> ::Protobuf::MessageToClient* Arena::CreateMaybeMessage<::Protobuf::MessageToClient>(Arena*);
 template<> ::Protobuf::MessageToClient_GameObjMessage* Arena::CreateMaybeMessage<::Protobuf::MessageToClient_GameObjMessage>(Arena*);
-template<> ::Protobuf::MessageToInitialize* Arena::CreateMaybeMessage<::Protobuf::MessageToInitialize>(Arena*);
 template<> ::Protobuf::MessageToOneClient* Arena::CreateMaybeMessage<::Protobuf::MessageToOneClient>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace Protobuf {
@@ -1119,24 +1122,24 @@ class MessageOfBombedBullet final :
 };
 // -------------------------------------------------------------------
 
-class MessageToInitialize final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protobuf.MessageToInitialize) */ {
+class MessageOfMap_Row final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protobuf.MessageOfMap.Row) */ {
  public:
-  inline MessageToInitialize() : MessageToInitialize(nullptr) {}
-  ~MessageToInitialize() override;
-  explicit constexpr MessageToInitialize(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline MessageOfMap_Row() : MessageOfMap_Row(nullptr) {}
+  ~MessageOfMap_Row() override;
+  explicit constexpr MessageOfMap_Row(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  MessageToInitialize(const MessageToInitialize& from);
-  MessageToInitialize(MessageToInitialize&& from) noexcept
-    : MessageToInitialize() {
+  MessageOfMap_Row(const MessageOfMap_Row& from);
+  MessageOfMap_Row(MessageOfMap_Row&& from) noexcept
+    : MessageOfMap_Row() {
     *this = ::std::move(from);
   }
 
-  inline MessageToInitialize& operator=(const MessageToInitialize& from) {
+  inline MessageOfMap_Row& operator=(const MessageOfMap_Row& from) {
     CopyFrom(from);
     return *this;
   }
-  inline MessageToInitialize& operator=(MessageToInitialize&& from) noexcept {
+  inline MessageOfMap_Row& operator=(MessageOfMap_Row&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -1159,20 +1162,20 @@ class MessageToInitialize final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const MessageToInitialize& default_instance() {
+  static const MessageOfMap_Row& default_instance() {
     return *internal_default_instance();
   }
-  static inline const MessageToInitialize* internal_default_instance() {
-    return reinterpret_cast<const MessageToInitialize*>(
-               &_MessageToInitialize_default_instance_);
+  static inline const MessageOfMap_Row* internal_default_instance() {
+    return reinterpret_cast<const MessageOfMap_Row*>(
+               &_MessageOfMap_Row_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     4;
 
-  friend void swap(MessageToInitialize& a, MessageToInitialize& b) {
+  friend void swap(MessageOfMap_Row& a, MessageOfMap_Row& b) {
     a.Swap(&b);
   }
-  inline void Swap(MessageToInitialize* other) {
+  inline void Swap(MessageOfMap_Row* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetOwningArena() != nullptr &&
@@ -1185,7 +1188,7 @@ class MessageToInitialize final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(MessageToInitialize* other) {
+  void UnsafeArenaSwap(MessageOfMap_Row* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -1193,13 +1196,13 @@ class MessageToInitialize final :
 
   // implements Message ----------------------------------------------
 
-  MessageToInitialize* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<MessageToInitialize>(arena);
+  MessageOfMap_Row* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<MessageOfMap_Row>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const MessageToInitialize& from);
+  void CopyFrom(const MessageOfMap_Row& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const MessageToInitialize& from);
+  void MergeFrom(const MessageOfMap_Row& from);
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
   public:
@@ -1216,15 +1219,15 @@ class MessageToInitialize final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(MessageToInitialize* other);
+  void InternalSwap(MessageOfMap_Row* other);
 
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "Protobuf.MessageToInitialize";
+    return "Protobuf.MessageOfMap.Row";
   }
   protected:
-  explicit MessageToInitialize(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit MessageOfMap_Row(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   private:
   static void ArenaDtor(void* object);
@@ -1241,36 +1244,196 @@ class MessageToInitialize final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kMapSerialFieldNumber = 1,
-    kMessageTypeFieldNumber = 2,
+    kColFieldNumber = 1,
   };
-  // int32 MapSerial = 1;
-  void clear_mapserial();
-  int32_t mapserial() const;
-  void set_mapserial(int32_t value);
+  // repeated int32 col = 1;
+  int col_size() const;
   private:
-  int32_t _internal_mapserial() const;
-  void _internal_set_mapserial(int32_t value);
+  int _internal_col_size() const;
   public:
-
-  // .Protobuf.MessageType messageType = 2;
-  void clear_messagetype();
-  ::Protobuf::MessageType messagetype() const;
-  void set_messagetype(::Protobuf::MessageType value);
+  void clear_col();
   private:
-  ::Protobuf::MessageType _internal_messagetype() const;
-  void _internal_set_messagetype(::Protobuf::MessageType value);
+  int32_t _internal_col(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >&
+      _internal_col() const;
+  void _internal_add_col(int32_t value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >*
+      _internal_mutable_col();
   public:
+  int32_t col(int index) const;
+  void set_col(int index, int32_t value);
+  void add_col(int32_t value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >&
+      col() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >*
+      mutable_col();
 
-  // @@protoc_insertion_point(class_scope:Protobuf.MessageToInitialize)
+  // @@protoc_insertion_point(class_scope:Protobuf.MessageOfMap.Row)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  int32_t mapserial_;
-  int messagetype_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t > col_;
+  mutable std::atomic<int> _col_cached_byte_size_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Message2Clients_2eproto;
+};
+// -------------------------------------------------------------------
+
+class MessageOfMap final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protobuf.MessageOfMap) */ {
+ public:
+  inline MessageOfMap() : MessageOfMap(nullptr) {}
+  ~MessageOfMap() override;
+  explicit constexpr MessageOfMap(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  MessageOfMap(const MessageOfMap& from);
+  MessageOfMap(MessageOfMap&& from) noexcept
+    : MessageOfMap() {
+    *this = ::std::move(from);
+  }
+
+  inline MessageOfMap& operator=(const MessageOfMap& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MessageOfMap& operator=(MessageOfMap&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const MessageOfMap& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const MessageOfMap* internal_default_instance() {
+    return reinterpret_cast<const MessageOfMap*>(
+               &_MessageOfMap_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(MessageOfMap& a, MessageOfMap& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(MessageOfMap* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MessageOfMap* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  MessageOfMap* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<MessageOfMap>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const MessageOfMap& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const MessageOfMap& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(MessageOfMap* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protobuf.MessageOfMap";
+  }
+  protected:
+  explicit MessageOfMap(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef MessageOfMap_Row Row;
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kRowFieldNumber = 51,
+  };
+  // repeated .Protobuf.MessageOfMap.Row row = 51;
+  int row_size() const;
+  private:
+  int _internal_row_size() const;
+  public:
+  void clear_row();
+  ::Protobuf::MessageOfMap_Row* mutable_row(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protobuf::MessageOfMap_Row >*
+      mutable_row();
+  private:
+  const ::Protobuf::MessageOfMap_Row& _internal_row(int index) const;
+  ::Protobuf::MessageOfMap_Row* _internal_add_row();
+  public:
+  const ::Protobuf::MessageOfMap_Row& row(int index) const;
+  ::Protobuf::MessageOfMap_Row* add_row();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protobuf::MessageOfMap_Row >&
+      row() const;
+
+  // @@protoc_insertion_point(class_scope:Protobuf.MessageOfMap)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protobuf::MessageOfMap_Row > row_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
 };
@@ -1324,6 +1487,7 @@ class MessageToClient_GameObjMessage final :
     kMessageOfBullet = 2,
     kMessageOfProp = 3,
     kMessageOfBombedBullet = 4,
+    kMessageOfMap = 5,
     OBJ_NOT_SET = 0,
   };
 
@@ -1332,7 +1496,7 @@ class MessageToClient_GameObjMessage final :
                &_MessageToClient_GameObjMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(MessageToClient_GameObjMessage& a, MessageToClient_GameObjMessage& b) {
     a.Swap(&b);
@@ -1410,6 +1574,7 @@ class MessageToClient_GameObjMessage final :
     kMessageOfBulletFieldNumber = 2,
     kMessageOfPropFieldNumber = 3,
     kMessageOfBombedBulletFieldNumber = 4,
+    kMessageOfMapFieldNumber = 5,
   };
   // .Protobuf.MessageOfCharacter messageOfCharacter = 1;
   bool has_messageofcharacter() const;
@@ -1483,6 +1648,24 @@ class MessageToClient_GameObjMessage final :
       ::Protobuf::MessageOfBombedBullet* messageofbombedbullet);
   ::Protobuf::MessageOfBombedBullet* unsafe_arena_release_messageofbombedbullet();
 
+  // .Protobuf.MessageOfMap messageOfMap = 5;
+  bool has_messageofmap() const;
+  private:
+  bool _internal_has_messageofmap() const;
+  public:
+  void clear_messageofmap();
+  const ::Protobuf::MessageOfMap& messageofmap() const;
+  PROTOBUF_NODISCARD ::Protobuf::MessageOfMap* release_messageofmap();
+  ::Protobuf::MessageOfMap* mutable_messageofmap();
+  void set_allocated_messageofmap(::Protobuf::MessageOfMap* messageofmap);
+  private:
+  const ::Protobuf::MessageOfMap& _internal_messageofmap() const;
+  ::Protobuf::MessageOfMap* _internal_mutable_messageofmap();
+  public:
+  void unsafe_arena_set_allocated_messageofmap(
+      ::Protobuf::MessageOfMap* messageofmap);
+  ::Protobuf::MessageOfMap* unsafe_arena_release_messageofmap();
+
   void clear_obj();
   ObjCase obj_case() const;
   // @@protoc_insertion_point(class_scope:Protobuf.MessageToClient.GameObjMessage)
@@ -1492,6 +1675,7 @@ class MessageToClient_GameObjMessage final :
   void set_has_messageofbullet();
   void set_has_messageofprop();
   void set_has_messageofbombedbullet();
+  void set_has_messageofmap();
 
   inline bool has_obj() const;
   inline void clear_has_obj();
@@ -1506,6 +1690,7 @@ class MessageToClient_GameObjMessage final :
     ::Protobuf::MessageOfBullet* messageofbullet_;
     ::Protobuf::MessageOfProp* messageofprop_;
     ::Protobuf::MessageOfBombedBullet* messageofbombedbullet_;
+    ::Protobuf::MessageOfMap* messageofmap_;
   } obj_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   uint32_t _oneof_case_[1];
@@ -1562,7 +1747,7 @@ class MessageToClient final :
                &_MessageToClient_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(MessageToClient& a, MessageToClient& b) {
     a.Swap(&b);
@@ -1730,7 +1915,7 @@ class MessageToOneClient final :
                &_MessageToOneClient_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(MessageToOneClient& a, MessageToOneClient& b) {
     a.Swap(&b);
@@ -2780,46 +2965,97 @@ inline void MessageOfBombedBullet::set_facingdirection(double value) {
 
 // -------------------------------------------------------------------
 
-// MessageToInitialize
+// MessageOfMap_Row
 
-// int32 MapSerial = 1;
-inline void MessageToInitialize::clear_mapserial() {
-  mapserial_ = 0;
+// repeated int32 col = 1;
+inline int MessageOfMap_Row::_internal_col_size() const {
+  return col_.size();
 }
-inline int32_t MessageToInitialize::_internal_mapserial() const {
-  return mapserial_;
+inline int MessageOfMap_Row::col_size() const {
+  return _internal_col_size();
 }
-inline int32_t MessageToInitialize::mapserial() const {
-  // @@protoc_insertion_point(field_get:Protobuf.MessageToInitialize.MapSerial)
-  return _internal_mapserial();
+inline void MessageOfMap_Row::clear_col() {
+  col_.Clear();
 }
-inline void MessageToInitialize::_internal_set_mapserial(int32_t value) {
-  
-  mapserial_ = value;
+inline int32_t MessageOfMap_Row::_internal_col(int index) const {
+  return col_.Get(index);
 }
-inline void MessageToInitialize::set_mapserial(int32_t value) {
-  _internal_set_mapserial(value);
-  // @@protoc_insertion_point(field_set:Protobuf.MessageToInitialize.MapSerial)
+inline int32_t MessageOfMap_Row::col(int index) const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfMap.Row.col)
+  return _internal_col(index);
+}
+inline void MessageOfMap_Row::set_col(int index, int32_t value) {
+  col_.Set(index, value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfMap.Row.col)
+}
+inline void MessageOfMap_Row::_internal_add_col(int32_t value) {
+  col_.Add(value);
+}
+inline void MessageOfMap_Row::add_col(int32_t value) {
+  _internal_add_col(value);
+  // @@protoc_insertion_point(field_add:Protobuf.MessageOfMap.Row.col)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >&
+MessageOfMap_Row::_internal_col() const {
+  return col_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >&
+MessageOfMap_Row::col() const {
+  // @@protoc_insertion_point(field_list:Protobuf.MessageOfMap.Row.col)
+  return _internal_col();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >*
+MessageOfMap_Row::_internal_mutable_col() {
+  return &col_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< int32_t >*
+MessageOfMap_Row::mutable_col() {
+  // @@protoc_insertion_point(field_mutable_list:Protobuf.MessageOfMap.Row.col)
+  return _internal_mutable_col();
 }
 
-// .Protobuf.MessageType messageType = 2;
-inline void MessageToInitialize::clear_messagetype() {
-  messagetype_ = 0;
+// -------------------------------------------------------------------
+
+// MessageOfMap
+
+// repeated .Protobuf.MessageOfMap.Row row = 51;
+inline int MessageOfMap::_internal_row_size() const {
+  return row_.size();
 }
-inline ::Protobuf::MessageType MessageToInitialize::_internal_messagetype() const {
-  return static_cast< ::Protobuf::MessageType >(messagetype_);
+inline int MessageOfMap::row_size() const {
+  return _internal_row_size();
 }
-inline ::Protobuf::MessageType MessageToInitialize::messagetype() const {
-  // @@protoc_insertion_point(field_get:Protobuf.MessageToInitialize.messageType)
-  return _internal_messagetype();
+inline void MessageOfMap::clear_row() {
+  row_.Clear();
 }
-inline void MessageToInitialize::_internal_set_messagetype(::Protobuf::MessageType value) {
-  
-  messagetype_ = value;
+inline ::Protobuf::MessageOfMap_Row* MessageOfMap::mutable_row(int index) {
+  // @@protoc_insertion_point(field_mutable:Protobuf.MessageOfMap.row)
+  return row_.Mutable(index);
 }
-inline void MessageToInitialize::set_messagetype(::Protobuf::MessageType value) {
-  _internal_set_messagetype(value);
-  // @@protoc_insertion_point(field_set:Protobuf.MessageToInitialize.messageType)
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protobuf::MessageOfMap_Row >*
+MessageOfMap::mutable_row() {
+  // @@protoc_insertion_point(field_mutable_list:Protobuf.MessageOfMap.row)
+  return &row_;
+}
+inline const ::Protobuf::MessageOfMap_Row& MessageOfMap::_internal_row(int index) const {
+  return row_.Get(index);
+}
+inline const ::Protobuf::MessageOfMap_Row& MessageOfMap::row(int index) const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfMap.row)
+  return _internal_row(index);
+}
+inline ::Protobuf::MessageOfMap_Row* MessageOfMap::_internal_add_row() {
+  return row_.Add();
+}
+inline ::Protobuf::MessageOfMap_Row* MessageOfMap::add_row() {
+  ::Protobuf::MessageOfMap_Row* _add = _internal_add_row();
+  // @@protoc_insertion_point(field_add:Protobuf.MessageOfMap.row)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protobuf::MessageOfMap_Row >&
+MessageOfMap::row() const {
+  // @@protoc_insertion_point(field_list:Protobuf.MessageOfMap.row)
+  return row_;
 }
 
 // -------------------------------------------------------------------
@@ -3122,6 +3358,80 @@ inline ::Protobuf::MessageOfBombedBullet* MessageToClient_GameObjMessage::mutabl
   return _msg;
 }
 
+// .Protobuf.MessageOfMap messageOfMap = 5;
+inline bool MessageToClient_GameObjMessage::_internal_has_messageofmap() const {
+  return obj_case() == kMessageOfMap;
+}
+inline bool MessageToClient_GameObjMessage::has_messageofmap() const {
+  return _internal_has_messageofmap();
+}
+inline void MessageToClient_GameObjMessage::set_has_messageofmap() {
+  _oneof_case_[0] = kMessageOfMap;
+}
+inline void MessageToClient_GameObjMessage::clear_messageofmap() {
+  if (_internal_has_messageofmap()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete obj_.messageofmap_;
+    }
+    clear_has_obj();
+  }
+}
+inline ::Protobuf::MessageOfMap* MessageToClient_GameObjMessage::release_messageofmap() {
+  // @@protoc_insertion_point(field_release:Protobuf.MessageToClient.GameObjMessage.messageOfMap)
+  if (_internal_has_messageofmap()) {
+    clear_has_obj();
+      ::Protobuf::MessageOfMap* temp = obj_.messageofmap_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    obj_.messageofmap_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Protobuf::MessageOfMap& MessageToClient_GameObjMessage::_internal_messageofmap() const {
+  return _internal_has_messageofmap()
+      ? *obj_.messageofmap_
+      : reinterpret_cast< ::Protobuf::MessageOfMap&>(::Protobuf::_MessageOfMap_default_instance_);
+}
+inline const ::Protobuf::MessageOfMap& MessageToClient_GameObjMessage::messageofmap() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageToClient.GameObjMessage.messageOfMap)
+  return _internal_messageofmap();
+}
+inline ::Protobuf::MessageOfMap* MessageToClient_GameObjMessage::unsafe_arena_release_messageofmap() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Protobuf.MessageToClient.GameObjMessage.messageOfMap)
+  if (_internal_has_messageofmap()) {
+    clear_has_obj();
+    ::Protobuf::MessageOfMap* temp = obj_.messageofmap_;
+    obj_.messageofmap_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void MessageToClient_GameObjMessage::unsafe_arena_set_allocated_messageofmap(::Protobuf::MessageOfMap* messageofmap) {
+  clear_obj();
+  if (messageofmap) {
+    set_has_messageofmap();
+    obj_.messageofmap_ = messageofmap;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Protobuf.MessageToClient.GameObjMessage.messageOfMap)
+}
+inline ::Protobuf::MessageOfMap* MessageToClient_GameObjMessage::_internal_mutable_messageofmap() {
+  if (!_internal_has_messageofmap()) {
+    clear_obj();
+    set_has_messageofmap();
+    obj_.messageofmap_ = CreateMaybeMessage< ::Protobuf::MessageOfMap >(GetArenaForAllocation());
+  }
+  return obj_.messageofmap_;
+}
+inline ::Protobuf::MessageOfMap* MessageToClient_GameObjMessage::mutable_messageofmap() {
+  ::Protobuf::MessageOfMap* _msg = _internal_mutable_messageofmap();
+  // @@protoc_insertion_point(field_mutable:Protobuf.MessageToClient.GameObjMessage.messageOfMap)
+  return _msg;
+}
+
 inline bool MessageToClient_GameObjMessage::has_obj() const {
   return obj_case() != OBJ_NOT_SET;
 }
@@ -3333,6 +3643,8 @@ inline void MessageToOneClient::set_allocated_message(std::string* message) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
