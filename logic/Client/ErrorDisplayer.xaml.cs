@@ -24,9 +24,5 @@ namespace Client
             InitializeComponent();
             errorDisplayer.Text = s+" Time:"+DateTime.Now.ToString();
         }
-        private void DragWindow(object sender, RoutedEventArgs e)
-        {
-            DragMove();
-        }
     }
 }
