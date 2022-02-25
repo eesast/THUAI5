@@ -172,11 +172,19 @@ namespace Gaming
             private int GemToScore(int num)
             {
                 //先用分段线性
-                if (num < 10)
-                    return num * GameData.gemToScore;
+                if (num < 0)
+                    return 0;
+                else if (num < 10)
+                    return num * GameData.gemToScore / 4;
+                else if (num < 15)
+                    return num * GameData.gemToScore / 2;
                 else if (num < 20)
+                    return num * GameData.gemToScore;
+                else if (num < 25)
                     return 2 * num * GameData.gemToScore;
-                else return 3 * num * GameData.gemToScore;
+                else if (num < 30)
+                    return 4 * num * GameData.gemToScore;
+                else return 8 * num * GameData.gemToScore;
             }
 
             public GemManager(Map gameMap)  //宝石不能扔过墙

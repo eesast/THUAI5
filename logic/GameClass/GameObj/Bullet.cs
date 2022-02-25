@@ -100,7 +100,7 @@ namespace GameClass.GameObj
     {
         public FastBullet(XYPosition initPos, int radius = GameData.bulletRadius, bool hasSpear = false) : base(initPos, radius, hasSpear) { }
         public FastBullet(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
-        public override double BulletBombRange => GameData.basicBulletBombRange;
+        public override double BulletBombRange => GameData.basicBulletBombRange / 4 * 2;
         public override int AP => (int)(0.2 * GameData.basicAp);
         public override int Speed => 2 * GameData.basicBulletMoveSpeed;
             

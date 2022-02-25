@@ -11,7 +11,7 @@ namespace GameClass.Skill
         private const int moveSpeed = GameData.basicMoveSpeed;
         public int MoveSpeed => moveSpeed;
 
-        private const int maxHp = GameData.basicHp;
+        private const int maxHp = GameData.basicHp / 6 * 10;
         public int MaxHp => maxHp;
 
         private const int cd = GameData.basicCD;
@@ -85,10 +85,10 @@ namespace GameClass.Skill
     }
     public class BecomeAssassin : ICommonSkill  //化身刺客，隐身：1*标准技能cd，1*标准持续时间
     {
-        private const int moveSpeed = GameData.basicMoveSpeed;
+        private const int moveSpeed = GameData.basicMoveSpeed / 3 * 4;
         public int MoveSpeed => moveSpeed;
 
-        private const int maxHp = GameData.basicHp;
+        private const int maxHp = GameData.basicHp / 6 * 5;
         public int MaxHp => maxHp;
 
         private const int cd = GameData.basicCD;
@@ -98,7 +98,7 @@ namespace GameClass.Skill
         public int MaxBulletNum => maxBulletNum;
         // 以上参数以后再改
         public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime;
+        public int DurationTime => GameData.commonSkillTime / 2;
         public bool SkillEffect(Character player)
         {
             if (player.TimeUntilCommonSkillAvailable == 0)
@@ -161,7 +161,7 @@ namespace GameClass.Skill
     }
     public class NuclearWeapon : ICommonSkill  //核武器：1*标准技能cd，0.5*标准持续时间
     {
-        private const int moveSpeed = GameData.basicMoveSpeed;
+        private const int moveSpeed = GameData.basicMoveSpeed / 6 * 5;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
@@ -174,7 +174,7 @@ namespace GameClass.Skill
         public int MaxBulletNum => maxBulletNum;
         // 以上参数以后再改
         public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime / 2;
+        public int DurationTime => GameData.commonSkillTime / 5;
         public bool SkillEffect(Character player)
         {
             if (player.TimeUntilCommonSkillAvailable == 0)
@@ -251,7 +251,7 @@ namespace GameClass.Skill
         public int MaxBulletNum => maxBulletNum;
         // 以上参数以后再改
         public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime;
+        public int DurationTime => GameData.commonSkillTime / 10 * 3;
         public bool SkillEffect(Character player)
         {
             if (player.TimeUntilCommonSkillAvailable == 0)
