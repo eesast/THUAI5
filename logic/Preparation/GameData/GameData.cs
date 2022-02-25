@@ -51,13 +51,12 @@ namespace Preparation.GameData
         public const int basicMoveSpeed = 3000;                   // 基本移动速度，单位：s-1
         public const int basicBulletMoveSpeed = 6000;             // 基本子弹移动速度，单位：s-1
         public const int addScoreWhenKillOneLevelPlayer = 100;   // 击杀一级角色获得的加分
-        public const int scoreInrease = 20;                      // 每高一级，击杀该角色多的加分
         public const int commonSkillCD = 30000;    //普通技能标准冷却时间
         public const int commonSkillTime = 10000;  //普通技能标准持续时间
         public const int bulletRadius = 200;       //默认子弹半径
         public const int reviveTime = 30000;       //复活时间
         public const int shieldTimeAtBirth = 3000;  //复活时的护盾时间
-        public const int gemToScore = 40; //初始时，一个宝石的加分
+        public const int gemToScore = 20; //一个宝石的标准加分
         /// <summary>
         /// 道具相关
         /// </summary>
