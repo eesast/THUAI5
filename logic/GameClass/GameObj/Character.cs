@@ -89,17 +89,6 @@ namespace GameClass.GameObj
         }
         public double oriVampire = 0;
 
-        private int level = 1;
-        public int Level
-        {
-            get => level;
-            set
-            {
-                lock (gameObjLock)
-                    level = value;
-            }
-        }
-
         //可能要改，改成存type比较好吧? 也不一定，先看看吧（自言自语
         private Bullet bulletOfPlayer;
         public Bullet BulletOfPlayer
