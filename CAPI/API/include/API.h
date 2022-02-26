@@ -17,10 +17,6 @@
 #pragma warning(disable:4996)
 #endif
 
-#define NUM_OF_GRID_PER_CELL 1000
-
-using XYPosition = ::std::pair<::std::int32_t, ::std::int32_t>;
-
 /// <summary>
 /// API中依赖Logic的部分
 /// </summary>
@@ -119,7 +115,7 @@ public:
     virtual bool MoveDown(uint32_t timeInMilliseconds) = 0;
 
     // 攻击
-    virtual bool  Attack(double angleInRadian) = 0;
+    virtual bool Attack(double angleInRadian) = 0;
     virtual bool UseCommonSkill() = 0;
 
     // 通信
