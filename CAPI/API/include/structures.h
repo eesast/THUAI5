@@ -42,12 +42,13 @@ namespace THUAI5
     /// </summary>
     enum class PlaceType :unsigned char
     {
-        NullPlaceType = 0,
-        Land = 1,
+        Land = 0,
+        Wall = 1,
         Grass1 = 2,
         Grass2 = 3,
         Grass3 = 4,
-        Invisible = 5
+        BirthPlace = 5,
+        GemWell = 6
     };
 
     /// <summary>
@@ -208,12 +209,13 @@ namespace THUAI5
 
     inline std::map<THUAI5::PlaceType, std::string> place_dict
     {
-        { PlaceType::NullPlaceType ,"NullPlaceType "},
         { PlaceType::Land ,"Land "},
+        { PlaceType::Wall ,"Wall "},
         { PlaceType::Grass1 ,"Grass1 "},
         { PlaceType::Grass2 ,"Grass2 "},
         { PlaceType::Grass3 ,"Grass3 "},
-        { PlaceType::Invisible ,"Invisible "}
+        { PlaceType::BirthPlace ,"BirthPlace "},
+        { PlaceType::GemWell ,"GemWell "}
     };
 
     inline std::map<THUAI5::BuffType, std::string> buff_dict

@@ -49,9 +49,9 @@ bool DebugAPI::MoveRight(uint32_t timeInMilliseconds)
     return MovePlayer(timeInMilliseconds, PI * 0.5);
 }
 
-bool DebugAPI::Attack(uint32_t timeInMilliseconds, double angleInRadian)
+bool DebugAPI::Attack(double angleInRadian)
 {
-    Out << "Call Attack(" << timeInMilliseconds << "," << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Out << "Call Attack(" << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
         
@@ -70,7 +70,6 @@ bool DebugAPI::Attack(uint32_t timeInMilliseconds, double angleInRadian)
 
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Attack);
-    message.set_timeinmilliseconds(timeInMilliseconds);
     message.set_angle(angleInRadian);
     return logic.SendInfo(message);
 }
@@ -301,12 +300,6 @@ std::vector<std::shared_ptr<const THUAI5::Character>> DebugAPI::GetCharacters() 
     return logic.GetCharacters();
 }
 
-std::vector<std::shared_ptr<const THUAI5::Wall>> DebugAPI::GetWalls() const
-{
-    Out << "Call GetWalls() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
-    return logic.GetWalls();
-}
-
 std::vector<std::shared_ptr<const THUAI5::Bullet>> DebugAPI::GetBullets() const
 {
     Out << "Call GetBullets() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
@@ -323,6 +316,12 @@ std::shared_ptr<const THUAI5::Character> DebugAPI::GetSelfInfo() const
 {
     Out << "Call GetSelfInfo() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     return logic.GetSelfInfo();
+}
+
+THUAI5::PlaceType DebugAPI::GetPlaceType(int CellX, int CellY) const
+{
+    Out << "Call GetPlaceType(" << CellX << "," << CellY << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetPlaceType(CellX, CellY);
 }
 
 uint32_t DebugAPI::GetTeamScore() const

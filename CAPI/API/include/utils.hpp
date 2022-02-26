@@ -100,6 +100,55 @@ PROTO2THUAI_NAMESPACE_BEGIN
 
         return prop;
     }
+
+    /// <summary>
+    /// 将server端的地图信息映射为地点种类
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    inline THUAI5::PlaceType Protobuf2THUAI5_M(int32_t data)
+    {
+        THUAI5::PlaceType placetype = THUAI5::PlaceType::Land;
+        switch (data)
+        {
+        case 1:
+            placetype = THUAI5::PlaceType::Wall;
+            break;
+        
+        case 2:
+            placetype = THUAI5::PlaceType::Grass1;
+            break;
+
+        case 3:
+            placetype = THUAI5::PlaceType::Grass2;
+            break;
+
+        case 4:
+            placetype = THUAI5::PlaceType::Grass3;
+            break;
+
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+            placetype = THUAI5::PlaceType::BirthPlace;
+            break;
+
+        case 13:
+            placetype = THUAI5::PlaceType::GemWell;
+        
+        default:
+            break;
+        }
+
+        return placetype;
+    }
+
+
 PROTO2THUAI_NAMESPACE_END
 
 /// <summary>

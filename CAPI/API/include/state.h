@@ -21,9 +21,9 @@ struct State
 
     // 全局游戏信息
     std::vector<std::shared_ptr<THUAI5::Character>> characters;
-    std::vector<std::shared_ptr<THUAI5::Wall>> walls;
     std::vector<std::shared_ptr<THUAI5::Prop>> props;
     std::vector<std::shared_ptr<THUAI5::Bullet>> bullets;
+    THUAI5::PlaceType gamemap[51][51];
 
     // GUID信息
     std::vector<int64_t> guids;
