@@ -63,12 +63,6 @@ public:
     virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
 
     /// <summary>
-    /// 获取墙的信息
-    /// </summary>
-    /// <returns></returns>
-    virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
-
-    /// <summary>
     /// 获取道具的信息
     /// </summary>
     /// <returns></returns>
@@ -85,6 +79,12 @@ public:
     /// </summary>
     /// <returns></returns>
     virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
+
+    /// <summary>
+    /// 获取地图信息
+    /// </summary>
+    /// <returns></returns>
+    virtual THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const = 0;
 
     /// <summary>
     /// 获取队伍分数
@@ -115,7 +115,7 @@ public:
     virtual bool MoveDown(uint32_t timeInMilliseconds) = 0;
 
     // 攻击
-    virtual bool Attack(uint32_t timeInMilliseconds, double angleInRadian) = 0;
+    virtual bool Attack(double angleInRadian) = 0;
     virtual bool UseCommonSkill() = 0;
 
     // 通信
@@ -132,18 +132,28 @@ public:
     virtual bool Wait() = 0;
 
     //***********选手可获取的信息***********//
-    // 待补充，此处只写了和THUAI4相同的内容
     [[nodiscard]] virtual bool MessageAvailable() = 0;
     [[nodiscard]] virtual std::optional<std::string> TryGetMessage() = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
+    [[nodiscard]] virtual THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const = 0;
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
     [[nodiscard]] virtual int GetFrameCount() const = 0;
-    
+
+    //***********选手可能用到的辅助函数***********//
+    [[nodiscard]] static constexpr inline int CellToGrid(int cell) noexcept // 获取指定格子中心的坐标
+    {
+        return cell * NUM_OF_GRID_PER_CELL + NUM_OF_GRID_PER_CELL / 2;
+    }
+
+    [[nodiscard]] static constexpr inline int GridToCell(int grid) noexcept // 获取指定坐标点所位于的格子的 X 序号
+    {
+        return grid / NUM_OF_GRID_PER_CELL;
+    }
+
     //***********构造函数************//
     IAPI(ILogic& logic) :logic(logic) {}
 
@@ -183,7 +193,7 @@ public:
     bool MoveDown(uint32_t timeInMilliseconds) override;
 
     // 攻击
-    bool Attack(uint32_t timeInMilliseconds, double angleInRadian) override;
+    bool Attack(double angleInRadian) override;
     bool UseCommonSkill() override;
 
     // 通信
@@ -205,10 +215,10 @@ public:
     std::optional<std::string> TryGetMessage() override;
 
     std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
-    std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
     std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const override;
     std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const override;
     std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
+    THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
@@ -233,7 +243,7 @@ public:
     bool MoveDown(uint32_t timeInMilliseconds) override;
 
     // 攻击
-    bool Attack(uint32_t timeInMilliseconds, double angleInRadian) override;
+    bool Attack(double angleInRadian) override;
     bool UseCommonSkill() override;
 
     // 通信
@@ -255,10 +265,10 @@ public:
     std::optional<std::string> TryGetMessage() override;
 
     std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
-    std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
     std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const override;
     std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const override;
     std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
+    THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;

@@ -87,10 +87,10 @@ private:
 
     int GetCounter() const override;
     std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
-    std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const override;
     std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const override;
     std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const override;
     std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
+    THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const override;
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;

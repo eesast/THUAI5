@@ -21,14 +21,6 @@ std::vector<std::shared_ptr<const THUAI5::Character>> Logic::GetCharacters() con
     return temp;
 }
 
-std::vector<std::shared_ptr<const THUAI5::Wall>> Logic::GetWalls() const
-{
-    std::unique_lock<std::mutex> lock(mtx_buffer);
-    std::vector<std::shared_ptr<const THUAI5::Wall>> temp;
-    temp.assign(pState->walls.begin(), pState->walls.end());
-    return temp;
-}
-
 std::vector<std::shared_ptr<const THUAI5::Bullet>> Logic::GetBullets() const
 {
     std::unique_lock<std::mutex> lock(mtx_buffer);
@@ -49,6 +41,12 @@ std::shared_ptr<const THUAI5::Character> Logic::GetSelfInfo() const
 {
     std::unique_lock<std::mutex> lock(mtx_buffer);
     return pState->self;
+}
+
+THUAI5::PlaceType Logic::GetPlaceType(int CellX,int CellY) const
+{
+    std::unique_lock<std::mutex> lock(mtx_buffer);
+    return pState->gamemap[CellX][CellY];
 }
 
 uint32_t Logic::GetTeamScore() const
@@ -205,12 +203,12 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 
         // 1.清除原有信息
         pBuffer->characters.clear();
-        pBuffer->walls.clear();
         pBuffer->props.clear();
         pBuffer->bullets.clear();
 
         // 2.信息不能全盘接受，要根据现有的视野范围接受
-        for (auto it = pm2c->gameobjmessage().begin(); it != pm2c->gameobjmessage().end(); it++)
+        auto gameObjMessage = pm2c->gameobjmessage();
+        for (auto it = gameObjMessage.begin(); it != gameObjMessage.end(); it++)
         {
             if (it->has_messageofcharacter())
             {
@@ -242,6 +240,23 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                 if (Vision::visible(pState->self,it->messageofprop()))
                 {
                     pBuffer->props.push_back(Proto2THUAI::Protobuf2THUAI5_P(it->messageofprop()));
+                }
+            }
+
+            else if(it->has_messageofmap())
+            {
+                auto Row = it->messageofmap().row();
+                int row_id = 0;
+                for(auto it_row=Row.begin();it_row!=Row.end();it_row++)
+                {
+                    auto Col = it_row->col();
+                    int col_id = 0;
+                    for(auto it_col = Col.begin();it_col!=Col.end();it_col++)
+                    {
+                        pBuffer->gamemap[row_id][col_id] = Proto2THUAI::Protobuf2THUAI5_M(*it_col);
+                        col_id++;
+                    }
+                    row_id++;
                 }
             }
 
