@@ -62,7 +62,6 @@ namespace Preparation.GameData
         /// </summary>
         public const int MinPropTypeNum = 1;
         public const int MaxPropTypeNum = 10;
-        public const int BuffTypeNum = 7;
         public const int PropRadius = numOfPosGridPerCell / 2;
         public const int PropMoveSpeed = 3000;
         public const int MaxGemSize = 5; //随机生成的宝石最大size
