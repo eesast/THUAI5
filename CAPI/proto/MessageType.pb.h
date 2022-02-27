@@ -6,7 +6,6 @@
 
 #include <limits>
 #include <string>
-#define PROTOBUF_USE_DLLS
 
 #include <google/protobuf/port_def.inc>
 #if PROTOBUF_VERSION < 3019000
@@ -72,15 +71,15 @@ enum MessageType : int {
   EndGame = 11,
   UseCommonSkill = 12,
   UseUltimateSkill = 13,
-  InitialLized = 14,
-  UseGem = 15,
-  ThrowGem = 16,
+  UseGem = 14,
+  ThrowGem = 15,
+  Map = 16,
   MessageType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   MessageType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool MessageType_IsValid(int value);
 constexpr MessageType MessageType_MIN = AddPlayer;
-constexpr MessageType MessageType_MAX = ThrowGem;
+constexpr MessageType MessageType_MAX = Map;
 constexpr int MessageType_ARRAYSIZE = MessageType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* MessageType_descriptor();

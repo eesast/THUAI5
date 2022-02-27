@@ -31,9 +31,6 @@ namespace CSharpInterface
             {
                 switch (content.MessageType)
                 {
-                    case MessageType.InitialLized:
-                        isGaming = true;
-                        break;
                     case MessageType.StartGame:
                         isGaming = true;
                         foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
@@ -50,6 +47,24 @@ namespace CSharpInterface
                                     break;
                                 case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
                                     propData.Add(obj);
+                                    break;
+                                case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap:
+                                    if (Map.flag)
+                                        break;
+                                    else
+                                    {
+                                        lock(Map.mapLock)
+                                        {
+                                            for(int i=0;i<50;i++)
+                                            {
+                                                for(int j=0;j<50;j++)
+                                                {
+                                                    Map.map[i, j] = obj.MessageOfMap.Row[i].Col[j];
+                                                }
+                                            }
+                                            Map.flag = true;
+                                        }
+                                    }
                                     break;
                             }
                         }
@@ -70,6 +85,24 @@ namespace CSharpInterface
                                     break;
                                 case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
                                     propData.Add(obj);
+                                    break;
+                                case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap:
+                                    if (Map.flag)
+                                        break;
+                                    else
+                                    {
+                                        lock (Map.mapLock)
+                                        {
+                                            for (int i = 0; i < 50; i++)
+                                            {
+                                                for (int j = 0; j < 50; j++)
+                                                {
+                                                    Map.map[i, j] = obj.MessageOfMap.Row[i].Col[j];
+                                                }
+                                            }
+                                            Map.flag = true;
+                                        }
+                                    }
                                     break;
                             }
                         }

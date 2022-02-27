@@ -71,10 +71,13 @@ message MessageOfBombedBullet  //for Unity
     double facingDirection=4;
 }
 
-message MessageToInitialize 
+message MessageOfMap
 {
-    int32 MapSerial = 1; //应该是地图的编号
-    MessageType messageType = 2;
+    message Row
+    {
+        repeated int32 col = 1;
+    }
+    repeated Row row = 51;  // 50*50 map
 }
 
 //每帧server发给client的信息
@@ -88,6 +91,7 @@ message MessageToClient
             MessageOfBullet messageOfBullet = 2;
             MessageOfProp messageOfProp = 3;
             MessageOfBombedBullet MessageOfBombedBullet=4;
+            MessageOfMap messageOfMap=5;
         }    
     }    
     repeated GameObjMessage gameObjMessage=1;

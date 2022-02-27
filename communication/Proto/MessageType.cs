@@ -24,36 +24,35 @@ namespace Communication.Proto {
     static MessageTypeReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChFNZXNzYWdlVHlwZS5wcm90bxIIUHJvdG9idWYqhAIKC01lc3NhZ2VUeXBl",
+            "ChFNZXNzYWdlVHlwZS5wcm90bxIIUHJvdG9idWYq+wEKC01lc3NhZ2VUeXBl",
             "Eg0KCUFkZFBsYXllchAAEggKBE1vdmUQARIKCgZBdHRhY2sQAhIICgRQaWNr",
             "EAMSCwoHVXNlUHJvcBAEEg0KCVRocm93UHJvcBAFEggKBFNlbmQQBhIRCg1J",
             "bnZhbGlkUGxheWVyEAcSDwoLVmFsaWRQbGF5ZXIQCBINCglTdGFydEdhbWUQ",
             "CRIKCgZHYW1pbmcQChILCgdFbmRHYW1lEAsSEgoOVXNlQ29tbW9uU2tpbGwQ",
-            "DBIUChBVc2VVbHRpbWF0ZVNraWxsEA0SEAoMSW5pdGlhbExpemVkEA4SCgoG",
-            "VXNlR2VtEA8SDAoIVGhyb3dHZW0QECqgAQoLR2FtZU9ialR5cGUSEwoPTnVs",
-            "bEdhbWVPYmpUeXBlEAASDQoJQ2hhcmFjdGVyEAESCAoEV2FsbBACEggKBFBy",
-            "b3AQAxIKCgZCdWxsZXQQBBIOCgpCaXJ0aFBvaW50EAUSEwoPT3V0T2ZCb3Vu",
-            "ZEJsb2NrEAYSCQoFR3Jhc3MQBxILCgdHZW1XZWxsEAgSEAoMQm9tYmVkQnVs",
-            "bGV0EAkqNgoJU2hhcGVUeXBlEhEKDU51bGxTaGFwZVR5cGUQABIKCgZDaXJj",
-            "bGUQARIKCgZTcXVhcmUQAipMCglQbGFjZVR5cGUSEQoNTnVsbFBsYWNlVHlw",
-            "ZRAAEggKBExhbmQQARIKCgZHcmFzczEQAhIKCgZHcmFzczIQAxIKCgZHcmFz",
-            "czMQBCqiAQoIUHJvcFR5cGUSEAoMTnVsbFByb3BUeXBlEAASCQoFYWRkSFAQ",
-            "ARIJCgVhZGRBUBACEgwKCGFkZFNwZWVkEAMSCwoHYWRkTElGRRAEEgsKB21p",
-            "bnVzQ0QQBRIHCgNHZW0QBhIKCgZTaGllbGQQBxIJCgVTcGVhchAIEg4KCm1p",
-            "bnVzU3BlZWQQCRILCgdtaW51c0FQEAoSCQoFYWRkQ0QQCyqVAQoQUGFzc2l2",
-            "ZVNraWxsVHlwZRIYChROdWxsUGFzc2l2ZVNraWxsVHlwZRAAEhYKElJlY292",
-            "ZXJBZnRlckJhdHRsZRABEhsKF1NwZWVkVXBXaGVuTGVhdmluZ0dyYXNzEAIS",
-            "CwoHVmFtcGlyZRADEgsKB1BTa2lsbDMQBBILCgdQU2tpbGw0EAUSCwoHUFNr",
-            "aWxsNRAGKo0BCg9BY3RpdmVTa2lsbFR5cGUSFwoTTnVsbEFjdGl2ZVNraWxs",
-            "VHlwZRAAEhEKDUJlY29tZVZhbXBpcmUQARISCg5CZWNvbWVBc3Nhc3NpbhAC",
-            "EhEKDU51Y2xlYXJXZWFwb24QAxINCglTdXBlckZhc3QQBBILCgdBU2tpbGw0",
-            "EAUSCwoHQVNraWxsNRAGKmcKCEJ1ZmZUeXBlEhAKDE51bGxCdWZmVHlwZRAA",
-            "Eg0KCU1vdmVTcGVlZBABEgYKAkFQEAISBgoCQ0QQAxILCgdBZGRMSUZFEAQS",
-            "DgoKU2hpZWxkQnVmZhAFEg0KCVNwZWFyQnVmZhAGKnUKCkJ1bGxldFR5cGUS",
-            "EgoOTnVsbEJ1bGxldFR5cGUQABIOCgpMaW5lQnVsbGV0EAESEQoNQ29tbW9u",
-            "QnVsbGV0MhACEg4KCkZhc3RCdWxsZXQQAxISCg5PcmRpbmFyeUJ1bGxldBAE",
-            "EgwKCEF0b21Cb21iEAVCFqoCE0NvbW11bmljYXRpb24uUHJvdG9iBnByb3Rv",
-            "Mw=="));
+            "DBIUChBVc2VVbHRpbWF0ZVNraWxsEA0SCgoGVXNlR2VtEA4SDAoIVGhyb3dH",
+            "ZW0QDxIHCgNNYXAQECqgAQoLR2FtZU9ialR5cGUSEwoPTnVsbEdhbWVPYmpU",
+            "eXBlEAASDQoJQ2hhcmFjdGVyEAESCAoEV2FsbBACEggKBFByb3AQAxIKCgZC",
+            "dWxsZXQQBBIOCgpCaXJ0aFBvaW50EAUSEwoPT3V0T2ZCb3VuZEJsb2NrEAYS",
+            "CQoFR3Jhc3MQBxILCgdHZW1XZWxsEAgSEAoMQm9tYmVkQnVsbGV0EAkqNgoJ",
+            "U2hhcGVUeXBlEhEKDU51bGxTaGFwZVR5cGUQABIKCgZDaXJjbGUQARIKCgZT",
+            "cXVhcmUQAipMCglQbGFjZVR5cGUSEQoNTnVsbFBsYWNlVHlwZRAAEggKBExh",
+            "bmQQARIKCgZHcmFzczEQAhIKCgZHcmFzczIQAxIKCgZHcmFzczMQBCqiAQoI",
+            "UHJvcFR5cGUSEAoMTnVsbFByb3BUeXBlEAASCQoFYWRkSFAQARIJCgVhZGRB",
+            "UBACEgwKCGFkZFNwZWVkEAMSCwoHYWRkTElGRRAEEgsKB21pbnVzQ0QQBRIH",
+            "CgNHZW0QBhIKCgZTaGllbGQQBxIJCgVTcGVhchAIEg4KCm1pbnVzU3BlZWQQ",
+            "CRILCgdtaW51c0FQEAoSCQoFYWRkQ0QQCyqVAQoQUGFzc2l2ZVNraWxsVHlw",
+            "ZRIYChROdWxsUGFzc2l2ZVNraWxsVHlwZRAAEhYKElJlY292ZXJBZnRlckJh",
+            "dHRsZRABEhsKF1NwZWVkVXBXaGVuTGVhdmluZ0dyYXNzEAISCwoHVmFtcGly",
+            "ZRADEgsKB1BTa2lsbDMQBBILCgdQU2tpbGw0EAUSCwoHUFNraWxsNRAGKo0B",
+            "Cg9BY3RpdmVTa2lsbFR5cGUSFwoTTnVsbEFjdGl2ZVNraWxsVHlwZRAAEhEK",
+            "DUJlY29tZVZhbXBpcmUQARISCg5CZWNvbWVBc3Nhc3NpbhACEhEKDU51Y2xl",
+            "YXJXZWFwb24QAxINCglTdXBlckZhc3QQBBILCgdBU2tpbGw0EAUSCwoHQVNr",
+            "aWxsNRAGKmcKCEJ1ZmZUeXBlEhAKDE51bGxCdWZmVHlwZRAAEg0KCU1vdmVT",
+            "cGVlZBABEgYKAkFQEAISBgoCQ0QQAxILCgdBZGRMSUZFEAQSDgoKU2hpZWxk",
+            "QnVmZhAFEg0KCVNwZWFyQnVmZhAGKnUKCkJ1bGxldFR5cGUSEgoOTnVsbEJ1",
+            "bGxldFR5cGUQABIOCgpMaW5lQnVsbGV0EAESEQoNQ29tbW9uQnVsbGV0MhAC",
+            "Eg4KCkZhc3RCdWxsZXQQAxISCg5PcmRpbmFyeUJ1bGxldBAEEgwKCEF0b21C",
+            "b21iEAVCFqoCE0NvbW11bmljYXRpb24uUHJvdG9iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Communication.Proto.MessageType), typeof(global::Communication.Proto.GameObjType), typeof(global::Communication.Proto.ShapeType), typeof(global::Communication.Proto.PlaceType), typeof(global::Communication.Proto.PropType), typeof(global::Communication.Proto.PassiveSkillType), typeof(global::Communication.Proto.ActiveSkillType), typeof(global::Communication.Proto.BuffType), typeof(global::Communication.Proto.BulletType), }, null, null));
@@ -86,12 +85,9 @@ namespace Communication.Proto {
     ///使用UltimateSkill。UltimateSkill极有可能不会有，即人物极有可能只有PassiveSkill和CommonSkill。
     /// </summary>
     [pbr::OriginalName("UseUltimateSkill")] UseUltimateSkill = 13,
-    /// <summary>
-    ///Server给Client发送初始化消息十分关键，因此这里用StartGame-MessageToInitialize-InitialLized三次握手确认该操作的成功。
-    /// </summary>
-    [pbr::OriginalName("InitialLized")] InitialLized = 14,
-    [pbr::OriginalName("UseGem")] UseGem = 15,
-    [pbr::OriginalName("ThrowGem")] ThrowGem = 16,
+    [pbr::OriginalName("UseGem")] UseGem = 14,
+    [pbr::OriginalName("ThrowGem")] ThrowGem = 15,
+    [pbr::OriginalName("Map")] Map = 16,
   }
 
   public enum GameObjType {

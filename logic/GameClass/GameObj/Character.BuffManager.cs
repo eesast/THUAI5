@@ -7,8 +7,7 @@ using Preparation.GameData;
 
 namespace GameClass.GameObj
 {
-    public
-        partial class Character
+    public partial class Character
     {
         private readonly BuffManeger buffManeger;
         /// <summary>
@@ -135,7 +134,7 @@ namespace GameClass.GameObj
             /// </summary>
             public void ClearAll()
             {
-                for (int i = 0; i < GameData.BuffTypeNum; ++i)
+                for (int i = 0; i < buffList.Length; ++i)
                 {
                     lock (buffListLock[i])
                     {
@@ -146,8 +145,7 @@ namespace GameClass.GameObj
 
             public BuffManeger()
             {
-
-                buffList = new LinkedList<BuffValue>[GameData.BuffTypeNum];
+                buffList = new LinkedList<BuffValue>[Enum.GetValues(typeof(BuffType)).Length];
                 for (int i = 0; i < buffList.Length; ++i)
                 {
                     buffList[i] = new LinkedList<BuffValue>();

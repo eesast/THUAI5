@@ -118,13 +118,17 @@ class IAPI
     [[nodiscard]] virtual bool MessageAvailable() = 0;
     [[nodiscard]] virtual std::optional<std::string> TryGetMessage() = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
+    [[nodiscard]] virtual THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const = 0;
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
     [[nodiscard]] virtual int GetFrameCount() const = 0;
+
+    //***********辅助函数***********//
+    [[nodiscard]] static constexpr inline int CellToGrid(int cell) noexcept; // 获取指定格子中心的坐标
+    [[nodiscard]] static constexpr inline int GridToCell(int grid) noexcept; // 获取指定坐标点所位于的格子的 X 序号
 }
 ```
 
@@ -145,7 +149,7 @@ class IAPI
 * `bool UseProp()`：使用道具。
 
 #### 攻击
-* `bool Attack(uint32_t timeInMilliseconds, double angleInRadian)`：发射子弹进行攻击。两个参数制定了子弹的移动参数（与 `MovePlayer` 相同），子弹的移动速度（每秒飞行的坐标数）已经在 `Constants.h` 中给出。
+* `bool Attack(double angleInRadian)`：发射子弹进行攻击。`angleInRadian`给出了子弹的发射方向，子弹的移动速度（每秒飞行的坐标数）已经在 `Constants.h` 中给出。
 
 #### 主动技能
 * `bool UseCommonSkill()`：使用主动技能。
@@ -176,17 +180,28 @@ class IAPI
 #### 玩家GUID信息
 * `const std::vector<int64_t> GetPlayerGUIDs() const`：返回一个数组，存储了场上所有玩家的GUID（全局唯一标识符）。
 
-* `std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const`：返回当前场地视野范围内的所有玩家的信息。视野范围是一个以一定长度为半径的圆形，如果一个玩家中心点处在视野范围内，那么就看做该玩家位于视野范围。
+#### 游戏实物信息
 
-* `std::vector<std::shared_ptr<const THUAI5::Wall>> GetWalls() const`：返回当前场地视野范围内的所有墙体的信息。其他信息同上。
+* `std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const`：返回当前场地内的所有可视玩家的信息。
 
-* `std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const`：返回当前场地视野范围内的所有**尚未被捡起的**的道具的信息。其他信息同上。
+* `std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const`：返回当前场地内的所有**尚未被捡起的**的可视道具的信息。其他信息同上。
 
-* `std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const`：返回当前场地视野范围内的所有子弹的信息。其他信息同上。
+* `std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const`：返回当前场地内的所有可视子弹的信息。其他信息同上。
+
+* `THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const`：返回某一位置场地种类信息。注意此处的`CellX`和`CellY`指的是**地图格数**，而不是**绝对坐标**。
+场地种类详见`structure.h`。
 
 #### 队友信息
 * `bool MessageAvailable()`：如果当前有队友发来的尚未接收的信息，返回 `true`。
 
 * `std::optional<std::string> TryGetMessage()`：获取队友发来的信息，注意当信息队列为空时，返回`nullptr`。
+
+#### 其他信息
+* `int GetFrameCount() const`：获取游戏已经进行的帧数。
+
+### 辅助函数
+* `static constexpr inline int CellToGrid(int cell) noexcept`：将地图格数`cell`转换为绝对坐标`grid`。
+
+* `static constexpr inline int GridToCell(int grid) noexcept`：将绝对坐标`grid`转换为地图格数`cell`。
 
 

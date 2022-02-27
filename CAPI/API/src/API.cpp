@@ -33,11 +33,10 @@ bool API::MoveRight(uint32_t timeInMilliseconds)
     return MovePlayer(timeInMilliseconds, PI * 0.5);
 }
 
-bool API::Attack(uint32_t timeInMilliseconds, double angleInRadian)
+bool API::Attack(double angleInRadian)
 {
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Attack);
-    message.set_timeinmilliseconds(timeInMilliseconds);
     message.set_angle(angleInRadian);
     return logic.SendInfo(message);
 }
@@ -125,11 +124,6 @@ std::vector<std::shared_ptr<const THUAI5::Character>> API::GetCharacters() const
     return logic.GetCharacters();
 }
 
-std::vector<std::shared_ptr<const THUAI5::Wall>> API::GetWalls() const
-{
-    return logic.GetWalls();
-}
-
 std::vector<std::shared_ptr<const THUAI5::Bullet>> API::GetBullets() const
 {
     return logic.GetBullets();
@@ -158,5 +152,10 @@ const std::vector<int64_t> API::GetPlayerGUIDs() const
 int API::GetFrameCount() const
 {
     return logic.GetCounter();
+}
+
+THUAI5::PlaceType API::GetPlaceType(int32_t CellX, int32_t CellY) const
+{
+    return logic.GetPlaceType(CellX, CellY);
 }
 

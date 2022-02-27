@@ -443,8 +443,6 @@ namespace Client
                     MessageToClient content = (MessageToClient)msg.Content;
                     switch (content.MessageType)
                     {
-                        case MessageType.InitialLized:
-                            break;
                         case MessageType.StartGame:
                             foreach (MessageToClient.Types.GameObjMessage obj in content.GameObjMessage)
                             {

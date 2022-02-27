@@ -19,9 +19,9 @@ enum MessageType
     EndGame = 11;
     UseCommonSkill = 12;   //使用CommonSkill
     UseUltimateSkill = 13;   //使用UltimateSkill。UltimateSkill极有可能不会有，即人物极有可能只有PassiveSkill和CommonSkill。
-    InitialLized = 14;  //Server给Client发送初始化消息十分关键，因此这里用StartGame-MessageToInitialize-InitialLized三次握手确认该操作的成功。
-    UseGem=15;
-    ThrowGem=16;
+    UseGem=14;
+    ThrowGem=15;
+    Map=16;
 }
 
 enum GameObjType
