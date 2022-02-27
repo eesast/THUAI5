@@ -30,7 +30,7 @@ namespace GameClass.Skill
                 new Thread
                 (() =>
                 {
-                    player.Vampire = 1.0;
+                    player.Vampire += 1.0;
                     Debugger.Output(player, "becomes vampire!");
 
                     new FrameRateTaskExecutor<int>
