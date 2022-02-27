@@ -17,6 +17,8 @@
 #pragma warning(disable:4996)
 #endif
 
+const constexpr int num_of_grid_per_cell = 1000;
+
 /// <summary>
 /// API中依赖Logic的部分
 /// </summary>
@@ -146,12 +148,12 @@ public:
     //***********选手可能用到的辅助函数***********//
     [[nodiscard]] static constexpr inline int CellToGrid(int cell) noexcept // 获取指定格子中心的坐标
     {
-        return cell * NUM_OF_GRID_PER_CELL + NUM_OF_GRID_PER_CELL / 2;
+        return cell * num_of_grid_per_cell + num_of_grid_per_cell / 2;
     }
 
     [[nodiscard]] static constexpr inline int GridToCell(int grid) noexcept // 获取指定坐标点所位于的格子的 X 序号
     {
-        return grid / NUM_OF_GRID_PER_CELL;
+        return grid / num_of_grid_per_cell;
     }
 
     //***********构造函数************//
