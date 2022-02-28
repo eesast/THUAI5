@@ -39,29 +39,27 @@ const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARI
   "llet\020\t*6\n\tShapeType\022\021\n\rNullShapeType\020\000\022\n"
   "\n\006Circle\020\001\022\n\n\006Square\020\002*L\n\tPlaceType\022\021\n\rN"
   "ullPlaceType\020\000\022\010\n\004Land\020\001\022\n\n\006Grass1\020\002\022\n\n\006"
-  "Grass2\020\003\022\n\n\006Grass3\020\004*\242\001\n\010PropType\022\020\n\014Nul"
-  "lPropType\020\000\022\t\n\005addHP\020\001\022\t\n\005addAP\020\002\022\014\n\010add"
-  "Speed\020\003\022\013\n\007addLIFE\020\004\022\013\n\007minusCD\020\005\022\007\n\003Gem"
-  "\020\006\022\n\n\006Shield\020\007\022\t\n\005Spear\020\010\022\016\n\nminusSpeed\020"
-  "\t\022\013\n\007minusAP\020\n\022\t\n\005addCD\020\013*\225\001\n\020PassiveSki"
-  "llType\022\030\n\024NullPassiveSkillType\020\000\022\026\n\022Reco"
-  "verAfterBattle\020\001\022\033\n\027SpeedUpWhenLeavingGr"
-  "ass\020\002\022\013\n\007Vampire\020\003\022\013\n\007PSkill3\020\004\022\013\n\007PSkil"
-  "l4\020\005\022\013\n\007PSkill5\020\006*\215\001\n\017ActiveSkillType\022\027\n"
-  "\023NullActiveSkillType\020\000\022\021\n\rBecomeVampire\020"
-  "\001\022\022\n\016BecomeAssassin\020\002\022\021\n\rNuclearWeapon\020\003"
-  "\022\r\n\tSuperFast\020\004\022\013\n\007ASkill4\020\005\022\013\n\007ASkill5\020"
-  "\006*g\n\010BuffType\022\020\n\014NullBuffType\020\000\022\r\n\tMoveS"
-  "peed\020\001\022\006\n\002AP\020\002\022\006\n\002CD\020\003\022\013\n\007AddLIFE\020\004\022\016\n\nS"
-  "hieldBuff\020\005\022\r\n\tSpearBuff\020\006*u\n\nBulletType"
-  "\022\022\n\016NullBulletType\020\000\022\016\n\nLineBullet\020\001\022\021\n\r"
-  "CommonBullet2\020\002\022\016\n\nFastBullet\020\003\022\022\n\016Ordin"
-  "aryBullet\020\004\022\014\n\010AtomBomb\020\005B\026\252\002\023Communicat"
-  "ion.Protob\006proto3"
+  "Grass2\020\003\022\n\n\006Grass3\020\004*W\n\010PropType\022\020\n\014Null"
+  "PropType\020\000\022\014\n\010addSpeed\020\001\022\013\n\007addLIFE\020\002\022\007\n"
+  "\003Gem\020\003\022\n\n\006Shield\020\004\022\t\n\005Spear\020\005*\225\001\n\020Passiv"
+  "eSkillType\022\030\n\024NullPassiveSkillType\020\000\022\026\n\022"
+  "RecoverAfterBattle\020\001\022\033\n\027SpeedUpWhenLeavi"
+  "ngGrass\020\002\022\013\n\007Vampire\020\003\022\013\n\007PSkill3\020\004\022\013\n\007P"
+  "Skill4\020\005\022\013\n\007PSkill5\020\006*\215\001\n\017ActiveSkillTyp"
+  "e\022\027\n\023NullActiveSkillType\020\000\022\021\n\rBecomeVamp"
+  "ire\020\001\022\022\n\016BecomeAssassin\020\002\022\021\n\rNuclearWeap"
+  "on\020\003\022\r\n\tSuperFast\020\004\022\013\n\007ASkill4\020\005\022\013\n\007ASki"
+  "ll5\020\006*g\n\010BuffType\022\020\n\014NullBuffType\020\000\022\r\n\tM"
+  "oveSpeed\020\001\022\006\n\002AP\020\002\022\006\n\002CD\020\003\022\013\n\007AddLIFE\020\004\022"
+  "\016\n\nShieldBuff\020\005\022\r\n\tSpearBuff\020\006*u\n\nBullet"
+  "Type\022\022\n\016NullBulletType\020\000\022\016\n\nLineBullet\020\001"
+  "\022\021\n\rCommonBullet2\020\002\022\016\n\nFastBullet\020\003\022\022\n\016O"
+  "rdinaryBullet\020\004\022\014\n\010AtomBomb\020\005B\026\252\002\023Commun"
+  "ication.Protob\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_MessageType_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_MessageType_2eproto = {
-  false, false, 1297, descriptor_table_protodef_MessageType_2eproto, "MessageType.proto", 
+  false, false, 1221, descriptor_table_protodef_MessageType_2eproto, "MessageType.proto", 
   &descriptor_table_MessageType_2eproto_once, nullptr, 0, 0,
   schemas, file_default_instances, TableStruct_MessageType_2eproto::offsets,
   nullptr, file_level_enum_descriptors_MessageType_2eproto, file_level_service_descriptors_MessageType_2eproto,
@@ -168,12 +166,6 @@ bool PropType_IsValid(int value) {
     case 3:
     case 4:
     case 5:
-    case 6:
-    case 7:
-    case 8:
-    case 9:
-    case 10:
-    case 11:
       return true;
     default:
       return false;

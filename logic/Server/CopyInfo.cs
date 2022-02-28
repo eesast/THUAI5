@@ -79,32 +79,14 @@ namespace Server
             {
                 switch (player.PropInventory.GetPropType())
                 {
-                    case Preparation.Utility.PropType.addAP:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddAp;
-                        break;
                     case Preparation.Utility.PropType.Gem:
                         msg.MessageOfCharacter.Prop = Communication.Proto.PropType.Gem;
-                        break;
-                    case Preparation.Utility.PropType.addCD:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddCd;
-                        break;
-                    case Preparation.Utility.PropType.addHP:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddHp;
                         break;
                     case Preparation.Utility.PropType.addLIFE:
                         msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddLife;
                         break;
                     case Preparation.Utility.PropType.addSpeed:
                         msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddSpeed;
-                        break;
-                    case Preparation.Utility.PropType.minusAP:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.MinusAp;
-                        break;
-                    case Preparation.Utility.PropType.minusCD:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.MinusCd;
-                        break;
-                    case Preparation.Utility.PropType.minusSpeed:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.MinusSpeed;
                         break;
                     case Preparation.Utility.PropType.Shield:
                         msg.MessageOfCharacter.Prop = Communication.Proto.PropType.Shield;
@@ -230,32 +212,14 @@ namespace Server
             msg.MessageOfProp.Guid = prop.ID;
             switch (prop.GetPropType())
             {
-                case Preparation.Utility.PropType.addAP:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddAp;
-                    break;
                 case Preparation.Utility.PropType.Gem:
                     msg.MessageOfProp.Type = Communication.Proto.PropType.Gem;
-                    break;
-                case Preparation.Utility.PropType.addCD:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddCd;
-                    break;
-                case Preparation.Utility.PropType.addHP:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddHp;
                     break;
                 case Preparation.Utility.PropType.addLIFE:
                     msg.MessageOfProp.Type = Communication.Proto.PropType.AddLife;
                     break;
                 case Preparation.Utility.PropType.addSpeed:
                     msg.MessageOfProp.Type = Communication.Proto.PropType.AddSpeed;
-                    break;
-                case Preparation.Utility.PropType.minusAP:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.MinusAp;
-                    break;
-                case Preparation.Utility.PropType.minusCD:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.MinusCd;
-                    break;
-                case Preparation.Utility.PropType.minusSpeed:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.MinusSpeed;
                     break;
                 case Preparation.Utility.PropType.Shield:
                     msg.MessageOfProp.Type = Communication.Proto.PropType.Shield;

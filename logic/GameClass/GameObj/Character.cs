@@ -46,20 +46,7 @@ namespace GameClass.GameObj
         private int deathCount = 0;
         public int DeathCount => deathCount;  // 玩家的死亡次数
 
-        protected int ap;   // 当前攻击力
-        public int AP
-        {
-            get => ap;
-            private set
-            {
-                lock (gameObjLock)
-                {
-                    ap = value;
-                    Debugger.Output(this, "'s AP has been set to: " + value.ToString());
-                }
-            }
-        }
-        public int OrgAp { get; protected set; }    // 原初攻击力
+        public int AP => this.BulletOfPlayer.AP;
 
         private int score = 0;
         public int Score
@@ -388,12 +375,8 @@ namespace GameClass.GameObj
         }
         #endregion
 
-        #region 角色拥有的buff相关属性、方法（目前还是完全照搬的）
-        public void AddMoveSpeed(double add, int buffTime) => buffManeger.AddMoveSpeed(add, buffTime, newVal => { MoveSpeed = newVal; }, OrgMoveSpeed);
-
-        public void AddAP(double add, int buffTime) => buffManeger.AddAP(add, buffTime, newVal => { AP = newVal; }, OrgAp);
-
-        public void ChangeCD(double discount, int buffTime) => buffManeger.ChangeCD(discount, buffTime, newVal => { CD = newVal; }, OrgCD);
+        #region 角色拥有的buff相关属性、方法
+        public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManeger.AddMoveSpeed(add, buffTime, newVal => { MoveSpeed = newVal; }, OrgMoveSpeed);
 
         public void AddShield(int shieldTime) => buffManeger.AddShield(shieldTime);
         public bool HasShield => buffManeger.HasShield;
@@ -418,7 +401,6 @@ namespace GameClass.GameObj
             base.Reset();
             this.moveSpeed = OrgMoveSpeed;
             hp = MaxHp;
-            ap = OrgAp;
             propInventory = null;
             bulletNum = maxBulletNum / 2;
             buffManeger.ClearAll();
