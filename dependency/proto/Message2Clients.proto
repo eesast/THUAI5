@@ -39,6 +39,7 @@ message MessageOfCharacter
     int64 teamID=24;
     int64 playerID=25;
     bool isInvisible=26;
+    double facingDirection=27;
 }
 
 message MessageOfProp

@@ -40,6 +40,7 @@ namespace Server
             msg.MessageOfCharacter.TeamID = player.TeamID;
             msg.MessageOfCharacter.PlayerID = player.PlayerID;
             msg.MessageOfCharacter.IsInvisible = player.IsInvisible;
+            msg.MessageOfCharacter.FacingDirection = player.FacingDirection;
 
             //应该要发队伍分数，这里先发个人分数
             msg.MessageOfCharacter.Score = player.Score;

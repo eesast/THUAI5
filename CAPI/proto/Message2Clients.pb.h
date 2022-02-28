@@ -245,6 +245,7 @@ class MessageOfCharacter final :
     kLifeNumFieldNumber = 22,
     kTeamIDFieldNumber = 24,
     kPlayerIDFieldNumber = 25,
+    kFacingDirectionFieldNumber = 27,
     kScoreFieldNumber = 23,
   };
   // int32 x = 1;
@@ -472,6 +473,15 @@ class MessageOfCharacter final :
   void _internal_set_playerid(int64_t value);
   public:
 
+  // double facingDirection = 27;
+  void clear_facingdirection();
+  double facingdirection() const;
+  void set_facingdirection(double value);
+  private:
+  double _internal_facingdirection() const;
+  void _internal_set_facingdirection(double value);
+  public:
+
   // int32 score = 23;
   void clear_score();
   int32_t score() const;
@@ -513,6 +523,7 @@ class MessageOfCharacter final :
   int32_t lifenum_;
   int64_t teamid_;
   int64_t playerid_;
+  double facingdirection_;
   int32_t score_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
@@ -2589,6 +2600,26 @@ inline void MessageOfCharacter::_internal_set_isinvisible(bool value) {
 inline void MessageOfCharacter::set_isinvisible(bool value) {
   _internal_set_isinvisible(value);
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.isInvisible)
+}
+
+// double facingDirection = 27;
+inline void MessageOfCharacter::clear_facingdirection() {
+  facingdirection_ = 0;
+}
+inline double MessageOfCharacter::_internal_facingdirection() const {
+  return facingdirection_;
+}
+inline double MessageOfCharacter::facingdirection() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfCharacter.facingDirection)
+  return _internal_facingdirection();
+}
+inline void MessageOfCharacter::_internal_set_facingdirection(double value) {
+  
+  facingdirection_ = value;
+}
+inline void MessageOfCharacter::set_facingdirection(double value) {
+  _internal_set_facingdirection(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.facingDirection)
 }
 
 // -------------------------------------------------------------------
