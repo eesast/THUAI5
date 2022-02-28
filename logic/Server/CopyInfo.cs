@@ -270,6 +270,7 @@ namespace Server
             msg.MessageOfBombedBullet.FacingDirection = bombedBullet.FacingDirection;
             msg.MessageOfBombedBullet.X = bombedBullet.bulletHasBombed.Position.x;
             msg.MessageOfBombedBullet.Y = bombedBullet.bulletHasBombed.Position.y;
+            msg.MessageOfBombedBullet.Guid = bombedBullet.ID;
             switch (bombedBullet.bulletHasBombed.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.OrdinaryBullet:

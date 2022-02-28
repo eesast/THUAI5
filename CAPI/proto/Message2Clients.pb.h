@@ -1079,6 +1079,7 @@ class MessageOfBombedBullet final :
     kTypeFieldNumber = 1,
     kXFieldNumber = 2,
     kFacingDirectionFieldNumber = 4,
+    kGuidFieldNumber = 5,
     kYFieldNumber = 3,
   };
   // .Protobuf.BulletType type = 1;
@@ -1108,6 +1109,15 @@ class MessageOfBombedBullet final :
   void _internal_set_facingdirection(double value);
   public:
 
+  // int64 guid = 5;
+  void clear_guid();
+  int64_t guid() const;
+  void set_guid(int64_t value);
+  private:
+  int64_t _internal_guid() const;
+  void _internal_set_guid(int64_t value);
+  public:
+
   // int32 y = 3;
   void clear_y();
   int32_t y() const;
@@ -1127,6 +1137,7 @@ class MessageOfBombedBullet final :
   int type_;
   int32_t x_;
   double facingdirection_;
+  int64_t guid_;
   int32_t y_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
@@ -2992,6 +3003,26 @@ inline void MessageOfBombedBullet::_internal_set_facingdirection(double value) {
 inline void MessageOfBombedBullet::set_facingdirection(double value) {
   _internal_set_facingdirection(value);
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfBombedBullet.facingDirection)
+}
+
+// int64 guid = 5;
+inline void MessageOfBombedBullet::clear_guid() {
+  guid_ = int64_t{0};
+}
+inline int64_t MessageOfBombedBullet::_internal_guid() const {
+  return guid_;
+}
+inline int64_t MessageOfBombedBullet::guid() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfBombedBullet.guid)
+  return _internal_guid();
+}
+inline void MessageOfBombedBullet::_internal_set_guid(int64_t value) {
+  
+  guid_ = value;
+}
+inline void MessageOfBombedBullet::set_guid(int64_t value) {
+  _internal_set_guid(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfBombedBullet.guid)
 }
 
 // -------------------------------------------------------------------
