@@ -2,6 +2,7 @@
 using Preparation.Interface;
 using Preparation.Utility;
 using System;
+using System.Collections.Generic;
 
 namespace GameClass.GameObj
 {
@@ -377,6 +378,7 @@ namespace GameClass.GameObj
 
         #region 角色拥有的buff相关属性、方法
         public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManeger.AddMoveSpeed(add, buffTime, newVal => { MoveSpeed = newVal; }, OrgMoveSpeed);
+        public bool HasFasterSpeed => buffManeger.HasFasterSpeed;
 
         public void AddShield(int shieldTime) => buffManeger.AddShield(shieldTime);
         public bool HasShield => buffManeger.HasShield;
@@ -386,6 +388,14 @@ namespace GameClass.GameObj
 
         public void AddSpear(int spearTime) => buffManeger.AddSpear(spearTime);
         public bool HasSpear => buffManeger.HasSpear;
+
+        public Dictionary<BuffType, bool> Buff
+        {   get
+            {
+                buffManeger.RefreshBuff();
+                return buffManeger.Buff;
+            }
+        }
 
         private void TryActivatingLIFE()
         {

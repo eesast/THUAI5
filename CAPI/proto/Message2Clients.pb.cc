@@ -19,7 +19,9 @@ PROTOBUF_PRAGMA_INIT_SEG
 namespace Protobuf {
 constexpr MessageOfCharacter::MessageOfCharacter(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : x_(0)
+  : buff_()
+  , _buff_cached_byte_size_(0)
+  , x_(0)
   , y_(0)
   , attackrange_(0)
   , bulletnum_(0)
@@ -28,30 +30,28 @@ constexpr MessageOfCharacter::MessageOfCharacter(
   , life_(0)
   , gemnum_(0)
   , timeuntilultimateskillavailable_(0)
-  , buff_(0)
-
+  , facingdirection_(0)
   , prop_(0)
 
-  , vampire_(0)
   , place_(0)
 
+  , vampire_(0)
   , bullettype_(0)
 
   , passiveskilltype_(0)
 
+  , guid_(int64_t{0})
   , activeskilltype_(0)
 
-  , guid_(int64_t{0})
   , radius_(0)
   , isresetting_(false)
   , canmove_(false)
   , isinvisible_(false)
   , cd_(0)
   , lifenum_(0)
+  , score_(0)
   , teamid_(int64_t{0})
-  , playerid_(int64_t{0})
-  , facingdirection_(0)
-  , score_(0){}
+  , playerid_(int64_t{0}){}
 struct MessageOfCharacterDefaultTypeInternal {
   constexpr MessageOfCharacterDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -207,7 +207,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, timeuntilcommonskillavailable_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, timeuntilultimateskillavailable_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, gemnum_),
-  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, buff_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, facingdirection_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, prop_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, place_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, vampire_),
@@ -224,7 +224,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, teamid_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, playerid_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, isinvisible_),
-  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, facingdirection_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfCharacter, buff_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -339,19 +339,19 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
   "\n\tbulletNum\030\004 \001(\005\022\r\n\005speed\030\005 \001(\005\022\014\n\004life"
   "\030\006 \001(\005\022%\n\035timeUntilCommonSkillAvailable\030"
   "\007 \001(\001\022\'\n\037timeUntilUltimateSkillAvailable"
-  "\030\010 \001(\001\022\016\n\006gemNum\030\t \001(\005\022 \n\004buff\030\n \001(\0162\022.P"
-  "rotobuf.BuffType\022 \n\004prop\030\013 \001(\0162\022.Protobu"
-  "f.PropType\022\"\n\005place\030\014 \001(\0162\023.Protobuf.Pla"
-  "ceType\022\017\n\007vampire\030\r \001(\001\022(\n\nbulletType\030\016 "
-  "\001(\0162\024.Protobuf.BulletType\022\023\n\013isResetting"
-  "\030\017 \001(\010\0224\n\020PassiveSkillType\030\020 \001(\0162\032.Proto"
-  "buf.PassiveSkillType\0222\n\017ActiveSkillType\030"
-  "\021 \001(\0162\031.Protobuf.ActiveSkillType\022\014\n\004guid"
-  "\030\022 \001(\003\022\017\n\007canMove\030\023 \001(\010\022\016\n\006radius\030\024 \001(\005\022"
-  "\n\n\002CD\030\025 \001(\005\022\017\n\007lifeNum\030\026 \001(\005\022\r\n\005score\030\027 "
-  "\001(\005\022\016\n\006teamID\030\030 \001(\003\022\020\n\010playerID\030\031 \001(\003\022\023\n"
-  "\013isInvisible\030\032 \001(\010\022\027\n\017facingDirection\030\033 "
-  "\001(\001\"\240\001\n\rMessageOfProp\022 \n\004type\030\001 \001(\0162\022.Pr"
+  "\030\010 \001(\001\022\016\n\006gemNum\030\t \001(\005\022\027\n\017facingDirectio"
+  "n\030\n \001(\001\022 \n\004prop\030\013 \001(\0162\022.Protobuf.PropTyp"
+  "e\022\"\n\005place\030\014 \001(\0162\023.Protobuf.PlaceType\022\017\n"
+  "\007vampire\030\r \001(\001\022(\n\nbulletType\030\016 \001(\0162\024.Pro"
+  "tobuf.BulletType\022\023\n\013isResetting\030\017 \001(\010\0224\n"
+  "\020PassiveSkillType\030\020 \001(\0162\032.Protobuf.Passi"
+  "veSkillType\0222\n\017ActiveSkillType\030\021 \001(\0162\031.P"
+  "rotobuf.ActiveSkillType\022\014\n\004guid\030\022 \001(\003\022\017\n"
+  "\007canMove\030\023 \001(\010\022\016\n\006radius\030\024 \001(\005\022\n\n\002CD\030\025 \001"
+  "(\005\022\017\n\007lifeNum\030\026 \001(\005\022\r\n\005score\030\027 \001(\005\022\016\n\006te"
+  "amID\030\030 \001(\003\022\020\n\010playerID\030\031 \001(\003\022\023\n\013isInvisi"
+  "ble\030\032 \001(\010\022 \n\004buff\030\033 \003(\0162\022.Protobuf.BuffT"
+  "ype\"\240\001\n\rMessageOfProp\022 \n\004type\030\001 \001(\0162\022.Pr"
   "otobuf.PropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n"
   "\017facingDirection\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\014\n\004"
   "size\030\006 \001(\005\022\"\n\005place\030\007 \001(\0162\023.Protobuf.Pla"
@@ -407,7 +407,8 @@ class MessageOfCharacter::_Internal {
 
 MessageOfCharacter::MessageOfCharacter(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
+  buff_(arena) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
@@ -415,19 +416,20 @@ MessageOfCharacter::MessageOfCharacter(::PROTOBUF_NAMESPACE_ID::Arena* arena,
   // @@protoc_insertion_point(arena_constructor:Protobuf.MessageOfCharacter)
 }
 MessageOfCharacter::MessageOfCharacter(const MessageOfCharacter& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      buff_(from.buff_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&x_, &from.x_,
-    static_cast<size_t>(reinterpret_cast<char*>(&score_) -
-    reinterpret_cast<char*>(&x_)) + sizeof(score_));
+    static_cast<size_t>(reinterpret_cast<char*>(&playerid_) -
+    reinterpret_cast<char*>(&x_)) + sizeof(playerid_));
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageOfCharacter)
 }
 
 inline void MessageOfCharacter::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&x_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&score_) -
-    reinterpret_cast<char*>(&x_)) + sizeof(score_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&playerid_) -
+    reinterpret_cast<char*>(&x_)) + sizeof(playerid_));
 }
 
 MessageOfCharacter::~MessageOfCharacter() {
@@ -457,9 +459,10 @@ void MessageOfCharacter::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  buff_.Clear();
   ::memset(&x_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&score_) -
-      reinterpret_cast<char*>(&x_)) + sizeof(score_));
+      reinterpret_cast<char*>(&playerid_) -
+      reinterpret_cast<char*>(&x_)) + sizeof(playerid_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -541,12 +544,11 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         } else
           goto handle_unusual;
         continue;
-      // .Protobuf.BuffType buff = 10;
+      // double facingDirection = 10;
       case 10:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 80)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-          _internal_set_buff(static_cast<::Protobuf::BuffType>(val));
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 81)) {
+          facingdirection_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
         } else
           goto handle_unusual;
         continue;
@@ -683,11 +685,15 @@ const char* MessageOfCharacter::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
         } else
           goto handle_unusual;
         continue;
-      // double facingDirection = 27;
+      // repeated .Protobuf.BuffType buff = 27;
       case 27:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 217)) {
-          facingdirection_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
-          ptr += sizeof(double);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 218)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedEnumParser(_internal_mutable_buff(), ptr, ctx);
+          CHK_(ptr);
+        } else if (static_cast<uint8_t>(tag) == 216) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_add_buff(static_cast<::Protobuf::BuffType>(val));
         } else
           goto handle_unusual;
         continue;
@@ -786,11 +792,14 @@ uint8_t* MessageOfCharacter::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(9, this->_internal_gemnum(), target);
   }
 
-  // .Protobuf.BuffType buff = 10;
-  if (this->_internal_buff() != 0) {
+  // double facingDirection = 10;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_facingdirection = this->_internal_facingdirection();
+  uint64_t raw_facingdirection;
+  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
+  if (raw_facingdirection != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
-      10, this->_internal_buff(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(10, this->_internal_facingdirection(), target);
   }
 
   // .Protobuf.PropType prop = 11;
@@ -898,14 +907,13 @@ uint8_t* MessageOfCharacter::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(26, this->_internal_isinvisible(), target);
   }
 
-  // double facingDirection = 27;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = this->_internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(27, this->_internal_facingdirection(), target);
+  // repeated .Protobuf.BuffType buff = 27;
+  {
+    int byte_size = _buff_cached_byte_size_.load(std::memory_order_relaxed);
+    if (byte_size > 0) {
+      target = stream->WriteEnumPacked(
+          27, buff_, byte_size, target);
+    }
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -923,6 +931,24 @@ size_t MessageOfCharacter::ByteSizeLong() const {
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // repeated .Protobuf.BuffType buff = 27;
+  {
+    size_t data_size = 0;
+    unsigned int count = static_cast<unsigned int>(this->_internal_buff_size());for (unsigned int i = 0; i < count; i++) {
+      data_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(
+        this->_internal_buff(static_cast<int>(i)));
+    }
+    if (data_size > 0) {
+      total_size += 2 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+            static_cast<int32_t>(data_size));
+    }
+    int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(data_size);
+    _buff_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
+  }
 
   // int32 x = 1;
   if (this->_internal_x() != 0) {
@@ -981,16 +1007,25 @@ size_t MessageOfCharacter::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  // .Protobuf.BuffType buff = 10;
-  if (this->_internal_buff() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_buff());
+  // double facingDirection = 10;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_facingdirection = this->_internal_facingdirection();
+  uint64_t raw_facingdirection;
+  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
+  if (raw_facingdirection != 0) {
+    total_size += 1 + 8;
   }
 
   // .Protobuf.PropType prop = 11;
   if (this->_internal_prop() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_prop());
+  }
+
+  // .Protobuf.PlaceType place = 12;
+  if (this->_internal_place() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_place());
   }
 
   // double vampire = 13;
@@ -1000,12 +1035,6 @@ size_t MessageOfCharacter::ByteSizeLong() const {
   memcpy(&raw_vampire, &tmp_vampire, sizeof(tmp_vampire));
   if (raw_vampire != 0) {
     total_size += 1 + 8;
-  }
-
-  // .Protobuf.PlaceType place = 12;
-  if (this->_internal_place() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_place());
   }
 
   // .Protobuf.BulletType bulletType = 14;
@@ -1020,17 +1049,17 @@ size_t MessageOfCharacter::ByteSizeLong() const {
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_passiveskilltype());
   }
 
-  // .Protobuf.ActiveSkillType ActiveSkillType = 17;
-  if (this->_internal_activeskilltype() != 0) {
-    total_size += 2 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_activeskilltype());
-  }
-
   // int64 guid = 18;
   if (this->_internal_guid() != 0) {
     total_size += 2 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64Size(
         this->_internal_guid());
+  }
+
+  // .Protobuf.ActiveSkillType ActiveSkillType = 17;
+  if (this->_internal_activeskilltype() != 0) {
+    total_size += 2 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_activeskilltype());
   }
 
   // int32 radius = 20;
@@ -1069,6 +1098,13 @@ size_t MessageOfCharacter::ByteSizeLong() const {
         this->_internal_lifenum());
   }
 
+  // int32 score = 23;
+  if (this->_internal_score() != 0) {
+    total_size += 2 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_score());
+  }
+
   // int64 teamID = 24;
   if (this->_internal_teamid() != 0) {
     total_size += 2 +
@@ -1081,22 +1117,6 @@ size_t MessageOfCharacter::ByteSizeLong() const {
     total_size += 2 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64Size(
         this->_internal_playerid());
-  }
-
-  // double facingDirection = 27;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = this->_internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
-    total_size += 2 + 8;
-  }
-
-  // int32 score = 23;
-  if (this->_internal_score() != 0) {
-    total_size += 2 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_score());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -1121,6 +1141,7 @@ void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  buff_.MergeFrom(from.buff_);
   if (from._internal_x() != 0) {
     _internal_set_x(from._internal_x());
   }
@@ -1160,11 +1181,18 @@ void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
   if (raw_timeuntilultimateskillavailable != 0) {
     _internal_set_timeuntilultimateskillavailable(from._internal_timeuntilultimateskillavailable());
   }
-  if (from._internal_buff() != 0) {
-    _internal_set_buff(from._internal_buff());
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_facingdirection = from._internal_facingdirection();
+  uint64_t raw_facingdirection;
+  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
+  if (raw_facingdirection != 0) {
+    _internal_set_facingdirection(from._internal_facingdirection());
   }
   if (from._internal_prop() != 0) {
     _internal_set_prop(from._internal_prop());
+  }
+  if (from._internal_place() != 0) {
+    _internal_set_place(from._internal_place());
   }
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_vampire = from._internal_vampire();
@@ -1173,20 +1201,17 @@ void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
   if (raw_vampire != 0) {
     _internal_set_vampire(from._internal_vampire());
   }
-  if (from._internal_place() != 0) {
-    _internal_set_place(from._internal_place());
-  }
   if (from._internal_bullettype() != 0) {
     _internal_set_bullettype(from._internal_bullettype());
   }
   if (from._internal_passiveskilltype() != 0) {
     _internal_set_passiveskilltype(from._internal_passiveskilltype());
   }
-  if (from._internal_activeskilltype() != 0) {
-    _internal_set_activeskilltype(from._internal_activeskilltype());
-  }
   if (from._internal_guid() != 0) {
     _internal_set_guid(from._internal_guid());
+  }
+  if (from._internal_activeskilltype() != 0) {
+    _internal_set_activeskilltype(from._internal_activeskilltype());
   }
   if (from._internal_radius() != 0) {
     _internal_set_radius(from._internal_radius());
@@ -1206,21 +1231,14 @@ void MessageOfCharacter::MergeFrom(const MessageOfCharacter& from) {
   if (from._internal_lifenum() != 0) {
     _internal_set_lifenum(from._internal_lifenum());
   }
+  if (from._internal_score() != 0) {
+    _internal_set_score(from._internal_score());
+  }
   if (from._internal_teamid() != 0) {
     _internal_set_teamid(from._internal_teamid());
   }
   if (from._internal_playerid() != 0) {
     _internal_set_playerid(from._internal_playerid());
-  }
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_facingdirection = from._internal_facingdirection();
-  uint64_t raw_facingdirection;
-  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
-  if (raw_facingdirection != 0) {
-    _internal_set_facingdirection(from._internal_facingdirection());
-  }
-  if (from._internal_score() != 0) {
-    _internal_set_score(from._internal_score());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1239,9 +1257,10 @@ bool MessageOfCharacter::IsInitialized() const {
 void MessageOfCharacter::InternalSwap(MessageOfCharacter* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  buff_.InternalSwap(&other->buff_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(MessageOfCharacter, score_)
-      + sizeof(MessageOfCharacter::score_)
+      PROTOBUF_FIELD_OFFSET(MessageOfCharacter, playerid_)
+      + sizeof(MessageOfCharacter::playerid_)
       - PROTOBUF_FIELD_OFFSET(MessageOfCharacter, x_)>(
           reinterpret_cast<char*>(&x_),
           reinterpret_cast<char*>(&other->x_));

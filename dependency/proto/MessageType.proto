@@ -84,11 +84,9 @@ enum BuffType    //buff
 {
     NullBuffType = 0;
     MoveSpeed = 1;
-    AP = 2;
-    CD = 3;
-    AddLIFE = 4;
-    ShieldBuff = 5;
-    SpearBuff = 6;
+    AddLIFE = 2;
+    ShieldBuff = 3;
+    SpearBuff = 4;
 }
 enum BulletType  //会有不同类型的子弹，现在只实现了“原子弹”
 {

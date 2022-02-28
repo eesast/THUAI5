@@ -275,11 +275,9 @@ inline bool ActiveSkillType_Parse(
 enum BuffType : int {
   NullBuffType = 0,
   MoveSpeed = 1,
-  AP = 2,
-  CD = 3,
-  AddLIFE = 4,
-  ShieldBuff = 5,
-  SpearBuff = 6,
+  AddLIFE = 2,
+  ShieldBuff = 3,
+  SpearBuff = 4,
   BuffType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   BuffType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };

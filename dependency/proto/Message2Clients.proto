@@ -21,7 +21,7 @@ message MessageOfCharacter
     double timeUntilCommonSkillAvailable = 7; //可见  
     double timeUntilUltimateSkillAvailable = 8;//这个可能用不到，因为可能只会有一个主动技能
     int32 gemNum = 9;//可见
-    BuffType buff = 10;//可见
+    double facingDirection=10;
     PropType prop = 11;//可见
     PlaceType place = 12;//人物所在位置
     double vampire=13;//吸血率
@@ -39,7 +39,7 @@ message MessageOfCharacter
     int64 teamID=24;
     int64 playerID=25;
     bool isInvisible=26;
-    double facingDirection=27;
+    repeated BuffType buff = 27;
 }
 
 message MessageOfProp
