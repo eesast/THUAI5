@@ -22,6 +22,10 @@ namespace GameClass.GameObj
             this.CanMove = false;
             this.Type = GameObjType.Prop;
         }
+        public void SetNewPos(XYPosition pos)
+        {
+            this.Position = pos;
+        }
     }
     /// <summary>
     /// 增益道具

@@ -118,6 +118,7 @@ namespace Gaming
                     return;
                 Prop prop = player.PropInventory;
                 player.PropInventory = null;
+                prop.SetNewPos(player.Position);
                 gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
                 try
                 {
