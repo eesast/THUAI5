@@ -32,33 +32,6 @@ namespace GameClass.GameObj
             /// </summary>
             private readonly LinkedList<BuffValue>[] buffList;
             private readonly object[] buffListLock;
-            public Dictionary<Preparation.Utility.BuffType, bool> Buff;
-            private Array buffTypeArray;
-            
-            private bool GetBuffStatus(BuffType type)
-            {
-                switch(type)
-                {
-                    case BuffType.Spear:
-                        return this.HasSpear;
-                    case BuffType.AddSpeed:
-                        return this.HasFasterSpeed;
-                    case BuffType.Shield:
-                        return this.HasShield;
-                    case BuffType.AddLIFE:
-                        return this.HasLIFE;
-                    default:
-                        return false;
-                }
-            }
-
-            public void RefreshBuff()
-            {
-                foreach(BuffType type in buffTypeArray)
-                {
-                    Buff[type] = GetBuffStatus(type);
-                }
-            }
 
             private void AddBuff(BuffValue bf, int buffTime, BuffType buffType, Action ReCalculateFunc)
             {
@@ -176,16 +149,14 @@ namespace GameClass.GameObj
 
             public BuffManeger()
             {
-                buffTypeArray = Enum.GetValues(typeof(BuffType));
+                var buffTypeArray = Enum.GetValues(typeof(BuffType));
                 buffList = new LinkedList<BuffValue>[buffTypeArray.Length];
                 buffListLock = new object[buffList.Length];
-                Buff = new Dictionary<BuffType, bool>();
                 int i = 0;
                 foreach(BuffType type in buffTypeArray)
                 {
                     buffList[i] = new LinkedList<BuffValue>();
                     buffListLock[i++] = new object();
-                    Buff.Add(type, false);
                 }
             }
         }

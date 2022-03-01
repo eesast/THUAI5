@@ -34,13 +34,13 @@ namespace GameClass.GameObj
     {
         public BuffProp(XYPosition initPos) : base(initPos) { }
     }
-    /// <summary>
-    /// 坑人地雷
-    /// </summary>
-    public abstract class DebuffMine : Prop
-    {
-        public DebuffMine(XYPosition initPos) : base(initPos) { }
-    }
+    ///// <summary>
+    ///// 坑人地雷
+    ///// </summary>
+    //public abstract class DebuffMine : Prop
+    //{
+    //    public DebuffMine(XYPosition initPos) : base(initPos) { }
+    //}
     #region 所有增益道具
     /// <summary>
     /// 增加速度
