@@ -45,13 +45,12 @@ namespace Communication.Proto {
             "CgdQU2tpbGw1EAYqjQEKD0FjdGl2ZVNraWxsVHlwZRIXChNOdWxsQWN0aXZl",
             "U2tpbGxUeXBlEAASEQoNQmVjb21lVmFtcGlyZRABEhIKDkJlY29tZUFzc2Fz",
             "c2luEAISEQoNTnVjbGVhcldlYXBvbhADEg0KCVN1cGVyRmFzdBAEEgsKB0FT",
-            "a2lsbDQQBRILCgdBU2tpbGw1EAYqZwoIQnVmZlR5cGUSEAoMTnVsbEJ1ZmZU",
-            "eXBlEAASDQoJTW92ZVNwZWVkEAESBgoCQVAQAhIGCgJDRBADEgsKB0FkZExJ",
-            "RkUQBBIOCgpTaGllbGRCdWZmEAUSDQoJU3BlYXJCdWZmEAYqdQoKQnVsbGV0",
-            "VHlwZRISCg5OdWxsQnVsbGV0VHlwZRAAEg4KCkxpbmVCdWxsZXQQARIRCg1D",
-            "b21tb25CdWxsZXQyEAISDgoKRmFzdEJ1bGxldBADEhIKDk9yZGluYXJ5QnVs",
-            "bGV0EAQSDAoIQXRvbUJvbWIQBUIWqgITQ29tbXVuaWNhdGlvbi5Qcm90b2IG",
-            "cHJvdG8z"));
+            "a2lsbDQQBRILCgdBU2tpbGw1EAYqVwoIQnVmZlR5cGUSEAoMTnVsbEJ1ZmZU",
+            "eXBlEAASDQoJTW92ZVNwZWVkEAESCwoHQWRkTElGRRACEg4KClNoaWVsZEJ1",
+            "ZmYQAxINCglTcGVhckJ1ZmYQBCp1CgpCdWxsZXRUeXBlEhIKDk51bGxCdWxs",
+            "ZXRUeXBlEAASDgoKTGluZUJ1bGxldBABEhEKDUNvbW1vbkJ1bGxldDIQAhIO",
+            "CgpGYXN0QnVsbGV0EAMSEgoOT3JkaW5hcnlCdWxsZXQQBBIMCghBdG9tQm9t",
+            "YhAFQhaqAhNDb21tdW5pY2F0aW9uLlByb3RvYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Communication.Proto.MessageType), typeof(global::Communication.Proto.GameObjType), typeof(global::Communication.Proto.ShapeType), typeof(global::Communication.Proto.PlaceType), typeof(global::Communication.Proto.PropType), typeof(global::Communication.Proto.PassiveSkillType), typeof(global::Communication.Proto.ActiveSkillType), typeof(global::Communication.Proto.BuffType), typeof(global::Communication.Proto.BulletType), }, null, null));
@@ -166,11 +165,9 @@ namespace Communication.Proto {
   public enum BuffType {
     [pbr::OriginalName("NullBuffType")] NullBuffType = 0,
     [pbr::OriginalName("MoveSpeed")] MoveSpeed = 1,
-    [pbr::OriginalName("AP")] Ap = 2,
-    [pbr::OriginalName("CD")] Cd = 3,
-    [pbr::OriginalName("AddLIFE")] AddLife = 4,
-    [pbr::OriginalName("ShieldBuff")] ShieldBuff = 5,
-    [pbr::OriginalName("SpearBuff")] SpearBuff = 6,
+    [pbr::OriginalName("AddLIFE")] AddLife = 2,
+    [pbr::OriginalName("ShieldBuff")] ShieldBuff = 3,
+    [pbr::OriginalName("SpearBuff")] SpearBuff = 4,
   }
 
   public enum BulletType {

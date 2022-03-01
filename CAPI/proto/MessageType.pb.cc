@@ -49,17 +49,17 @@ const char descriptor_table_protodef_MessageType_2eproto[] PROTOBUF_SECTION_VARI
   "e\022\027\n\023NullActiveSkillType\020\000\022\021\n\rBecomeVamp"
   "ire\020\001\022\022\n\016BecomeAssassin\020\002\022\021\n\rNuclearWeap"
   "on\020\003\022\r\n\tSuperFast\020\004\022\013\n\007ASkill4\020\005\022\013\n\007ASki"
-  "ll5\020\006*g\n\010BuffType\022\020\n\014NullBuffType\020\000\022\r\n\tM"
-  "oveSpeed\020\001\022\006\n\002AP\020\002\022\006\n\002CD\020\003\022\013\n\007AddLIFE\020\004\022"
-  "\016\n\nShieldBuff\020\005\022\r\n\tSpearBuff\020\006*u\n\nBullet"
-  "Type\022\022\n\016NullBulletType\020\000\022\016\n\nLineBullet\020\001"
-  "\022\021\n\rCommonBullet2\020\002\022\016\n\nFastBullet\020\003\022\022\n\016O"
-  "rdinaryBullet\020\004\022\014\n\010AtomBomb\020\005B\026\252\002\023Commun"
-  "ication.Protob\006proto3"
+  "ll5\020\006*W\n\010BuffType\022\020\n\014NullBuffType\020\000\022\r\n\tM"
+  "oveSpeed\020\001\022\013\n\007AddLIFE\020\002\022\016\n\nShieldBuff\020\003\022"
+  "\r\n\tSpearBuff\020\004*u\n\nBulletType\022\022\n\016NullBull"
+  "etType\020\000\022\016\n\nLineBullet\020\001\022\021\n\rCommonBullet"
+  "2\020\002\022\016\n\nFastBullet\020\003\022\022\n\016OrdinaryBullet\020\004\022"
+  "\014\n\010AtomBomb\020\005B\026\252\002\023Communication.Protob\006p"
+  "roto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_MessageType_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_MessageType_2eproto = {
-  false, false, 1221, descriptor_table_protodef_MessageType_2eproto, "MessageType.proto", 
+  false, false, 1205, descriptor_table_protodef_MessageType_2eproto, "MessageType.proto", 
   &descriptor_table_MessageType_2eproto_once, nullptr, 0, 0,
   schemas, file_default_instances, TableStruct_MessageType_2eproto::offsets,
   nullptr, file_level_enum_descriptors_MessageType_2eproto, file_level_service_descriptors_MessageType_2eproto,
@@ -221,8 +221,6 @@ bool BuffType_IsValid(int value) {
     case 2:
     case 3:
     case 4:
-    case 5:
-    case 6:
       return true;
     default:
       return false;

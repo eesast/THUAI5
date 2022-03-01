@@ -2,6 +2,7 @@
 using Preparation.Interface;
 using Preparation.Utility;
 using System;
+using System.Collections.Generic;
 
 namespace GameClass.GameObj
 {
@@ -377,6 +378,7 @@ namespace GameClass.GameObj
 
         #region 角色拥有的buff相关属性、方法
         public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManeger.AddMoveSpeed(add, buffTime, newVal => { MoveSpeed = newVal; }, OrgMoveSpeed);
+        public bool HasFasterSpeed => buffManeger.HasFasterSpeed;
 
         public void AddShield(int shieldTime) => buffManeger.AddShield(shieldTime);
         public bool HasShield => buffManeger.HasShield;
@@ -387,6 +389,35 @@ namespace GameClass.GameObj
         public void AddSpear(int spearTime) => buffManeger.AddSpear(spearTime);
         public bool HasSpear => buffManeger.HasSpear;
 
+        private Array buffTypeArray = Enum.GetValues(typeof(BuffType));
+        public  Dictionary<BuffType, bool> Buff
+        {   get
+            {
+                Dictionary<BuffType,bool> buff = new Dictionary<BuffType,bool>();
+                foreach(BuffType type in buffTypeArray)
+                {
+                    if (type != BuffType.Null)
+                        buff.Add(type, GetBuffStatus(type));
+                }
+                return buff;
+            }
+        }
+        private bool GetBuffStatus(BuffType type)
+        {
+            switch (type)
+            {
+                case BuffType.Spear:
+                    return this.HasSpear;
+                case BuffType.AddSpeed:
+                    return this.HasFasterSpeed;
+                case BuffType.Shield:
+                    return this.HasShield;
+                case BuffType.AddLIFE:
+                    return this.HasLIFE;
+                default:
+                    return false;
+            }
+        }
         private void TryActivatingLIFE()
         {
             if (buffManeger.TryActivatingLIFE())
@@ -415,10 +446,10 @@ namespace GameClass.GameObj
                 {
                     return true;
                 }
-            else if (targetObj is DebuffMine && ((DebuffMine)targetObj).Parent?.TeamID == TeamID)   // 自己队的地雷忽略碰撞
-            {
-                return true;
-            }
+            //else if (targetObj is DebuffMine && ((DebuffMine)targetObj).Parent?.TeamID == TeamID)   // 自己队的地雷忽略碰撞
+            //{
+            //    return true;
+            //}
             return false;
         }
     }
