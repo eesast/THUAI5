@@ -7,6 +7,9 @@ namespace Client
 {
     internal class StatusBar
     {
+        const int Width = 65;
+        const int Height = 15;
+        const int FontSize = 12;
         public StatusBar(Grid parent,int margin1,int margin2,int margin3,int margin4)
         {
             backGround = new();
@@ -18,17 +21,17 @@ namespace Client
             parent.Children.Add(backGround);
             backGround.Background = Brushes.White;
             backGround.Margin = new(margin1, margin2, margin3, margin4);
-            progressBar.Height = 15;
-            progressBar.Width = 65;
+            progressBar.Height = Height;
+            progressBar.Width = Width;
             progressBar.Value = 50;
             progressBar.Background = Brushes.White;
             backGround.Children.Add(progressBar);
             Canvas.SetTop(progressBar, 150);
 
-            star.Height = 15;
+            star.Height = Height;
             star.Text = "⭐：";
             star.TextWrapping = System.Windows.TextWrapping.Wrap;
-            star.Width = 65;
+            star.Width = Width;
             star.FontSize = 12;
             star.BorderBrush = Brushes.White;
             star.RenderTransformOrigin = new(0.478, 0.159);
@@ -39,17 +42,17 @@ namespace Client
             status.Height = 63;
             status.Text = "🗡：\n🏹：\n🏃：\n♥：";
             status.TextWrapping = System.Windows.TextWrapping.Wrap;
-            status.Width = 65;
+            status.Width = Width;
             status.FontSize = 12;
             status.BorderBrush = Brushes.White;
             status.IsReadOnly = true;
             backGround.Children.Add(status);
             Canvas.SetTop(status, 51);
 
-            scores.Height = 15;
+            scores.Height = Height;
             scores.Text = "Scores：";
             scores.TextWrapping = System.Windows.TextWrapping.Wrap;
-            scores.Width = 65;
+            scores.Width = Width;
             scores.FontSize = 12;
             scores.BorderBrush = Brushes.White;
             scores.IsReadOnly = true;
@@ -59,7 +62,7 @@ namespace Client
             serial.Height = 46;
             serial.Text = "👥null🧓null\n职业：";
             serial.TextWrapping = System.Windows.TextWrapping.Wrap;
-            serial.Width = 65;
+            serial.Width = Width;
             serial.FontSize = 12;
             serial.BorderBrush = Brushes.White;
             serial.RenderTransformOrigin = new(0.478, 0.159);

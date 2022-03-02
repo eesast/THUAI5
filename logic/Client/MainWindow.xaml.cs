@@ -97,7 +97,7 @@ namespace Client
                         Height = 13,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
-                        Margin = new Thickness(13 * (j + 0.5), 13 * (i + 0.5), 0, 0)
+                        Margin = new Thickness(13 * (j ), 13 * (i ), 0, 0)
                     };
                     switch (defaultMap[i, j])
                     {
@@ -589,7 +589,7 @@ namespace Client
                                         Height = 13,
                                         HorizontalAlignment = HorizontalAlignment.Left,
                                         VerticalAlignment = VerticalAlignment.Top,
-                                        Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0, data.MessageOfCharacter.X * 13.0 / 1000.0, 0, 0),
+                                        Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0-6.5, data.MessageOfCharacter.X * 13.0 / 1000.0-6.5, 0, 0),
                                         Fill = Brushes.Black
                                     };
                                     UpperLayerOfMap.Children.Add(icon);
@@ -605,7 +605,7 @@ namespace Client
                                         Height = 10,
                                         HorizontalAlignment = HorizontalAlignment.Left,
                                         VerticalAlignment = VerticalAlignment.Top,
-                                        Margin = new Thickness(data.MessageOfBullet.Y * 13.0 / 1000.0, data.MessageOfBullet.X * 13.0 / 1000.0, 0, 0),
+                                        Margin = new Thickness(data.MessageOfBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBullet.X * 13.0 / 1000.0-6.5, 0, 0),
                                         Fill = Brushes.Red
                                     };
                                     UpperLayerOfMap.Children.Add(icon);
@@ -623,7 +623,7 @@ namespace Client
                                             Height = 10,
                                             HorizontalAlignment = HorizontalAlignment.Left,
                                             VerticalAlignment = VerticalAlignment.Top,
-                                            Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0),
+                                            Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0-6.5, data.MessageOfProp.X * 13.0 / 1000.0-6.5, 0, 0),
                                             Fill = Brushes.Purple
                                         };
                                         UpperLayerOfMap.Children.Add(icon);
@@ -636,7 +636,7 @@ namespace Client
                                             Height = 10,
                                             HorizontalAlignment = HorizontalAlignment.Left,
                                             VerticalAlignment = VerticalAlignment.Top,
-                                            Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0, data.MessageOfProp.X * 13.0 / 1000.0, 0, 0),
+                                            Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0-6.5, data.MessageOfProp.X * 13.0 / 1000.0-6.5, 0, 0),
                                             Fill = Brushes.Gray
                                         };
                                         UpperLayerOfMap.Children.Add(icon);
@@ -654,7 +654,7 @@ namespace Client
                                             icon.Height = 65;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-32.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-32.5, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -666,7 +666,7 @@ namespace Client
                                             icon.Height = 3 * 65;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -678,7 +678,7 @@ namespace Client
                                             icon.Height = 65;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -694,7 +694,7 @@ namespace Client
                                             icon.Height = 65;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
