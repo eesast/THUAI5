@@ -16,9 +16,14 @@ $ git submodule update --init --recursive
 
 ### Linux
 
-1. 首先需要编译`protobuf`:
+1. 首先需要编译`protobuf`，**安装之前需要添加以下依赖项**：
+```
+
+```
+按照以下流程进行编译：
 ```bash
 $ cd CAPI/protobuf
+$ ./autogen.sh
 $ ./configure
 $ make
 $ make check
