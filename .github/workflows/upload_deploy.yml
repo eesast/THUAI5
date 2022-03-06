@@ -31,9 +31,9 @@ jobs:
 
     - name: Publish
       run: |
-        New-Item -Path . -Name "THUAI" -ItemType "directory"
+        New-Item -Path . -Name "THUAI5" -ItemType "directory"
         ./dependency/shell/BuildLogic.ps1 ./THUAI5
-        python ./dependency/py/upload.py --id 118.195.131.159 --key ${{ secrets.SERVER_PASSWORD }} CAPI THUAI5
+        python ./dependency/py/upload.py --id 118.195.131.159 --key ${{ secrets.SERVER_PASSWORD }} CAPI
 
   deploy:
     runs-on: ubuntu-latest
