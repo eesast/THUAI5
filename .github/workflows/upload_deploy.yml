@@ -34,7 +34,7 @@ jobs:
       run: cd ./CAPI
       uses: srt32/git-actions@v0.0.3
       with:
-        args: git submodule --init --recursive
+        args: git add .
       run: cd ..
 
     - name: Publish
