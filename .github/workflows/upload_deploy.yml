@@ -17,6 +17,7 @@ jobs:
       with:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         if_key_exists: replace
+        known_hosts: ""
 
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v1
