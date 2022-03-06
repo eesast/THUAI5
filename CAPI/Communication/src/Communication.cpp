@@ -170,6 +170,7 @@ void ClientCommunication::Stop()
 void MultiThreadClientCommunication::OnConnect()
 {
 	auto message = subscripter.OnConnect();
+    std::cout << "***" << message.DebugString() << std::endl;
 	Send(message);
 }
 

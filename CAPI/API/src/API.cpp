@@ -159,3 +159,109 @@ THUAI5::PlaceType API::GetPlaceType(int32_t CellX, int32_t CellY) const
     return logic.GetPlaceType(CellX, CellY);
 }
 
+void API::PrintBullets() const
+{
+    std::cout << "******************Bullets******************" << std::endl;
+    auto bullets = logic.GetBullets();
+    for (int i = 0;i<bullets.size();i++)
+    {
+        std::cout << "Bullet " << i << ":" << std::endl;
+        std::cout << "facingDirection: " <<bullets[i]->facingDirection << std::endl
+                  << "guid: " << bullets[i]->guid << std::endl
+                  << "parentTeamID: " << bullets[i]->parentTeamID << std::endl
+                  << "place: " << THUAI5::place_dict[bullets[i]->place] << std::endl
+                  << "type: " << THUAI5::bullet_dict[bullets[i]->type] << std::endl
+                  << "x: " << bullets[i]->x << std::endl
+                  << "y: " << bullets[i]->y << std::endl;
+    }
+    std::cout << "*******************************************" << std::endl;
+}
+
+void API::PrintCharacters() const
+{
+    std::cout << "******************Characters******************" << std::endl;
+    auto characters = logic.GetCharacters();
+    for(int i = 0;i<characters.size();i++)
+    {
+        std::cout << "Character " << i << ":" << std::endl;
+        std::cout << "activeSkillType: " << THUAI5::active_dict[characters[i]->activeSkillType] << std::endl
+                  << "attackRange: " << characters[i]->attackRange << std::endl
+                  << "buff: " << THUAI5::buff_dict[characters[i]->buff] << std::endl
+                  << "bulletNum: " << characters[i]->bulletNum << std::endl
+                  << "bulletType: " << THUAI5::bullet_dict[characters[i]->bulletType] << std::endl
+                  << "canMove: " << characters[i]->canMove << std::endl
+                  << "CD: " << characters[i]->CD << std::endl
+                  << "gemNum: " << characters[i]->gemNum << std::endl
+                  << "guid: " << characters[i]->guid << std::endl
+                  << "isResetting: " << characters[i]->isResetting << std::endl
+                  << "life: " << characters[i]->life << std::endl
+                  << "lifeNum: " << characters[i]->lifeNum << std::endl
+                  << "passiveSkillType: " << THUAI5::passive_dict[characters[i]->passiveSkillType] << std::endl
+                  << "place: " << THUAI5::place_dict[characters[i]->place] << std::endl
+                  << "playerID: " << characters[i]->playerID << std::endl
+                  << "prop: " << THUAI5::prop_dict[characters[i]->prop] << std::endl
+                  << "radius: " << characters[i]->radius << std::endl
+                  << "score: " << characters[i]->score << std::endl
+                  << "speed: " << characters[i]->speed << std::endl
+                  << "teamID: " << characters[i]->teamID << std::endl
+                  << "timeUntilCommonSkillAvailable: " << characters[i]->timeUntilCommonSkillAvailable << std::endl
+                  << "timeUntilUltimateSkillAvailable: " << characters[i]->timeUntilUltimateSkillAvailable << std::endl
+                  << "vampire: " << characters[i]->vampire << std::endl
+                  << "x: " << characters[i]->x << std::endl
+                  << "y: " << characters[i]->y << std::endl;
+    }
+    std::cout << "**********************************************" << std::endl;
+}
+
+void API::PrintProps() const
+{
+    std::cout << "******************Props******************" << std::endl;
+    auto props = logic.GetProps();
+    for(int i = 0;i<props.size();i++)
+    {
+        std::cout << "Prop " << i << ":" << std::endl;
+        std::cout << "facingDirection: " << props[i]->facingDirection << std::endl
+                  << "guid: " << props[i]->guid << std::endl
+                  << "place: " << THUAI5::place_dict[props[i]->place] << std::endl
+                  << "size: " << props[i]->size << std::endl
+                  << "type: " << THUAI5::prop_dict[props[i]->type] << std::endl
+                  << "x: " << props[i]->x << std::endl
+                  << "y: " << props[i]->y << std::endl;
+    }
+    std::cout << "*****************************************" << std::endl;
+}
+
+void API::PrintSelfInfo() const
+{
+    std::cout << "******************Selfinfo******************" << std::endl;
+    auto selfinfo = logic.GetSelfInfo();
+    if (selfinfo != nullptr)
+    {
+        std::cout << "activeSkillType: " << THUAI5::active_dict[selfinfo->activeSkillType] << std::endl
+                  << "attackRange: " << selfinfo->attackRange << std::endl
+                  << "buff: " << THUAI5::buff_dict[selfinfo->buff] << std::endl
+                  << "bulletNum: " << selfinfo->bulletNum << std::endl
+                  << "bulletType: " << THUAI5::bullet_dict[selfinfo->bulletType] << std::endl
+                  << "canMove: " << selfinfo->canMove << std::endl
+                  << "CD: " << selfinfo->CD << std::endl
+                  << "gemNum: " << selfinfo->gemNum << std::endl
+                  << "guid: " << selfinfo->guid << std::endl
+                  << "isResetting: " << selfinfo->isResetting << std::endl
+                  << "life: " << selfinfo->life << std::endl
+                  << "lifeNum: " << selfinfo->lifeNum << std::endl
+                  << "passiveSkillType: " << THUAI5::passive_dict[selfinfo->passiveSkillType] << std::endl
+                  << "place: " << THUAI5::place_dict[selfinfo->place] << std::endl
+                  << "playerID: " << selfinfo->playerID << std::endl
+                  << "prop: " << THUAI5::prop_dict[selfinfo->prop] << std::endl
+                  << "radius: " << selfinfo->radius << std::endl
+                  << "score: " << selfinfo->score << std::endl
+                  << "speed: " << selfinfo->speed << std::endl
+                  << "teamID: " << selfinfo->teamID << std::endl
+                  << "timeUntilCommonSkillAvailable: " << selfinfo->timeUntilCommonSkillAvailable << std::endl
+                  << "timeUntilUltimateSkillAvailable: " << selfinfo->timeUntilUltimateSkillAvailable << std::endl
+                  << "vampire: " << selfinfo->vampire << std::endl
+                  << "x: " << selfinfo->x << std::endl
+                  << "y: " << selfinfo->y << std::endl;
+    }
+    std::cout << "********************************************" << std::endl;
+}

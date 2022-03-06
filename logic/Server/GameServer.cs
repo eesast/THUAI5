@@ -106,6 +106,7 @@ namespace Server
         {
 #if DEBUG 
             Console.WriteLine($"Receive message: from teamID {msg.TeamID} , playerID {msg.PlayerID}: {msg.MessageType}, args: {msg.TimeInMilliseconds} {msg.Angle}");
+            Console.WriteLine($"The Content is {msg}");
 #endif
             if (msg.TimeInMilliseconds < 0)
             {

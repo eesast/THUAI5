@@ -1,8 +1,9 @@
-//#define COMMUNICATION_DEBUG
+#define COMMUNICATION_DEBUG
 
 using System;
 using System.IO;
 using Google.Protobuf;
+
 
 namespace Communication.Proto
 {
@@ -69,17 +70,19 @@ namespace Communication.Proto
                 CodedInputStream codedInputStream = new CodedInputStream(istream);
                 Content = Activator.CreateInstance(Type.GetType(typename)) as IMessage; // 这里按照原来的写法写会报错，难道和版本有关?
                 Content.MergeFrom(codedInputStream); // 这一步才是真正的反序列化过程
+#if COMMUNICATION_DEBUG
+                Console.WriteLine($"The content is {Content}");
+#endif
             }
             catch (Google.Protobuf.InvalidProtocolBufferException)
             {
+
                 // 这只是为了让server控制台界面更清爽一点，所不得已用的办法！虽然当前代码会触发这个异常，但好像不影响运行，而且codedInputStream也确实可以被正确解码
                 // 迟早要解决的！
             }
             catch (Exception e)
             {
-#if COMMUNICATION_DEBUG
-                Console.WriteLine($"The content is {Content}");
-#endif
+
                 Console.WriteLine($"Unhandled exception while trying to deserialize packet: {e}");
             }
         }

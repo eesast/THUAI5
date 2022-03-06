@@ -145,6 +145,12 @@ public:
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
     [[nodiscard]] virtual int GetFrameCount() const = 0;
 
+    //***********此暂时仅供debug使用，不过后续也可考虑将其加入选手接口中***********//
+    virtual void PrintCharacters() const = 0;
+    virtual void PrintProps() const = 0;
+    virtual void PrintBullets() const = 0;
+    virtual void PrintSelfInfo() const = 0;
+
     //***********选手可能用到的辅助函数***********//
     [[nodiscard]] static constexpr inline int CellToGrid(int cell) noexcept // 获取指定格子中心的坐标
     {
@@ -222,6 +228,11 @@ public:
     std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
     THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
 
+    void PrintCharacters() const override;
+    void PrintProps() const override;
+    void PrintBullets() const override;
+    void PrintSelfInfo() const override;
+
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
     int GetFrameCount() const override;
@@ -275,6 +286,11 @@ public:
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
     int GetFrameCount() const override;
+
+    void PrintCharacters() const override;
+    void PrintProps() const override;
+    void PrintBullets() const override;
+    void PrintSelfInfo() const override;
 
 private:
     bool CanPick(THUAI5::PropType propType, std::shared_ptr<const THUAI5::Character> &selfInfo);

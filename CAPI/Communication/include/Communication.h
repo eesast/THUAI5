@@ -71,7 +71,7 @@ private:
     /// <summary>
     /// 信息流的最大长度
     /// </summary>
-    static const constexpr int max_length = 500;
+    static const constexpr int max_length = 1000;
 
     /// <summary>
     /// tcp-client组件
