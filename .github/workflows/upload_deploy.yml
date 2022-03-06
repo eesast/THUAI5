@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    
+
     - name: make directory
       run: mkdir ./Server
 
@@ -55,7 +55,7 @@ jobs:
       run: cd ./CAPI && git submodule update --init --recursive && cd ..
 
     - name: Build CAPI_compile docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile 
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile .
     - name: Push CAPI_compile image to DockerHub
       run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest
 
