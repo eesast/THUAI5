@@ -16,6 +16,7 @@ jobs:
       uses: shimataro/ssh-key-action@v2
       with:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        if_key_exsists: replace
 
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v1
