@@ -16,7 +16,7 @@ jobs:
       uses: shimataro/ssh-key-action@v2
       with:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        if_key_exsists: replace
+        if_key_exists: replace
 
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v1
@@ -55,13 +55,13 @@ jobs:
         dotnet-version: 5.0.x
 
     - name: Build CAPI_compile docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile .
     - name: Push CAPI_compile image to DockerHub
       run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest
 
     - name: Publish server
       run: dotnet publish "./logic/Server/Server.csproj" -c Release -r linux-x64 --self-contained true
     - name: Build running docker image 
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest -f ./dependency/Dockerfile/Dockerfile_run
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest -f ./dependency/Dockerfile/Dockerfile_run .
     - name: Push agent image to DockerHub
       run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest
