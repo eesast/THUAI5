@@ -10,60 +10,60 @@ jobs:
   build_upload:
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v1
+    - uses: actions/checkout@v1
       
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - names: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.14
+    - names: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.14
       
-      - names: Setup Python
-        uses: actions/setup-python@v1.2.0
-        with:
+    - names: Setup Python
+      uses: actions/setup-python@v1.2.0
+      with:
           python-version: 3.7.4
       
-      - names: Pip Install paramiko
-        run: pip install paramiko
+    - names: Pip Install paramiko
+      run: pip install paramiko
 
-      - names: Git Submodule
-        run: cd ./CAPI
-        uses: srt32/git-actions@v0.0.3
-        with:
-          args: git submodule --init --recursive
-        run: cd ..
+    - names: Git Submodule
+      run: cd ./CAPI
+      uses: srt32/git-actions@v0.0.3
+      with:
+        args: git submodule --init --recursive
+      run: cd ..
 
-      - names: Publish
-        run: |
-          New-Item -Path . -Name "THUAI5" -ItemType "directory"
-          ./dependency/shell/BuildLogic.ps1 ./THUAI5
-          python ./dependency/py/upload.py --id ${{ secrets.TENCENT_CLOUD_ID }} --key ${{ secrets.TENCENT_CLOUD_KEY }} CAPI THUAI5
+    - names: Publish
+      run: |
+        New-Item -Path . -Name "THUAI5" -ItemType "directory"
+        ./dependency/shell/BuildLogic.ps1 ./THUAI5
+        python ./dependency/py/upload.py --id ${{ secrets.TENCENT_CLOUD_ID }} --key ${{ secrets.TENCENT_CLOUD_KEY }} CAPI THUAI5
 
   deploy:
-     runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+    - uses: actions/checkout@v1
 
-      - name: Log in to DockerHub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+    - name: Log in to DockerHub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.14
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.14
 
-      - name: Build CAPI_compile docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile
-      - name: Push CAPI_compile image to DockerHub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest
+    - name: Build CAPI_compile docker image
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile
+    - name: Push CAPI_compile image to DockerHub
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest
 
-      - name: Publish server
-        run: dotnet publish "./logic/Server/Server.csproj" -c Release -r linux-x64 --self-contained true
-      - name: Build running docker image 
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest -f ./dependency/Dockerfile/Dockerfile_run
-      - name: Push agent image to DockerHub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest
+    - name: Publish server
+      run: dotnet publish "./logic/Server/Server.csproj" -c Release -r linux-x64 --self-contained true
+    - name: Build running docker image 
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest -f ./dependency/Dockerfile/Dockerfile_run
+    - name: Push agent image to DockerHub
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest
