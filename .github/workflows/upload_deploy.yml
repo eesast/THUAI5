@@ -24,7 +24,7 @@ jobs:
         architecture: 'x64'
       
     - name: git submodule
-      run: cd ./CAPI && git submodule --init --recursive && cd ..
+      run: cd ./CAPI && git submodule update --init --recursive && cd ..
 
     - name: Pip Install paramiko
       run: pip install paramiko
