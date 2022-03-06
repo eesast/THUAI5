@@ -17,12 +17,12 @@ jobs:
       with:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - names: Setup dotnet Core
+    - name: Setup dotnet Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.14
       
-    - names: Setup Python
+    - name: Setup Python
       uses: actions/setup-python@v1.2.0
       with:
           python-version: 3.7.4
@@ -30,14 +30,14 @@ jobs:
     - names: Pip Install paramiko
       run: pip install paramiko
 
-    - names: Git Submodule
+    - name: Git Submodule
       run: cd ./CAPI
       uses: srt32/git-actions@v0.0.3
       with:
         args: git submodule --init --recursive
       run: cd ..
 
-    - names: Publish
+    - name: Publish
       run: |
         New-Item -Path . -Name "THUAI5" -ItemType "directory"
         ./dependency/shell/BuildLogic.ps1 ./THUAI5
