@@ -97,7 +97,6 @@ if __name__ == '__main__':
     for file in file_list:
         local_file_path = os.path.join(config['cwd'], file)
         remote_file_path = os.path.join(config['upload_path'], file).replace('\\', '/')
-        print(file)
         file_list_json.append(remote_file_path)
         upload_file(local_file_path, remote_file_path, ssh, sftp)
     
