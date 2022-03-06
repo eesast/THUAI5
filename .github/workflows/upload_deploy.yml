@@ -1,7 +1,9 @@
-name: upload_deploy
+name: "upload_deploy"
 
 on:
   push:
+    branches: [ master, dev ]
+  pull_request:
     branches: [ master, dev ]
 
 jobs:
@@ -24,6 +26,7 @@ jobs:
         uses: actions/setup-python@v1.2.0
         with:
           python-version: 3.7.4
+      
       - names: Pip Install paramiko
         run: pip install paramiko
 
