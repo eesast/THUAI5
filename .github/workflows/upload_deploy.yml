@@ -15,12 +15,12 @@ jobs:
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.14
+        dotnet-version: 5.0.x
       
     - name: Setup Python
       uses: actions/setup-python@v1.2.0
       with:
-          python-version: 3.7.4
+          python-version: 3.7
       
     - name: git submodule
       run: cd ./CAPI && git submodule --init --recursive && cd ..
