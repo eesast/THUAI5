@@ -68,11 +68,8 @@ Protobuf::MessageToServer Logic::OnConnect()
     message.set_messagetype(Protobuf::MessageType::AddPlayer);
     message.set_playerid(playerID);
     message.set_teamid(teamID);
-    std::cout << THUAI5::active_dict[playerActiveSkill] << std::endl;
-    std::cout << THUAI5::passive_dict[playerPassiveSkill] << std::endl;
-    message.set_askill1((Protobuf::ActiveSkillType)(int)playerActiveSkill);
-    message.set_pskill((Protobuf::PassiveSkillType)(int)playerPassiveSkill);
-    std::cout << "@@@@" << message.DebugString() << "@@@@" << std::endl;
+    message.set_askill1((Protobuf::ActiveSkillType)playerActiveSkill);
+    message.set_pskill((Protobuf::PassiveSkillType)playerPassiveSkill);
     return message;
 }
 
@@ -91,8 +88,6 @@ bool Logic::SendInfo(Protobuf::MessageToServer& m2s)
 {
     m2s.set_playerid(playerID);
     m2s.set_teamid(teamID);
-    m2s.set_askill1((Protobuf::ActiveSkillType)playerActiveSkill);
-    m2s.set_pskill((Protobuf::PassiveSkillType)playerPassiveSkill);
     return pComm->Send(m2s);
 }
 

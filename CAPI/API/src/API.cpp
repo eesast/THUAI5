@@ -186,7 +186,7 @@ void API::PrintCharacters() const
         std::cout << "Character " << i << ":" << std::endl;
         std::cout << "activeSkillType: " << THUAI5::active_dict[characters[i]->activeSkillType] << std::endl
                   << "attackRange: " << characters[i]->attackRange << std::endl
-                  << "buff: " << THUAI5::buff_dict[characters[i]->buff] << std::endl
+                  << "buff: " << THUAI5::buff_dict[characters[i]->buff[0]] << std::endl
                   << "bulletNum: " << characters[i]->bulletNum << std::endl
                   << "bulletType: " << THUAI5::bullet_dict[characters[i]->bulletType] << std::endl
                   << "canMove: " << characters[i]->canMove << std::endl
@@ -239,7 +239,7 @@ void API::PrintSelfInfo() const
     {
         std::cout << "activeSkillType: " << THUAI5::active_dict[selfinfo->activeSkillType] << std::endl
                   << "attackRange: " << selfinfo->attackRange << std::endl
-                  << "buff: " << THUAI5::buff_dict[selfinfo->buff] << std::endl
+                  << "buff: " << THUAI5::buff_dict[selfinfo->buff[0]] << std::endl
                   << "bulletNum: " << selfinfo->bulletNum << std::endl
                   << "bulletType: " << THUAI5::bullet_dict[selfinfo->bulletType] << std::endl
                   << "canMove: " << selfinfo->canMove << std::endl

@@ -139,7 +139,7 @@ void AI::play(IAPI &api)
     api.Send(1, "this is an example");
 
     // // ! only for debug!
-    if (api.GetFrameCount() == 10)
+    if (api.GetFrameCount() == 30)
     {
         exit(0);
     }

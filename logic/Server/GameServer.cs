@@ -117,7 +117,7 @@ namespace Server
             }
             if (double.IsNaN(msg.Angle) || double.IsInfinity(msg.Angle))
                 msg.Angle = 0.0;
-
+                
             switch (msg.MessageType)
             {
                 case MessageType.AddPlayer:
