@@ -27,7 +27,7 @@ jobs:
       with:
           python-version: 3.7.4
       
-    - names: Pip Install paramiko
+    - name: Pip Install paramiko
       run: pip install paramiko
 
     - name: Git Submodule
