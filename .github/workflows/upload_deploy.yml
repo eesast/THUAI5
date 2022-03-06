@@ -1,0 +1,66 @@
+name: "upload_deploy"
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev, test/ci]
+
+jobs:
+  build_upload:
+    runs-on: windows-2019
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Setup dotnet Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+      
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.7'
+        architecture: 'x64'
+      
+    - name: git submodule
+      run: cd ./CAPI && git submodule update --init --recursive && cd ..
+
+    - name: Pip Install paramiko
+      run: pip install paramiko
+
+    - name: Publish
+      run: |
+        New-Item -Path . -Name "THUAI5" -ItemType "directory"
+        ./dependency/shell/BuildLogic.ps1 ./THUAI5
+        python ./dependency/py/upload.py --id ${{ secrets.TENCENT_CLOUD_ID }} --key ${{ secrets.TENCENT_CLOUD_KEY }} CAPI THUAI5
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Log in to DockerHub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.14
+
+    - name: Build CAPI_compile docker image
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile
+    - name: Push CAPI_compile image to DockerHub
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest
+
+    - name: Publish server
+      run: dotnet publish "./logic/Server/Server.csproj" -c Release -r linux-x64 --self-contained true
+    - name: Build running docker image 
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest -f ./dependency/Dockerfile/Dockerfile_run
+    - name: Push agent image to DockerHub
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest
