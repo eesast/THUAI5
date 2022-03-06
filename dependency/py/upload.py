@@ -93,10 +93,11 @@ if __name__ == '__main__':
         mkdir(dir, ssh)
     
     """上传文件"""
-    print("正在上传中")
+    print("uploading...")
     for file in file_list:
         local_file_path = os.path.join(config['cwd'], file)
         remote_file_path = os.path.join(config['upload_path'], file).replace('\\', '/')
+        print(file)
         file_list_json.append(remote_file_path)
         upload_file(local_file_path, remote_file_path, ssh, sftp)
     
@@ -105,4 +106,4 @@ if __name__ == '__main__':
     upload_file('./file.json', config['upload_path'] + '/file.json', ssh, sftp)
 
     os.remove('./file.json')
-    print("上传完成")
+    print("Finished")
