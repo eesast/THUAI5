@@ -18,9 +18,10 @@ jobs:
         dotnet-version: 5.0.x
       
     - name: Setup Python
-      uses: actions/setup-python@v1.2.0
+      uses: actions/setup-python@v2
       with:
-          python-version: 3.7
+        python-version: '3.7'
+        architecture: 'x64'
       
     - name: git submodule
       run: cd ./CAPI && git submodule --init --recursive && cd ..
