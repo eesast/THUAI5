@@ -33,12 +33,13 @@ jobs:
       run: |
         New-Item -Path . -Name "THUAI5" -ItemType "directory"
         ./dependency/shell/BuildLogic.ps1 ./THUAI5
-        python ./dependency/py/upload.py --id ${{ secrets.TENCENT_CLOUD_ID }} --key ${{ secrets.TENCENT_CLOUD_KEY }} CAPI THUAI5
+        python ./dependency/py/upload.py --id 118.195.131.159 --key ${{ secrets.SERVER_PASSWORD }} CAPI THUAI5
 
   deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+      run: mkdir ./Server
 
     - name: Log in to DockerHub
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -52,13 +53,13 @@ jobs:
       run: cd ./CAPI && git submodule update --init --recursive && cd ..
 
     - name: Build CAPI_compile docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile 
     - name: Push CAPI_compile image to DockerHub
       run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest
 
     - name: Publish server
-      run: dotnet publish "./logic/Server/Server.csproj" -c Release -r linux-x64 --self-contained true
-    - name: Build running docker image 
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest -f ./dependency/Dockerfile/Dockerfile_run .
-    - name: Push agent image to DockerHub
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai_agentclient:latest
+      run: dotnet publish "./logic/Server/Server.csproj" -c Release -r linux-x64 --self-contained true -o ./Server
+    - name: Build runner docker image 
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai_runner:latest -f ./dependency/Dockerfile/Dockerfile_run .
+    - name: Push runner image to DockerHub
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai_runner:latest
