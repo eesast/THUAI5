@@ -2,7 +2,7 @@ name: "upload_deploy"
 
 on:
   push:
-    branches: [ master, dev ]
+    branches: [ master, dev, test/ci]
   pull_request:
     branches: [ master, dev, test/ci]
 
