@@ -22,6 +22,10 @@ namespace GameClass.GameObj
             this.CanMove = false;
             this.Type = GameObjType.Prop;
         }
+        public void SetNewPos(XYPosition pos)
+        {
+            this.Position = pos;
+        }
     }
     /// <summary>
     /// 增益道具
@@ -30,30 +34,14 @@ namespace GameClass.GameObj
     {
         public BuffProp(XYPosition initPos) : base(initPos) { }
     }
-    /// <summary>
-    /// 坑人地雷
-    /// </summary>
-    public abstract class DebuffMine : Prop
-    {
-        public DebuffMine(XYPosition initPos) : base(initPos) { }
-    }
+    ///// <summary>
+    ///// 坑人地雷
+    ///// </summary>
+    //public abstract class DebuffMine : Prop
+    //{
+    //    public DebuffMine(XYPosition initPos) : base(initPos) { }
+    //}
     #region 所有增益道具
-    /// <summary>
-    /// 增加HP
-    /// </summary>
-    public sealed class AddHP : BuffProp
-    {
-        public AddHP(XYPosition initPos) : base(initPos) { }
-        public override PropType GetPropType() => PropType.addHP;
-    }
-    /// <summary>
-    /// 增加AP
-    /// </summary>
-    public sealed class AddAP : BuffProp
-    {
-        public AddAP(XYPosition initPos) : base(initPos) { }
-        public override PropType GetPropType() => PropType.addAP;
-    }
     /// <summary>
     /// 增加速度
     /// </summary>
@@ -69,14 +57,6 @@ namespace GameClass.GameObj
     {
         public AddLIFE(XYPosition initPos) : base(initPos) { }
         public override PropType GetPropType() => PropType.addLIFE;
-    }
-    /// <summary>
-    /// 减少冷却
-    /// </summary>
-    public sealed class MinusCD : BuffProp
-    {
-        public MinusCD(XYPosition initPos) : base(initPos) { }
-        public override PropType GetPropType() => PropType.minusCD;
     }
     /// <summary>
     /// 护盾
@@ -95,31 +75,30 @@ namespace GameClass.GameObj
         public override PropType GetPropType() => PropType.Spear;
     }
     #endregion
-    #region 所有坑人地雷
-    /// <summary>
-    /// 减速
-    /// </summary>
-    public sealed class MinusSpeed : DebuffMine
-    {
-        public MinusSpeed(XYPosition initPos) : base(initPos) { }
-        public override PropType GetPropType() => PropType.minusSpeed;
-    }
-    /// <summary>
-    /// 减少攻击力
-    /// </summary>
-    public sealed class MinusAP : DebuffMine
-    {
-        public MinusAP(XYPosition initPos) : base(initPos) { }
-        public override PropType GetPropType() => PropType.minusAP;
-    }
-    /// <summary>
-    /// 增加冷却
-    /// </summary>
-    public sealed class AddCD : DebuffMine
-    {
-        public AddCD(XYPosition initPos) : base(initPos) { }
-        public override PropType GetPropType() => PropType.addCD;
-    }
-    
-    #endregion
+    //#region 所有坑人地雷
+    ///// <summary>
+    ///// 减速
+    ///// </summary>
+    //public sealed class MinusSpeed : DebuffMine
+    //{
+    //    public MinusSpeed(XYPosition initPos) : base(initPos) { }
+    //    public override PropType GetPropType() => PropType.minusSpeed;
+    //}
+    ///// <summary>
+    ///// 减少攻击力
+    ///// </summary>
+    //public sealed class MinusAP : DebuffMine
+    //{
+    //    public MinusAP(XYPosition initPos) : base(initPos) { }
+    //    public override PropType GetPropType() => PropType.minusAP;
+    //}
+    ///// <summary>
+    ///// 增加冷却
+    ///// </summary>
+    //public sealed class AddCD : DebuffMine
+    //{
+    //    public AddCD(XYPosition initPos) : base(initPos) { }
+    //    public override PropType GetPropType() => PropType.addCD;
+    //}
+    //#endregion
 }

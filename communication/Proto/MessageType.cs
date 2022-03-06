@@ -36,23 +36,21 @@ namespace Communication.Proto {
             "CQoFR3Jhc3MQBxILCgdHZW1XZWxsEAgSEAoMQm9tYmVkQnVsbGV0EAkqNgoJ",
             "U2hhcGVUeXBlEhEKDU51bGxTaGFwZVR5cGUQABIKCgZDaXJjbGUQARIKCgZT",
             "cXVhcmUQAipMCglQbGFjZVR5cGUSEQoNTnVsbFBsYWNlVHlwZRAAEggKBExh",
-            "bmQQARIKCgZHcmFzczEQAhIKCgZHcmFzczIQAxIKCgZHcmFzczMQBCqiAQoI",
-            "UHJvcFR5cGUSEAoMTnVsbFByb3BUeXBlEAASCQoFYWRkSFAQARIJCgVhZGRB",
-            "UBACEgwKCGFkZFNwZWVkEAMSCwoHYWRkTElGRRAEEgsKB21pbnVzQ0QQBRIH",
-            "CgNHZW0QBhIKCgZTaGllbGQQBxIJCgVTcGVhchAIEg4KCm1pbnVzU3BlZWQQ",
-            "CRILCgdtaW51c0FQEAoSCQoFYWRkQ0QQCyqVAQoQUGFzc2l2ZVNraWxsVHlw",
-            "ZRIYChROdWxsUGFzc2l2ZVNraWxsVHlwZRAAEhYKElJlY292ZXJBZnRlckJh",
-            "dHRsZRABEhsKF1NwZWVkVXBXaGVuTGVhdmluZ0dyYXNzEAISCwoHVmFtcGly",
-            "ZRADEgsKB1BTa2lsbDMQBBILCgdQU2tpbGw0EAUSCwoHUFNraWxsNRAGKo0B",
-            "Cg9BY3RpdmVTa2lsbFR5cGUSFwoTTnVsbEFjdGl2ZVNraWxsVHlwZRAAEhEK",
-            "DUJlY29tZVZhbXBpcmUQARISCg5CZWNvbWVBc3Nhc3NpbhACEhEKDU51Y2xl",
-            "YXJXZWFwb24QAxINCglTdXBlckZhc3QQBBILCgdBU2tpbGw0EAUSCwoHQVNr",
-            "aWxsNRAGKmcKCEJ1ZmZUeXBlEhAKDE51bGxCdWZmVHlwZRAAEg0KCU1vdmVT",
-            "cGVlZBABEgYKAkFQEAISBgoCQ0QQAxILCgdBZGRMSUZFEAQSDgoKU2hpZWxk",
-            "QnVmZhAFEg0KCVNwZWFyQnVmZhAGKnUKCkJ1bGxldFR5cGUSEgoOTnVsbEJ1",
-            "bGxldFR5cGUQABIOCgpMaW5lQnVsbGV0EAESEQoNQ29tbW9uQnVsbGV0MhAC",
-            "Eg4KCkZhc3RCdWxsZXQQAxISCg5PcmRpbmFyeUJ1bGxldBAEEgwKCEF0b21C",
-            "b21iEAVCFqoCE0NvbW11bmljYXRpb24uUHJvdG9iBnByb3RvMw=="));
+            "bmQQARIKCgZHcmFzczEQAhIKCgZHcmFzczIQAxIKCgZHcmFzczMQBCpXCghQ",
+            "cm9wVHlwZRIQCgxOdWxsUHJvcFR5cGUQABIMCghhZGRTcGVlZBABEgsKB2Fk",
+            "ZExJRkUQAhIHCgNHZW0QAxIKCgZTaGllbGQQBBIJCgVTcGVhchAFKpUBChBQ",
+            "YXNzaXZlU2tpbGxUeXBlEhgKFE51bGxQYXNzaXZlU2tpbGxUeXBlEAASFgoS",
+            "UmVjb3ZlckFmdGVyQmF0dGxlEAESGwoXU3BlZWRVcFdoZW5MZWF2aW5nR3Jh",
+            "c3MQAhILCgdWYW1waXJlEAMSCwoHUFNraWxsMxAEEgsKB1BTa2lsbDQQBRIL",
+            "CgdQU2tpbGw1EAYqjQEKD0FjdGl2ZVNraWxsVHlwZRIXChNOdWxsQWN0aXZl",
+            "U2tpbGxUeXBlEAASEQoNQmVjb21lVmFtcGlyZRABEhIKDkJlY29tZUFzc2Fz",
+            "c2luEAISEQoNTnVjbGVhcldlYXBvbhADEg0KCVN1cGVyRmFzdBAEEgsKB0FT",
+            "a2lsbDQQBRILCgdBU2tpbGw1EAYqVwoIQnVmZlR5cGUSEAoMTnVsbEJ1ZmZU",
+            "eXBlEAASDQoJTW92ZVNwZWVkEAESCwoHQWRkTElGRRACEg4KClNoaWVsZEJ1",
+            "ZmYQAxINCglTcGVhckJ1ZmYQBCp1CgpCdWxsZXRUeXBlEhIKDk51bGxCdWxs",
+            "ZXRUeXBlEAASDgoKTGluZUJ1bGxldBABEhEKDUNvbW1vbkJ1bGxldDIQAhIO",
+            "CgpGYXN0QnVsbGV0EAMSEgoOT3JkaW5hcnlCdWxsZXQQBBIMCghBdG9tQm9t",
+            "YhAFQhaqAhNDb21tdW5pY2F0aW9uLlByb3RvYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Communication.Proto.MessageType), typeof(global::Communication.Proto.GameObjType), typeof(global::Communication.Proto.ShapeType), typeof(global::Communication.Proto.PlaceType), typeof(global::Communication.Proto.PropType), typeof(global::Communication.Proto.PassiveSkillType), typeof(global::Communication.Proto.ActiveSkillType), typeof(global::Communication.Proto.BuffType), typeof(global::Communication.Proto.BulletType), }, null, null));
@@ -122,20 +120,26 @@ namespace Communication.Proto {
 
   public enum PropType {
     [pbr::OriginalName("NullPropType")] NullPropType = 0,
-    [pbr::OriginalName("addHP")] AddHp = 1,
-    [pbr::OriginalName("addAP")] AddAp = 2,
-    [pbr::OriginalName("addSpeed")] AddSpeed = 3,
-    [pbr::OriginalName("addLIFE")] AddLife = 4,
-    [pbr::OriginalName("minusCD")] MinusCd = 5,
+    /// <summary>
+    /// 加速
+    /// </summary>
+    [pbr::OriginalName("addSpeed")] AddSpeed = 1,
+    /// <summary>
+    /// 多一条命
+    /// </summary>
+    [pbr::OriginalName("addLIFE")] AddLife = 2,
     /// <summary>
     /// 新增：宝石
     /// </summary>
-    [pbr::OriginalName("Gem")] Gem = 6,
-    [pbr::OriginalName("Shield")] Shield = 7,
-    [pbr::OriginalName("Spear")] Spear = 8,
-    [pbr::OriginalName("minusSpeed")] MinusSpeed = 9,
-    [pbr::OriginalName("minusAP")] MinusAp = 10,
-    [pbr::OriginalName("addCD")] AddCd = 11,
+    [pbr::OriginalName("Gem")] Gem = 3,
+    /// <summary>
+    /// 护盾
+    /// </summary>
+    [pbr::OriginalName("Shield")] Shield = 4,
+    /// <summary>
+    /// 破盾
+    /// </summary>
+    [pbr::OriginalName("Spear")] Spear = 5,
   }
 
   public enum PassiveSkillType {
@@ -161,11 +165,9 @@ namespace Communication.Proto {
   public enum BuffType {
     [pbr::OriginalName("NullBuffType")] NullBuffType = 0,
     [pbr::OriginalName("MoveSpeed")] MoveSpeed = 1,
-    [pbr::OriginalName("AP")] Ap = 2,
-    [pbr::OriginalName("CD")] Cd = 3,
-    [pbr::OriginalName("AddLIFE")] AddLife = 4,
-    [pbr::OriginalName("ShieldBuff")] ShieldBuff = 5,
-    [pbr::OriginalName("SpearBuff")] SpearBuff = 6,
+    [pbr::OriginalName("AddLIFE")] AddLife = 2,
+    [pbr::OriginalName("ShieldBuff")] ShieldBuff = 3,
+    [pbr::OriginalName("SpearBuff")] SpearBuff = 4,
   }
 
   public enum BulletType {

@@ -54,17 +54,11 @@ enum PlaceType  //位置标志，包括陆地，草丛，以及角色技能带�
 enum PropType    // 道具的类型
 {
     NullPropType = 0;
-    addHP = 1;
-    addAP = 2;
-    addSpeed = 3;
-    addLIFE = 4;
-    minusCD = 5;
-    Gem = 6;    // 新增：宝石
-    Shield = 7;
-    Spear = 8;
-    minusSpeed = 9;
-    minusAP = 10;
-    addCD = 11;
+    addSpeed = 1; // 加速
+    addLIFE = 2; // 多一条命
+    Gem = 3;    // 新增：宝石
+    Shield = 4; // 护盾
+    Spear = 5; // 破盾
 }
 enum PassiveSkillType   // 被动技能，有名字的都是已经实现了的
 {
@@ -90,11 +84,9 @@ enum BuffType    //buff
 {
     NullBuffType = 0;
     MoveSpeed = 1;
-    AP = 2;
-    CD = 3;
-    AddLIFE = 4;
-    ShieldBuff = 5;
-    SpearBuff = 6;
+    AddLIFE = 2;
+    ShieldBuff = 3;
+    SpearBuff = 4;
 }
 enum BulletType  //会有不同类型的子弹，现在只实现了“原子弹”
 {

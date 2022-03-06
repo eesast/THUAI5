@@ -25,53 +25,54 @@ namespace Communication.Proto {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChVNZXNzYWdlMkNsaWVudHMucHJvdG8SCFByb3RvYnVmGhFNZXNzYWdlVHlw",
-            "ZS5wcm90byKDBQoSTWVzc2FnZU9mQ2hhcmFjdGVyEgkKAXgYASABKAUSCQoB",
+            "ZS5wcm90byKcBQoSTWVzc2FnZU9mQ2hhcmFjdGVyEgkKAXgYASABKAUSCQoB",
             "eRgCIAEoBRITCgthdHRhY2tSYW5nZRgDIAEoARIRCglidWxsZXROdW0YBCAB",
             "KAUSDQoFc3BlZWQYBSABKAUSDAoEbGlmZRgGIAEoBRIlCh10aW1lVW50aWxD",
             "b21tb25Ta2lsbEF2YWlsYWJsZRgHIAEoARInCh90aW1lVW50aWxVbHRpbWF0",
-            "ZVNraWxsQXZhaWxhYmxlGAggASgBEg4KBmdlbU51bRgJIAEoBRIgCgRidWZm",
-            "GAogASgOMhIuUHJvdG9idWYuQnVmZlR5cGUSIAoEcHJvcBgLIAEoDjISLlBy",
-            "b3RvYnVmLlByb3BUeXBlEiIKBXBsYWNlGAwgASgOMhMuUHJvdG9idWYuUGxh",
-            "Y2VUeXBlEg8KB3ZhbXBpcmUYDSABKAESKAoKYnVsbGV0VHlwZRgOIAEoDjIU",
-            "LlByb3RvYnVmLkJ1bGxldFR5cGUSEwoLaXNSZXNldHRpbmcYDyABKAgSNAoQ",
-            "UGFzc2l2ZVNraWxsVHlwZRgQIAEoDjIaLlByb3RvYnVmLlBhc3NpdmVTa2ls",
-            "bFR5cGUSMgoPQWN0aXZlU2tpbGxUeXBlGBEgASgOMhkuUHJvdG9idWYuQWN0",
-            "aXZlU2tpbGxUeXBlEgwKBGd1aWQYEiABKAMSDwoHY2FuTW92ZRgTIAEoCBIO",
-            "CgZyYWRpdXMYFCABKAUSCgoCQ0QYFSABKAUSDwoHbGlmZU51bRgWIAEoBRIN",
-            "CgVzY29yZRgXIAEoBRIOCgZ0ZWFtSUQYGCABKAMSEAoIcGxheWVySUQYGSAB",
-            "KAMSEwoLaXNJbnZpc2libGUYGiABKAgioAEKDU1lc3NhZ2VPZlByb3ASIAoE",
-            "dHlwZRgBIAEoDjISLlByb3RvYnVmLlByb3BUeXBlEgkKAXgYAiABKAUSCQoB",
-            "eRgDIAEoBRIXCg9mYWNpbmdEaXJlY3Rpb24YBCABKAESDAoEZ3VpZBgFIAEo",
-            "AxIMCgRzaXplGAYgASgFEiIKBXBsYWNlGAcgASgOMhMuUHJvdG9idWYuUGxh",
-            "Y2VUeXBlIqwBCg9NZXNzYWdlT2ZCdWxsZXQSIgoEdHlwZRgBIAEoDjIULlBy",
-            "b3RvYnVmLkJ1bGxldFR5cGUSCQoBeBgCIAEoBRIJCgF5GAMgASgFEhcKD2Zh",
-            "Y2luZ0RpcmVjdGlvbhgEIAEoARIMCgRndWlkGAUgASgDEhQKDHBhcmVudFRl",
-            "YW1JRBgGIAEoAxIiCgVwbGFjZRgHIAEoDjITLlByb3RvYnVmLlBsYWNlVHlw",
-            "ZSJqChVNZXNzYWdlT2ZCb21iZWRCdWxsZXQSIgoEdHlwZRgBIAEoDjIULlBy",
-            "b3RvYnVmLkJ1bGxldFR5cGUSCQoBeBgCIAEoBRIJCgF5GAMgASgFEhcKD2Zh",
-            "Y2luZ0RpcmVjdGlvbhgEIAEoASJLCgxNZXNzYWdlT2ZNYXASJwoDcm93GDMg",
-            "AygLMhouUHJvdG9idWYuTWVzc2FnZU9mTWFwLlJvdxoSCgNSb3cSCwoDY29s",
-            "GAEgAygFIq8DCg9NZXNzYWdlVG9DbGllbnQSQAoOZ2FtZU9iak1lc3NhZ2UY",
-            "ASADKAsyKC5Qcm90b2J1Zi5NZXNzYWdlVG9DbGllbnQuR2FtZU9iak1lc3Nh",
-            "Z2USKgoLbWVzc2FnZVR5cGUYAiABKA4yFS5Qcm90b2J1Zi5NZXNzYWdlVHlw",
-            "ZRqtAgoOR2FtZU9iak1lc3NhZ2USOgoSbWVzc2FnZU9mQ2hhcmFjdGVyGAEg",
-            "ASgLMhwuUHJvdG9idWYuTWVzc2FnZU9mQ2hhcmFjdGVySAASNAoPbWVzc2Fn",
-            "ZU9mQnVsbGV0GAIgASgLMhkuUHJvdG9idWYuTWVzc2FnZU9mQnVsbGV0SAAS",
-            "MAoNbWVzc2FnZU9mUHJvcBgDIAEoCzIXLlByb3RvYnVmLk1lc3NhZ2VPZlBy",
-            "b3BIABJAChVNZXNzYWdlT2ZCb21iZWRCdWxsZXQYBCABKAsyHy5Qcm90b2J1",
-            "Zi5NZXNzYWdlT2ZCb21iZWRCdWxsZXRIABIuCgxtZXNzYWdlT2ZNYXAYBSAB",
-            "KAsyFi5Qcm90b2J1Zi5NZXNzYWdlT2ZNYXBIAEIFCgNvYmoigQEKEk1lc3Nh",
-            "Z2VUb09uZUNsaWVudBIQCghwbGF5ZXJJRBgBIAEoAxIOCgZ0ZWFtSUQYAiAB",
-            "KAMSKgoLbWVzc2FnZVR5cGUYAyABKA4yFS5Qcm90b2J1Zi5NZXNzYWdlVHlw",
-            "ZRIMCgRndWlkGAQgASgDEg8KB21lc3NhZ2UYBSABKAlCFqoCE0NvbW11bmlj",
-            "YXRpb24uUHJvdG9iBnByb3RvMw=="));
+            "ZVNraWxsQXZhaWxhYmxlGAggASgBEg4KBmdlbU51bRgJIAEoBRIXCg9mYWNp",
+            "bmdEaXJlY3Rpb24YCiABKAESIAoEcHJvcBgLIAEoDjISLlByb3RvYnVmLlBy",
+            "b3BUeXBlEiIKBXBsYWNlGAwgASgOMhMuUHJvdG9idWYuUGxhY2VUeXBlEg8K",
+            "B3ZhbXBpcmUYDSABKAESKAoKYnVsbGV0VHlwZRgOIAEoDjIULlByb3RvYnVm",
+            "LkJ1bGxldFR5cGUSEwoLaXNSZXNldHRpbmcYDyABKAgSNAoQUGFzc2l2ZVNr",
+            "aWxsVHlwZRgQIAEoDjIaLlByb3RvYnVmLlBhc3NpdmVTa2lsbFR5cGUSMgoP",
+            "QWN0aXZlU2tpbGxUeXBlGBEgASgOMhkuUHJvdG9idWYuQWN0aXZlU2tpbGxU",
+            "eXBlEgwKBGd1aWQYEiABKAMSDwoHY2FuTW92ZRgTIAEoCBIOCgZyYWRpdXMY",
+            "FCABKAUSCgoCQ0QYFSABKAUSDwoHbGlmZU51bRgWIAEoBRINCgVzY29yZRgX",
+            "IAEoBRIOCgZ0ZWFtSUQYGCABKAMSEAoIcGxheWVySUQYGSABKAMSEwoLaXNJ",
+            "bnZpc2libGUYGiABKAgSIAoEYnVmZhgbIAMoDjISLlByb3RvYnVmLkJ1ZmZU",
+            "eXBlIqABCg1NZXNzYWdlT2ZQcm9wEiAKBHR5cGUYASABKA4yEi5Qcm90b2J1",
+            "Zi5Qcm9wVHlwZRIJCgF4GAIgASgFEgkKAXkYAyABKAUSFwoPZmFjaW5nRGly",
+            "ZWN0aW9uGAQgASgBEgwKBGd1aWQYBSABKAMSDAoEc2l6ZRgGIAEoBRIiCgVw",
+            "bGFjZRgHIAEoDjITLlByb3RvYnVmLlBsYWNlVHlwZSKsAQoPTWVzc2FnZU9m",
+            "QnVsbGV0EiIKBHR5cGUYASABKA4yFC5Qcm90b2J1Zi5CdWxsZXRUeXBlEgkK",
+            "AXgYAiABKAUSCQoBeRgDIAEoBRIXCg9mYWNpbmdEaXJlY3Rpb24YBCABKAES",
+            "DAoEZ3VpZBgFIAEoAxIUCgxwYXJlbnRUZWFtSUQYBiABKAMSIgoFcGxhY2UY",
+            "ByABKA4yEy5Qcm90b2J1Zi5QbGFjZVR5cGUieAoVTWVzc2FnZU9mQm9tYmVk",
+            "QnVsbGV0EiIKBHR5cGUYASABKA4yFC5Qcm90b2J1Zi5CdWxsZXRUeXBlEgkK",
+            "AXgYAiABKAUSCQoBeRgDIAEoBRIXCg9mYWNpbmdEaXJlY3Rpb24YBCABKAES",
+            "DAoEZ3VpZBgFIAEoAyJLCgxNZXNzYWdlT2ZNYXASJwoDcm93GDMgAygLMhou",
+            "UHJvdG9idWYuTWVzc2FnZU9mTWFwLlJvdxoSCgNSb3cSCwoDY29sGAEgAygF",
+            "Iq8DCg9NZXNzYWdlVG9DbGllbnQSQAoOZ2FtZU9iak1lc3NhZ2UYASADKAsy",
+            "KC5Qcm90b2J1Zi5NZXNzYWdlVG9DbGllbnQuR2FtZU9iak1lc3NhZ2USKgoL",
+            "bWVzc2FnZVR5cGUYAiABKA4yFS5Qcm90b2J1Zi5NZXNzYWdlVHlwZRqtAgoO",
+            "R2FtZU9iak1lc3NhZ2USOgoSbWVzc2FnZU9mQ2hhcmFjdGVyGAEgASgLMhwu",
+            "UHJvdG9idWYuTWVzc2FnZU9mQ2hhcmFjdGVySAASNAoPbWVzc2FnZU9mQnVs",
+            "bGV0GAIgASgLMhkuUHJvdG9idWYuTWVzc2FnZU9mQnVsbGV0SAASMAoNbWVz",
+            "c2FnZU9mUHJvcBgDIAEoCzIXLlByb3RvYnVmLk1lc3NhZ2VPZlByb3BIABJA",
+            "ChVNZXNzYWdlT2ZCb21iZWRCdWxsZXQYBCABKAsyHy5Qcm90b2J1Zi5NZXNz",
+            "YWdlT2ZCb21iZWRCdWxsZXRIABIuCgxtZXNzYWdlT2ZNYXAYBSABKAsyFi5Q",
+            "cm90b2J1Zi5NZXNzYWdlT2ZNYXBIAEIFCgNvYmoigQEKEk1lc3NhZ2VUb09u",
+            "ZUNsaWVudBIQCghwbGF5ZXJJRBgBIAEoAxIOCgZ0ZWFtSUQYAiABKAMSKgoL",
+            "bWVzc2FnZVR5cGUYAyABKA4yFS5Qcm90b2J1Zi5NZXNzYWdlVHlwZRIMCgRn",
+            "dWlkGAQgASgDEg8KB21lc3NhZ2UYBSABKAlCFqoCE0NvbW11bmljYXRpb24u",
+            "UHJvdG9iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Communication.Proto.MessageTypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfCharacter), global::Communication.Proto.MessageOfCharacter.Parser, new[]{ "X", "Y", "AttackRange", "BulletNum", "Speed", "Life", "TimeUntilCommonSkillAvailable", "TimeUntilUltimateSkillAvailable", "GemNum", "Buff", "Prop", "Place", "Vampire", "BulletType", "IsResetting", "PassiveSkillType", "ActiveSkillType", "Guid", "CanMove", "Radius", "CD", "LifeNum", "Score", "TeamID", "PlayerID", "IsInvisible" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfCharacter), global::Communication.Proto.MessageOfCharacter.Parser, new[]{ "X", "Y", "AttackRange", "BulletNum", "Speed", "Life", "TimeUntilCommonSkillAvailable", "TimeUntilUltimateSkillAvailable", "GemNum", "FacingDirection", "Prop", "Place", "Vampire", "BulletType", "IsResetting", "PassiveSkillType", "ActiveSkillType", "Guid", "CanMove", "Radius", "CD", "LifeNum", "Score", "TeamID", "PlayerID", "IsInvisible", "Buff" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfProp), global::Communication.Proto.MessageOfProp.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "Size", "Place" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfBullet), global::Communication.Proto.MessageOfBullet.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "ParentTeamID", "Place" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfBombedBullet), global::Communication.Proto.MessageOfBombedBullet.Parser, new[]{ "Type", "X", "Y", "FacingDirection" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfBombedBullet), global::Communication.Proto.MessageOfBombedBullet.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfMap), global::Communication.Proto.MessageOfMap.Parser, new[]{ "Row" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfMap.Types.Row), global::Communication.Proto.MessageOfMap.Types.Row.Parser, new[]{ "Col" }, null, null, null, null)}),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageToClient), global::Communication.Proto.MessageToClient.Parser, new[]{ "GameObjMessage", "MessageType" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageToClient.Types.GameObjMessage), global::Communication.Proto.MessageToClient.Types.GameObjMessage.Parser, new[]{ "MessageOfCharacter", "MessageOfBullet", "MessageOfProp", "MessageOfBombedBullet", "MessageOfMap" }, new[]{ "Obj" }, null, null, null)}),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageToOneClient), global::Communication.Proto.MessageToOneClient.Parser, new[]{ "PlayerID", "TeamID", "MessageType", "Guid", "Message" }, null, null, null, null)
@@ -124,7 +125,7 @@ namespace Communication.Proto {
       timeUntilCommonSkillAvailable_ = other.timeUntilCommonSkillAvailable_;
       timeUntilUltimateSkillAvailable_ = other.timeUntilUltimateSkillAvailable_;
       gemNum_ = other.gemNum_;
-      buff_ = other.buff_;
+      facingDirection_ = other.facingDirection_;
       prop_ = other.prop_;
       place_ = other.place_;
       vampire_ = other.vampire_;
@@ -141,6 +142,7 @@ namespace Communication.Proto {
       teamID_ = other.teamID_;
       playerID_ = other.playerID_;
       isInvisible_ = other.isInvisible_;
+      buff_ = other.buff_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -282,18 +284,15 @@ namespace Communication.Proto {
       }
     }
 
-    /// <summary>Field number for the "buff" field.</summary>
-    public const int BuffFieldNumber = 10;
-    private global::Communication.Proto.BuffType buff_ = global::Communication.Proto.BuffType.NullBuffType;
-    /// <summary>
-    ///可见
-    /// </summary>
+    /// <summary>Field number for the "facingDirection" field.</summary>
+    public const int FacingDirectionFieldNumber = 10;
+    private double facingDirection_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Communication.Proto.BuffType Buff {
-      get { return buff_; }
+    public double FacingDirection {
+      get { return facingDirection_; }
       set {
-        buff_ = value;
+        facingDirection_ = value;
       }
     }
 
@@ -519,6 +518,17 @@ namespace Communication.Proto {
       }
     }
 
+    /// <summary>Field number for the "buff" field.</summary>
+    public const int BuffFieldNumber = 27;
+    private static readonly pb::FieldCodec<global::Communication.Proto.BuffType> _repeated_buff_codec
+        = pb::FieldCodec.ForEnum(218, x => (int) x, x => (global::Communication.Proto.BuffType) x);
+    private readonly pbc::RepeatedField<global::Communication.Proto.BuffType> buff_ = new pbc::RepeatedField<global::Communication.Proto.BuffType>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Communication.Proto.BuffType> Buff {
+      get { return buff_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -543,7 +553,7 @@ namespace Communication.Proto {
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(TimeUntilCommonSkillAvailable, other.TimeUntilCommonSkillAvailable)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(TimeUntilUltimateSkillAvailable, other.TimeUntilUltimateSkillAvailable)) return false;
       if (GemNum != other.GemNum) return false;
-      if (Buff != other.Buff) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(FacingDirection, other.FacingDirection)) return false;
       if (Prop != other.Prop) return false;
       if (Place != other.Place) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Vampire, other.Vampire)) return false;
@@ -560,6 +570,7 @@ namespace Communication.Proto {
       if (TeamID != other.TeamID) return false;
       if (PlayerID != other.PlayerID) return false;
       if (IsInvisible != other.IsInvisible) return false;
+      if(!buff_.Equals(other.buff_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -576,7 +587,7 @@ namespace Communication.Proto {
       if (TimeUntilCommonSkillAvailable != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(TimeUntilCommonSkillAvailable);
       if (TimeUntilUltimateSkillAvailable != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(TimeUntilUltimateSkillAvailable);
       if (GemNum != 0) hash ^= GemNum.GetHashCode();
-      if (Buff != global::Communication.Proto.BuffType.NullBuffType) hash ^= Buff.GetHashCode();
+      if (FacingDirection != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(FacingDirection);
       if (Prop != global::Communication.Proto.PropType.NullPropType) hash ^= Prop.GetHashCode();
       if (Place != global::Communication.Proto.PlaceType.NullPlaceType) hash ^= Place.GetHashCode();
       if (Vampire != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Vampire);
@@ -593,6 +604,7 @@ namespace Communication.Proto {
       if (TeamID != 0L) hash ^= TeamID.GetHashCode();
       if (PlayerID != 0L) hash ^= PlayerID.GetHashCode();
       if (IsInvisible != false) hash ^= IsInvisible.GetHashCode();
+      hash ^= buff_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -647,9 +659,9 @@ namespace Communication.Proto {
         output.WriteRawTag(72);
         output.WriteInt32(GemNum);
       }
-      if (Buff != global::Communication.Proto.BuffType.NullBuffType) {
-        output.WriteRawTag(80);
-        output.WriteEnum((int) Buff);
+      if (FacingDirection != 0D) {
+        output.WriteRawTag(81);
+        output.WriteDouble(FacingDirection);
       }
       if (Prop != global::Communication.Proto.PropType.NullPropType) {
         output.WriteRawTag(88);
@@ -715,6 +727,7 @@ namespace Communication.Proto {
         output.WriteRawTag(208, 1);
         output.WriteBool(IsInvisible);
       }
+      buff_.WriteTo(output, _repeated_buff_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -761,9 +774,9 @@ namespace Communication.Proto {
         output.WriteRawTag(72);
         output.WriteInt32(GemNum);
       }
-      if (Buff != global::Communication.Proto.BuffType.NullBuffType) {
-        output.WriteRawTag(80);
-        output.WriteEnum((int) Buff);
+      if (FacingDirection != 0D) {
+        output.WriteRawTag(81);
+        output.WriteDouble(FacingDirection);
       }
       if (Prop != global::Communication.Proto.PropType.NullPropType) {
         output.WriteRawTag(88);
@@ -829,6 +842,7 @@ namespace Communication.Proto {
         output.WriteRawTag(208, 1);
         output.WriteBool(IsInvisible);
       }
+      buff_.WriteTo(ref output, _repeated_buff_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -866,8 +880,8 @@ namespace Communication.Proto {
       if (GemNum != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(GemNum);
       }
-      if (Buff != global::Communication.Proto.BuffType.NullBuffType) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Buff);
+      if (FacingDirection != 0D) {
+        size += 1 + 8;
       }
       if (Prop != global::Communication.Proto.PropType.NullPropType) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Prop);
@@ -917,6 +931,7 @@ namespace Communication.Proto {
       if (IsInvisible != false) {
         size += 2 + 1;
       }
+      size += buff_.CalculateSize(_repeated_buff_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -956,8 +971,8 @@ namespace Communication.Proto {
       if (other.GemNum != 0) {
         GemNum = other.GemNum;
       }
-      if (other.Buff != global::Communication.Proto.BuffType.NullBuffType) {
-        Buff = other.Buff;
+      if (other.FacingDirection != 0D) {
+        FacingDirection = other.FacingDirection;
       }
       if (other.Prop != global::Communication.Proto.PropType.NullPropType) {
         Prop = other.Prop;
@@ -1007,6 +1022,7 @@ namespace Communication.Proto {
       if (other.IsInvisible != false) {
         IsInvisible = other.IsInvisible;
       }
+      buff_.Add(other.buff_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1058,8 +1074,8 @@ namespace Communication.Proto {
             GemNum = input.ReadInt32();
             break;
           }
-          case 80: {
-            Buff = (global::Communication.Proto.BuffType) input.ReadEnum();
+          case 81: {
+            FacingDirection = input.ReadDouble();
             break;
           }
           case 88: {
@@ -1124,6 +1140,11 @@ namespace Communication.Proto {
           }
           case 208: {
             IsInvisible = input.ReadBool();
+            break;
+          }
+          case 218:
+          case 216: {
+            buff_.AddEntriesFrom(input, _repeated_buff_codec);
             break;
           }
         }
@@ -1177,8 +1198,8 @@ namespace Communication.Proto {
             GemNum = input.ReadInt32();
             break;
           }
-          case 80: {
-            Buff = (global::Communication.Proto.BuffType) input.ReadEnum();
+          case 81: {
+            FacingDirection = input.ReadDouble();
             break;
           }
           case 88: {
@@ -1243,6 +1264,11 @@ namespace Communication.Proto {
           }
           case 208: {
             IsInvisible = input.ReadBool();
+            break;
+          }
+          case 218:
+          case 216: {
+            buff_.AddEntriesFrom(ref input, _repeated_buff_codec);
             break;
           }
         }
@@ -2115,6 +2141,7 @@ namespace Communication.Proto {
       x_ = other.x_;
       y_ = other.y_;
       facingDirection_ = other.facingDirection_;
+      guid_ = other.guid_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2172,6 +2199,18 @@ namespace Communication.Proto {
       }
     }
 
+    /// <summary>Field number for the "guid" field.</summary>
+    public const int GuidFieldNumber = 5;
+    private long guid_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public long Guid {
+      get { return guid_; }
+      set {
+        guid_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2191,6 +2230,7 @@ namespace Communication.Proto {
       if (X != other.X) return false;
       if (Y != other.Y) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(FacingDirection, other.FacingDirection)) return false;
+      if (Guid != other.Guid) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2202,6 +2242,7 @@ namespace Communication.Proto {
       if (X != 0) hash ^= X.GetHashCode();
       if (Y != 0) hash ^= Y.GetHashCode();
       if (FacingDirection != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(FacingDirection);
+      if (Guid != 0L) hash ^= Guid.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2236,6 +2277,10 @@ namespace Communication.Proto {
         output.WriteRawTag(33);
         output.WriteDouble(FacingDirection);
       }
+      if (Guid != 0L) {
+        output.WriteRawTag(40);
+        output.WriteInt64(Guid);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2262,6 +2307,10 @@ namespace Communication.Proto {
         output.WriteRawTag(33);
         output.WriteDouble(FacingDirection);
       }
+      if (Guid != 0L) {
+        output.WriteRawTag(40);
+        output.WriteInt64(Guid);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2283,6 +2332,9 @@ namespace Communication.Proto {
       }
       if (FacingDirection != 0D) {
         size += 1 + 8;
+      }
+      if (Guid != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Guid);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2307,6 +2359,9 @@ namespace Communication.Proto {
       }
       if (other.FacingDirection != 0D) {
         FacingDirection = other.FacingDirection;
+      }
+      if (other.Guid != 0L) {
+        Guid = other.Guid;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2339,6 +2394,10 @@ namespace Communication.Proto {
             FacingDirection = input.ReadDouble();
             break;
           }
+          case 40: {
+            Guid = input.ReadInt64();
+            break;
+          }
         }
       }
     #endif
@@ -2368,6 +2427,10 @@ namespace Communication.Proto {
           }
           case 33: {
             FacingDirection = input.ReadDouble();
+            break;
+          }
+          case 40: {
+            Guid = input.ReadInt64();
             break;
           }
         }

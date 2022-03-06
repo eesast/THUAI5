@@ -23,14 +23,13 @@ namespace Preparation.Utility
         Circle = 1,      //仍然，子弹和人物为圆形，格子为方形
         Square = 2
     }
-    public enum PlaceType  //位置标志，包括陆地，草丛，以及角色技能带来的隐身。游戏中每一帧都要刷新各个物体的该属性
+    public enum PlaceType  //位置标志，包括陆地，草丛。游戏中每一帧都要刷新各个物体的该属性
     {
         Null = 0,
         Land = 1,
         Grass1 = 2,
         Grass2 = 3,
         Grass3 = 4,
-        //Invisible = 5
     }
     public enum BulletType //工厂方式
     {
@@ -43,17 +42,11 @@ namespace Preparation.Utility
     public enum PropType    // 道具的类型
     {
         Null = 0,
-        addHP = 1,
-        addAP = 2,
-        addSpeed = 3,
-        addLIFE = 4,
-        minusCD = 5,
-        Shield = 6,
-        Spear = 7,
-        minusSpeed = 8,
-        minusAP = 9,
-        addCD = 10,
-        Gem = 11,    // 新增：宝石
+        addSpeed = 1,
+        addLIFE = 2,
+        Shield = 3,
+        Spear = 4,
+        Gem = 5,    // 新增：宝石
     }
     public enum PassiveSkillType   // 被动技能
     {
@@ -78,12 +71,10 @@ namespace Preparation.Utility
     public enum BuffType    //buff
     {
         Null = 0,
-        MoveSpeed = 1,
-        AP = 2,
-        CD = 3,
-        AddLIFE = 4,
-        Shield = 5,
-        Spear = 6
+        AddSpeed = 1,
+        AddLIFE = 2,
+        Shield = 3,
+        Spear = 4
     }
     public enum GameObjIdx
     {
