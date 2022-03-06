@@ -32,9 +32,12 @@ jobs:
 
     - name: Git Submodule
       run: cd ./CAPI
-      uses: srt32/git-actions@v0.0.3
-      with:
-        args: git add .
+      
+      action "git command" {
+        uses = "srt32/git-actions@v0.0.3"
+        args = "git submodule --init --recursive"
+      }
+      
       run: cd ..
 
     - name: Publish
