@@ -10,7 +10,7 @@ COPY ./logic/Server/bin/Release/net5.0/linux-x64 ./usr/local/linux-64
 RUN cd linux-64
 ENTRYPOINT ["dotnet", "Server.dll"]
 CMD ["-p", "20000", "--teamCount", "2", "--playerCount", "4", "-t", "600", "--fileName", 'video']
-cd ../play
+RUN cd ../play
 RUN int=1 
 RUN while(( $int<=8 )) 
 RUN do 
