@@ -12,13 +12,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Install SSH Key
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        if_key_exists: replace
-        known_hosts: ""
-
     - name: Setup dotnet Core
       uses: actions/setup-dotnet@v1
       with:
@@ -30,7 +23,7 @@ jobs:
         python-version: '3.7'
         architecture: 'x64'
       
-    - name: git submodule
+    - name: Git Submodule
       run: cd ./CAPI && git submodule update --init --recursive && cd ..
 
     - name: Pip Install paramiko
