@@ -8,6 +8,7 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.3/cmake-3.22.3
 ENV PATH=$PATH:/usr/local/cmake-3.22.3-Linux-x86_64/bin
 RUN apt-get install --no-install-recommends -y autoconf automake libtool curl make g++ unzip
 COPY ./CAPI /usr/local/CAPI
+COPY ./dependency/shell/compile.sh ./compile.sh
 RUN cd ./CAPI/protobuf && ./autogen.sh && ./configure && make && make install && ldconfig && cd ../..
-RUN cp -f /usr/local/mnt/player.cpp ./API/src/AI.cpp
-RUN cmake CMakeLists.txt && make
+ENTRYPOINT ["bash", "compile.sh"]
+CMD ["1"]

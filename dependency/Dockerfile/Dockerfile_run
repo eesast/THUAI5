@@ -10,10 +10,3 @@ COPY ./Server ./usr/local/Server
 RUN cd Server 
 ENTRYPOINT ["dotnet", "Server.dll"]
 CMD ["-p", "20000", "--teamCount", "2", "--playerCount", "4", "-t", "600", "--fileName", 'video']
-RUN cd ../play
-RUN int=1 
-RUN while(( $int<=8 )) 
-RUN do 
-RUN capi${int} 
-RUN let "int++" 
-RUN done
