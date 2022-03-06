@@ -223,11 +223,14 @@ namespace CSharpInterface
                 case PropType.Gem:
                     msg.PropType = Communication.Proto.PropType.Gem;
                     break;
-                case PropType.addHP:
-                    msg.PropType = Communication.Proto.PropType.AddHp;
+                case PropType.addLIFE:
+                    msg.PropType = Communication.Proto.PropType.AddLife;
                     break;
-                case PropType.addAP:
-                    msg.PropType = Communication.Proto.PropType.AddAp;
+                case PropType.Shield:
+                    msg.PropType = Communication.Proto.PropType.Shield;
+                    break;
+                case PropType.Spear:
+                    msg.PropType = Communication.Proto.PropType.Spear;
                     break;
                 case PropType.addSpeed:
                     msg.PropType = Communication.Proto.PropType.AddSpeed;

@@ -1,4 +1,5 @@
 using Communication.Proto;
+using System.Collections.Generic;
 using GameClass.GameObj;
 
 namespace Server
@@ -25,7 +26,6 @@ namespace Server
             msg.MessageOfCharacter.X = player.Position.x;
             msg.MessageOfCharacter.Y = player.Position.y;
             msg.MessageOfCharacter.AttackRange = player.AttackRange;
-            msg.MessageOfCharacter.Buff = 0; //没有buff这个属性，是否要加？
             msg.MessageOfCharacter.BulletNum = player.BulletNum;
             msg.MessageOfCharacter.CanMove = player.CanMove;
             msg.MessageOfCharacter.CD = player.CD;
@@ -40,14 +40,38 @@ namespace Server
             msg.MessageOfCharacter.TeamID = player.TeamID;
             msg.MessageOfCharacter.PlayerID = player.PlayerID;
             msg.MessageOfCharacter.IsInvisible = player.IsInvisible;
+            msg.MessageOfCharacter.FacingDirection = player.FacingDirection;
 
             //应该要发队伍分数，这里先发个人分数
             msg.MessageOfCharacter.Score = player.Score;
 
             //这条暂时没啥用
             msg.MessageOfCharacter.TimeUntilUltimateSkillAvailable = 0;
-            msg.MessageOfCharacter.Vampire = player.Vampire;
 
+            msg.MessageOfCharacter.Vampire = player.Vampire;
+            foreach (KeyValuePair<Preparation.Utility.BuffType, bool> kvp in player.Buff)
+            {
+                if (kvp.Value)
+                {
+                    switch(kvp.Key)
+                    {
+                        case Preparation.Utility.BuffType.Spear:
+                            msg.MessageOfCharacter.Buff.Add(BuffType.SpearBuff);
+                            break;
+                        case Preparation.Utility.BuffType.AddLIFE:
+                            msg.MessageOfCharacter.Buff.Add(BuffType.AddLife);
+                            break;
+                        case Preparation.Utility.BuffType.Shield:
+                            msg.MessageOfCharacter.Buff.Add(BuffType.ShieldBuff);
+                            break;
+                        case Preparation.Utility.BuffType.AddSpeed:
+                            msg.MessageOfCharacter.Buff.Add(BuffType.MoveSpeed);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
             switch (player.Place)
             {
                 case Preparation.Utility.PlaceType.Land:
@@ -78,32 +102,14 @@ namespace Server
             {
                 switch (player.PropInventory.GetPropType())
                 {
-                    case Preparation.Utility.PropType.addAP:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddAp;
-                        break;
                     case Preparation.Utility.PropType.Gem:
                         msg.MessageOfCharacter.Prop = Communication.Proto.PropType.Gem;
-                        break;
-                    case Preparation.Utility.PropType.addCD:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddCd;
-                        break;
-                    case Preparation.Utility.PropType.addHP:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddHp;
                         break;
                     case Preparation.Utility.PropType.addLIFE:
                         msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddLife;
                         break;
                     case Preparation.Utility.PropType.addSpeed:
                         msg.MessageOfCharacter.Prop = Communication.Proto.PropType.AddSpeed;
-                        break;
-                    case Preparation.Utility.PropType.minusAP:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.MinusAp;
-                        break;
-                    case Preparation.Utility.PropType.minusCD:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.MinusCd;
-                        break;
-                    case Preparation.Utility.PropType.minusSpeed:
-                        msg.MessageOfCharacter.Prop = Communication.Proto.PropType.MinusSpeed;
                         break;
                     case Preparation.Utility.PropType.Shield:
                         msg.MessageOfCharacter.Prop = Communication.Proto.PropType.Shield;
@@ -229,32 +235,14 @@ namespace Server
             msg.MessageOfProp.Guid = prop.ID;
             switch (prop.GetPropType())
             {
-                case Preparation.Utility.PropType.addAP:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddAp;
-                    break;
                 case Preparation.Utility.PropType.Gem:
                     msg.MessageOfProp.Type = Communication.Proto.PropType.Gem;
-                    break;
-                case Preparation.Utility.PropType.addCD:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddCd;
-                    break;
-                case Preparation.Utility.PropType.addHP:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.AddHp;
                     break;
                 case Preparation.Utility.PropType.addLIFE:
                     msg.MessageOfProp.Type = Communication.Proto.PropType.AddLife;
                     break;
                 case Preparation.Utility.PropType.addSpeed:
                     msg.MessageOfProp.Type = Communication.Proto.PropType.AddSpeed;
-                    break;
-                case Preparation.Utility.PropType.minusAP:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.MinusAp;
-                    break;
-                case Preparation.Utility.PropType.minusCD:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.MinusCd;
-                    break;
-                case Preparation.Utility.PropType.minusSpeed:
-                    msg.MessageOfProp.Type = Communication.Proto.PropType.MinusSpeed;
                     break;
                 case Preparation.Utility.PropType.Shield:
                     msg.MessageOfProp.Type = Communication.Proto.PropType.Shield;
@@ -305,6 +293,7 @@ namespace Server
             msg.MessageOfBombedBullet.FacingDirection = bombedBullet.FacingDirection;
             msg.MessageOfBombedBullet.X = bombedBullet.bulletHasBombed.Position.x;
             msg.MessageOfBombedBullet.Y = bombedBullet.bulletHasBombed.Position.y;
+            msg.MessageOfBombedBullet.Guid = bombedBullet.ID;
             switch (bombedBullet.bulletHasBombed.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.OrdinaryBullet:

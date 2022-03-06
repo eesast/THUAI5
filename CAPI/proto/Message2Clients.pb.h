@@ -220,6 +220,7 @@ class MessageOfCharacter final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kBuffFieldNumber = 27,
     kXFieldNumber = 1,
     kYFieldNumber = 2,
     kAttackRangeFieldNumber = 3,
@@ -229,24 +230,41 @@ class MessageOfCharacter final :
     kLifeFieldNumber = 6,
     kGemNumFieldNumber = 9,
     kTimeUntilUltimateSkillAvailableFieldNumber = 8,
-    kBuffFieldNumber = 10,
+    kFacingDirectionFieldNumber = 10,
     kPropFieldNumber = 11,
-    kVampireFieldNumber = 13,
     kPlaceFieldNumber = 12,
+    kVampireFieldNumber = 13,
     kBulletTypeFieldNumber = 14,
     kPassiveSkillTypeFieldNumber = 16,
-    kActiveSkillTypeFieldNumber = 17,
     kGuidFieldNumber = 18,
+    kActiveSkillTypeFieldNumber = 17,
     kRadiusFieldNumber = 20,
     kIsResettingFieldNumber = 15,
     kCanMoveFieldNumber = 19,
     kIsInvisibleFieldNumber = 26,
     kCDFieldNumber = 21,
     kLifeNumFieldNumber = 22,
+    kScoreFieldNumber = 23,
     kTeamIDFieldNumber = 24,
     kPlayerIDFieldNumber = 25,
-    kScoreFieldNumber = 23,
   };
+  // repeated .Protobuf.BuffType buff = 27;
+  int buff_size() const;
+  private:
+  int _internal_buff_size() const;
+  public:
+  void clear_buff();
+  private:
+  ::Protobuf::BuffType _internal_buff(int index) const;
+  void _internal_add_buff(::Protobuf::BuffType value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>* _internal_mutable_buff();
+  public:
+  ::Protobuf::BuffType buff(int index) const;
+  void set_buff(int index, ::Protobuf::BuffType value);
+  void add_buff(::Protobuf::BuffType value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>& buff() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>* mutable_buff();
+
   // int32 x = 1;
   void clear_x();
   int32_t x() const;
@@ -328,13 +346,13 @@ class MessageOfCharacter final :
   void _internal_set_timeuntilultimateskillavailable(double value);
   public:
 
-  // .Protobuf.BuffType buff = 10;
-  void clear_buff();
-  ::Protobuf::BuffType buff() const;
-  void set_buff(::Protobuf::BuffType value);
+  // double facingDirection = 10;
+  void clear_facingdirection();
+  double facingdirection() const;
+  void set_facingdirection(double value);
   private:
-  ::Protobuf::BuffType _internal_buff() const;
-  void _internal_set_buff(::Protobuf::BuffType value);
+  double _internal_facingdirection() const;
+  void _internal_set_facingdirection(double value);
   public:
 
   // .Protobuf.PropType prop = 11;
@@ -346,15 +364,6 @@ class MessageOfCharacter final :
   void _internal_set_prop(::Protobuf::PropType value);
   public:
 
-  // double vampire = 13;
-  void clear_vampire();
-  double vampire() const;
-  void set_vampire(double value);
-  private:
-  double _internal_vampire() const;
-  void _internal_set_vampire(double value);
-  public:
-
   // .Protobuf.PlaceType place = 12;
   void clear_place();
   ::Protobuf::PlaceType place() const;
@@ -362,6 +371,15 @@ class MessageOfCharacter final :
   private:
   ::Protobuf::PlaceType _internal_place() const;
   void _internal_set_place(::Protobuf::PlaceType value);
+  public:
+
+  // double vampire = 13;
+  void clear_vampire();
+  double vampire() const;
+  void set_vampire(double value);
+  private:
+  double _internal_vampire() const;
+  void _internal_set_vampire(double value);
   public:
 
   // .Protobuf.BulletType bulletType = 14;
@@ -382,15 +400,6 @@ class MessageOfCharacter final :
   void _internal_set_passiveskilltype(::Protobuf::PassiveSkillType value);
   public:
 
-  // .Protobuf.ActiveSkillType ActiveSkillType = 17;
-  void clear_activeskilltype();
-  ::Protobuf::ActiveSkillType activeskilltype() const;
-  void set_activeskilltype(::Protobuf::ActiveSkillType value);
-  private:
-  ::Protobuf::ActiveSkillType _internal_activeskilltype() const;
-  void _internal_set_activeskilltype(::Protobuf::ActiveSkillType value);
-  public:
-
   // int64 guid = 18;
   void clear_guid();
   int64_t guid() const;
@@ -398,6 +407,15 @@ class MessageOfCharacter final :
   private:
   int64_t _internal_guid() const;
   void _internal_set_guid(int64_t value);
+  public:
+
+  // .Protobuf.ActiveSkillType ActiveSkillType = 17;
+  void clear_activeskilltype();
+  ::Protobuf::ActiveSkillType activeskilltype() const;
+  void set_activeskilltype(::Protobuf::ActiveSkillType value);
+  private:
+  ::Protobuf::ActiveSkillType _internal_activeskilltype() const;
+  void _internal_set_activeskilltype(::Protobuf::ActiveSkillType value);
   public:
 
   // int32 radius = 20;
@@ -454,6 +472,15 @@ class MessageOfCharacter final :
   void _internal_set_lifenum(int32_t value);
   public:
 
+  // int32 score = 23;
+  void clear_score();
+  int32_t score() const;
+  void set_score(int32_t value);
+  private:
+  int32_t _internal_score() const;
+  void _internal_set_score(int32_t value);
+  public:
+
   // int64 teamID = 24;
   void clear_teamid();
   int64_t teamid() const;
@@ -472,15 +499,6 @@ class MessageOfCharacter final :
   void _internal_set_playerid(int64_t value);
   public:
 
-  // int32 score = 23;
-  void clear_score();
-  int32_t score() const;
-  void set_score(int32_t value);
-  private:
-  int32_t _internal_score() const;
-  void _internal_set_score(int32_t value);
-  public:
-
   // @@protoc_insertion_point(class_scope:Protobuf.MessageOfCharacter)
  private:
   class _Internal;
@@ -488,6 +506,8 @@ class MessageOfCharacter final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField<int> buff_;
+  mutable std::atomic<int> _buff_cached_byte_size_;
   int32_t x_;
   int32_t y_;
   double attackrange_;
@@ -497,23 +517,23 @@ class MessageOfCharacter final :
   int32_t life_;
   int32_t gemnum_;
   double timeuntilultimateskillavailable_;
-  int buff_;
+  double facingdirection_;
   int prop_;
-  double vampire_;
   int place_;
+  double vampire_;
   int bullettype_;
   int passiveskilltype_;
-  int activeskilltype_;
   int64_t guid_;
+  int activeskilltype_;
   int32_t radius_;
   bool isresetting_;
   bool canmove_;
   bool isinvisible_;
   int32_t cd_;
   int32_t lifenum_;
+  int32_t score_;
   int64_t teamid_;
   int64_t playerid_;
-  int32_t score_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
 };
@@ -1068,6 +1088,7 @@ class MessageOfBombedBullet final :
     kTypeFieldNumber = 1,
     kXFieldNumber = 2,
     kFacingDirectionFieldNumber = 4,
+    kGuidFieldNumber = 5,
     kYFieldNumber = 3,
   };
   // .Protobuf.BulletType type = 1;
@@ -1097,6 +1118,15 @@ class MessageOfBombedBullet final :
   void _internal_set_facingdirection(double value);
   public:
 
+  // int64 guid = 5;
+  void clear_guid();
+  int64_t guid() const;
+  void set_guid(int64_t value);
+  private:
+  int64_t _internal_guid() const;
+  void _internal_set_guid(int64_t value);
+  public:
+
   // int32 y = 3;
   void clear_y();
   int32_t y() const;
@@ -1116,6 +1146,7 @@ class MessageOfBombedBullet final :
   int type_;
   int32_t x_;
   double facingdirection_;
+  int64_t guid_;
   int32_t y_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
@@ -2251,24 +2282,24 @@ inline void MessageOfCharacter::set_gemnum(int32_t value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.gemNum)
 }
 
-// .Protobuf.BuffType buff = 10;
-inline void MessageOfCharacter::clear_buff() {
-  buff_ = 0;
+// double facingDirection = 10;
+inline void MessageOfCharacter::clear_facingdirection() {
+  facingdirection_ = 0;
 }
-inline ::Protobuf::BuffType MessageOfCharacter::_internal_buff() const {
-  return static_cast< ::Protobuf::BuffType >(buff_);
+inline double MessageOfCharacter::_internal_facingdirection() const {
+  return facingdirection_;
 }
-inline ::Protobuf::BuffType MessageOfCharacter::buff() const {
-  // @@protoc_insertion_point(field_get:Protobuf.MessageOfCharacter.buff)
-  return _internal_buff();
+inline double MessageOfCharacter::facingdirection() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfCharacter.facingDirection)
+  return _internal_facingdirection();
 }
-inline void MessageOfCharacter::_internal_set_buff(::Protobuf::BuffType value) {
+inline void MessageOfCharacter::_internal_set_facingdirection(double value) {
   
-  buff_ = value;
+  facingdirection_ = value;
 }
-inline void MessageOfCharacter::set_buff(::Protobuf::BuffType value) {
-  _internal_set_buff(value);
-  // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.buff)
+inline void MessageOfCharacter::set_facingdirection(double value) {
+  _internal_set_facingdirection(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.facingDirection)
 }
 
 // .Protobuf.PropType prop = 11;
@@ -2589,6 +2620,49 @@ inline void MessageOfCharacter::_internal_set_isinvisible(bool value) {
 inline void MessageOfCharacter::set_isinvisible(bool value) {
   _internal_set_isinvisible(value);
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.isInvisible)
+}
+
+// repeated .Protobuf.BuffType buff = 27;
+inline int MessageOfCharacter::_internal_buff_size() const {
+  return buff_.size();
+}
+inline int MessageOfCharacter::buff_size() const {
+  return _internal_buff_size();
+}
+inline void MessageOfCharacter::clear_buff() {
+  buff_.Clear();
+}
+inline ::Protobuf::BuffType MessageOfCharacter::_internal_buff(int index) const {
+  return static_cast< ::Protobuf::BuffType >(buff_.Get(index));
+}
+inline ::Protobuf::BuffType MessageOfCharacter::buff(int index) const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfCharacter.buff)
+  return _internal_buff(index);
+}
+inline void MessageOfCharacter::set_buff(int index, ::Protobuf::BuffType value) {
+  buff_.Set(index, value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfCharacter.buff)
+}
+inline void MessageOfCharacter::_internal_add_buff(::Protobuf::BuffType value) {
+  buff_.Add(value);
+}
+inline void MessageOfCharacter::add_buff(::Protobuf::BuffType value) {
+  _internal_add_buff(value);
+  // @@protoc_insertion_point(field_add:Protobuf.MessageOfCharacter.buff)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>&
+MessageOfCharacter::buff() const {
+  // @@protoc_insertion_point(field_list:Protobuf.MessageOfCharacter.buff)
+  return buff_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>*
+MessageOfCharacter::_internal_mutable_buff() {
+  return &buff_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField<int>*
+MessageOfCharacter::mutable_buff() {
+  // @@protoc_insertion_point(field_mutable_list:Protobuf.MessageOfCharacter.buff)
+  return _internal_mutable_buff();
 }
 
 // -------------------------------------------------------------------
@@ -2961,6 +3035,26 @@ inline void MessageOfBombedBullet::_internal_set_facingdirection(double value) {
 inline void MessageOfBombedBullet::set_facingdirection(double value) {
   _internal_set_facingdirection(value);
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfBombedBullet.facingDirection)
+}
+
+// int64 guid = 5;
+inline void MessageOfBombedBullet::clear_guid() {
+  guid_ = int64_t{0};
+}
+inline int64_t MessageOfBombedBullet::_internal_guid() const {
+  return guid_;
+}
+inline int64_t MessageOfBombedBullet::guid() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfBombedBullet.guid)
+  return _internal_guid();
+}
+inline void MessageOfBombedBullet::_internal_set_guid(int64_t value) {
+  
+  guid_ = value;
+}
+inline void MessageOfBombedBullet::set_guid(int64_t value) {
+  _internal_set_guid(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfBombedBullet.guid)
 }
 
 // -------------------------------------------------------------------

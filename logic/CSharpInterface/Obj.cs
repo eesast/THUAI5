@@ -23,17 +23,11 @@
     public enum PropType
     {
         Null = 0,
-        addHP = 1,
-        addAP = 2,
-        addSpeed = 3,
-        addLIFE = 4,
-        minusCD = 5,
-        Shield = 6,
-        Spear = 7,
-        minusSpeed = 8,
-        minusAP = 9,
-        addCD = 10,
-        Gem = 11,   
+        addSpeed = 1,
+        addLIFE = 2,
+        Shield = 3,
+        Spear = 4,
+        Gem = 5,   
     };
     public class Wall
     {

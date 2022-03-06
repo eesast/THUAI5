@@ -4,6 +4,10 @@
 
 游戏逻辑与选手简易调试 GUI 客户端  
 
+## 逻辑架构
+
+![structrue](img/structrue.jpg)
+
 ## 目标
 
 ### 基本目标

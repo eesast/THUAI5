@@ -74,13 +74,17 @@ namespace GameClass.GameObj
             }
 
             public void AddMoveSpeed(double add, int buffTime, Action<int> SetNewMoveSpeed, int orgMoveSpeed)
-                => AddBuff(new BuffValue(add), buffTime, BuffType.MoveSpeed, () => SetNewMoveSpeed(ReCalculateFloatBuff(BuffType.MoveSpeed, orgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed)));
-
-            public void AddAP(double add, int buffTime, Action<int> SetNewAp, int orgAp)
-                => AddBuff(new BuffValue(add), buffTime, BuffType.AP, () => SetNewAp(ReCalculateFloatBuff(BuffType.AP, orgAp, GameData.MaxAP, GameData.MinAP)));
-
-            public void ChangeCD(double discount, int buffTime, Action<int> SetNewCD, int orgCD)
-                => AddBuff(new BuffValue(discount), buffTime, BuffType.CD, () => SetNewCD(ReCalculateFloatBuff(BuffType.CD, orgCD, int.MaxValue, 1)));
+                => AddBuff(new BuffValue(add), buffTime, BuffType.AddSpeed, () => SetNewMoveSpeed(ReCalculateFloatBuff(BuffType.AddSpeed, orgMoveSpeed, GameData.MaxSpeed, GameData.MinSpeed)));
+            public bool HasFasterSpeed
+            {
+                get
+                {
+                    lock (buffListLock[(int)BuffType.AddSpeed])
+                    {
+                        return buffList[(int)BuffType.AddSpeed].Count != 0;
+                    }
+                }
+            }
 
             public void AddShield(int shieldTime) => AddBuff(new BuffValue(), shieldTime, BuffType.Shield, () => { });
             public bool HasShield
@@ -94,7 +98,7 @@ namespace GameClass.GameObj
                 }
             }
 
-            public void AddLIFE(int totemTime) => AddBuff(new BuffValue(), totemTime, BuffType.AddLIFE, () => { });
+            public void AddLIFE(int totelTime) => AddBuff(new BuffValue(), totelTime, BuffType.AddLIFE, () => { });
             public bool HasLIFE
             {
                 get
@@ -145,16 +149,14 @@ namespace GameClass.GameObj
 
             public BuffManeger()
             {
-                buffList = new LinkedList<BuffValue>[Enum.GetValues(typeof(BuffType)).Length];
-                for (int i = 0; i < buffList.Length; ++i)
+                var buffTypeArray = Enum.GetValues(typeof(BuffType));
+                buffList = new LinkedList<BuffValue>[buffTypeArray.Length];
+                buffListLock = new object[buffList.Length];
+                int i = 0;
+                foreach(BuffType type in buffTypeArray)
                 {
                     buffList[i] = new LinkedList<BuffValue>();
-                }
-
-                buffListLock = new object[buffList.Length];
-                for (int i = 0; i < buffListLock.Length; ++i)
-                {
-                    buffListLock[i] = new object();
+                    buffListLock[i++] = new object();
                 }
             }
         }

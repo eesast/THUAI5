@@ -348,26 +348,12 @@ namespace Server
         {
             switch(propType)
             {
-                case PropType.AddAp:
-                    return Preparation.Utility.PropType.addAP;
-                case PropType.AddCd:
-                    return Preparation.Utility.PropType.addCD;
-                case PropType.AddHp:
-                    return Preparation.Utility.PropType.addHP;
                 case PropType.AddLife:
                     return Preparation.Utility.PropType.addLIFE;
                 case PropType.AddSpeed:
                     return Preparation.Utility.PropType.addSpeed;
                 case PropType.Gem:
                     return Preparation.Utility.PropType.Gem;
-                case PropType.MinusAp:
-                    return Preparation.Utility.PropType.minusAP;
-                case PropType.MinusCd:
-                    return Preparation.Utility.PropType.minusCD;
-                case PropType.MinusSpeed:
-                    return Preparation.Utility.PropType.minusSpeed;
-                case PropType.NullPropType:
-                    return Preparation.Utility.PropType.Null;
                 case PropType.Shield:
                     return Preparation.Utility.PropType.Shield;
                 case PropType.Spear:

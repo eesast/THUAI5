@@ -185,23 +185,17 @@ inline bool PlaceType_Parse(
 }
 enum PropType : int {
   NullPropType = 0,
-  addHP = 1,
-  addAP = 2,
-  addSpeed = 3,
-  addLIFE = 4,
-  minusCD = 5,
-  Gem = 6,
-  Shield = 7,
-  Spear = 8,
-  minusSpeed = 9,
-  minusAP = 10,
-  addCD = 11,
+  addSpeed = 1,
+  addLIFE = 2,
+  Gem = 3,
+  Shield = 4,
+  Spear = 5,
   PropType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   PropType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool PropType_IsValid(int value);
 constexpr PropType PropType_MIN = NullPropType;
-constexpr PropType PropType_MAX = addCD;
+constexpr PropType PropType_MAX = Spear;
 constexpr int PropType_ARRAYSIZE = PropType_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* PropType_descriptor();
@@ -281,11 +275,9 @@ inline bool ActiveSkillType_Parse(
 enum BuffType : int {
   NullBuffType = 0,
   MoveSpeed = 1,
-  AP = 2,
-  CD = 3,
-  AddLIFE = 4,
-  ShieldBuff = 5,
-  SpearBuff = 6,
+  AddLIFE = 2,
+  ShieldBuff = 3,
+  SpearBuff = 4,
   BuffType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   BuffType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
