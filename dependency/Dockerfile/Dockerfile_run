@@ -1,0 +1,19 @@
+FROM ubuntu:18.04
+Maintainer eesast.com
+WORKDIR /usr/local
+RUN mkdir /usr/local/play
+RUN wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
+    && dpkg -i packages-microsoft-prod.deb \
+    && rm packages-microsoft-prod.deb
+RUN apt-get update && apt-get install -y apt-transport-https && apt-get update && apt-get install -y aspnetcore-runtime-5.0
+COPY ./logic/Server/bin/Release/net5.0/linux-x64 ./usr/local/linux-64
+RUN cd linux-64
+ENTRYPOINT ["dotnet", "Server.dll"]
+CMD ["-p", "20000", "--teamCount", "2", "--playerCount", "4", "-t", "600", "--fileName", 'video']
+cd ../play
+RUN int=1 
+RUN while(( $int<=8 )) 
+RUN do 
+RUN capi${int} 
+RUN let "int++" 
+RUN done
