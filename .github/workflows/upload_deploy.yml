@@ -39,13 +39,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-
+    
     - name: make directory
       run: mkdir ./Server
 
     - name: Log in to DockerHub
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
+    - name: Install SSH
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        known_hosts: 127.0.0.1
+    
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
