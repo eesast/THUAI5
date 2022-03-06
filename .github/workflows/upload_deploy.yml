@@ -30,10 +30,6 @@ jobs:
     - name: Pip Install paramiko
       run: pip install paramiko
 
-    - name: Git Submodule
-      run: cd ./CAPI
-      run: cd ..
-
     - name: Publish
       run: |
         New-Item -Path . -Name "THUAI5" -ItemType "directory"
