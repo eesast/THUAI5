@@ -189,20 +189,20 @@ class MessageToServer final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kMessageFieldNumber = 9,
+    kMessageFieldNumber = 12,
     kPlayerIDFieldNumber = 2,
     kMessageTypeFieldNumber = 1,
-    kPropTypeFieldNumber = 4,
+    kPSkillFieldNumber = 4,
     kTeamIDFieldNumber = 3,
-    kTimeInMillisecondsFieldNumber = 5,
-    kAngleFieldNumber = 6,
-    kToPlayerIDFieldNumber = 8,
-    kGemSizeFieldNumber = 7,
-    kPSkillFieldNumber = 10,
-    kASkill1FieldNumber = 11,
-    kASkill2FieldNumber = 12,
+    kASkill1FieldNumber = 5,
+    kASkill2FieldNumber = 6,
+    kTimeInMillisecondsFieldNumber = 8,
+    kPropTypeFieldNumber = 7,
+    kGemSizeFieldNumber = 10,
+    kAngleFieldNumber = 9,
+    kToPlayerIDFieldNumber = 11,
   };
-  // string message = 9;
+  // string message = 12;
   void clear_message();
   const std::string& message() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
@@ -234,13 +234,13 @@ class MessageToServer final :
   void _internal_set_messagetype(::Protobuf::MessageType value);
   public:
 
-  // .Protobuf.PropType propType = 4;
-  void clear_proptype();
-  ::Protobuf::PropType proptype() const;
-  void set_proptype(::Protobuf::PropType value);
+  // .Protobuf.PassiveSkillType pSkill = 4;
+  void clear_pskill();
+  ::Protobuf::PassiveSkillType pskill() const;
+  void set_pskill(::Protobuf::PassiveSkillType value);
   private:
-  ::Protobuf::PropType _internal_proptype() const;
-  void _internal_set_proptype(::Protobuf::PropType value);
+  ::Protobuf::PassiveSkillType _internal_pskill() const;
+  void _internal_set_pskill(::Protobuf::PassiveSkillType value);
   public:
 
   // int64 teamID = 3;
@@ -252,52 +252,7 @@ class MessageToServer final :
   void _internal_set_teamid(int64_t value);
   public:
 
-  // int64 timeInMilliseconds = 5;
-  void clear_timeinmilliseconds();
-  int64_t timeinmilliseconds() const;
-  void set_timeinmilliseconds(int64_t value);
-  private:
-  int64_t _internal_timeinmilliseconds() const;
-  void _internal_set_timeinmilliseconds(int64_t value);
-  public:
-
-  // double angle = 6;
-  void clear_angle();
-  double angle() const;
-  void set_angle(double value);
-  private:
-  double _internal_angle() const;
-  void _internal_set_angle(double value);
-  public:
-
-  // int64 ToPlayerID = 8;
-  void clear_toplayerid();
-  int64_t toplayerid() const;
-  void set_toplayerid(int64_t value);
-  private:
-  int64_t _internal_toplayerid() const;
-  void _internal_set_toplayerid(int64_t value);
-  public:
-
-  // int32 gemSize = 7;
-  void clear_gemsize();
-  int32_t gemsize() const;
-  void set_gemsize(int32_t value);
-  private:
-  int32_t _internal_gemsize() const;
-  void _internal_set_gemsize(int32_t value);
-  public:
-
-  // .Protobuf.PassiveSkillType pSkill = 10;
-  void clear_pskill();
-  ::Protobuf::PassiveSkillType pskill() const;
-  void set_pskill(::Protobuf::PassiveSkillType value);
-  private:
-  ::Protobuf::PassiveSkillType _internal_pskill() const;
-  void _internal_set_pskill(::Protobuf::PassiveSkillType value);
-  public:
-
-  // .Protobuf.ActiveSkillType aSkill1 = 11;
+  // .Protobuf.ActiveSkillType aSkill1 = 5;
   void clear_askill1();
   ::Protobuf::ActiveSkillType askill1() const;
   void set_askill1(::Protobuf::ActiveSkillType value);
@@ -306,13 +261,58 @@ class MessageToServer final :
   void _internal_set_askill1(::Protobuf::ActiveSkillType value);
   public:
 
-  // .Protobuf.ActiveSkillType aSkill2 = 12;
+  // .Protobuf.ActiveSkillType aSkill2 = 6;
   void clear_askill2();
   ::Protobuf::ActiveSkillType askill2() const;
   void set_askill2(::Protobuf::ActiveSkillType value);
   private:
   ::Protobuf::ActiveSkillType _internal_askill2() const;
   void _internal_set_askill2(::Protobuf::ActiveSkillType value);
+  public:
+
+  // int64 timeInMilliseconds = 8;
+  void clear_timeinmilliseconds();
+  int64_t timeinmilliseconds() const;
+  void set_timeinmilliseconds(int64_t value);
+  private:
+  int64_t _internal_timeinmilliseconds() const;
+  void _internal_set_timeinmilliseconds(int64_t value);
+  public:
+
+  // .Protobuf.PropType propType = 7;
+  void clear_proptype();
+  ::Protobuf::PropType proptype() const;
+  void set_proptype(::Protobuf::PropType value);
+  private:
+  ::Protobuf::PropType _internal_proptype() const;
+  void _internal_set_proptype(::Protobuf::PropType value);
+  public:
+
+  // int32 gemSize = 10;
+  void clear_gemsize();
+  int32_t gemsize() const;
+  void set_gemsize(int32_t value);
+  private:
+  int32_t _internal_gemsize() const;
+  void _internal_set_gemsize(int32_t value);
+  public:
+
+  // double angle = 9;
+  void clear_angle();
+  double angle() const;
+  void set_angle(double value);
+  private:
+  double _internal_angle() const;
+  void _internal_set_angle(double value);
+  public:
+
+  // int64 ToPlayerID = 11;
+  void clear_toplayerid();
+  int64_t toplayerid() const;
+  void set_toplayerid(int64_t value);
+  private:
+  int64_t _internal_toplayerid() const;
+  void _internal_set_toplayerid(int64_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protobuf.MessageToServer)
@@ -325,15 +325,15 @@ class MessageToServer final :
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr message_;
   int64_t playerid_;
   int messagetype_;
-  int proptype_;
-  int64_t teamid_;
-  int64_t timeinmilliseconds_;
-  double angle_;
-  int64_t toplayerid_;
-  int32_t gemsize_;
   int pskill_;
+  int64_t teamid_;
   int askill1_;
   int askill2_;
+  int64_t timeinmilliseconds_;
+  int proptype_;
+  int32_t gemsize_;
+  double angle_;
+  int64_t toplayerid_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Server_2eproto;
 };
@@ -408,7 +408,67 @@ inline void MessageToServer::set_teamid(int64_t value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.teamID)
 }
 
-// .Protobuf.PropType propType = 4;
+// .Protobuf.PassiveSkillType pSkill = 4;
+inline void MessageToServer::clear_pskill() {
+  pskill_ = 0;
+}
+inline ::Protobuf::PassiveSkillType MessageToServer::_internal_pskill() const {
+  return static_cast< ::Protobuf::PassiveSkillType >(pskill_);
+}
+inline ::Protobuf::PassiveSkillType MessageToServer::pskill() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageToServer.pSkill)
+  return _internal_pskill();
+}
+inline void MessageToServer::_internal_set_pskill(::Protobuf::PassiveSkillType value) {
+  
+  pskill_ = value;
+}
+inline void MessageToServer::set_pskill(::Protobuf::PassiveSkillType value) {
+  _internal_set_pskill(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.pSkill)
+}
+
+// .Protobuf.ActiveSkillType aSkill1 = 5;
+inline void MessageToServer::clear_askill1() {
+  askill1_ = 0;
+}
+inline ::Protobuf::ActiveSkillType MessageToServer::_internal_askill1() const {
+  return static_cast< ::Protobuf::ActiveSkillType >(askill1_);
+}
+inline ::Protobuf::ActiveSkillType MessageToServer::askill1() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageToServer.aSkill1)
+  return _internal_askill1();
+}
+inline void MessageToServer::_internal_set_askill1(::Protobuf::ActiveSkillType value) {
+  
+  askill1_ = value;
+}
+inline void MessageToServer::set_askill1(::Protobuf::ActiveSkillType value) {
+  _internal_set_askill1(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.aSkill1)
+}
+
+// .Protobuf.ActiveSkillType aSkill2 = 6;
+inline void MessageToServer::clear_askill2() {
+  askill2_ = 0;
+}
+inline ::Protobuf::ActiveSkillType MessageToServer::_internal_askill2() const {
+  return static_cast< ::Protobuf::ActiveSkillType >(askill2_);
+}
+inline ::Protobuf::ActiveSkillType MessageToServer::askill2() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageToServer.aSkill2)
+  return _internal_askill2();
+}
+inline void MessageToServer::_internal_set_askill2(::Protobuf::ActiveSkillType value) {
+  
+  askill2_ = value;
+}
+inline void MessageToServer::set_askill2(::Protobuf::ActiveSkillType value) {
+  _internal_set_askill2(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.aSkill2)
+}
+
+// .Protobuf.PropType propType = 7;
 inline void MessageToServer::clear_proptype() {
   proptype_ = 0;
 }
@@ -428,7 +488,7 @@ inline void MessageToServer::set_proptype(::Protobuf::PropType value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.propType)
 }
 
-// int64 timeInMilliseconds = 5;
+// int64 timeInMilliseconds = 8;
 inline void MessageToServer::clear_timeinmilliseconds() {
   timeinmilliseconds_ = int64_t{0};
 }
@@ -448,7 +508,7 @@ inline void MessageToServer::set_timeinmilliseconds(int64_t value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.timeInMilliseconds)
 }
 
-// double angle = 6;
+// double angle = 9;
 inline void MessageToServer::clear_angle() {
   angle_ = 0;
 }
@@ -468,7 +528,7 @@ inline void MessageToServer::set_angle(double value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.angle)
 }
 
-// int32 gemSize = 7;
+// int32 gemSize = 10;
 inline void MessageToServer::clear_gemsize() {
   gemsize_ = 0;
 }
@@ -488,7 +548,7 @@ inline void MessageToServer::set_gemsize(int32_t value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.gemSize)
 }
 
-// int64 ToPlayerID = 8;
+// int64 ToPlayerID = 11;
 inline void MessageToServer::clear_toplayerid() {
   toplayerid_ = int64_t{0};
 }
@@ -508,7 +568,7 @@ inline void MessageToServer::set_toplayerid(int64_t value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.ToPlayerID)
 }
 
-// string message = 9;
+// string message = 12;
 inline void MessageToServer::clear_message() {
   message_.ClearToEmpty();
 }
@@ -557,66 +617,6 @@ inline void MessageToServer::set_allocated_message(std::string* message) {
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:Protobuf.MessageToServer.message)
-}
-
-// .Protobuf.PassiveSkillType pSkill = 10;
-inline void MessageToServer::clear_pskill() {
-  pskill_ = 0;
-}
-inline ::Protobuf::PassiveSkillType MessageToServer::_internal_pskill() const {
-  return static_cast< ::Protobuf::PassiveSkillType >(pskill_);
-}
-inline ::Protobuf::PassiveSkillType MessageToServer::pskill() const {
-  // @@protoc_insertion_point(field_get:Protobuf.MessageToServer.pSkill)
-  return _internal_pskill();
-}
-inline void MessageToServer::_internal_set_pskill(::Protobuf::PassiveSkillType value) {
-  
-  pskill_ = value;
-}
-inline void MessageToServer::set_pskill(::Protobuf::PassiveSkillType value) {
-  _internal_set_pskill(value);
-  // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.pSkill)
-}
-
-// .Protobuf.ActiveSkillType aSkill1 = 11;
-inline void MessageToServer::clear_askill1() {
-  askill1_ = 0;
-}
-inline ::Protobuf::ActiveSkillType MessageToServer::_internal_askill1() const {
-  return static_cast< ::Protobuf::ActiveSkillType >(askill1_);
-}
-inline ::Protobuf::ActiveSkillType MessageToServer::askill1() const {
-  // @@protoc_insertion_point(field_get:Protobuf.MessageToServer.aSkill1)
-  return _internal_askill1();
-}
-inline void MessageToServer::_internal_set_askill1(::Protobuf::ActiveSkillType value) {
-  
-  askill1_ = value;
-}
-inline void MessageToServer::set_askill1(::Protobuf::ActiveSkillType value) {
-  _internal_set_askill1(value);
-  // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.aSkill1)
-}
-
-// .Protobuf.ActiveSkillType aSkill2 = 12;
-inline void MessageToServer::clear_askill2() {
-  askill2_ = 0;
-}
-inline ::Protobuf::ActiveSkillType MessageToServer::_internal_askill2() const {
-  return static_cast< ::Protobuf::ActiveSkillType >(askill2_);
-}
-inline ::Protobuf::ActiveSkillType MessageToServer::askill2() const {
-  // @@protoc_insertion_point(field_get:Protobuf.MessageToServer.aSkill2)
-  return _internal_askill2();
-}
-inline void MessageToServer::_internal_set_askill2(::Protobuf::ActiveSkillType value) {
-  
-  askill2_ = value;
-}
-inline void MessageToServer::set_askill2(::Protobuf::ActiveSkillType value) {
-  _internal_set_askill2(value);
-  // @@protoc_insertion_point(field_set:Protobuf.MessageToServer.aSkill2)
 }
 
 #ifdef __GNUC__
