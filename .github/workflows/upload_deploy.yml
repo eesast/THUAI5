@@ -27,6 +27,10 @@ jobs:
       with:
           python-version: 3.7.4
       
+    - name: git submodule
+      uses: srt32/git-actions@v0.0.3
+      args: git submodule --init --recursive
+
     - name: Pip Install paramiko
       run: pip install paramiko
 
