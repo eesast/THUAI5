@@ -9,7 +9,7 @@ config = {
     'ip' : '',
     'username' : 'ubuntu',
     'password' : '',
-    'port' : 21,
+    'port' : 22,
     'upload_path' : '/home/ubuntu/THUAI5_for_Windows'
 }
 
@@ -62,9 +62,10 @@ if __name__ == '__main__':
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname=config['ip'], port=config['port'], username=config['username'], password=config['password'])
-    t = paramiko.Transport(sock=(config['ip'], config['port']))
-    t.connect(username=config['username'], password=config['password'])
-    sftp = paramiko.SFTPClient.from_transport(t)
+    # t = paramiko.Transport(sock=(config['ip'], config['port']))
+    # t.connect(username=config['username'], password=config['password'])
+    # sftp = paramiko.SFTPClient.from_transport(t)
+    sftp = ssh.open_sftp()
 
     """检查根目录是否存在"""
     root_path = config['upload_path']
