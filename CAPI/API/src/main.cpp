@@ -73,7 +73,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         std::cerr << "Parsing error: " << e.error() << " for arg " << e.argId() << std::endl;
         return 1;
     }
-    Logic logic(tID, pID);
+    Logic logic(tID, pID, aSkill, pSkill);
     extern const bool asynchronous;
     std::cout << "*******************basic info*******************" << std::endl;
     std::cout << "asynchronous: " << asynchronous << std::endl;
@@ -86,7 +86,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
     std::cout << "debug level: " << level << std::endl;
     std::cout << "file name: " << filename << std::endl;
     std::cout << "************************************************" << std::endl;
-    logic.Main(sIP.c_str(), sPort, pID, tID, aSkill, pSkill, AIBuilder, level, filename);
+    logic.Main(sIP.c_str(), sPort, AIBuilder, level, filename);
     return 0;
 }
 

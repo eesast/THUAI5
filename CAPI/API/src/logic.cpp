@@ -107,7 +107,7 @@ bool Logic::WaitThread()
     return true;
 }
 
-Logic::Logic(int teamID, int playerID) :teamID(teamID), playerID(playerID)
+Logic::Logic(int teamID, int playerID, THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType) : teamID(teamID), playerID(playerID), activeSkillType(activeSkillType), passiveSkillType(passiveSkillType)
 {
     pState = &state[0];
     pBuffer = &state[1];
@@ -198,7 +198,6 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 {
     // 更新buffer内容
     {
-        std::cout << "begin load buffer" << std::endl;
         std::lock_guard<std::mutex> lck(mtx_buffer);
 
         // 1.清除原有信息
@@ -348,7 +347,7 @@ void Logic::Wait() noexcept
     }
 }
 
-void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t teamID, THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType, CreateAIFunc f, int debuglevel, std::string filename)
+void Logic::Main(const char* address, uint16_t port, CreateAIFunc f, int debuglevel, std::string filename)
 {
     // 构造AI
     pAI = f();
@@ -368,8 +367,12 @@ void Logic::Main(const char* address, uint16_t port, int32_t playerID, int32_t t
             {
                 std::cerr << "Failed to open the file!" << std::endl;
             }
+            pAPI = std::make_unique<DebugAPI>(*this, Out);
         }
-        pAPI = std::make_unique<DebugAPI>(*this);
+        else
+        {
+            pAPI = std::make_unique<DebugAPI>(*this, std::cout);
+        }
     }
     else
     {

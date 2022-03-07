@@ -38,6 +38,10 @@ private:
     int teamID;
     int playerID;
 
+    // 技能记录
+    THUAI5::ActiveSkillType activeSkillType;
+    THUAI5::PassiveSkillType passiveSkillType;
+
     // 记录一场游戏中所有玩家的全部GUID信息
     std::vector<int64_t> playerGUIDS;
 
@@ -159,9 +163,9 @@ private:
   
 public:
 
-    Logic(int teamID, int playerID);
+    Logic(int teamID, int playerID,THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType);
     ~Logic() = default;
-    void Main(const char* address, uint16_t port, int32_t playerID, int32_t teamID, THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType, CreateAIFunc f, int debuglevel, std::string filename);
+    void Main(const char* address, uint16_t port, CreateAIFunc f, int debuglevel, std::string filename);
 };
 
 #endif
