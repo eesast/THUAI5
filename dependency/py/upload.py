@@ -9,7 +9,7 @@ config = {
     'ip' : '',
     'username' : 'ubuntu',
     'password' : '',
-    'port' : 22,
+    'port' : 21,
     'upload_path' : '/home/ubuntu/THUAI5_for_Windows'
 }
 

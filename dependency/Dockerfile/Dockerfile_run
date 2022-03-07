@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 Maintainer eesast.com
 WORKDIR /usr/local
-RUN mkdir /usr/local/play
+RUN mkdir /usr/local/play && mkdir /usr/local/Server
 RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make libprotobuf-dev wget curl ca-certificates
 RUN wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb \
