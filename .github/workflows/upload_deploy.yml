@@ -3,8 +3,6 @@ name: "upload_deploy"
 on:
   push:
     branches: [ master, dev, test/ci]
-  pull_request:
-    branches: [ master, dev, test/ci]
 
 jobs:
   build_upload:
@@ -39,7 +37,7 @@ jobs:
       run: |
         New-Item -Path . -Name "THUAI5" -ItemType "directory"
         ./dependency/shell/BuildLogic.ps1 ./THUAI5
-        python ./dependency/py/upload.py --id 118.195.131.159 --key ${{ secrets.SERVER_PASSWORD }} CAPI
+        python ./dependency/py/upload.py --id 118.195.131.159 --key ${{ secrets.SERVER_PASSWORD }} CAPI THUAI5
 
   deploy:
     runs-on: ubuntu-latest
@@ -68,6 +66,6 @@ jobs:
     - name: Publish server
       run: dotnet publish "./logic/Server/Server.csproj" -c Release -r linux-x64 --self-contained true -o ./Server
     - name: Build runner docker image 
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai_runner:latest -f ./dependency/Dockerfile/Dockerfile_run .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_runner:latest -f ./dependency/Dockerfile/Dockerfile_run .
     - name: Push runner image to DockerHub
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai_runner:latest
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/thuai5_runner:latest
