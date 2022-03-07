@@ -79,15 +79,6 @@ if __name__ == '__main__':
             for file in files:
                 file_list.append(os.path.join(root, file))
     
-    """创建ssh控制台"""
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=config['ip'], port=config['port'], username=config['username'], password=config['password'])
-    t = paramiko.Transport(sock=(config['ip'], config['port']))
-    t.connect(username=config['username'], password=config['password'])
-    sftp = paramiko.SFTPClient.from_transport(t)
-    # sftp.put("D:\\fuyh\\THUAI5\\README.md", '/home/ubuntu/README.md')
-    
     for folder in folder_list:
         dir = config['upload_path'] + '/' + folder.replace('\\', '/')
         mkdir(dir, ssh)
