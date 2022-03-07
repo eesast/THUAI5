@@ -6,9 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FrameRateTask" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\communication\ClientCommunication\ClientCommunication.csproj" />
     <ProjectReference Include="..\..\communication\Proto\Proto.csproj" />
-    <ProjectReference Include="..\FrameRateTask\FrameRateTask.csproj" />
   </ItemGroup>
 
 </Project>
