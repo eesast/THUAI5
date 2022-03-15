@@ -27,7 +27,7 @@ namespace Client
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
             SetStatusBar();
-            DrawMap();
+            //DrawMap();
             timer.Start();
             isClientStocked = true;
             drawPicLock = new();
@@ -131,6 +131,7 @@ namespace Client
                     UnderLayerOfMap.Children.Add(rectangle);
                 }
             }
+            hasDrawed = true;
         }
         //Client控制函数
 
@@ -430,6 +431,29 @@ namespace Client
                     break;
             }
         }
+        private void GetMap(MessageToClient.Types.GameObjMessage obj)
+        {
+            int[,] map = new int[50, 50];
+            try
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    for (int j = 0; j < 50; j++)
+                    {
+                        map[i, j] = obj.MessageOfMap.Row[i].Col[j];
+                    }
+                }
+            }
+            catch
+            {
+                mapFlag = false;
+            }
+            finally
+            {
+                defaultMap = map;
+                mapFlag = true;
+            }
+        }
         private void OnReceive()
         {
             if (communicator.TryTake(out IGameMessage msg) && msg.PacketType == PacketType.MessageToClient)
@@ -462,6 +486,9 @@ namespace Client
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
                                         bombedBulletData.Add(obj);
                                         break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap:
+                                        GetMap(obj);
+                                        break;
                                 }
                             }
                             break;
@@ -484,6 +511,10 @@ namespace Client
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
                                         bombedBulletData.Add(obj);
+                                        break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap:
+                                        if (!mapFlag)
+                                            GetMap(obj);
                                         break;
                                 }
                             }
@@ -578,6 +609,8 @@ namespace Client
                     {
                         lock (drawPicLock) //加锁是必要的，画图操作和接收信息操作不能同时进行
                         {
+                            if (!hasDrawed && mapFlag)
+                                DrawMap();
                             foreach (var data in playerData)
                             {
                                 StatusBars[data.MessageOfCharacter.TeamID * 4 + data.MessageOfCharacter.PlayerID].SetValue(data.MessageOfCharacter);
@@ -755,7 +788,9 @@ namespace Client
         /// 50*50
         /// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3 
         /// </summary>
-        public static uint[,] defaultMap = new uint[,]
+        private bool mapFlag = false;
+        private bool hasDrawed = false;
+        public static int[,] defaultMap = new int[,]
          {
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
