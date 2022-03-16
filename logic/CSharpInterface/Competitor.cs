@@ -6,27 +6,53 @@ namespace CSharpInterface
     {
         public readonly ActiveSkillType activeSkillType = ActiveSkillType.NuclearWeapon;
         public readonly PassiveSkillType passiveSkillType = PassiveSkillType.RecoverAfterBattle;
+
+        int[,] map = null;
+        int direction = 0; // 0 1 2 3：上左下右
+        Random random = new Random();
         public void Play()
         {
-            var chas = GetCharacters();
-            var me = GetSelfInfo();
-            var map = GetMap();
-            bool f = map[41, 42] == 1;
-            if(f)
+            if (map == null)
+                map = GetMap();
+            var self = GetSelfInfo();
+            if(direction == 0)
             {
-
-            }
-            else
-            {
-
-            }
-            foreach (var ch in chas)
-            {
-                if (((ch.X - me.X) * (ch.X - me.X) + (ch.Y - me.Y) * (ch.Y - me.Y)) <= 10000 * 10000)
+                if (map[self.X / 1000 - 1, self.Y / 1000] == 1 || (map[self.X / 1000 - 1, self.Y / 1000] >= 5 && map[self.X / 1000 - 1, self.Y / 1000] <= 12))
+                    direction = 1;
+                else
                 {
-                    Attack(Math.Atan2(ch.Y - me.Y, ch.X - me.X));
+                    MoveUp(50);
                 }
             }
+            if (direction == 1)
+            {
+                if (map[self.X / 1000, self.Y / 1000 - 1] == 1 || (map[self.X / 1000, self.Y / 1000 - 1] >= 5 && map[self.X / 1000, self.Y / 1000 - 1] <= 12))
+                    direction = 2;
+                else
+                {
+                    MoveLeft(50);
+                }
+            }
+            if (direction == 2)
+            {
+                if (map[self.X / 1000 + 1, self.Y / 1000] == 1 || (map[self.X / 1000 + 1, self.Y / 1000] >= 5 && map[self.X / 1000 + 1, self.Y / 1000] <= 12))
+                    direction = 3;
+                else
+                {
+                    MoveDown(50);
+                }
+            }
+            if (direction == 3)
+            {
+                if (map[self.X / 1000, self.Y / 1000 + 1] == 1 || (map[self.X / 1000, self.Y / 1000 + 1] >= 5 && map[self.X / 1000, self.Y / 1000 + 1] <= 12))
+                    direction = 0;
+                else
+                {
+                    MoveRight(50);
+                }
+            }
+            if (random.Next(14) == 13)
+                Attack(random.NextDouble() * Math.PI * 2);
         }
     }
 }
