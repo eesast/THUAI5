@@ -10,6 +10,7 @@ using System.Windows.Shapes;
 using System.IO;
 using Communication.ClientCommunication;
 using Communication.Proto;
+using CommandLine;
 
 namespace Client
 {
@@ -27,7 +28,7 @@ namespace Client
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
             SetStatusBar();
-            DrawMap();
+            //DrawMap();
             timer.Start();
             isClientStocked = true;
             drawPicLock = new();
@@ -36,13 +37,45 @@ namespace Client
             propData = new List<MessageToClient.Types.GameObjMessage>();
             bombedBulletData = new List<MessageToClient.Types.GameObjMessage>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            communicator = new ClientCommunication();
-            communicator.OnReceive += OnReceive;
+            string[] args = Environment.GetCommandLineArgs();
+            _ = Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o => { options = o; });
+            if (options == null || options.cl == false)
+            {
+                communicator = new ClientCommunication();
+                communicator.OnReceive += OnReceive;
+            }
+            else
+            {
+                try
+                {
+                    if (options.PlaybackFile == DefaultArgumentOptions.FileName)
+                    {
+                        communicator = new ClientCommunication();
+                        communicator.OnReceive += OnReceive;
+                        string[] comInfo = new string[6];
+                        comInfo[0] = options.Ip;
+                        comInfo[1] = options.Port;
+                        comInfo[2] = options.PlayerID;
+                        comInfo[3] = options.TeamID;
+                        comInfo[4] = options.Hardware;
+                        comInfo[5] = options.Software;
+                        ConnectToServer(comInfo);
+                    }
+                    else
+                    {
+                        // 直接回放，饼 (2022/3/15 画)
+                    }
+                }
+                catch
+                {
+                    communicator = new ClientCommunication();
+                    communicator.OnReceive += OnReceive;
+                }
+            }
             //注：队伍用边框区分，人物编号以背景颜色区分
             //角色死亡则对应信息框变灰
             //被动技能和buff在人物编号后用彩色文字注明
         }
-
         private void SetStatusBar()
         {
             for(int i=0;i<8;i++)
@@ -131,6 +164,7 @@ namespace Client
                     UnderLayerOfMap.Children.Add(rectangle);
                 }
             }
+            hasDrawed = true;
         }
         //Client控制函数
 
@@ -223,6 +257,73 @@ namespace Client
         {
             PleaseWait();
         }
+        private void ConnectToServer(string[] comInfo)
+        {
+            if (comInfo.Length != 6)
+                throw new Exception("注册信息有误！");
+            playerID = Convert.ToInt64(comInfo[2]);
+            teamID = Convert.ToInt64(comInfo[3]);
+            Connect.Background = Brushes.Gray;
+            if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
+            {
+                Connect.Background = Brushes.Aqua;
+                Exception exc = new("TimeOut");
+                throw exc;
+            }
+            else if (communicator.Client.IsConnected)
+            {
+                MessageToServer msg = new();
+                msg.MessageType = MessageType.AddPlayer;
+                msg.PlayerID = playerID;
+                msg.TeamID = teamID;
+                msg.PSkill = Convert.ToInt64(comInfo[4]) switch
+                {
+                    0 => PassiveSkillType.NullPassiveSkillType,
+                    1 => PassiveSkillType.RecoverAfterBattle,
+                    2 => PassiveSkillType.SpeedUpWhenLeavingGrass,
+                    3 => PassiveSkillType.Vampire,
+                    4 => PassiveSkillType.Pskill3,
+                    5 => PassiveSkillType.Pskill4,
+                    _ => PassiveSkillType.Pskill5,
+                };
+                switch (Convert.ToInt64(comInfo[5]))
+                {
+                    case 0:
+                        msg.ASkill1 = ActiveSkillType.NullActiveSkillType;
+                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                        break;
+                    case 1:
+                        msg.ASkill1 = ActiveSkillType.BecomeAssassin;
+                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                        break;
+                    case 2:
+                        msg.ASkill1 = ActiveSkillType.BecomeVampire;
+                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                        break;
+                    case 3:
+                        msg.ASkill1 = ActiveSkillType.NuclearWeapon;
+                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                        break;
+                    case 4:
+                        msg.ASkill1 = ActiveSkillType.SuperFast;
+                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                        break;
+                    case 5:
+                        msg.ASkill1 = ActiveSkillType.Askill4;
+                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                        break;
+                    default:
+                        msg.ASkill1 = ActiveSkillType.Askill5;
+                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                        break;
+                }
+                communicator.SendMessage(msg);
+                Connect.Background = Brushes.Transparent;
+                isClientStocked = false;
+                PorC.Content = "⏸";
+                //建立连接的同时加入人物
+            }
+        }
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
             if (!communicator.Client.IsConnected)//第一次连接失败后第二次连接会出错
@@ -241,67 +342,7 @@ namespace Client
                         {
                             throw new Exception("Input data not sufficent");
                         }
-                        playerID = Convert.ToInt64(comInfo[2]);
-                        teamID = Convert.ToInt64(comInfo[3]);
-                        Connect.Background = Brushes.Gray;
-                        if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
-                        {
-                            Connect.Background = Brushes.Aqua;
-                            Exception exc = new("TimeOut");
-                            throw exc;
-                        }
-                        else if (communicator.Client.IsConnected)
-                        {
-                            MessageToServer msg = new();
-                            msg.MessageType = MessageType.AddPlayer;
-                            msg.PlayerID = playerID;
-                            msg.TeamID = teamID;
-                            msg.PSkill = Convert.ToInt64(comInfo[4]) switch
-                            {
-                                0 => PassiveSkillType.NullPassiveSkillType,
-                                1 => PassiveSkillType.RecoverAfterBattle,
-                                2 => PassiveSkillType.SpeedUpWhenLeavingGrass,
-                                3 => PassiveSkillType.Vampire,
-                                4 => PassiveSkillType.Pskill3,
-                                5 => PassiveSkillType.Pskill4,
-                                _ => PassiveSkillType.Pskill5,
-                            };
-                            switch (Convert.ToInt64(comInfo[5]))
-                            {
-                                case 0:
-                                    msg.ASkill1 = ActiveSkillType.NullActiveSkillType;
-                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                                    break;
-                                case 1:
-                                    msg.ASkill1 = ActiveSkillType.BecomeAssassin;
-                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                                    break;
-                                case 2:
-                                    msg.ASkill1 = ActiveSkillType.BecomeVampire;
-                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                                    break;
-                                case 3:
-                                    msg.ASkill1 = ActiveSkillType.NuclearWeapon;
-                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                                    break;
-                                case 4:
-                                    msg.ASkill1 = ActiveSkillType.SuperFast;
-                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                                    break;
-                                case 5:
-                                    msg.ASkill1 = ActiveSkillType.Askill4;
-                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                                    break;
-                                default:
-                                    msg.ASkill1 = ActiveSkillType.Askill5;
-                                    msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                                    break;
-                            }
-                            communicator.SendMessage(msg);
-                            Connect.Background = Brushes.Transparent;
-                            isClientStocked = false;
-                            PorC.Content = "⏸";
-                        }//建立连接的同时加入人物
+                        ConnectToServer(comInfo);
                     }
                 }
                 catch (Exception exc)
@@ -322,9 +363,9 @@ namespace Client
             }
             else
             {
-                _ = communicator.Stop();
-                Connect.Background = Brushes.Aqua;
-
+                //_ = communicator.Stop();
+                //Connect.Background = Brushes.Aqua;
+                MessageBox.Show("您已连接服务器！！");
             }
         }
 
@@ -430,6 +471,29 @@ namespace Client
                     break;
             }
         }
+        private void GetMap(MessageToClient.Types.GameObjMessage obj)
+        {
+            int[,] map = new int[50, 50];
+            try
+            {
+                for (int i = 0; i < 50; i++)
+                {
+                    for (int j = 0; j < 50; j++)
+                    {
+                        map[i, j] = obj.MessageOfMap.Row[i].Col[j];
+                    }
+                }
+            }
+            catch
+            {
+                mapFlag = false;
+            }
+            finally
+            {
+                defaultMap = map;
+                mapFlag = true;
+            }
+        }
         private void OnReceive()
         {
             if (communicator.TryTake(out IGameMessage msg) && msg.PacketType == PacketType.MessageToClient)
@@ -462,6 +526,9 @@ namespace Client
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
                                         bombedBulletData.Add(obj);
                                         break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap:
+                                        GetMap(obj);
+                                        break;
                                 }
                             }
                             break;
@@ -484,6 +551,10 @@ namespace Client
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
                                         bombedBulletData.Add(obj);
+                                        break;
+                                    case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap:
+                                        if (!mapFlag)
+                                            GetMap(obj);
                                         break;
                                 }
                             }
@@ -578,6 +649,8 @@ namespace Client
                     {
                         lock (drawPicLock) //加锁是必要的，画图操作和接收信息操作不能同时进行
                         {
+                            if (!hasDrawed && mapFlag)
+                                DrawMap();
                             foreach (var data in playerData)
                             {
                                 StatusBars[data.MessageOfCharacter.TeamID * 4 + data.MessageOfCharacter.PlayerID].SetValue(data.MessageOfCharacter);
@@ -755,7 +828,9 @@ namespace Client
         /// 50*50
         /// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3 
         /// </summary>
-        public static uint[,] defaultMap = new uint[,]
+        private bool mapFlag = false;
+        private bool hasDrawed = false;
+        public static int[,] defaultMap = new int[,]
          {
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -808,6 +883,8 @@ namespace Client
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
         };
+
+        ArgumentOptions? options = null;
     }
 }
 //2021-10-23
