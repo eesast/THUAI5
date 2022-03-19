@@ -16,8 +16,11 @@ namespace Server
                 return Prop((Prop)gameObj);
             else if (gameObj.Type == Preparation.Utility.GameObjType.BombedBullet)
                 return BombedBullet((BombedBullet)gameObj);
+            else if (gameObj.Type == Preparation.Utility.GameObjType.PickedProp)
+                return PickedProp((PickedProp)gameObj);
             else return null;  //先写着防报错
         }
+
         private static MessageToClient.Types.GameObjMessage Player(Character player)
         {
             MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
@@ -293,7 +296,7 @@ namespace Server
             msg.MessageOfBombedBullet.FacingDirection = bombedBullet.FacingDirection;
             msg.MessageOfBombedBullet.X = bombedBullet.bulletHasBombed.Position.x;
             msg.MessageOfBombedBullet.Y = bombedBullet.bulletHasBombed.Position.y;
-            msg.MessageOfBombedBullet.Guid = bombedBullet.ID;
+            msg.MessageOfBombedBullet.MappingID = bombedBullet.MappingID;
             switch (bombedBullet.bulletHasBombed.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.OrdinaryBullet:
@@ -310,6 +313,39 @@ namespace Server
                     break;
                 default:
                     msg.MessageOfBombedBullet.Type = Communication.Proto.BulletType.NullBulletType;
+                    break;
+            }
+            return msg;
+        }
+
+        private static MessageToClient.Types.GameObjMessage PickedProp(PickedProp pickedProp)
+        {
+            MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
+            msg.MessageOfPickedProp = new MessageOfPickedProp();
+
+            msg.MessageOfPickedProp.MappingID = pickedProp.MappingID;
+            msg.MessageOfPickedProp.X = pickedProp.PropHasPicked.Position.x;
+            msg.MessageOfPickedProp.Y = pickedProp.PropHasPicked.Position.y;
+            msg.MessageOfPickedProp.FacingDirection = pickedProp.PropHasPicked.FacingDirection;
+            switch (pickedProp.PropHasPicked.GetPropType())
+            {
+                case Preparation.Utility.PropType.Gem:
+                    msg.MessageOfPickedProp.Type = Communication.Proto.PropType.Gem;
+                    break;
+                case Preparation.Utility.PropType.addLIFE:
+                    msg.MessageOfPickedProp.Type = Communication.Proto.PropType.AddLife;
+                    break;
+                case Preparation.Utility.PropType.addSpeed:
+                    msg.MessageOfPickedProp.Type = Communication.Proto.PropType.AddSpeed;
+                    break;
+                case Preparation.Utility.PropType.Shield:
+                    msg.MessageOfPickedProp.Type = Communication.Proto.PropType.Shield;
+                    break;
+                case Preparation.Utility.PropType.Spear:
+                    msg.MessageOfPickedProp.Type = Communication.Proto.PropType.Spear;
+                    break;
+                default:
+                    msg.MessageOfPickedProp.Type = Communication.Proto.PropType.NullPropType;
                     break;
             }
             return msg;

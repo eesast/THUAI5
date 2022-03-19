@@ -107,7 +107,7 @@ constexpr MessageOfBombedBullet::MessageOfBombedBullet(
 
   , x_(0)
   , facingdirection_(0)
-  , guid_(int64_t{0})
+  , mappingid_(int64_t{0})
   , y_(0){}
 struct MessageOfBombedBulletDefaultTypeInternal {
   constexpr MessageOfBombedBulletDefaultTypeInternal()
@@ -118,6 +118,23 @@ struct MessageOfBombedBulletDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MessageOfBombedBulletDefaultTypeInternal _MessageOfBombedBullet_default_instance_;
+constexpr MessageOfPickedProp::MessageOfPickedProp(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : type_(0)
+
+  , x_(0)
+  , facingdirection_(0)
+  , mappingid_(int64_t{0})
+  , y_(0){}
+struct MessageOfPickedPropDefaultTypeInternal {
+  constexpr MessageOfPickedPropDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~MessageOfPickedPropDefaultTypeInternal() {}
+  union {
+    MessageOfPickedProp _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MessageOfPickedPropDefaultTypeInternal _MessageOfPickedProp_default_instance_;
 constexpr MessageOfMap_Row::MessageOfMap_Row(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : col_()
@@ -187,7 +204,7 @@ struct MessageToOneClientDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MessageToOneClientDefaultTypeInternal _MessageToOneClient_default_instance_;
 }  // namespace Protobuf
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Message2Clients_2eproto[9];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_Message2Clients_2eproto[10];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_Message2Clients_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_Message2Clients_2eproto = nullptr;
 
@@ -261,7 +278,18 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBombedBullet, x_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBombedBullet, y_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBombedBullet, facingdirection_),
-  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBombedBullet, guid_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBombedBullet, mappingid_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfPickedProp, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfPickedProp, type_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfPickedProp, x_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfPickedProp, y_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfPickedProp, facingdirection_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfPickedProp, mappingid_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfMap_Row, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -282,6 +310,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToClient_GameObjMessage, _oneof_case_[0]),
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
@@ -313,11 +342,12 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 33, -1, -1, sizeof(::Protobuf::MessageOfProp)},
   { 46, -1, -1, sizeof(::Protobuf::MessageOfBullet)},
   { 59, -1, -1, sizeof(::Protobuf::MessageOfBombedBullet)},
-  { 70, -1, -1, sizeof(::Protobuf::MessageOfMap_Row)},
-  { 77, -1, -1, sizeof(::Protobuf::MessageOfMap)},
-  { 84, -1, -1, sizeof(::Protobuf::MessageToClient_GameObjMessage)},
-  { 96, -1, -1, sizeof(::Protobuf::MessageToClient)},
-  { 104, -1, -1, sizeof(::Protobuf::MessageToOneClient)},
+  { 70, -1, -1, sizeof(::Protobuf::MessageOfPickedProp)},
+  { 81, -1, -1, sizeof(::Protobuf::MessageOfMap_Row)},
+  { 88, -1, -1, sizeof(::Protobuf::MessageOfMap)},
+  { 95, -1, -1, sizeof(::Protobuf::MessageToClient_GameObjMessage)},
+  { 108, -1, -1, sizeof(::Protobuf::MessageToClient)},
+  { 116, -1, -1, sizeof(::Protobuf::MessageToOneClient)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -325,6 +355,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageOfProp_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageOfBullet_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageOfBombedBullet_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageOfPickedProp_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageOfMap_Row_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageOfMap_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::Protobuf::_MessageToClient_GameObjMessage_default_instance_),
@@ -359,35 +390,40 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
   "2\024.Protobuf.BulletType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003"
   " \001(\005\022\027\n\017facingDirection\030\004 \001(\001\022\014\n\004guid\030\005 "
   "\001(\003\022\024\n\014parentTeamID\030\006 \001(\003\022\"\n\005place\030\007 \001(\016"
-  "2\023.Protobuf.PlaceType\"x\n\025MessageOfBombed"
+  "2\023.Protobuf.PlaceType\"}\n\025MessageOfBombed"
   "Bullet\022\"\n\004type\030\001 \001(\0162\024.Protobuf.BulletTy"
   "pe\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDirect"
-  "ion\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\"K\n\014MessageOfMap\022"
-  "\'\n\003row\0303 \003(\0132\032.Protobuf.MessageOfMap.Row"
-  "\032\022\n\003Row\022\013\n\003col\030\001 \003(\005\"\257\003\n\017MessageToClient"
-  "\022@\n\016gameObjMessage\030\001 \003(\0132(.Protobuf.Mess"
-  "ageToClient.GameObjMessage\022*\n\013messageTyp"
-  "e\030\002 \001(\0162\025.Protobuf.MessageType\032\255\002\n\016GameO"
-  "bjMessage\022:\n\022messageOfCharacter\030\001 \001(\0132\034."
-  "Protobuf.MessageOfCharacterH\000\0224\n\017message"
-  "OfBullet\030\002 \001(\0132\031.Protobuf.MessageOfBulle"
-  "tH\000\0220\n\rmessageOfProp\030\003 \001(\0132\027.Protobuf.Me"
-  "ssageOfPropH\000\022@\n\025MessageOfBombedBullet\030\004"
-  " \001(\0132\037.Protobuf.MessageOfBombedBulletH\000\022"
-  ".\n\014messageOfMap\030\005 \001(\0132\026.Protobuf.Message"
-  "OfMapH\000B\005\n\003obj\"\201\001\n\022MessageToOneClient\022\020\n"
-  "\010playerID\030\001 \001(\003\022\016\n\006teamID\030\002 \001(\003\022*\n\013messa"
-  "geType\030\003 \001(\0162\025.Protobuf.MessageType\022\014\n\004g"
-  "uid\030\004 \001(\003\022\017\n\007message\030\005 \001(\tB\026\252\002\023Communica"
-  "tion.Protob\006proto3"
+  "ion\030\004 \001(\001\022\021\n\tmappingID\030\005 \001(\003\"y\n\023MessageO"
+  "fPickedProp\022 \n\004type\030\001 \001(\0162\022.Protobuf.Pro"
+  "pType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDir"
+  "ection\030\004 \001(\001\022\021\n\tmappingID\030\005 \001(\003\"K\n\014Messa"
+  "geOfMap\022\'\n\003row\0303 \003(\0132\032.Protobuf.MessageO"
+  "fMap.Row\032\022\n\003Row\022\013\n\003col\030\001 \003(\005\"\355\003\n\017Message"
+  "ToClient\022@\n\016gameObjMessage\030\001 \003(\0132(.Proto"
+  "buf.MessageToClient.GameObjMessage\022*\n\013me"
+  "ssageType\030\002 \001(\0162\025.Protobuf.MessageType\032\353"
+  "\002\n\016GameObjMessage\022:\n\022messageOfCharacter\030"
+  "\001 \001(\0132\034.Protobuf.MessageOfCharacterH\000\0224\n"
+  "\017messageOfBullet\030\002 \001(\0132\031.Protobuf.Messag"
+  "eOfBulletH\000\0220\n\rmessageOfProp\030\003 \001(\0132\027.Pro"
+  "tobuf.MessageOfPropH\000\022.\n\014messageOfMap\030\004 "
+  "\001(\0132\026.Protobuf.MessageOfMapH\000\022@\n\025Message"
+  "OfBombedBullet\030\005 \001(\0132\037.Protobuf.MessageO"
+  "fBombedBulletH\000\022<\n\023messageOfPickedProp\030\006"
+  " \001(\0132\035.Protobuf.MessageOfPickedPropH\000B\005\n"
+  "\003obj\"\201\001\n\022MessageToOneClient\022\020\n\010playerID\030"
+  "\001 \001(\003\022\016\n\006teamID\030\002 \001(\003\022*\n\013messageType\030\003 \001"
+  "(\0162\025.Protobuf.MessageType\022\014\n\004guid\030\004 \001(\003\022"
+  "\017\n\007message\030\005 \001(\tB\026\252\002\023Communication.Proto"
+  "b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Message2Clients_2eproto_deps[1] = {
   &::descriptor_table_MessageType_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Clients_2eproto = {
-  false, false, 1858, descriptor_table_protodef_Message2Clients_2eproto, "Message2Clients.proto", 
-  &descriptor_table_Message2Clients_2eproto_once, descriptor_table_Message2Clients_2eproto_deps, 1, 9,
+  false, false, 2048, descriptor_table_protodef_Message2Clients_2eproto, "Message2Clients.proto", 
+  &descriptor_table_Message2Clients_2eproto_once, descriptor_table_Message2Clients_2eproto_deps, 1, 10,
   schemas, file_default_instances, TableStruct_Message2Clients_2eproto::offsets,
   file_level_metadata_Message2Clients_2eproto, file_level_enum_descriptors_Message2Clients_2eproto, file_level_service_descriptors_Message2Clients_2eproto,
 };
@@ -2055,10 +2091,10 @@ const char* MessageOfBombedBullet::_InternalParse(const char* ptr, ::PROTOBUF_NA
         } else
           goto handle_unusual;
         continue;
-      // int64 guid = 5;
+      // int64 mappingID = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          guid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          mappingid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2121,10 +2157,10 @@ uint8_t* MessageOfBombedBullet::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_facingdirection(), target);
   }
 
-  // int64 guid = 5;
-  if (this->_internal_guid() != 0) {
+  // int64 mappingID = 5;
+  if (this->_internal_mappingid() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(5, this->_internal_guid(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(5, this->_internal_mappingid(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2163,9 +2199,9 @@ size_t MessageOfBombedBullet::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  // int64 guid = 5;
-  if (this->_internal_guid() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_guid());
+  // int64 mappingID = 5;
+  if (this->_internal_mappingid() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_mappingid());
   }
 
   // int32 y = 3;
@@ -2208,8 +2244,8 @@ void MessageOfBombedBullet::MergeFrom(const MessageOfBombedBullet& from) {
   if (raw_facingdirection != 0) {
     _internal_set_facingdirection(from._internal_facingdirection());
   }
-  if (from._internal_guid() != 0) {
-    _internal_set_guid(from._internal_guid());
+  if (from._internal_mappingid() != 0) {
+    _internal_set_mappingid(from._internal_mappingid());
   }
   if (from._internal_y() != 0) {
     _internal_set_y(from._internal_y());
@@ -2243,6 +2279,299 @@ void MessageOfBombedBullet::InternalSwap(MessageOfBombedBullet* other) {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
       file_level_metadata_Message2Clients_2eproto[3]);
+}
+
+// ===================================================================
+
+class MessageOfPickedProp::_Internal {
+ public:
+};
+
+MessageOfPickedProp::MessageOfPickedProp(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:Protobuf.MessageOfPickedProp)
+}
+MessageOfPickedProp::MessageOfPickedProp(const MessageOfPickedProp& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::memcpy(&type_, &from.type_,
+    static_cast<size_t>(reinterpret_cast<char*>(&y_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(y_));
+  // @@protoc_insertion_point(copy_constructor:Protobuf.MessageOfPickedProp)
+}
+
+inline void MessageOfPickedProp::SharedCtor() {
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&type_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&y_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(y_));
+}
+
+MessageOfPickedProp::~MessageOfPickedProp() {
+  // @@protoc_insertion_point(destructor:Protobuf.MessageOfPickedProp)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void MessageOfPickedProp::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void MessageOfPickedProp::ArenaDtor(void* object) {
+  MessageOfPickedProp* _this = reinterpret_cast< MessageOfPickedProp* >(object);
+  (void)_this;
+}
+void MessageOfPickedProp::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void MessageOfPickedProp::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void MessageOfPickedProp::Clear() {
+// @@protoc_insertion_point(message_clear_start:Protobuf.MessageOfPickedProp)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&type_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&y_) -
+      reinterpret_cast<char*>(&type_)) + sizeof(y_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* MessageOfPickedProp::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .Protobuf.PropType type = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_type(static_cast<::Protobuf::PropType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 x = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 y = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+          y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // double facingDirection = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 33)) {
+          facingdirection_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      // int64 mappingID = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+          mappingid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* MessageOfPickedProp::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Protobuf.MessageOfPickedProp)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .Protobuf.PropType type = 1;
+  if (this->_internal_type() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      1, this->_internal_type(), target);
+  }
+
+  // int32 x = 2;
+  if (this->_internal_x() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_x(), target);
+  }
+
+  // int32 y = 3;
+  if (this->_internal_y() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_y(), target);
+  }
+
+  // double facingDirection = 4;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_facingdirection = this->_internal_facingdirection();
+  uint64_t raw_facingdirection;
+  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
+  if (raw_facingdirection != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_facingdirection(), target);
+  }
+
+  // int64 mappingID = 5;
+  if (this->_internal_mappingid() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(5, this->_internal_mappingid(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Protobuf.MessageOfPickedProp)
+  return target;
+}
+
+size_t MessageOfPickedProp::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Protobuf.MessageOfPickedProp)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .Protobuf.PropType type = 1;
+  if (this->_internal_type() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_type());
+  }
+
+  // int32 x = 2;
+  if (this->_internal_x() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_x());
+  }
+
+  // double facingDirection = 4;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_facingdirection = this->_internal_facingdirection();
+  uint64_t raw_facingdirection;
+  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
+  if (raw_facingdirection != 0) {
+    total_size += 1 + 8;
+  }
+
+  // int64 mappingID = 5;
+  if (this->_internal_mappingid() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_mappingid());
+  }
+
+  // int32 y = 3;
+  if (this->_internal_y() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_y());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MessageOfPickedProp::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    MessageOfPickedProp::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*MessageOfPickedProp::GetClassData() const { return &_class_data_; }
+
+void MessageOfPickedProp::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<MessageOfPickedProp *>(to)->MergeFrom(
+      static_cast<const MessageOfPickedProp &>(from));
+}
+
+
+void MessageOfPickedProp::MergeFrom(const MessageOfPickedProp& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:Protobuf.MessageOfPickedProp)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_type() != 0) {
+    _internal_set_type(from._internal_type());
+  }
+  if (from._internal_x() != 0) {
+    _internal_set_x(from._internal_x());
+  }
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_facingdirection = from._internal_facingdirection();
+  uint64_t raw_facingdirection;
+  memcpy(&raw_facingdirection, &tmp_facingdirection, sizeof(tmp_facingdirection));
+  if (raw_facingdirection != 0) {
+    _internal_set_facingdirection(from._internal_facingdirection());
+  }
+  if (from._internal_mappingid() != 0) {
+    _internal_set_mappingid(from._internal_mappingid());
+  }
+  if (from._internal_y() != 0) {
+    _internal_set_y(from._internal_y());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void MessageOfPickedProp::CopyFrom(const MessageOfPickedProp& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Protobuf.MessageOfPickedProp)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool MessageOfPickedProp::IsInitialized() const {
+  return true;
+}
+
+void MessageOfPickedProp::InternalSwap(MessageOfPickedProp* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(MessageOfPickedProp, y_)
+      + sizeof(MessageOfPickedProp::y_)
+      - PROTOBUF_FIELD_OFFSET(MessageOfPickedProp, type_)>(
+          reinterpret_cast<char*>(&type_),
+          reinterpret_cast<char*>(&other->type_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata MessageOfPickedProp::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
+      file_level_metadata_Message2Clients_2eproto[4]);
 }
 
 // ===================================================================
@@ -2434,7 +2763,7 @@ void MessageOfMap_Row::InternalSwap(MessageOfMap_Row* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfMap_Row::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
-      file_level_metadata_Message2Clients_2eproto[4]);
+      file_level_metadata_Message2Clients_2eproto[5]);
 }
 
 // ===================================================================
@@ -2619,7 +2948,7 @@ void MessageOfMap::InternalSwap(MessageOfMap* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata MessageOfMap::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
-      file_level_metadata_Message2Clients_2eproto[5]);
+      file_level_metadata_Message2Clients_2eproto[6]);
 }
 
 // ===================================================================
@@ -2629,8 +2958,9 @@ class MessageToClient_GameObjMessage::_Internal {
   static const ::Protobuf::MessageOfCharacter& messageofcharacter(const MessageToClient_GameObjMessage* msg);
   static const ::Protobuf::MessageOfBullet& messageofbullet(const MessageToClient_GameObjMessage* msg);
   static const ::Protobuf::MessageOfProp& messageofprop(const MessageToClient_GameObjMessage* msg);
-  static const ::Protobuf::MessageOfBombedBullet& messageofbombedbullet(const MessageToClient_GameObjMessage* msg);
   static const ::Protobuf::MessageOfMap& messageofmap(const MessageToClient_GameObjMessage* msg);
+  static const ::Protobuf::MessageOfBombedBullet& messageofbombedbullet(const MessageToClient_GameObjMessage* msg);
+  static const ::Protobuf::MessageOfPickedProp& messageofpickedprop(const MessageToClient_GameObjMessage* msg);
 };
 
 const ::Protobuf::MessageOfCharacter&
@@ -2645,13 +2975,17 @@ const ::Protobuf::MessageOfProp&
 MessageToClient_GameObjMessage::_Internal::messageofprop(const MessageToClient_GameObjMessage* msg) {
   return *msg->obj_.messageofprop_;
 }
+const ::Protobuf::MessageOfMap&
+MessageToClient_GameObjMessage::_Internal::messageofmap(const MessageToClient_GameObjMessage* msg) {
+  return *msg->obj_.messageofmap_;
+}
 const ::Protobuf::MessageOfBombedBullet&
 MessageToClient_GameObjMessage::_Internal::messageofbombedbullet(const MessageToClient_GameObjMessage* msg) {
   return *msg->obj_.messageofbombedbullet_;
 }
-const ::Protobuf::MessageOfMap&
-MessageToClient_GameObjMessage::_Internal::messageofmap(const MessageToClient_GameObjMessage* msg) {
-  return *msg->obj_.messageofmap_;
+const ::Protobuf::MessageOfPickedProp&
+MessageToClient_GameObjMessage::_Internal::messageofpickedprop(const MessageToClient_GameObjMessage* msg) {
+  return *msg->obj_.messageofpickedprop_;
 }
 void MessageToClient_GameObjMessage::set_allocated_messageofcharacter(::Protobuf::MessageOfCharacter* messageofcharacter) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
@@ -2698,6 +3032,21 @@ void MessageToClient_GameObjMessage::set_allocated_messageofprop(::Protobuf::Mes
   }
   // @@protoc_insertion_point(field_set_allocated:Protobuf.MessageToClient.GameObjMessage.messageOfProp)
 }
+void MessageToClient_GameObjMessage::set_allocated_messageofmap(::Protobuf::MessageOfMap* messageofmap) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  clear_obj();
+  if (messageofmap) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::Protobuf::MessageOfMap>::GetOwningArena(messageofmap);
+    if (message_arena != submessage_arena) {
+      messageofmap = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, messageofmap, submessage_arena);
+    }
+    set_has_messageofmap();
+    obj_.messageofmap_ = messageofmap;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Protobuf.MessageToClient.GameObjMessage.messageOfMap)
+}
 void MessageToClient_GameObjMessage::set_allocated_messageofbombedbullet(::Protobuf::MessageOfBombedBullet* messageofbombedbullet) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   clear_obj();
@@ -2713,20 +3062,20 @@ void MessageToClient_GameObjMessage::set_allocated_messageofbombedbullet(::Proto
   }
   // @@protoc_insertion_point(field_set_allocated:Protobuf.MessageToClient.GameObjMessage.MessageOfBombedBullet)
 }
-void MessageToClient_GameObjMessage::set_allocated_messageofmap(::Protobuf::MessageOfMap* messageofmap) {
+void MessageToClient_GameObjMessage::set_allocated_messageofpickedprop(::Protobuf::MessageOfPickedProp* messageofpickedprop) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   clear_obj();
-  if (messageofmap) {
+  if (messageofpickedprop) {
     ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::Protobuf::MessageOfMap>::GetOwningArena(messageofmap);
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::Protobuf::MessageOfPickedProp>::GetOwningArena(messageofpickedprop);
     if (message_arena != submessage_arena) {
-      messageofmap = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, messageofmap, submessage_arena);
+      messageofpickedprop = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, messageofpickedprop, submessage_arena);
     }
-    set_has_messageofmap();
-    obj_.messageofmap_ = messageofmap;
+    set_has_messageofpickedprop();
+    obj_.messageofpickedprop_ = messageofpickedprop;
   }
-  // @@protoc_insertion_point(field_set_allocated:Protobuf.MessageToClient.GameObjMessage.messageOfMap)
+  // @@protoc_insertion_point(field_set_allocated:Protobuf.MessageToClient.GameObjMessage.messageOfPickedProp)
 }
 MessageToClient_GameObjMessage::MessageToClient_GameObjMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
@@ -2754,12 +3103,16 @@ MessageToClient_GameObjMessage::MessageToClient_GameObjMessage(const MessageToCl
       _internal_mutable_messageofprop()->::Protobuf::MessageOfProp::MergeFrom(from._internal_messageofprop());
       break;
     }
+    case kMessageOfMap: {
+      _internal_mutable_messageofmap()->::Protobuf::MessageOfMap::MergeFrom(from._internal_messageofmap());
+      break;
+    }
     case kMessageOfBombedBullet: {
       _internal_mutable_messageofbombedbullet()->::Protobuf::MessageOfBombedBullet::MergeFrom(from._internal_messageofbombedbullet());
       break;
     }
-    case kMessageOfMap: {
-      _internal_mutable_messageofmap()->::Protobuf::MessageOfMap::MergeFrom(from._internal_messageofmap());
+    case kMessageOfPickedProp: {
+      _internal_mutable_messageofpickedprop()->::Protobuf::MessageOfPickedProp::MergeFrom(from._internal_messageofpickedprop());
       break;
     }
     case OBJ_NOT_SET: {
@@ -2818,15 +3171,21 @@ void MessageToClient_GameObjMessage::clear_obj() {
       }
       break;
     }
+    case kMessageOfMap: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete obj_.messageofmap_;
+      }
+      break;
+    }
     case kMessageOfBombedBullet: {
       if (GetArenaForAllocation() == nullptr) {
         delete obj_.messageofbombedbullet_;
       }
       break;
     }
-    case kMessageOfMap: {
+    case kMessageOfPickedProp: {
       if (GetArenaForAllocation() == nullptr) {
-        delete obj_.messageofmap_;
+        delete obj_.messageofpickedprop_;
       }
       break;
     }
@@ -2878,18 +3237,26 @@ const char* MessageToClient_GameObjMessage::_InternalParse(const char* ptr, ::PR
         } else
           goto handle_unusual;
         continue;
-      // .Protobuf.MessageOfBombedBullet MessageOfBombedBullet = 4;
+      // .Protobuf.MessageOfMap messageOfMap = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
+          ptr = ctx->ParseMessage(_internal_mutable_messageofmap(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // .Protobuf.MessageOfBombedBullet MessageOfBombedBullet = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
           ptr = ctx->ParseMessage(_internal_mutable_messageofbombedbullet(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // .Protobuf.MessageOfMap messageOfMap = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
-          ptr = ctx->ParseMessage(_internal_mutable_messageofmap(), ptr);
+      // .Protobuf.MessageOfPickedProp messageOfPickedProp = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          ptr = ctx->ParseMessage(_internal_mutable_messageofpickedprop(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -2947,20 +3314,28 @@ uint8_t* MessageToClient_GameObjMessage::_InternalSerialize(
         3, _Internal::messageofprop(this), target, stream);
   }
 
-  // .Protobuf.MessageOfBombedBullet MessageOfBombedBullet = 4;
-  if (_internal_has_messageofbombedbullet()) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(
-        4, _Internal::messageofbombedbullet(this), target, stream);
-  }
-
-  // .Protobuf.MessageOfMap messageOfMap = 5;
+  // .Protobuf.MessageOfMap messageOfMap = 4;
   if (_internal_has_messageofmap()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
-        5, _Internal::messageofmap(this), target, stream);
+        4, _Internal::messageofmap(this), target, stream);
+  }
+
+  // .Protobuf.MessageOfBombedBullet MessageOfBombedBullet = 5;
+  if (_internal_has_messageofbombedbullet()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        5, _Internal::messageofbombedbullet(this), target, stream);
+  }
+
+  // .Protobuf.MessageOfPickedProp messageOfPickedProp = 6;
+  if (_internal_has_messageofpickedprop()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        6, _Internal::messageofpickedprop(this), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -3001,18 +3376,25 @@ size_t MessageToClient_GameObjMessage::ByteSizeLong() const {
           *obj_.messageofprop_);
       break;
     }
-    // .Protobuf.MessageOfBombedBullet MessageOfBombedBullet = 4;
+    // .Protobuf.MessageOfMap messageOfMap = 4;
+    case kMessageOfMap: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *obj_.messageofmap_);
+      break;
+    }
+    // .Protobuf.MessageOfBombedBullet MessageOfBombedBullet = 5;
     case kMessageOfBombedBullet: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *obj_.messageofbombedbullet_);
       break;
     }
-    // .Protobuf.MessageOfMap messageOfMap = 5;
-    case kMessageOfMap: {
+    // .Protobuf.MessageOfPickedProp messageOfPickedProp = 6;
+    case kMessageOfPickedProp: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *obj_.messageofmap_);
+          *obj_.messageofpickedprop_);
       break;
     }
     case OBJ_NOT_SET: {
@@ -3054,12 +3436,16 @@ void MessageToClient_GameObjMessage::MergeFrom(const MessageToClient_GameObjMess
       _internal_mutable_messageofprop()->::Protobuf::MessageOfProp::MergeFrom(from._internal_messageofprop());
       break;
     }
+    case kMessageOfMap: {
+      _internal_mutable_messageofmap()->::Protobuf::MessageOfMap::MergeFrom(from._internal_messageofmap());
+      break;
+    }
     case kMessageOfBombedBullet: {
       _internal_mutable_messageofbombedbullet()->::Protobuf::MessageOfBombedBullet::MergeFrom(from._internal_messageofbombedbullet());
       break;
     }
-    case kMessageOfMap: {
-      _internal_mutable_messageofmap()->::Protobuf::MessageOfMap::MergeFrom(from._internal_messageofmap());
+    case kMessageOfPickedProp: {
+      _internal_mutable_messageofpickedprop()->::Protobuf::MessageOfPickedProp::MergeFrom(from._internal_messageofpickedprop());
       break;
     }
     case OBJ_NOT_SET: {
@@ -3090,7 +3476,7 @@ void MessageToClient_GameObjMessage::InternalSwap(MessageToClient_GameObjMessage
 ::PROTOBUF_NAMESPACE_ID::Metadata MessageToClient_GameObjMessage::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
-      file_level_metadata_Message2Clients_2eproto[6]);
+      file_level_metadata_Message2Clients_2eproto[7]);
 }
 
 // ===================================================================
@@ -3304,7 +3690,7 @@ void MessageToClient::InternalSwap(MessageToClient* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata MessageToClient::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
-      file_level_metadata_Message2Clients_2eproto[7]);
+      file_level_metadata_Message2Clients_2eproto[8]);
 }
 
 // ===================================================================
@@ -3614,7 +4000,7 @@ void MessageToOneClient::InternalSwap(MessageToOneClient* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata MessageToOneClient::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_Message2Clients_2eproto_getter, &descriptor_table_Message2Clients_2eproto_once,
-      file_level_metadata_Message2Clients_2eproto[8]);
+      file_level_metadata_Message2Clients_2eproto[9]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -3631,6 +4017,9 @@ template<> PROTOBUF_NOINLINE ::Protobuf::MessageOfBullet* Arena::CreateMaybeMess
 }
 template<> PROTOBUF_NOINLINE ::Protobuf::MessageOfBombedBullet* Arena::CreateMaybeMessage< ::Protobuf::MessageOfBombedBullet >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Protobuf::MessageOfBombedBullet >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Protobuf::MessageOfPickedProp* Arena::CreateMaybeMessage< ::Protobuf::MessageOfPickedProp >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Protobuf::MessageOfPickedProp >(arena);
 }
 template<> PROTOBUF_NOINLINE ::Protobuf::MessageOfMap_Row* Arena::CreateMaybeMessage< ::Protobuf::MessageOfMap_Row >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Protobuf::MessageOfMap_Row >(arena);

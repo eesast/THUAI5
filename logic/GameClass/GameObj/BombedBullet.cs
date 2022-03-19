@@ -7,11 +7,13 @@ namespace GameClass.GameObj
     {
         public override ShapeType Shape => ShapeType.Circle;
         public override bool IsRigid => false;
+        public long MappingID { get; }
         public Bullet bulletHasBombed;
         public BombedBullet(Bullet bullet) : base(bullet.Position, bullet.Radius,bullet.Place) 
         {
             this.bulletHasBombed = bullet;
             this.Type = GameObjType.BombedBullet;
+            this.MappingID = bullet.ID;
         }
     }
 }
