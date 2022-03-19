@@ -585,6 +585,8 @@ namespace Client
         }
         private bool CanSee(MessageOfCharacter msg)
         {
+            if (playerID >= 2022 || teamID >= 2022)
+                return true;
             if (myInfo != null)
             {
                 if (myInfo.MessageOfCharacter.Guid == msg.Guid) //自己能看见自己
