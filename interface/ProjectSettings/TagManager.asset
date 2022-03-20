@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags: []
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 3068671187
+    locked: 0
+  - name: Item
+    uniqueID: 3076979837
+    locked: 0
+  - name: Electricity
+    uniqueID: 1549268577
+    locked: 0
+  - name: Player
+    uniqueID: 1580701999
+    locked: 0
+  - name: BlindZone
+    uniqueID: 759195083
+    locked: 0
+  - name: UI
+    uniqueID: 1600092981
+    locked: 0
