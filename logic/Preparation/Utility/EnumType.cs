@@ -15,7 +15,8 @@ namespace Preparation.Utility
         OutOfBoundBlock = 6,
         Grass = 7,
         GemWell = 8,
-        BombedBullet=9
+        BombedBullet = 9,
+        PickedProp = 10
     }
     public enum ShapeType
     {
@@ -84,6 +85,7 @@ namespace Preparation.Utility
         Prop = 3,
         Gem = 4,
         Map = 5,
-        BombedBullet = 6
+        BombedBullet = 6,
+        PickedProp = 7
     }
 }

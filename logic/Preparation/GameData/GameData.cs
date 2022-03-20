@@ -46,7 +46,7 @@ namespace Preparation.GameData
         public const int basicBulletNum = 5;   // 初始子弹量
         public const int MinAP = 0; // 最小攻击力
         public const int MaxAP = int.MaxValue;  //最大攻击力
-        public const double basicAttackRange = 10000;               // 基本攻击范围
+        public const double basicAttackRange = 9000;               // 基本攻击范围
         public const double basicBulletBombRange = 5000;           // 基本子弹爆炸范围
         public const int basicMoveSpeed = 3000;                   // 基本移动速度，单位：s-1
         public const int basicBulletMoveSpeed = 6000;             // 基本子弹移动速度，单位：s-1
