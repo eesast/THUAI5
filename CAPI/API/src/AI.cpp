@@ -7,10 +7,10 @@
 extern const bool asynchronous = false;
 
 // 选手主动技能，选手 !!必须!! 定义此变量来选择主动技能
-extern const THUAI5::ActiveSkillType playerActiveSkill = THUAI5::ActiveSkillType::SuperFast;
+extern const THUAI5::SoftwareType playerSoftware = THUAI5::SoftwareType::Booster;
 
 // 选手被动技能，选手 !!必须!! 定义此变量来选择被动技能
-extern const THUAI5::PassiveSkillType playerPassiveSkill = THUAI5::PassiveSkillType::SpeedUpWhenLeavingGrass;
+extern const THUAI5::HardwareType playerHardware = THUAI5::HardwareType::EnergyConvert;
 
 namespace
 {
@@ -52,8 +52,8 @@ void AI::play(IAPI &api)
 
     if (api.GetFrameCount() == 21)
     {
-        auto characters = api.GetCharacters();
-        api.PrintCharacters();
+        auto characters = api.GetRobots();
+        api.PrintRobots();
     }
 
     if (api.GetFrameCount() == 22)
@@ -64,8 +64,8 @@ void AI::play(IAPI &api)
 
     if (api.GetFrameCount() == 23)
     {
-        auto bullets = api.GetBullets();
-        api.PrintBullets();
+        auto bullets = api.GetSignalJammers();
+        api.PrintSignalJammers();
     }
 
     if (api.GetFrameCount() == 24)
@@ -114,9 +114,9 @@ void AI::play(IAPI &api)
     // how to use gems
     if (api.GetFrameCount() == 28)
     {
-        if (selfinfo->gemNum != 0)
+        if (selfinfo->cpuNum != 0)
         {
-            api.UseGem(selfinfo->gemNum);
+            api.UseCPU(selfinfo->cpuNum);
             // or you can throw it to your teammate:
             // api.ThrowGem(10,1);
         }

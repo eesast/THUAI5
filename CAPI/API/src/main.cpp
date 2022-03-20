@@ -13,8 +13,8 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
     uint16_t sPort;
     int pID;
     int tID;
-    THUAI5::ActiveSkillType aSkill;
-    THUAI5::PassiveSkillType pSkill;
+    THUAI5::SoftwareType software;
+    THUAI5::HardwareType hardware;
     int level = 0;
     std::string filename;
 
@@ -51,12 +51,12 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         cmd.add(warning);
 
         cmd.parse(argc, argv);
-        extern const THUAI5::ActiveSkillType playerActiveSkill; // Extern variable, actually defined in AI.cpp
-        extern const THUAI5::PassiveSkillType playerPassiveSkill;
+        extern const THUAI5::SoftwareType playerSoftware; // Extern variable, actually defined in AI.cpp
+        extern const THUAI5::HardwareType playerHardware;
         pID = playerID.getValue();
         tID = teamID.getValue();
-        aSkill = playerActiveSkill;
-        pSkill = playerPassiveSkill;
+        software = playerSoftware;
+        hardware = playerHardware;
         sIP = serverIP.getValue();
         sPort = serverPort.getValue();
 
@@ -73,7 +73,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         std::cerr << "Parsing error: " << e.error() << " for arg " << e.argId() << std::endl;
         return 1;
     }
-    Logic logic(tID, pID, aSkill, pSkill);
+    Logic logic(tID, pID, software, hardware);
     extern const bool asynchronous;
     std::cout << "*******************basic info*******************" << std::endl;
     std::cout << "asynchronous: " << asynchronous << std::endl;
@@ -81,8 +81,8 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
     std::cout << "server port: " << sPort << std::endl;
     std::cout << "team ID: " << tID << std::endl;
     std::cout << "port ID: " << pID << std::endl;
-    std::cout << "active skill type: " << THUAI5::active_dict[aSkill] << std::endl;
-    std::cout << "passive skill type: " << THUAI5::passive_dict[pSkill] << std::endl;
+    std::cout << "software type: " << THUAI5::software_dict[software] << std::endl;
+    std::cout << "passive skill type: " << THUAI5::software_dict[software] << std::endl;
     std::cout << "debug level: " << level << std::endl;
     std::cout << "file name: " << filename << std::endl;
     std::cout << "************************************************" << std::endl;
