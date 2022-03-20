@@ -34,6 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="HPSocket.Net" Version="5.8.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\communication\ClientCommunication\ClientCommunication.csproj" />
     <ProjectReference Include="..\..\communication\Proto\Proto.csproj" />
   </ItemGroup>
