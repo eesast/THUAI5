@@ -1,9 +1,12 @@
-#! /bin/bash
+#! /bin/bash 
+# WORKDIR /usr/local/
+cd ./CAPI
 i=1
-while (( $i<= 8 ))
+while (( $i<= 4 ))
 do
-    mv -f /usr/local/mnt/player$i.cpp ./API/src/AI.cpp
-    cmake CMakeLists.txt && make
-    mv capi /usr/local/play/capi$i
+    cp -f ../mnt/player$i.cpp ./API/src
+    mv ./API/src/player$i.cpp ./API/src/AI.cpp
+    cmake ./CMakeLists.txt && make
+    mv ./capi ../mnt/capi$i
     let "i++"
 done
