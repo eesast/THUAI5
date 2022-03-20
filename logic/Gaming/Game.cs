@@ -311,14 +311,20 @@ namespace Gaming
             finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
         }
 
-        public void ClearBombedBulletList()
-         {
-            gameMap.GameObjLockDict[GameObjIdx.BombedBullet].EnterWriteLock();
-            try
+        public void ClearLists(GameObjIdx[] objIdxes)
+        {
+            foreach (var idx in objIdxes)
             {
-                gameMap.GameObjDict[GameObjIdx.BombedBullet].Clear();
+                if (idx != GameObjIdx.None)
+                {
+                    gameMap.GameObjLockDict[idx].EnterWriteLock();
+                    try
+                    {
+                        gameMap.GameObjDict[idx].Clear();
+                    }
+                    finally { gameMap.GameObjLockDict[idx].ExitWriteLock(); }
+                }
             }
-            finally { gameMap.GameObjLockDict[GameObjIdx.BombedBullet].ExitWriteLock(); }
         }
 
         public int GetTeamScore(long teamID)

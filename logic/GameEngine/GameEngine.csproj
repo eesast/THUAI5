@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FrameRateTask\FrameRateTask.csproj" />
+    <PackageReference Include="FrameRateTask" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Preparation\Preparation.csproj" />
   </ItemGroup>
 

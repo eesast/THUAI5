@@ -8,6 +8,6 @@ namespace CSharpInterface
 {
     public static class Constants
     {
-        public const long GameDuration = 300000;
+        public const long GameDuration = 600000;
     }
 }

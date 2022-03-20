@@ -142,6 +142,13 @@ namespace Test
                         msgP.PropType = Communication.Proto.PropType.Gem;
                         clientCommunication.SendMessage(msgP);
                         break;
+                    case ConsoleKey.O:
+                        MessageToServer msgO = new MessageToServer();
+                        msgO.MessageType = MessageType.Pick;
+                        msgO.PlayerID = playerID;
+                        msgO.TeamID = teamID;
+                        clientCommunication.SendMessage(msgO);
+                        break;
                     default:
                         break;
                 }

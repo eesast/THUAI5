@@ -23,19 +23,19 @@ constexpr MessageToServer::MessageToServer(
   , playerid_(int64_t{0})
   , messagetype_(0)
 
-  , proptype_(0)
-
-  , teamid_(int64_t{0})
-  , timeinmilliseconds_(int64_t{0})
-  , angle_(0)
-  , toplayerid_(int64_t{0})
-  , gemsize_(0)
   , pskill_(0)
 
+  , teamid_(int64_t{0})
   , askill1_(0)
 
   , askill2_(0)
-{}
+
+  , timeinmilliseconds_(int64_t{0})
+  , proptype_(0)
+
+  , gemsize_(0)
+  , angle_(0)
+  , toplayerid_(int64_t{0}){}
 struct MessageToServerDefaultTypeInternal {
   constexpr MessageToServerDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -60,15 +60,15 @@ const uint32_t TableStruct_Message2Server_2eproto::offsets[] PROTOBUF_SECTION_VA
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, messagetype_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, playerid_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, teamid_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, pskill_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, askill1_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, askill2_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, proptype_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, timeinmilliseconds_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, angle_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, gemsize_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, toplayerid_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, message_),
-  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, pskill_),
-  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, askill1_),
-  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageToServer, askill2_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::Protobuf::MessageToServer)},
@@ -83,13 +83,13 @@ const char descriptor_table_protodef_Message2Server_2eproto[] PROTOBUF_SECTION_V
   "eType.proto\032\025Message2Clients.proto\"\352\002\n\017M"
   "essageToServer\022*\n\013messageType\030\001 \001(\0162\025.Pr"
   "otobuf.MessageType\022\020\n\010playerID\030\002 \001(\003\022\016\n\006"
-  "teamID\030\003 \001(\003\022$\n\010propType\030\004 \001(\0162\022.Protobu"
-  "f.PropType\022\032\n\022timeInMilliseconds\030\005 \001(\003\022\r"
-  "\n\005angle\030\006 \001(\001\022\017\n\007gemSize\030\007 \001(\005\022\022\n\nToPlay"
-  "erID\030\010 \001(\003\022\017\n\007message\030\t \001(\t\022*\n\006pSkill\030\n "
-  "\001(\0162\032.Protobuf.PassiveSkillType\022*\n\007aSkil"
-  "l1\030\013 \001(\0162\031.Protobuf.ActiveSkillType\022*\n\007a"
-  "Skill2\030\014 \001(\0162\031.Protobuf.ActiveSkillTypeB"
+  "teamID\030\003 \001(\003\022*\n\006pSkill\030\004 \001(\0162\032.Protobuf."
+  "PassiveSkillType\022*\n\007aSkill1\030\005 \001(\0162\031.Prot"
+  "obuf.ActiveSkillType\022*\n\007aSkill2\030\006 \001(\0162\031."
+  "Protobuf.ActiveSkillType\022$\n\010propType\030\007 \001"
+  "(\0162\022.Protobuf.PropType\022\032\n\022timeInMillisec"
+  "onds\030\010 \001(\003\022\r\n\005angle\030\t \001(\001\022\017\n\007gemSize\030\n \001"
+  "(\005\022\022\n\nToPlayerID\030\013 \001(\003\022\017\n\007message\030\014 \001(\tB"
   "\026\252\002\023Communication.Protob\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Message2Server_2eproto_deps[2] = {
@@ -138,8 +138,8 @@ MessageToServer::MessageToServer(const MessageToServer& from)
       GetArenaForAllocation());
   }
   ::memcpy(&playerid_, &from.playerid_,
-    static_cast<size_t>(reinterpret_cast<char*>(&askill2_) -
-    reinterpret_cast<char*>(&playerid_)) + sizeof(askill2_));
+    static_cast<size_t>(reinterpret_cast<char*>(&toplayerid_) -
+    reinterpret_cast<char*>(&playerid_)) + sizeof(toplayerid_));
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageToServer)
 }
 
@@ -150,8 +150,8 @@ message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlre
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&playerid_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&askill2_) -
-    reinterpret_cast<char*>(&playerid_)) + sizeof(askill2_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&toplayerid_) -
+    reinterpret_cast<char*>(&playerid_)) + sizeof(toplayerid_));
 }
 
 MessageToServer::~MessageToServer() {
@@ -184,8 +184,8 @@ void MessageToServer::Clear() {
 
   message_.ClearToEmpty();
   ::memset(&playerid_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&askill2_) -
-      reinterpret_cast<char*>(&playerid_)) + sizeof(askill2_));
+      reinterpret_cast<char*>(&toplayerid_) -
+      reinterpret_cast<char*>(&playerid_)) + sizeof(toplayerid_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -220,81 +220,81 @@ const char* MessageToServer::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPAC
         } else
           goto handle_unusual;
         continue;
-      // .Protobuf.PropType propType = 4;
+      // .Protobuf.PassiveSkillType pSkill = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-          _internal_set_proptype(static_cast<::Protobuf::PropType>(val));
-        } else
-          goto handle_unusual;
-        continue;
-      // int64 timeInMilliseconds = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          timeinmilliseconds_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // double angle = 6;
-      case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 49)) {
-          angle_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
-          ptr += sizeof(double);
-        } else
-          goto handle_unusual;
-        continue;
-      // int32 gemSize = 7;
-      case 7:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56)) {
-          gemsize_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // int64 ToPlayerID = 8;
-      case 8:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64)) {
-          toplayerid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // string message = 9;
-      case 9:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 74)) {
-          auto str = _internal_mutable_message();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "Protobuf.MessageToServer.message"));
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // .Protobuf.PassiveSkillType pSkill = 10;
-      case 10:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 80)) {
           uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_pskill(static_cast<::Protobuf::PassiveSkillType>(val));
         } else
           goto handle_unusual;
         continue;
-      // .Protobuf.ActiveSkillType aSkill1 = 11;
-      case 11:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 88)) {
+      // .Protobuf.ActiveSkillType aSkill1 = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
           uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_askill1(static_cast<::Protobuf::ActiveSkillType>(val));
         } else
           goto handle_unusual;
         continue;
-      // .Protobuf.ActiveSkillType aSkill2 = 12;
-      case 12:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 96)) {
+      // .Protobuf.ActiveSkillType aSkill2 = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
           uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_askill2(static_cast<::Protobuf::ActiveSkillType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // .Protobuf.PropType propType = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56)) {
+          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+          _internal_set_proptype(static_cast<::Protobuf::PropType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // int64 timeInMilliseconds = 8;
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64)) {
+          timeinmilliseconds_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // double angle = 9;
+      case 9:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 73)) {
+          angle_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 gemSize = 10;
+      case 10:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 80)) {
+          gemsize_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // int64 ToPlayerID = 11;
+      case 11:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 88)) {
+          toplayerid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // string message = 12;
+      case 12:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 98)) {
+          auto str = _internal_mutable_message();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "Protobuf.MessageToServer.message"));
+          CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
@@ -346,70 +346,70 @@ uint8_t* MessageToServer::_InternalSerialize(
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(3, this->_internal_teamid(), target);
   }
 
-  // .Protobuf.PropType propType = 4;
+  // .Protobuf.PassiveSkillType pSkill = 4;
+  if (this->_internal_pskill() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      4, this->_internal_pskill(), target);
+  }
+
+  // .Protobuf.ActiveSkillType aSkill1 = 5;
+  if (this->_internal_askill1() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      5, this->_internal_askill1(), target);
+  }
+
+  // .Protobuf.ActiveSkillType aSkill2 = 6;
+  if (this->_internal_askill2() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
+      6, this->_internal_askill2(), target);
+  }
+
+  // .Protobuf.PropType propType = 7;
   if (this->_internal_proptype() != 0) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
-      4, this->_internal_proptype(), target);
+      7, this->_internal_proptype(), target);
   }
 
-  // int64 timeInMilliseconds = 5;
+  // int64 timeInMilliseconds = 8;
   if (this->_internal_timeinmilliseconds() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(5, this->_internal_timeinmilliseconds(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(8, this->_internal_timeinmilliseconds(), target);
   }
 
-  // double angle = 6;
+  // double angle = 9;
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_angle = this->_internal_angle();
   uint64_t raw_angle;
   memcpy(&raw_angle, &tmp_angle, sizeof(tmp_angle));
   if (raw_angle != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(6, this->_internal_angle(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(9, this->_internal_angle(), target);
   }
 
-  // int32 gemSize = 7;
+  // int32 gemSize = 10;
   if (this->_internal_gemsize() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(7, this->_internal_gemsize(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(10, this->_internal_gemsize(), target);
   }
 
-  // int64 ToPlayerID = 8;
+  // int64 ToPlayerID = 11;
   if (this->_internal_toplayerid() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(8, this->_internal_toplayerid(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(11, this->_internal_toplayerid(), target);
   }
 
-  // string message = 9;
+  // string message = 12;
   if (!this->_internal_message().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_message().data(), static_cast<int>(this->_internal_message().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "Protobuf.MessageToServer.message");
     target = stream->WriteStringMaybeAliased(
-        9, this->_internal_message(), target);
-  }
-
-  // .Protobuf.PassiveSkillType pSkill = 10;
-  if (this->_internal_pskill() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
-      10, this->_internal_pskill(), target);
-  }
-
-  // .Protobuf.ActiveSkillType aSkill1 = 11;
-  if (this->_internal_askill1() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
-      11, this->_internal_askill1(), target);
-  }
-
-  // .Protobuf.ActiveSkillType aSkill2 = 12;
-  if (this->_internal_askill2() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
-      12, this->_internal_askill2(), target);
+        12, this->_internal_message(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -428,7 +428,7 @@ size_t MessageToServer::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string message = 9;
+  // string message = 12;
   if (!this->_internal_message().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
@@ -446,10 +446,10 @@ size_t MessageToServer::ByteSizeLong() const {
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_messagetype());
   }
 
-  // .Protobuf.PropType propType = 4;
-  if (this->_internal_proptype() != 0) {
+  // .Protobuf.PassiveSkillType pSkill = 4;
+  if (this->_internal_pskill() != 0) {
     total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_proptype());
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_pskill());
   }
 
   // int64 teamID = 3;
@@ -457,12 +457,35 @@ size_t MessageToServer::ByteSizeLong() const {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_teamid());
   }
 
-  // int64 timeInMilliseconds = 5;
+  // .Protobuf.ActiveSkillType aSkill1 = 5;
+  if (this->_internal_askill1() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_askill1());
+  }
+
+  // .Protobuf.ActiveSkillType aSkill2 = 6;
+  if (this->_internal_askill2() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_askill2());
+  }
+
+  // int64 timeInMilliseconds = 8;
   if (this->_internal_timeinmilliseconds() != 0) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_timeinmilliseconds());
   }
 
-  // double angle = 6;
+  // .Protobuf.PropType propType = 7;
+  if (this->_internal_proptype() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_proptype());
+  }
+
+  // int32 gemSize = 10;
+  if (this->_internal_gemsize() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_gemsize());
+  }
+
+  // double angle = 9;
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_angle = this->_internal_angle();
   uint64_t raw_angle;
@@ -471,32 +494,9 @@ size_t MessageToServer::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  // int64 ToPlayerID = 8;
+  // int64 ToPlayerID = 11;
   if (this->_internal_toplayerid() != 0) {
     total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64SizePlusOne(this->_internal_toplayerid());
-  }
-
-  // int32 gemSize = 7;
-  if (this->_internal_gemsize() != 0) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32SizePlusOne(this->_internal_gemsize());
-  }
-
-  // .Protobuf.PassiveSkillType pSkill = 10;
-  if (this->_internal_pskill() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_pskill());
-  }
-
-  // .Protobuf.ActiveSkillType aSkill1 = 11;
-  if (this->_internal_askill1() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_askill1());
-  }
-
-  // .Protobuf.ActiveSkillType aSkill2 = 12;
-  if (this->_internal_askill2() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_askill2());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -530,14 +530,26 @@ void MessageToServer::MergeFrom(const MessageToServer& from) {
   if (from._internal_messagetype() != 0) {
     _internal_set_messagetype(from._internal_messagetype());
   }
-  if (from._internal_proptype() != 0) {
-    _internal_set_proptype(from._internal_proptype());
+  if (from._internal_pskill() != 0) {
+    _internal_set_pskill(from._internal_pskill());
   }
   if (from._internal_teamid() != 0) {
     _internal_set_teamid(from._internal_teamid());
   }
+  if (from._internal_askill1() != 0) {
+    _internal_set_askill1(from._internal_askill1());
+  }
+  if (from._internal_askill2() != 0) {
+    _internal_set_askill2(from._internal_askill2());
+  }
   if (from._internal_timeinmilliseconds() != 0) {
     _internal_set_timeinmilliseconds(from._internal_timeinmilliseconds());
+  }
+  if (from._internal_proptype() != 0) {
+    _internal_set_proptype(from._internal_proptype());
+  }
+  if (from._internal_gemsize() != 0) {
+    _internal_set_gemsize(from._internal_gemsize());
   }
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_angle = from._internal_angle();
@@ -548,18 +560,6 @@ void MessageToServer::MergeFrom(const MessageToServer& from) {
   }
   if (from._internal_toplayerid() != 0) {
     _internal_set_toplayerid(from._internal_toplayerid());
-  }
-  if (from._internal_gemsize() != 0) {
-    _internal_set_gemsize(from._internal_gemsize());
-  }
-  if (from._internal_pskill() != 0) {
-    _internal_set_pskill(from._internal_pskill());
-  }
-  if (from._internal_askill1() != 0) {
-    _internal_set_askill1(from._internal_askill1());
-  }
-  if (from._internal_askill2() != 0) {
-    _internal_set_askill2(from._internal_askill2());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -586,8 +586,8 @@ void MessageToServer::InternalSwap(MessageToServer* other) {
       &other->message_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(MessageToServer, askill2_)
-      + sizeof(MessageToServer::askill2_)
+      PROTOBUF_FIELD_OFFSET(MessageToServer, toplayerid_)
+      + sizeof(MessageToServer::toplayerid_)
       - PROTOBUF_FIELD_OFFSET(MessageToServer, playerid_)>(
           reinterpret_cast<char*>(&playerid_),
           reinterpret_cast<char*>(&other->playerid_));

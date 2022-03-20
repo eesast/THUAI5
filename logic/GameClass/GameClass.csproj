@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FrameRateTask\FrameRateTask.csproj" />
     <ProjectReference Include="..\GameEngine\GameEngine.csproj" />
     <ProjectReference Include="..\Preparation\Preparation.csproj" />
   </ItemGroup>

@@ -135,7 +135,7 @@ namespace THUAI5
         double timeUntilUltimateSkillAvailable;         // 特殊主动技能的冷却时间
         double vampire;                                 // 吸血率
 
-        BuffType buff;                                  // 所拥有的buff
+        std::vector<BuffType> buff;                                  // 所拥有的buff
         PropType prop;                                  // 所持有的道具
         PlaceType place;                                // 人物所在位置
         BulletType bulletType;                          // 子弹类型

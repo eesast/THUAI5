@@ -47,10 +47,9 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
-            
-            <StackPanel Visibility="Hidden" Name="Down2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <ProgressBar Name="pb" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30" Width="400"  />
-                <Label Name="label" Content="" FontSize="16" VerticalAlignment="Center" />
+
+            <StackPanel Visibility="Hidden" Name="Down2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Width="212">
+                <Label Name="label" Content="正在下载中..." FontSize="16" VerticalAlignment="Center" HorizontalContentAlignment="Center" Width="212" Height="27"/>
             </StackPanel>
         </Grid>
     </Grid>

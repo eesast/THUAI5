@@ -36,7 +36,10 @@ PROTO2THUAI_NAMESPACE_BEGIN
         std::shared_ptr<THUAI5::Character> character = std::make_shared<THUAI5::Character>();
         character->activeSkillType = (THUAI5::ActiveSkillType)c.activeskilltype();
         character->attackRange = c.attackrange();
-        character->buff = (THUAI5::BuffType)c.buff();
+        for (auto it = c.buff().begin(); it != c.buff().end(); it++)
+        {
+            character->buff.push_back((THUAI5::BuffType)(*it));
+        }
         character->bulletNum = c.bulletnum();
         character->bulletType = (THUAI5::BulletType)c.bullettype();
         character->canMove = c.canmove();

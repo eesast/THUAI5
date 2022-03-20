@@ -84,12 +84,12 @@ namespace GameMessage
 		}
 		int msg_size = m2s.ByteSizeLong();
 #ifdef COMMUNICATION_DEBUG
-		std::cout << "the length is " << msg_size << std::endl;
+		std::cout << "the length is " << msg_size + 4 << std::endl;
 		std::cout << "the content is " << m2s.DebugString() << std::endl;
 #endif
 		m2s.SerializeToArray(data + 4, msg_size);
 #ifdef COMMUNICATION_DEBUG
-		std::cout << "after serialize: " << toHexString(data, msg_size) << std::endl;
+        std::cout << "after serialize: " << toHexString(data, msg_size + 4) << std::endl;
 #endif
 	}
 };
@@ -142,15 +142,7 @@ void ClientCommunication::Send(const Protobuf::MessageToServer& m2s)
 	unsigned char data[max_length];
 	int msgSize = m2s.ByteSizeLong();
     GameMessage::Serialize(data, m2s);
-//#ifdef COMMUNICATION_DEBUG
-//	std::cout << "the serialized data: " << std::endl;
-//	for (int i = 0; i < 20; i++)
-//	{
-//		std::cout << data[i] << ' ';
-//	}
-//	std::cout << std::endl;
-//#endif
-	if (!pclient->Send(data, msgSize))
+    if (!pclient->Send(data, 4 + msgSize))
 	{
 		std::cerr << "Failed to send the message. Error code:";
 		std::cerr << pclient->GetLastError() << std::endl;

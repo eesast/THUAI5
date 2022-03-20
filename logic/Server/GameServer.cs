@@ -7,6 +7,7 @@ using Communication.Proto;
 using GameClass.GameObj;
 using System.IO;
 using Playback;
+using System.Collections.Generic;
 
 namespace Server
 {
@@ -15,6 +16,7 @@ namespace Server
         protected readonly Game game;
         private uint spectatorMinTeamID = 2022;
         private uint spectatorMinPlayerID = 2022;
+        private List<Tuple<uint, uint>> spectatorList = new List<Tuple<uint, uint>>();
         public override int TeamCount => options.TeamCount;
         protected long[,] communicationToGameID; //通信用的ID映射到游戏内的ID,[i,j]表示team：i，player：j的id。
         private readonly object messageToAllClientsLock = new();
@@ -40,7 +42,12 @@ namespace Server
             if (msg.PlayerID >= spectatorMinPlayerID && msg.TeamID >= spectatorMinTeamID)
             {
                 //观战模式
-                Console.WriteLine("A new spectator comes to watch this game.");
+                Tuple<uint, uint> tp = new Tuple<uint, uint>((uint)msg.TeamID, (uint)msg.PlayerID);
+                if (!spectatorList.Contains(tp))
+                {
+                    spectatorList.Add(tp);
+                    Console.WriteLine("A new spectator comes to watch this game.");
+                }
                 return false;
             }
             if (game.GameMap.Timer.IsGaming)  //游戏运行中，不能添加玩家
@@ -106,6 +113,7 @@ namespace Server
         {
 #if DEBUG 
             Console.WriteLine($"Receive message: from teamID {msg.TeamID} , playerID {msg.PlayerID}: {msg.MessageType}, args: {msg.TimeInMilliseconds} {msg.Angle}");
+            Console.WriteLine($"The Content is {msg}");
 #endif
             if (msg.TimeInMilliseconds < 0)
             {
@@ -116,7 +124,7 @@ namespace Server
             }
             if (double.IsNaN(msg.Angle) || double.IsInfinity(msg.Angle))
                 msg.Angle = 0.0;
-
+                
             switch (msg.MessageType)
             {
                 case MessageType.AddPlayer:
@@ -227,7 +235,7 @@ namespace Server
                 }
             }
 
-            game.ClearBombedBulletList();
+            game.ClearLists(new Preparation.Utility.GameObjIdx[2] { Preparation.Utility.GameObjIdx.BombedBullet, Preparation.Utility.GameObjIdx.PickedProp });
             serverCommunicator.SendToClient(messageToClient);
         }
         private void SendMessageToTeammate(MessageToServer msgToServer)
@@ -348,26 +356,12 @@ namespace Server
         {
             switch(propType)
             {
-                case PropType.AddAp:
-                    return Preparation.Utility.PropType.addAP;
-                case PropType.AddCd:
-                    return Preparation.Utility.PropType.addCD;
-                case PropType.AddHp:
-                    return Preparation.Utility.PropType.addHP;
                 case PropType.AddLife:
                     return Preparation.Utility.PropType.addLIFE;
                 case PropType.AddSpeed:
                     return Preparation.Utility.PropType.addSpeed;
                 case PropType.Gem:
                     return Preparation.Utility.PropType.Gem;
-                case PropType.MinusAp:
-                    return Preparation.Utility.PropType.minusAP;
-                case PropType.MinusCd:
-                    return Preparation.Utility.PropType.minusCD;
-                case PropType.MinusSpeed:
-                    return Preparation.Utility.PropType.minusSpeed;
-                case PropType.NullPropType:
-                    return Preparation.Utility.PropType.Null;
                 case PropType.Shield:
                     return Preparation.Utility.PropType.Shield;
                 case PropType.Spear:

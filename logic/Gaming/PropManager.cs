@@ -33,7 +33,24 @@ namespace Gaming
             {
                 if (!player.IsAvailable)
                     return;
-                player.UseProp();
+                Prop? prop = player.UseProp();
+                switch(prop?.GetPropType())
+                {
+                    case PropType.Spear:
+                        player.AddSpear(GameData.PropDuration);
+                        break;
+                    case PropType.Shield:
+                        player.AddShield(GameData.PropDuration);
+                        break;
+                    case PropType.addLIFE:
+                        player.AddLIFE(GameData.PropDuration);
+                        break;
+                    case PropType.addSpeed:
+                        player.AddMoveSpeed(GameData.PropDuration);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             /// <summary>
@@ -88,6 +105,13 @@ namespace Gaming
                         gameMap.GameObjDict[GameObjIdx.Prop].Remove(pickProp);
                     }
                     finally { gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock(); }
+
+                    gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
+                    try
+                    {
+                        gameMap.GameObjDict[GameObjIdx.PickedProp].Add(pickProp);
+                    }
+                    finally { gameMap.GameObjLockDict[GameObjIdx.PickedProp].ExitWriteLock(); }
                     return true;
                 }
                 else return false;
@@ -101,6 +125,7 @@ namespace Gaming
                     return;
                 Prop prop = player.PropInventory;
                 player.PropInventory = null;
+                prop.SetNewPos(player.Position);
                 gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
                 try
                 {
@@ -128,36 +153,18 @@ namespace Gaming
                                 gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
                                 try
                                 {
-                                    switch (r.Next(0, 10))
+                                    switch (r.Next(0, 4))
                                     {
                                         case 0:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddAP(randPos));
-                                            break;
-                                        case 1:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddCD(randPos));
-                                            break;
-                                        case 2:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddHP(randPos));
-                                            break;
-                                        case 3:
                                             gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddLIFE(randPos));
                                             break;
-                                        case 4:
+                                        case 1:
                                             gameMap.GameObjDict[GameObjIdx.Prop].Add(new AddSpeed(randPos));
                                             break;
-                                        case 5:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new MinusAP(randPos));
-                                            break;
-                                        case 6:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new MinusCD(randPos));
-                                            break;
-                                        case 7:
-                                            gameMap.GameObjDict[GameObjIdx.Prop].Add(new MinusSpeed(randPos));
-                                            break;
-                                        case 8:
+                                        case 2:
                                             gameMap.GameObjDict[GameObjIdx.Prop].Add(new Shield(randPos));
                                             break;
-                                        case 9:
+                                        case 3:
                                             gameMap.GameObjDict[GameObjIdx.Prop].Add(new Spear(randPos));
                                             break;
                                         default:
