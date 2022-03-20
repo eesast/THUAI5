@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Threading;
 using System.Diagnostics;
@@ -27,6 +27,8 @@ namespace Client
             };
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
+            Point temp = new(1, 2);
+            DrawLaser(temp, 1, 100);
             SetStatusBar();
             //DrawMap();
             timer.Start();
@@ -92,7 +94,52 @@ namespace Client
             }
             Application.Current.Shutdown();
         }
-
+        private void DrawLaser(Point source, double theta, double range)//三个参数分别为攻击者的位置，攻击方位角（窗口坐标）和攻击半径
+        {
+            double Width = 5;
+            Point[] endPoint = new Point[4];
+            Point target = new();
+            target.X = source.X + range * Math.Cos(theta);
+            target.Y = source.Y + range * Math.Sin(theta);
+            endPoint[0].X = source.X + Width * Math.Cos(theta - 1.57);
+            endPoint[0].Y = source.Y + Width * Math.Sin(theta - 1.57);
+            endPoint[1].X = target.X + Width * Math.Cos(theta - 1.57);
+            endPoint[1].Y = target.Y + Width * Math.Sin(theta - 1.57);
+            endPoint[2].X = target.X + Width * Math.Cos(theta + 1.57);
+            endPoint[2].Y = target.Y + Width * Math.Sin(theta + 1.57);
+            endPoint[3].X = source.X + Width * Math.Cos(theta + 1.57);
+            endPoint[3].Y = source.Y + Width * Math.Sin(theta + 1.57);
+            Polygon laserIcon = new();
+            laserIcon.Stroke = System.Windows.Media.Brushes.Red;
+            laserIcon.Fill = System.Windows.Media.Brushes.Red;
+            laserIcon.StrokeThickness = 2;
+            laserIcon.HorizontalAlignment = HorizontalAlignment.Left;
+            laserIcon.VerticalAlignment = VerticalAlignment.Top;
+            PointCollection laserEndPoints = new();
+            for (int i = 0; i < 4; i++)
+            {
+                laserEndPoints.Add(endPoint[i]);
+            }
+            laserIcon.Points = laserEndPoints;
+            UpperLayerOfMap.Children.Add(laserIcon);
+        }
+        private void DrawProp(MessageToClient.Types.GameObjMessage data, string text)
+        {
+            TextBox icon = new()
+            {
+                FontSize=10,
+                Width = 20,
+                Height = 20,
+                Text = text,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0 - 6.5, data.MessageOfProp.X * 13.0 / 1000.0 - 6.5, 0, 0),
+                Background = Brushes.Transparent,
+                BorderBrush=Brushes.Transparent,
+                IsReadOnly = true
+            };
+            UpperLayerOfMap.Children.Add(icon);
+        }
         private void ClickToMinimize(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
@@ -690,31 +737,23 @@ namespace Client
                             {
                                 if (CanSee(data.MessageOfProp))
                                 {
-                                    if (data.MessageOfProp.Type == PropType.Gem)
+                                    switch (data.MessageOfProp.Type)
                                     {
-                                        Ellipse icon = new()
-                                        {
-                                            Width = 10,
-                                            Height = 10,
-                                            HorizontalAlignment = HorizontalAlignment.Left,
-                                            VerticalAlignment = VerticalAlignment.Top,
-                                            Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0-6.5, data.MessageOfProp.X * 13.0 / 1000.0-6.5, 0, 0),
-                                            Fill = Brushes.Purple
-                                        };
-                                        UpperLayerOfMap.Children.Add(icon);
-                                    }
-                                    else
-                                    {
-                                        Ellipse icon = new()
-                                        {
-                                            Width = 10,
-                                            Height = 10,
-                                            HorizontalAlignment = HorizontalAlignment.Left,
-                                            VerticalAlignment = VerticalAlignment.Top,
-                                            Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0-6.5, data.MessageOfProp.X * 13.0 / 1000.0-6.5, 0, 0),
-                                            Fill = Brushes.Gray
-                                        };
-                                        UpperLayerOfMap.Children.Add(icon);
+                                        case PropType.Gem:
+                                            DrawProp(data, "💎");
+                                            break;
+                                        case PropType.Shield:
+                                            DrawProp(data, "🛡");
+                                            break;
+                                        case PropType.Spear:
+                                            DrawProp(data, "🗡");
+                                            break;
+                                        case PropType.AddSpeed:
+                                            DrawProp(data, "⛸");
+                                            break;
+                                        default:
+                                            DrawProp(data, "♨");
+                                            break;
                                     }
                                 }
                             }

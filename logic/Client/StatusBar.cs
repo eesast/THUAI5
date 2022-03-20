@@ -18,16 +18,28 @@ namespace Client
             status = new();
             scores = new();
             serial = new();
+            icon = new();
             parent.Children.Add(backGround);
             backGround.Background = Brushes.White;
             backGround.Margin = new(margin1, margin2, margin3, margin4);
             progressBar.Height = Height;
-            progressBar.Width = Width;
+            progressBar.Width = Width-20;
             progressBar.Value = 50;
             progressBar.Background = Brushes.White;
             backGround.Children.Add(progressBar);
             Canvas.SetTop(progressBar, 150);
+            Canvas.SetLeft(progressBar, Height+2);
 
+            icon.Height = Height;
+            icon.Width = Height;
+            icon.IsReadOnly = true;
+            icon.FontSize = 12;
+            icon.TextWrapping = System.Windows.TextWrapping.Wrap;
+            icon.BorderBrush = Brushes.White;
+            icon.Background = Brushes.White;
+            backGround.Children.Add(icon);
+            Canvas.SetTop(icon, 150);
+            
             star.Height = Height;
             star.Text = "⭐：";
             star.TextWrapping = System.Windows.TextWrapping.Wrap;
@@ -113,6 +125,24 @@ namespace Client
                 + "\n🏃：" + Convert.ToString(obj.Speed)
                 + "\n♥：" + Convert.ToString(obj.Life);
             scores.Text="Scores:"+Convert.ToString(obj.Score);
+            switch(obj.Prop)
+            {
+                case PropType.Gem:
+                    icon.Text= "💎";
+                    break;
+                case PropType.Shield:
+                    icon.Text = "🛡";
+                    break;
+                case PropType.Spear:
+                    icon.Text = "🗡";
+                    break;
+                case PropType.AddSpeed:
+                    icon.Text = "⛸";
+                    break;
+                default:
+                    icon.Text = "♨"; 
+                    break;
+            }
         }
         public void SetValue(MessageOfCharacter obj)
         {
@@ -120,6 +150,7 @@ namespace Client
             SetDynamicValue(obj);
         }
         private readonly Canvas backGround;
+        private readonly TextBox icon;
         private readonly ProgressBar progressBar;
         private readonly TextBox star;
         private readonly TextBox status;
