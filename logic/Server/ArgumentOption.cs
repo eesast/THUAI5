@@ -27,11 +27,11 @@ namespace Server
         [Option('f', "fileName", Required = false, HelpText = "The file to store playback file or to read file.")]
         public string FileName { get; set; } = DefaultArgumentOptions.FileName;
 
-        [Option('b', "playBack", Required = false, HelpText = "Whether open the server in a playback mode.")]
-        public bool PlayBack { get; set; } = false;
+        [Option('b', "playback", Required = false, HelpText = "Whether open the server in a playback mode.")]
+        public bool Playback { get; set; } = false;
 
-        [Option("playBackSpeed", Required = false, HelpText = "The speed of the playback, between 0.25 and 4.0")]
-        public double PlayBackSpeed { get; set; } = 1.0;
+        [Option("playbackSpeed", Required = false, HelpText = "The speed of the playback, between 0.25 and 4.0")]
+        public double PlaybackSpeed { get; set; } = 1.0;
 
         [Option("resultOnly", Required = false, HelpText = "In playback mode to get the result directly")]
         public bool ResultOnly { get; set; } = false;

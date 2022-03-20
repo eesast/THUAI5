@@ -25,7 +25,7 @@ namespace Server
 
             ServerBase? server = null;
 
-            if (options.PlayBack)
+            if (options.Playback)
             {
                 try
                 {

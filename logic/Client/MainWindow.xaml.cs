@@ -665,8 +665,14 @@ namespace Client
                                         HorizontalAlignment = HorizontalAlignment.Left,
                                         VerticalAlignment = VerticalAlignment.Top,
                                         Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0-6.5, data.MessageOfCharacter.X * 13.0 / 1000.0-6.5, 0, 0),
-                                        Fill = Brushes.Black
                                     };
+                                    if (data.MessageOfCharacter.TeamID == 0)
+                                        icon.Fill = Brushes.Black;
+                                    else if (data.MessageOfCharacter.TeamID == 1)
+                                        icon.Fill = Brushes.BlueViolet;
+                                    else if (data.MessageOfCharacter.TeamID == 2)
+                                        icon.Fill = Brushes.DarkOrange;
+                                    else icon.Fill = Brushes.Cyan;
                                     UpperLayerOfMap.Children.Add(icon);
                                 }
                             }
