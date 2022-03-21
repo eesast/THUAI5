@@ -11,14 +11,14 @@ namespace Server
     /// </summary>
     class PlayBackServer : ServerBase
     {
-        private int[] teamScore;
+        private int[ , ] teamScore;
 
-        public override int TeamCount { get => teamScore.Length; }
+        public override int TeamCount { get => teamScore.GetLength(0); }
         //public override bool ForManualOperation => true;
 
         public PlayBackServer(ArgumentOptions options) : base(options)
         {
-            teamScore = new int[0];
+            teamScore = new int[0, 0];
         }
         public override void WaitForGame()
         {
@@ -29,7 +29,7 @@ namespace Server
                     using (MessageReader mr = new MessageReader(options.FileName))
                     {
                         Console.WriteLine("Parsing playback file...");
-                        teamScore = new int[mr.teamCount];
+                        teamScore = new int[mr.teamCount, mr.playerCount];
                         int infoNo = 0;
                         object cursorLock = new object();
                         var initialTop = Console.CursorTop;
@@ -86,14 +86,14 @@ namespace Server
                 else
                 {
                     long timeInterval = GameServer.SendMessageToClientIntervalInMilliseconds;
-                    if (options.PlayBackSpeed != 1.0)
+                    if (options.PlaybackSpeed != 1.0)
                     {
-                        options.PlayBackSpeed = Math.Max(0.25, Math.Min(4.0, options.PlayBackSpeed));
-                        timeInterval = (int)Math.Round(timeInterval / options.PlayBackSpeed);
+                        options.PlaybackSpeed = Math.Max(0.25, Math.Min(4.0, options.PlaybackSpeed));
+                        timeInterval = (int)Math.Round(timeInterval / options.PlaybackSpeed);
                     }
                     using (MessageReader mr = new MessageReader(options.FileName))
                     {
-                        teamScore = new int[mr.teamCount];
+                        teamScore = new int[mr.teamCount, mr.playerCount];
                         int infoNo = 0;
                         object cursorLock = new object();
                         var msgCurTop = Console.CursorTop;
@@ -125,7 +125,11 @@ namespace Server
                                         }
                                         if (msg != null)
                                         {
-                                            //teamScore[i] = msg.TeamScore;
+                                            foreach(var item in msg.GameObjMessage)
+                                            { 
+                                                if(item.MessageOfCharacter != null)
+                                                    teamScore[item.MessageOfCharacter.TeamID, item.MessageOfCharacter.PlayerID] = item.MessageOfCharacter.Score;
+                                            }
                                         }
                                     }
                                 }
@@ -191,14 +195,19 @@ namespace Server
             }
             finally
             {
-                teamScore ??= new int[0];
+                teamScore ??= new int[0, 0];
             }
         }
 
         protected override void OnReceive(MessageToServer msg) { }
         public override int GetTeamScore(long teamID)
         {
-            return teamScore[(int)teamID];
+            int ret = 0;
+            for (int i = 0; i < teamScore.GetLength(1); i++)
+            {
+                ret += teamScore[teamID, i];
+            }
+            return ret;
         }
     }
 }

@@ -158,7 +158,7 @@ namespace Gaming
             {
                 if (keyValuePair.Key != GameObjIdx.Map)
                 {
-                    gameMap.GameObjLockDict[keyValuePair.Key].EnterReadLock();
+                    gameMap.GameObjLockDict[keyValuePair.Key].EnterWriteLock();
                     try
                     {
                         if (keyValuePair.Key == GameObjIdx.Player)
@@ -170,7 +170,7 @@ namespace Gaming
                         }
                         gameMap.GameObjDict[keyValuePair.Key].Clear();
                     }
-                    finally { gameMap.GameObjLockDict[keyValuePair.Key].ExitReadLock(); }
+                    finally { gameMap.GameObjLockDict[keyValuePair.Key].ExitWriteLock(); }
                 }
             }
 

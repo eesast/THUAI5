@@ -14,6 +14,7 @@ namespace GameClass.GameObj
             this.bulletHasBombed = bullet;
             this.Type = GameObjType.BombedBullet;
             this.MappingID = bullet.ID;
+            this.FacingDirection = bullet.FacingDirection;
         }
     }
 }

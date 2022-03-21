@@ -27,8 +27,6 @@ namespace Client
             };
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
-            Point temp = new(1, 2);
-            DrawLaser(temp, 1, 100);
             SetStatusBar();
             //DrawMap();
             timer.Start();
@@ -101,14 +99,14 @@ namespace Client
             Point target = new();
             target.X = source.X + range * Math.Cos(theta);
             target.Y = source.Y + range * Math.Sin(theta);
-            endPoint[0].X = source.X + Width * Math.Cos(theta - 1.57);
-            endPoint[0].Y = source.Y + Width * Math.Sin(theta - 1.57);
-            endPoint[1].X = target.X + Width * Math.Cos(theta - 1.57);
-            endPoint[1].Y = target.Y + Width * Math.Sin(theta - 1.57);
-            endPoint[2].X = target.X + Width * Math.Cos(theta + 1.57);
-            endPoint[2].Y = target.Y + Width * Math.Sin(theta + 1.57);
-            endPoint[3].X = source.X + Width * Math.Cos(theta + 1.57);
-            endPoint[3].Y = source.Y + Width * Math.Sin(theta + 1.57);
+            endPoint[0].X = source.X + Width * Math.Cos(theta - Math.PI / 2);
+            endPoint[0].Y = source.Y + Width * Math.Sin(theta - Math.PI / 2);
+            endPoint[1].X = target.X + Width * Math.Cos(theta - Math.PI / 2);
+            endPoint[1].Y = target.Y + Width * Math.Sin(theta - Math.PI / 2);
+            endPoint[2].X = target.X + Width * Math.Cos(theta + Math.PI / 2);
+            endPoint[2].Y = target.Y + Width * Math.Sin(theta + Math.PI / 2);
+            endPoint[3].X = source.X + Width * Math.Cos(theta + Math.PI / 2);
+            endPoint[3].Y = source.Y + Width * Math.Sin(theta + Math.PI / 2);
             Polygon laserIcon = new();
             laserIcon.Stroke = System.Windows.Media.Brushes.Red;
             laserIcon.Fill = System.Windows.Media.Brushes.Red;
@@ -712,8 +710,14 @@ namespace Client
                                         HorizontalAlignment = HorizontalAlignment.Left,
                                         VerticalAlignment = VerticalAlignment.Top,
                                         Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0-6.5, data.MessageOfCharacter.X * 13.0 / 1000.0-6.5, 0, 0),
-                                        Fill = Brushes.Black
                                     };
+                                    if (data.MessageOfCharacter.TeamID == 0)
+                                        icon.Fill = Brushes.Black;
+                                    else if (data.MessageOfCharacter.TeamID == 1)
+                                        icon.Fill = Brushes.BlueViolet;
+                                    else if (data.MessageOfCharacter.TeamID == 2)
+                                        icon.Fill = Brushes.DarkOrange;
+                                    else icon.Fill = Brushes.Cyan;
                                     UpperLayerOfMap.Children.Add(icon);
                                 }
                             }
@@ -764,11 +768,11 @@ namespace Client
                                     case BulletType.FastBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 65;
-                                            icon.Height = 65;
+                                            icon.Width = 1.5 * 13;
+                                            icon.Height = 1.5 * 13;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-32.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-32.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-1.5*13/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-1.5*13/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -776,11 +780,11 @@ namespace Client
                                     case BulletType.AtomBomb:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 3 * 65;
-                                            icon.Height = 3 * 65;
+                                            icon.Width = 3 * 39;
+                                            icon.Height = 3 * 39;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-3*39.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-3*39.0/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -788,17 +792,18 @@ namespace Client
                                     case BulletType.OrdinaryBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 65;
-                                            icon.Height = 65;
+                                            icon.Width = 39;
+                                            icon.Height = 39;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-39.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-39.0/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
                                         }
                                     case BulletType.LineBullet:
                                         {
+                                            DrawLaser(new Point(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0), -data.MessageOfBombedBullet.FacingDirection + Math.PI/2, 60);
                                             break;
                                         }
                                     default:
@@ -808,7 +813,7 @@ namespace Client
                                             icon.Height = 65;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-65.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-65.0/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
