@@ -27,8 +27,6 @@ namespace Client
             };
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
-            Point temp = new(1, 2);
-            DrawLaser(temp, 1, 100);
             SetStatusBar();
             //DrawMap();
             timer.Start();
@@ -101,14 +99,14 @@ namespace Client
             Point target = new();
             target.X = source.X + range * Math.Cos(theta);
             target.Y = source.Y + range * Math.Sin(theta);
-            endPoint[0].X = source.X + Width * Math.Cos(theta - 1.57);
-            endPoint[0].Y = source.Y + Width * Math.Sin(theta - 1.57);
-            endPoint[1].X = target.X + Width * Math.Cos(theta - 1.57);
-            endPoint[1].Y = target.Y + Width * Math.Sin(theta - 1.57);
-            endPoint[2].X = target.X + Width * Math.Cos(theta + 1.57);
-            endPoint[2].Y = target.Y + Width * Math.Sin(theta + 1.57);
-            endPoint[3].X = source.X + Width * Math.Cos(theta + 1.57);
-            endPoint[3].Y = source.Y + Width * Math.Sin(theta + 1.57);
+            endPoint[0].X = source.X + Width * Math.Cos(theta - Math.PI / 2);
+            endPoint[0].Y = source.Y + Width * Math.Sin(theta - Math.PI / 2);
+            endPoint[1].X = target.X + Width * Math.Cos(theta - Math.PI / 2);
+            endPoint[1].Y = target.Y + Width * Math.Sin(theta - Math.PI / 2);
+            endPoint[2].X = target.X + Width * Math.Cos(theta + Math.PI / 2);
+            endPoint[2].Y = target.Y + Width * Math.Sin(theta + Math.PI / 2);
+            endPoint[3].X = source.X + Width * Math.Cos(theta + Math.PI / 2);
+            endPoint[3].Y = source.Y + Width * Math.Sin(theta + Math.PI / 2);
             Polygon laserIcon = new();
             laserIcon.Stroke = System.Windows.Media.Brushes.Red;
             laserIcon.Fill = System.Windows.Media.Brushes.Red;
@@ -805,6 +803,7 @@ namespace Client
                                         }
                                     case BulletType.LineBullet:
                                         {
+                                            DrawLaser(new Point(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0), -data.MessageOfBombedBullet.FacingDirection + Math.PI/2, 60);
                                             break;
                                         }
                                     default:

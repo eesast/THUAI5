@@ -293,7 +293,7 @@ namespace Server
             MessageToClient.Types.GameObjMessage msg = new MessageToClient.Types.GameObjMessage();
             msg.MessageOfBombedBullet = new MessageOfBombedBullet();
 
-            msg.MessageOfBombedBullet.FacingDirection = bombedBullet.FacingDirection;
+            msg.MessageOfBombedBullet.FacingDirection = bombedBullet.bulletHasBombed.FacingDirection;
             msg.MessageOfBombedBullet.X = bombedBullet.bulletHasBombed.Position.x;
             msg.MessageOfBombedBullet.Y = bombedBullet.bulletHasBombed.Position.y;
             msg.MessageOfBombedBullet.MappingID = bombedBullet.MappingID;

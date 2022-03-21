@@ -125,10 +125,7 @@ namespace GameClass.GameObj
                                 GameObjLockDict[GameObjIdx.Map].EnterWriteLock();
                                 try
                                 {
-                                    lock (GameObjLockDict[GameObjIdx.Map])
-                                    {
-                                        GameObjDict[GameObjIdx.Map].Add(new Wall(GameData.GetCellCenterPos(i, j)));
-                                    }
+                                    GameObjDict[GameObjIdx.Map].Add(new Wall(GameData.GetCellCenterPos(i, j)));
                                 }
                                 finally { GameObjLockDict[GameObjIdx.Map].ExitWriteLock(); }
                                 break;
@@ -147,10 +144,7 @@ namespace GameClass.GameObj
                                 GameObjLockDict[GameObjIdx.Map].EnterWriteLock();
                                 try
                                 {
-                                    lock (GameObjLockDict[GameObjIdx.Map])
-                                    {
-                                        GameObjDict[GameObjIdx.Map].Add(newBirthPoint);
-                                    }
+                                    GameObjDict[GameObjIdx.Map].Add(newBirthPoint);
                                 }
                                 finally { GameObjLockDict[GameObjIdx.Map].ExitWriteLock(); }
                                 break;

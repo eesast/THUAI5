@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using CommandLine;
 
 namespace Server
@@ -52,7 +53,9 @@ namespace Server
 
             server.WaitForGame();
 
-            Console.WriteLine($"Final score: ");
+            Thread.Sleep(50);
+            Console.WriteLine("");
+            Console.WriteLine("===================  Final Score   ====================");
             for (int i = 0; i < server.TeamCount; ++i)
             {
                 Console.WriteLine($"Team {i}: {server.GetTeamScore(i)}");
