@@ -318,7 +318,7 @@ std::shared_ptr<const THUAI5::Character> DebugAPI::GetSelfInfo() const
     return logic.GetSelfInfo();
 }
 
-THUAI5::PlaceType DebugAPI::GetPlaceType(int CellX, int CellY) const
+THUAI5::PlaceType DebugAPI::GetPlaceType(int32_t CellX, int32_t CellY) const
 {
     Out << "Call GetPlaceType(" << CellX << "," << CellY << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     return logic.GetPlaceType(CellX, CellY);
