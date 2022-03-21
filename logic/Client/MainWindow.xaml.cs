@@ -768,11 +768,11 @@ namespace Client
                                     case BulletType.FastBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 65;
-                                            icon.Height = 65;
+                                            icon.Width = 1.5 * 13;
+                                            icon.Height = 1.5 * 13;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-32.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-32.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-1.5*13/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-1.5*13/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -780,11 +780,11 @@ namespace Client
                                     case BulletType.AtomBomb:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 3 * 65;
-                                            icon.Height = 3 * 65;
+                                            icon.Width = 3 * 39;
+                                            icon.Height = 3 * 39;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-3*39.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-3*39.0/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -792,11 +792,11 @@ namespace Client
                                     case BulletType.OrdinaryBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 65;
-                                            icon.Height = 65;
+                                            icon.Width = 39;
+                                            icon.Height = 39;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-39.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-39.0/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -813,7 +813,7 @@ namespace Client
                                             icon.Height = 65;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-65.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-65.0/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
