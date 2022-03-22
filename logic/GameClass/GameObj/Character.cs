@@ -47,8 +47,6 @@ namespace GameClass.GameObj
         private int deathCount = 0;
         public int DeathCount => deathCount;  // 玩家的死亡次数
 
-        public int AP => this.BulletOfPlayer.AP;
-
         private int score = 0;
         public int Score
         {
@@ -75,11 +73,10 @@ namespace GameClass.GameObj
                         vampire = value;
             }
         }
-        public double oriVampire = 0;
+        public double OriVampire = 0;
 
-        //可能要改，改成存type比较好吧? 也不一定，先看看吧（自言自语
-        private Bullet bulletOfPlayer;
-        public Bullet BulletOfPlayer
+        private BulletType bulletOfPlayer;
+        public BulletType BulletOfPlayer
         {
             get => bulletOfPlayer;
             set
@@ -169,10 +166,10 @@ namespace GameClass.GameObj
             if (TrySubBulletNum()) return ProduceOneBullet(this.Position + posOffset);
             else return null;
         }
-        protected Bullet ProduceOneBullet(XYPosition initPos)
+        protected Bullet? ProduceOneBullet(XYPosition initPos)
         {
-            var newBullet = this.bulletOfPlayer.Clone(this);
-            newBullet.SetPosition(initPos);
+            var newBullet = BulletFactory.GetBullet(this);
+            newBullet?.SetPosition(initPos);
             return newBullet;
         }
 

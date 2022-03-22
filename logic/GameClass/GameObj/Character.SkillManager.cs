@@ -89,7 +89,6 @@ namespace GameClass.GameObj
             this.bulletOfPlayer = pSkill.InitBullet;
             this.passiveSkill = pSkill.SkillEffect;
             this.commonSkill = cSkill.SkillEffect;
-            this.bulletOfPlayer.Parent = this;
             this.passiveSkillType = passiveSkillType;
             this.commonSkillType = commonSkillType;
 

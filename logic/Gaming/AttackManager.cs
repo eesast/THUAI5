@@ -45,7 +45,7 @@ namespace Gaming
                     gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
                     try
                     {
-                        _ = gameMap.GameObjDict[GameObjIdx.Player].Remove(playerBeingShot);
+                        gameMap.GameObjDict[GameObjIdx.Player].Remove(playerBeingShot);
                     }
                     finally
                     {
@@ -111,7 +111,7 @@ namespace Gaming
                                 gameMap.GameObjDict[GameObjIdx.BombedBullet].Add(new BombedBullet(bullet));
                             }
                             finally { gameMap.GameObjLockDict[GameObjIdx.BombedBullet].ExitWriteLock(); }
-                            _ = gameMap.GameObjDict[GameObjIdx.Bullet].Remove(_bullet);
+                            gameMap.GameObjDict[GameObjIdx.Bullet].Remove(_bullet);
                             break;
                         }
                     }
@@ -119,7 +119,7 @@ namespace Gaming
                 finally { gameMap.GameObjLockDict[GameObjIdx.Bullet].ExitWriteLock(); }
                 if (objBeingShot != null)
                 {
-                    if (objBeingShot is Character)
+                    if (objBeingShot.Type == GameObjType.Character)
                     {
                         //BombOnePlayer(bullet, (Character)objBeingShot); //这里不计算伤害，等到爆炸的时候计算
                         bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * bullet.AP));  //造成伤害根据吸血率来吸血
@@ -167,20 +167,20 @@ namespace Gaming
                     (
                         new XYPosition  //子弹紧贴人物生成。
                         (
-                            (int)((player.Radius + player.BulletOfPlayer.Radius) * Math.Cos(angle)),
-                            (int)((player.Radius + player.BulletOfPlayer.Radius) * Math.Sin(angle))
+                            (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Cos(angle)),
+                            (int)((player.Radius + BulletFactory.BulletRadius(player.BulletOfPlayer)) * Math.Sin(angle))
                         )
                     );
                 if (bullet != null)
                 {
                     bullet.CanMove = true;
-                    gameMap.GameObjLockDict[GameObjIdx.Bullet].EnterReadLock();
+                    gameMap.GameObjLockDict[GameObjIdx.Bullet].EnterWriteLock();
                     try
                     {
                         gameMap.GameObjDict[GameObjIdx.Bullet].Add(bullet);
                     }
-                    finally { gameMap.GameObjLockDict[GameObjIdx.Bullet].ExitReadLock(); }
-                    moveEngine.MoveObj(bullet, (int)((player.AttackRange - player.Radius - player.BulletOfPlayer.Radius) * 1000 / bullet.MoveSpeed), angle);  //这里时间参数除出来的单位要是ms
+                    finally { gameMap.GameObjLockDict[GameObjIdx.Bullet].ExitWriteLock(); }
+                    moveEngine.MoveObj(bullet, (int)((player.AttackRange - player.Radius - BulletFactory.BulletRadius(player.BulletOfPlayer)) * 1000 / bullet.MoveSpeed), angle);  //这里时间参数除出来的单位要是ms
 #if DEBUG
                     Console.WriteLine($"playerID:{player.ID} successfully attacked!");
 #endif

@@ -159,7 +159,7 @@ namespace Server
                     break;
             }
 
-            switch (player.BulletOfPlayer.TypeOfBullet)
+            switch (player.BulletOfPlayer)
             {
                 case Preparation.Utility.BulletType.AtomBomb:
                     msg.MessageOfCharacter.BulletType = Communication.Proto.BulletType.AtomBomb;

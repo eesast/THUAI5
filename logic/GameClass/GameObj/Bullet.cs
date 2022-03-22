@@ -32,29 +32,22 @@ namespace GameClass.GameObj
             if (targetObj is BirthPoint || targetObj.Type == GameObjType.Prop) return true;	// 子弹不会与出生点和道具碰撞
             return false;
         }
-        public Bullet(XYPosition initPos, int radius, bool hasSpear) : base(initPos, radius, PlaceType.Null)
-        {
-            this.CanMove = true;
-            this.Type = GameObjType.Bullet;
-            this.moveSpeed = this.Speed;
-            this.hasSpear = hasSpear;
-        }
         public Bullet(Character player, int radius) : base(player.Position, radius, PlaceType.Null)
         {
             this.CanMove = true;
             this.Type = GameObjType.Bullet;
             this.moveSpeed = this.Speed;
             this.hasSpear = player.HasSpear;
+            this.Parent = player;
         }
         public override bool IsRigid => true;	// 默认为true
         public override ShapeType Shape => ShapeType.Circle;	// 默认为圆形
         public abstract BulletType TypeOfBullet { get;}
-        public abstract Bullet Clone(Character parent);  //深复制子弹
+        
     }
 
     internal sealed class AtomBomb : Bullet  //3倍爆炸范围，3倍攻击力，1倍速
     {
-        public AtomBomb(XYPosition initPos, int radius = GameData.bulletRadius, bool hasSpear = false) : base(initPos, radius, hasSpear) { }
         public AtomBomb(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
         public override double BulletBombRange => 3 * GameData.basicBulletBombRange;
         public override int AP => 3 * GameData.basicAp;
@@ -64,19 +57,12 @@ namespace GameClass.GameObj
             // 圆形攻击范围
             return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
         }
-        public override AtomBomb Clone(Character parent)
-        {
-            AtomBomb a = new AtomBomb(this.Position, this.Radius, this.HasSpear);
-            a.Parent = parent;
-            a.FacingDirection = this.FacingDirection;
-            return a;
-        }
+
         public override BulletType TypeOfBullet => BulletType.AtomBomb;
     }
 
     internal sealed class OrdinaryBullet : Bullet //1倍攻击范围，1倍攻击力，一倍速
     {
-        public OrdinaryBullet(XYPosition initPos, int radius = GameData.bulletRadius, bool hasSpear = false) : base(initPos, radius, hasSpear) { }
         public OrdinaryBullet(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
         public override double BulletBombRange => GameData.basicBulletBombRange;
         public override int AP => GameData.basicAp;
@@ -86,19 +72,12 @@ namespace GameClass.GameObj
             // 圆形攻击范围
             return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
         }
-        public override OrdinaryBullet Clone(Character parent)
-        {
-            OrdinaryBullet a= new OrdinaryBullet(this.Position, this.Radius, this.HasSpear);
-            a.Parent = parent;
-            a.FacingDirection = this.FacingDirection;
-            return a;
-        }
+
         public override BulletType TypeOfBullet => BulletType.OrdinaryBullet;
     }
 
     internal sealed class FastBullet: Bullet //1倍攻击范围，0.2倍攻击力，2倍速
     {
-        public FastBullet(XYPosition initPos, int radius = GameData.bulletRadius, bool hasSpear = false) : base(initPos, radius, hasSpear) { }
         public FastBullet(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
         public override double BulletBombRange => GameData.basicBulletBombRange / 4 * 2;
         public override int AP => (int)(0.2 * GameData.basicAp);
@@ -109,19 +88,12 @@ namespace GameClass.GameObj
             // 圆形攻击范围
             return XYPosition.Distance(this.Position, target.Position) <= this.BulletBombRange;
         }
-        public override FastBullet Clone(Character parent)
-        {
-            FastBullet a = new FastBullet(this.Position, this.Radius, this.HasSpear);
-            a.Parent = parent;
-            a.FacingDirection = this.FacingDirection;
-            return a;
-        }
+
         public override BulletType TypeOfBullet => BulletType.FastBullet;
     }
 
     internal sealed class LineBullet : Bullet //直线爆炸，宽度1格，长度为2倍攻击范围，1倍攻击力，1倍速
     {
-        public LineBullet(XYPosition initPos, int radius = GameData.bulletRadius, bool hasSpear = false) : base(initPos, radius, hasSpear) { }
         public LineBullet(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
         public override double BulletBombRange => 2 * GameData.basicBulletBombRange;
         public override int AP => GameData.basicAp;
@@ -157,13 +129,44 @@ namespace GameClass.GameObj
                 return false;
             return true;
         }
-        public override LineBullet Clone(Character parent)
-        {
-            LineBullet a = new LineBullet(this.Position, this.Radius, this.HasSpear);
-            a.Parent = parent;
-            a.FacingDirection = this.FacingDirection;
-            return a;
-        }
+
         public override BulletType TypeOfBullet => BulletType.LineBullet;
+    }
+    public static class BulletFactory
+    {
+        public static Bullet? GetBullet(Character character)
+        {
+            Bullet? newBullet = null;
+            switch (character.BulletOfPlayer)
+            {
+                case BulletType.AtomBomb:
+                    newBullet = new AtomBomb(character);
+                    break;
+                case BulletType.LineBullet:
+                    newBullet = new LineBullet(character);
+                    break;
+                case BulletType.FastBullet:
+                    newBullet = new FastBullet(character);
+                    break;
+                case BulletType.OrdinaryBullet:
+                    newBullet = new OrdinaryBullet(character);
+                    break;
+                default:
+                    break;
+            }
+            return newBullet;
+        }
+        public static int BulletRadius(BulletType bulletType)
+        {
+            switch (bulletType)
+            {
+                case BulletType.AtomBomb:
+                case BulletType.LineBullet:
+                case BulletType.FastBullet:
+                case BulletType.OrdinaryBullet:
+                default:
+                    return GameData.bulletRadius;
+            }
+        }
     }
 }

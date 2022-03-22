@@ -8,7 +8,7 @@ namespace GameClass.GameObj
     /// </summary>
     public abstract class ObjOfCharacter : GameObj, IObjOfCharacter
     {
-        private ICharacter? parent = null;  //道具的主人
+        private ICharacter? parent = null;  //主人
         public ICharacter? Parent
         {
             get => parent;
