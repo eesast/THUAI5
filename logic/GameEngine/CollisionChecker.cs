@@ -41,6 +41,11 @@ namespace GameEngine
                             }
                         }
                     }
+                    catch (System.InvalidOperationException)
+                    {
+                        Console.WriteLine("***************************************************");
+                        Console.WriteLine("invalid operation exception, ignore.");
+                    }
                     finally { listLock.ExitReadLock(); }
                     return collisionObj;
                 };
@@ -200,6 +205,11 @@ namespace GameEngine
                             }
                         }
                     }
+                }
+                catch (System.InvalidOperationException)
+                {
+                    Console.WriteLine("***************************************************");
+                    Console.WriteLine("invalid operation exception, ignore.");
                 }
                 finally
                 {

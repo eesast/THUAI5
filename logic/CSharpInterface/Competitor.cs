@@ -51,8 +51,8 @@ namespace CSharpInterface
                     MoveRight(50);
                 }
             }
-            if (random.Next(14) == 13)
-                Attack(random.NextDouble() * Math.PI * 2);
+            // if (random.Next(14) == 13)
+            Attack(random.NextDouble() * Math.PI * 2);
         }
     }
 }
