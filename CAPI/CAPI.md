@@ -12,7 +12,13 @@ $ git submodule update --init --recursive
 
 ### windows
 
-在**x64**生成环境下，选手首先需要将组件包中的`HPSocket.lib`和`libprotobuf.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下。待到生成完毕后，在`THUAI5\CAPI`文件夹（即与`CAPI.sln`文件相同的目录）下，会有一个`x64`文件夹，在此文件夹中可以找到可执行文件`API.exe`，在与`API.exe`相同的文件夹下放置`HPSocket.dll`。
+在**x64**生成环境下，如果生成模式为**release**模式，选手首先需要将组件包中的`HPSocket.lib`和`libprotobuf.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；如果生成模式为**debug**模式，则需要将`libprotobuf.lib`换成`libprotobufd.lib`。
+
+同时，需要在visual studio中更改以下配置：点击`项目->API属性`，在`配置属性->C/C++->代码生成->运行库`一栏中，若为**debug**模式，则选择**MTd**；若为**release**模式，则选择**MT**。
+
+![settings](../resource/APIsettings.png)
+
+待到生成完毕后，在`THUAI5\CAPI`文件夹（即与`CAPI.sln`文件相同的目录）下，会有一个`x64`文件夹，在此文件夹中可以找到可执行文件`API.exe`，在与`API.exe`相同的文件夹下放置`HPSocket.dll`。
 
 ### Linux
 
