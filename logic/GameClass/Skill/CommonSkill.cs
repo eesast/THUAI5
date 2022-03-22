@@ -49,7 +49,7 @@ namespace GameClass.Skill
                         MaxTolerantTimeExceedCount = ulong.MaxValue,
                     }.Start();
 
-                    player.Vampire = player.oriVampire;
+                    player.Vampire = player.OriVampire;
                     Debugger.Output(player, "return to normal.");
 
                     new FrameRateTaskExecutor<int>
@@ -183,8 +183,8 @@ namespace GameClass.Skill
                 new Thread
                 (() =>
                 {
-                    Bullet b = player.BulletOfPlayer.Clone(player);
-                    player.BulletOfPlayer = new AtomBomb(player);
+                    BulletType b = player.BulletOfPlayer;
+                    player.BulletOfPlayer = BulletType.AtomBomb;
                     Debugger.Output(player, "uses atombomb!");
                     new FrameRateTaskExecutor<int>
                     (
