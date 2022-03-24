@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 Maintainer eesast.com
 WORKDIR /usr/local
 RUN mkdir /usr/local/mnt
-RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make libprotobuf-dev wget curl ca-certificates cmake autoconf automake libtool curl unzip
+RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make libprotobuf-dev wget ca-certificates cmake autoconf automake libtool curl unzip
 COPY ./CAPI /usr/local/CAPI
 COPY ./dependency/shell/compile.sh ./
 RUN cd ./CAPI/protobuf && ./autogen.sh && ./configure && make && make install && ldconfig
