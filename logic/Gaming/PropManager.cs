@@ -192,7 +192,7 @@ namespace Gaming
                     },
                     EndMove: obj =>
                     {
-                        obj.Place = gameMap.GetPlaceType((GameObj)obj);
+                        // obj.Place = gameMap.GetPlaceType((GameObj)obj);
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                     }
                 );
