@@ -12,13 +12,21 @@ $ git submodule update --init --recursive
 
 ### windows
 
-在**x64**生成环境下，选手首先需要将组件包中的`HPSocket.lib`和`libprotobufd.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下。待到生成完毕后，在`THUAI5\CAPI`文件夹（即与`CAPI.sln`文件相同的目录）下，会有一个`x64`文件夹，在此文件夹中可以找到可执行文件`API.exe`，在与`API.exe`相同的文件夹下放置`HPSocket.dll`、`libprotobufd.dll`和`zlib.dll`。
+在**x64**生成环境下，如果生成模式为**release**模式，选手首先需要将组件包中的`HPSocket.lib`和`libprotobuf.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；如果生成模式为**debug**模式，则需要将`libprotobuf.lib`换成`libprotobufd.lib`。
+
+同时，需要在visual studio中更改以下配置：点击`项目->API属性`，在`配置属性->C/C++->代码生成->运行库`一栏中，若为**debug**模式，则选择**MTd**；若为**release**模式，则选择**MT**。
+
+![settings](../resource/APIsettings.png)
+
+待到生成完毕后，在`THUAI5\CAPI`文件夹（即与`CAPI.sln`文件相同的目录）下，会有一个`x64`文件夹，在此文件夹中可以找到可执行文件`API.exe`，在与`API.exe`相同的文件夹下放置`HPSocket.dll`。
 
 ### Linux
 
-1. 首先需要编译`protobuf`，**安装之前需要添加以下依赖项**：
-```
+参考[protobuf installation](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md)
 
+1. 首先需要编译`protobuf`，**安装之前需要添加以下依赖项**：
+```bash
+$ sudo apt-get install autoconf automake libtool curl make g++ unzip
 ```
 按照以下流程进行编译：
 ```bash
@@ -205,8 +213,7 @@ class IAPI
 * `int GetFrameCount() const`：获取游戏已经进行的帧数。
 
 ### 辅助函数
-* `static constexpr inline int CellToGrid(int cell) noexcept`：将地图格数`cell`转换为绝对坐标`grid`。
+* `static inline int CellToGrid(int cell) noexcept`：将地图格数`cell`转换为绝对坐标`grid`。
 
-* `static constexpr inline int GridToCell(int grid) noexcept`：将绝对坐标`grid`转换为地图格数`cell`。
-
+* `static inline int GridToCell(int grid) noexcept`：将绝对坐标`grid`转换为地图格数`cell`。
 

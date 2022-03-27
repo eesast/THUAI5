@@ -259,6 +259,11 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                 }
             }
 
+            else if(it->has_messageofbombedbullet() || it->has_messageofpickedprop())
+            {
+                
+            }
+
             else
             {
                 std::cerr << "invalid gameobjtype (not character, prop or bullet)" << std::endl;
