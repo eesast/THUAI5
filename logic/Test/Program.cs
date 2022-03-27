@@ -48,8 +48,9 @@ namespace Test
             messageToServer.TeamID = teamID;
             messageToServer.ASkill1 = ActiveSkillType.BecomeAssassin;
             messageToServer.PSkill = PassiveSkillType.SpeedUpWhenLeavingGrass;
-             
-            clientCommunication.OnReceive += () =>
+
+            clientCommunication.OnReceive += 
+            () =>
             {
                 if (clientCommunication.TryTake(out IGameMessage msg) && msg.PacketType == PacketType.MessageToClient)
                 {
