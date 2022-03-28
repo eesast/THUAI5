@@ -145,7 +145,7 @@ PROTO2THUAI_NAMESPACE_BEGIN
             placetype = THUAI5::PlaceType::CPUFactory;
         
         default:
-            break;
+            placetype = THUAI5::PlaceType::Land;
         }
 
         return placetype;

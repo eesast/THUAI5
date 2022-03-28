@@ -242,7 +242,7 @@ namespace THUAI5
     inline std::map<THUAI5::SoftwareType, std::string> software_dict
     {
         { SoftwareType::NullSoftwareType ,"NullSoftwareType "},
-        { SoftwareType:: PowerEmission,"PowerEmission "},
+        { SoftwareType::PowerEmission,"PowerEmission "},
         { SoftwareType::Invisible ,"Invisible "},
         { SoftwareType::Amplification ,"Amplification "},
         { SoftwareType::Booster ,"Booster "},

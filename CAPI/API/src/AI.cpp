@@ -6,11 +6,12 @@
 // 为假则play()调用期间游戏状态更新阻塞，为真则只保证当前游戏状态不会被状态更新函数与IAPI的方法同时访问
 extern const bool asynchronous = false;
 
-// 选手主动技能，选手 !!必须!! 定义此变量来选择主动技能
-extern const THUAI5::ActiveSkillType playerActiveSkill = THUAI5::ActiveSkillType::NuclearWeapon;
 
-// 选手被动技能，选手 !!必须!! 定义此变量来选择被动技能
-extern const THUAI5::PassiveSkillType playerPassiveSkill = THUAI5::PassiveSkillType::RecoverAfterBattle;
+// 选手主动技能，选手 !!必须!! 定义此变量来选择主动技能(software type)
+extern const THUAI5::SoftwareType playerSoftware = THUAI5::SoftwareType::Booster;
+
+// 选手被动技能，选手 !!必须!! 定义此变量来选择被动技能(hardware type)
+extern const THUAI5::HardwareType playerHardware = THUAI5::HardwareType::EnergyConvert;
 
 namespace
 {
@@ -93,6 +94,9 @@ void AI::play(IAPI& api)
     {
         auto props = api.GetProps();
         if (props.size() != 0)
+        {
+            api.UseProp();
+        }
         else
         {
             api.MoveUp(50);
@@ -101,9 +105,9 @@ void AI::play(IAPI& api)
     if (mydirection == 1)
     {
 
-        if (selfinfo->cpuNum != 0)
+        if (self->cpuNum != 0)
         {
-            api.UseCPU(selfinfo->cpuNum);
+            api.UseCPU(self->cpuNum);
             // or you can throw it to your teammate:
             // api.ThrowGem(10,1);
         }
