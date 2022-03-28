@@ -2,12 +2,9 @@ FROM ubuntu:18.04
 Maintainer eesast.com
 WORKDIR /usr/local
 RUN mkdir /usr/local/mnt
-RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make libprotobuf-dev wget curl ca-certificates
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.22.3/cmake-3.22.3-Linux-x86_64.tar.gz --no-check-certificate \
-	&& tar -zxvf cmake-3.22.3-Linux-x86_64.tar.gz && rm cmake-3.22.3-Linux-x86_64.tar.gz
-ENV PATH=$PATH:/usr/local/cmake-3.22.3-Linux-x86_64/bin
-RUN apt-get install --no-install-recommends -y autoconf automake libtool curl make g++ unzip
+RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make libprotobuf-dev wget ca-certificates cmake autoconf automake libtool curl unzip
 COPY ./CAPI /usr/local/CAPI
 COPY ./dependency/shell/compile.sh ./
-RUN cd ./CAPI/protobuf && ./autogen.sh && ./configure && make && make install && ldconfig && cd ../
+RUN cd ./CAPI/protobuf && ./autogen.sh && ./configure && make && make install && ldconfig
+RUN cd /usr/local && mkdir ./CAPI/lib && wget -O dependency.zip https://cloud.tsinghua.edu.cn/f/9257418fd0ed40049c00/?dl=1 && unzip dependency.zip && mv -f ./linux/a ./CAPI/lib && mv -f ./linux/so ./CAPI/lib
 ENTRYPOINT ["bash", "compile.sh"]

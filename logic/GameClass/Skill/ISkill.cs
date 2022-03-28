@@ -1,10 +1,11 @@
 ﻿using GameClass.GameObj;
+using Preparation.Utility;
 
 namespace GameClass.Skill
 {
     public interface IPassiveSkill
     {
-        public Bullet InitBullet { get; }
+        public BulletType InitBullet { get; }
         public double AttackRange { get; }
         public void SkillEffect(Character player);
     }

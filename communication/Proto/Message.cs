@@ -74,15 +74,8 @@ namespace Communication.Proto
                 Console.WriteLine($"The content is {Content}");
 #endif
             }
-            catch (Google.Protobuf.InvalidProtocolBufferException)
-            {
-
-                // 这只是为了让server控制台界面更清爽一点，所不得已用的办法！虽然当前代码会触发这个异常，但好像不影响运行，而且codedInputStream也确实可以被正确解码
-                // 迟早要解决的！
-            }
             catch (Exception e)
             {
-
                 Console.WriteLine($"Unhandled exception while trying to deserialize packet: {e}");
             }
         }

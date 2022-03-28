@@ -7,34 +7,29 @@
 extern const bool asynchronous = false;
 
 // 选手主动技能，选手 !!必须!! 定义此变量来选择主动技能
-extern const THUAI5::SoftwareType playerSoftware = THUAI5::SoftwareType::Booster;
+extern const THUAI5::ActiveSkillType playerActiveSkill = THUAI5::ActiveSkillType::NuclearWeapon;
 
 // 选手被动技能，选手 !!必须!! 定义此变量来选择被动技能
-extern const THUAI5::HardwareType playerHardware = THUAI5::HardwareType::EnergyConvert;
+extern const THUAI5::PassiveSkillType playerPassiveSkill = THUAI5::PassiveSkillType::RecoverAfterBattle;
 
 namespace
 {
     [[maybe_unused]] std::uniform_real_distribution<double> direction(0, 2 * 3.1415926);
-    [[maybe_unused]] std::default_random_engine e{std::random_device{}()};
+    [[maybe_unused]] std::default_random_engine e{ std::random_device{}() };
 }
 
-void AI::play(IAPI &api)
+int mydirection = 0;
+
+void AI::play(IAPI& api)
 {
-    //!注：此处的GetFrameCount()仅供通信组和逻辑组debug使用，实际编写时大可以去掉
-    auto selfinfo = api.GetSelfInfo();
 
-    // how to know the game frame
-    std::cout << api.GetFrameCount() << std::endl;
-
-    // how to get player GUIDS
-    if (api.GetFrameCount() == 18)
+    auto self = api.GetSelfInfo();
+    if (mydirection == 0)
     {
-        auto guids = api.GetPlayerGUIDs();
-        for (auto it = guids.begin(); it != guids.end(); it++)
+        if (api.GetPlaceType(self->x / 1000 - 1, self->y / 1000) == THUAI5::PlaceType(1))
         {
-            std::cout << *it << ' ';
+            mydirection = 1;
         }
-        std::cout << std::endl;
     }
 
     // how to get team score
@@ -98,22 +93,14 @@ void AI::play(IAPI &api)
     {
         auto props = api.GetProps();
         if (props.size() != 0)
+        else
         {
-            api.Pick(props[0]->type);
-            api.UseProp();
-            // or you can throw it to your teammate:
-            // api.ThrowProp(10,1);
-
-            // some examples for get the thuai5 type [code]:
-            // auto atombomb=THUAI5::BulletType::AtomBomb;
-            // auto circle=THUAI5::ShapeType::Circle;
-            // auto superFast=THUAI5::ActiveSkillType::SuperFast;
+            api.MoveUp(50);
         }
     }
-
-    // how to use gems
-    if (api.GetFrameCount() == 28)
+    if (mydirection == 1)
     {
+
         if (selfinfo->cpuNum != 0)
         {
             api.UseCPU(selfinfo->cpuNum);
@@ -121,26 +108,28 @@ void AI::play(IAPI &api)
             // api.ThrowGem(10,1);
         }
     }
-
-    // how to use skill
-    if (api.GetFrameCount() == 29)
+    if (mydirection == 2)
     {
-        api.UseCommonSkill();
+        if (api.GetPlaceType(self->x / 1000 + 1, self->y / 1000) == THUAI5::PlaceType(1))
+        {
+            mydirection = 3;
+        }
+        else
+        {
+            api.MoveDown(50);
+        }
     }
-
-    // how to receive a message
-    if (api.MessageAvailable())
+    if (mydirection == 3)
     {
-        auto message = api.TryGetMessage();
-        std::cout << "receive message:" << message.value() << std::endl;
+        if (api.GetPlaceType(self->x / 1000, self->y / 1000 + 1) == THUAI5::PlaceType(1))
+        {
+            mydirection = 0;
+        }
+        else
+        {
+            api.MoveRight(50);
+        }
     }
-
-    // how to send a message
-    api.Send(1, "this is an example");
-
-    // // ! only for debug!
-    if (api.GetFrameCount() == 30)
-    {
-        exit(0);
-    }
+    
+    api.Attack(1.0);
 }

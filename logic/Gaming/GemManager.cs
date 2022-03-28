@@ -172,7 +172,7 @@ namespace Gaming
             private int GemToScore(int num)
             {
                 //先用分段线性
-                if (num < 0)
+                if (num < 5)
                     return 0;
                 else if (num < 10)
                     return num * GameData.gemToScore / 4;
@@ -199,6 +199,7 @@ namespace Gaming
                     },
                     EndMove: obj =>
                      {
+                         // obj.Place = gameMap.GetPlaceType((GameObj)obj);
                          Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                      }
                 );

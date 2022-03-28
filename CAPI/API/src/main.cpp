@@ -64,7 +64,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
         bool w = warning.getValue();
         if (d)
         {
-            level = 1 + w;
+            level =  w;
         }
         filename = FileName.getValue();
     }

@@ -152,12 +152,12 @@ public:
     virtual void PrintSelfInfo() const = 0;
 
     //***********选手可能用到的辅助函数***********//
-    [[nodiscard]] static constexpr inline int CellToGrid(int cell) noexcept // 获取指定格子中心的坐标
+    [[nodiscard]] static inline int CellToGrid(int cell) noexcept // 获取指定格子中心的坐标
     {
         return cell * num_of_grid_per_cell + num_of_grid_per_cell / 2;
     }
 
-    [[nodiscard]] static constexpr inline int GridToCell(int grid) noexcept // 获取指定坐标点所位于的格子的 X 序号
+    [[nodiscard]] static inline int GridToCell(int grid) noexcept // 获取指定坐标点所位于的格子的 X 序号
     {
         return grid / num_of_grid_per_cell;
     }

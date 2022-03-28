@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Windows.Controls;
 using System.Windows;
 using System.Windows.Threading;
 using System.Diagnostics;
@@ -92,7 +92,52 @@ namespace Client
             }
             Application.Current.Shutdown();
         }
-
+        private void DrawLaser(Point source, double theta, double range)//三个参数分别为攻击者的位置，攻击方位角（窗口坐标）和攻击半径
+        {
+            double Width = 5;
+            Point[] endPoint = new Point[4];
+            Point target = new();
+            target.X = source.X + range * Math.Cos(theta);
+            target.Y = source.Y + range * Math.Sin(theta);
+            endPoint[0].X = source.X + Width * Math.Cos(theta - Math.PI / 2);
+            endPoint[0].Y = source.Y + Width * Math.Sin(theta - Math.PI / 2);
+            endPoint[1].X = target.X + Width * Math.Cos(theta - Math.PI / 2);
+            endPoint[1].Y = target.Y + Width * Math.Sin(theta - Math.PI / 2);
+            endPoint[2].X = target.X + Width * Math.Cos(theta + Math.PI / 2);
+            endPoint[2].Y = target.Y + Width * Math.Sin(theta + Math.PI / 2);
+            endPoint[3].X = source.X + Width * Math.Cos(theta + Math.PI / 2);
+            endPoint[3].Y = source.Y + Width * Math.Sin(theta + Math.PI / 2);
+            Polygon laserIcon = new();
+            laserIcon.Stroke = System.Windows.Media.Brushes.Red;
+            laserIcon.Fill = System.Windows.Media.Brushes.Red;
+            laserIcon.StrokeThickness = 2;
+            laserIcon.HorizontalAlignment = HorizontalAlignment.Left;
+            laserIcon.VerticalAlignment = VerticalAlignment.Top;
+            PointCollection laserEndPoints = new();
+            for (int i = 0; i < 4; i++)
+            {
+                laserEndPoints.Add(endPoint[i]);
+            }
+            laserIcon.Points = laserEndPoints;
+            UpperLayerOfMap.Children.Add(laserIcon);
+        }
+        private void DrawProp(MessageToClient.Types.GameObjMessage data, string text)
+        {
+            TextBox icon = new()
+            {
+                FontSize=10,
+                Width = 20,
+                Height = 20,
+                Text = text,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0 - 6.5, data.MessageOfProp.X * 13.0 / 1000.0 - 6.5, 0, 0),
+                Background = Brushes.Transparent,
+                BorderBrush=Brushes.Transparent,
+                IsReadOnly = true
+            };
+            UpperLayerOfMap.Children.Add(icon);
+        }
         private void ClickToMinimize(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
@@ -585,6 +630,8 @@ namespace Client
         }
         private bool CanSee(MessageOfCharacter msg)
         {
+            if (playerID >= 2022 || teamID >= 2022)
+                return true;
             if (myInfo != null)
             {
                 if (myInfo.MessageOfCharacter.Guid == msg.Guid) //自己能看见自己
@@ -663,8 +710,14 @@ namespace Client
                                         HorizontalAlignment = HorizontalAlignment.Left,
                                         VerticalAlignment = VerticalAlignment.Top,
                                         Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0-6.5, data.MessageOfCharacter.X * 13.0 / 1000.0-6.5, 0, 0),
-                                        Fill = Brushes.Black
                                     };
+                                    if (data.MessageOfCharacter.TeamID == 0)
+                                        icon.Fill = Brushes.Black;
+                                    else if (data.MessageOfCharacter.TeamID == 1)
+                                        icon.Fill = Brushes.BlueViolet;
+                                    else if (data.MessageOfCharacter.TeamID == 2)
+                                        icon.Fill = Brushes.DarkOrange;
+                                    else icon.Fill = Brushes.Cyan;
                                     UpperLayerOfMap.Children.Add(icon);
                                 }
                             }
@@ -688,31 +741,23 @@ namespace Client
                             {
                                 if (CanSee(data.MessageOfProp))
                                 {
-                                    if (data.MessageOfProp.Type == PropType.Gem)
+                                    switch (data.MessageOfProp.Type)
                                     {
-                                        Ellipse icon = new()
-                                        {
-                                            Width = 10,
-                                            Height = 10,
-                                            HorizontalAlignment = HorizontalAlignment.Left,
-                                            VerticalAlignment = VerticalAlignment.Top,
-                                            Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0-6.5, data.MessageOfProp.X * 13.0 / 1000.0-6.5, 0, 0),
-                                            Fill = Brushes.Purple
-                                        };
-                                        UpperLayerOfMap.Children.Add(icon);
-                                    }
-                                    else
-                                    {
-                                        Ellipse icon = new()
-                                        {
-                                            Width = 10,
-                                            Height = 10,
-                                            HorizontalAlignment = HorizontalAlignment.Left,
-                                            VerticalAlignment = VerticalAlignment.Top,
-                                            Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0-6.5, data.MessageOfProp.X * 13.0 / 1000.0-6.5, 0, 0),
-                                            Fill = Brushes.Gray
-                                        };
-                                        UpperLayerOfMap.Children.Add(icon);
+                                        case PropType.Gem:
+                                            DrawProp(data, "💎");
+                                            break;
+                                        case PropType.Shield:
+                                            DrawProp(data, "🛡");
+                                            break;
+                                        case PropType.Spear:
+                                            DrawProp(data, "🗡");
+                                            break;
+                                        case PropType.AddSpeed:
+                                            DrawProp(data, "⛸");
+                                            break;
+                                        default:
+                                            DrawProp(data, "♨");
+                                            break;
                                     }
                                 }
                             }
@@ -723,11 +768,11 @@ namespace Client
                                     case BulletType.FastBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 65;
-                                            icon.Height = 65;
+                                            icon.Width = 1.5 * 13;
+                                            icon.Height = 1.5 * 13;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-32.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-32.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-1.5*13/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-1.5*13/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -735,11 +780,11 @@ namespace Client
                                     case BulletType.AtomBomb:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 3 * 65;
-                                            icon.Height = 3 * 65;
+                                            icon.Width = 3 * 39;
+                                            icon.Height = 3 * 39;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-3*39.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-3*39.0/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -747,17 +792,18 @@ namespace Client
                                     case BulletType.OrdinaryBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 65;
-                                            icon.Height = 65;
+                                            icon.Width = 39;
+                                            icon.Height = 39;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-39.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-39.0/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
                                         }
                                     case BulletType.LineBullet:
                                         {
+                                            DrawLaser(new Point(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0), -data.MessageOfBombedBullet.FacingDirection + Math.PI/2, 60);
                                             break;
                                         }
                                     default:
@@ -767,7 +813,7 @@ namespace Client
                                             icon.Height = 65;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBombedBullet.X * 13.0 / 1000.0-6.5, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-65.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-65.0/2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;

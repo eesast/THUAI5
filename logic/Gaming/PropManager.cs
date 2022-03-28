@@ -105,6 +105,13 @@ namespace Gaming
                         gameMap.GameObjDict[GameObjIdx.Prop].Remove(pickProp);
                     }
                     finally { gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock(); }
+
+                    gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
+                    try
+                    {
+                        gameMap.GameObjDict[GameObjIdx.PickedProp].Add(pickProp);
+                    }
+                    finally { gameMap.GameObjLockDict[GameObjIdx.PickedProp].ExitWriteLock(); }
                     return true;
                 }
                 else return false;
@@ -185,6 +192,7 @@ namespace Gaming
                     },
                     EndMove: obj =>
                     {
+                        // obj.Place = gameMap.GetPlaceType((GameObj)obj);
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                     }
                 );

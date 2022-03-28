@@ -7,6 +7,8 @@ using Communication.Proto;
 using GameClass.GameObj;
 using System.IO;
 using Playback;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Server
 {
@@ -15,6 +17,7 @@ namespace Server
         protected readonly Game game;
         private uint spectatorMinTeamID = 2022;
         private uint spectatorMinPlayerID = 2022;
+        private List<Tuple<uint, uint>> spectatorList = new List<Tuple<uint, uint>>();
         public override int TeamCount => options.TeamCount;
         protected long[,] communicationToGameID; //通信用的ID映射到游戏内的ID,[i,j]表示team：i，player：j的id。
         private readonly object messageToAllClientsLock = new();
@@ -40,7 +43,12 @@ namespace Server
             if (msg.PlayerID >= spectatorMinPlayerID && msg.TeamID >= spectatorMinTeamID)
             {
                 //观战模式
-                Console.WriteLine("A new spectator comes to watch this game.");
+                Tuple<uint, uint> tp = new Tuple<uint, uint>((uint)msg.TeamID, (uint)msg.PlayerID);
+                if (!spectatorList.Contains(tp))
+                {
+                    spectatorList.Add(tp);
+                    Console.WriteLine("A new spectator comes to watch this game.");
+                }
                 return false;
             }
             if (game.GameMap.Timer.IsGaming)  //游戏运行中，不能添加玩家
@@ -228,7 +236,7 @@ namespace Server
                 }
             }
 
-            game.ClearBombedBulletList();
+            game.ClearLists(new Preparation.Utility.GameObjIdx[2] { Preparation.Utility.GameObjIdx.BombedBullet, Preparation.Utility.GameObjIdx.PickedProp });
             serverCommunicator.SendToClient(messageToClient);
         }
         private void SendMessageToTeammate(MessageToServer msgToServer)
@@ -257,13 +265,27 @@ namespace Server
         {
             SendMessageToAllClients(MessageType.EndGame, false);
             mwr?.Flush();
-#if DEBUG
-            //跑起来时测试用
-            for (int i = 0; i < TeamCount; i++)
-                Console.WriteLine($"Team{i} Score: {game.GetTeamScore(game.TeamList[i].TeamID)}");
-#endif
+            SaveGameResult("test.json");
             endGameInfoSema.Release();
         }
+        
+        private void SaveGameResult(string path)
+        {
+            Dictionary<string, int> result = new Dictionary<string, int>();
+            for (int i = 0; i < TeamCount; i++)
+            {
+                result.Add("Team " + i.ToString(), GetTeamScore(i));
+            }
+            JsonSerializer serializer = new JsonSerializer();
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                using (JsonWriter writer = new JsonTextWriter(sw))
+                {
+                    serializer.Serialize(writer, result);
+                }
+            }
+        }
+
         private void CheckStart()
         {
             if (game.GameMap.Timer.IsGaming)
