@@ -104,35 +104,31 @@ namespace Server
                             loopToDo: () =>
                             {
                                 MessageToClient? msg = null;
-                                for (int i = 0; i < mr.teamCount; ++i)
+                                
+                                msg = mr.ReadOne();
+                                if (msg == null)
                                 {
-                                    for (int j = 0; j < mr.playerCount; ++j)
-                                    {
-                                        msg = mr.ReadOne();
-                                        if (msg == null)
-                                        {
-                                            Console.WriteLine("The game doesn't come to an end because of timing up!");
-                                            return false;
-                                        }
-                                        serverCommunicator.SendToClient(msg);
-                                        lock (cursorLock)
-                                        {
-                                            var curTop = Console.CursorTop;
-                                            var curLeft = Console.CursorLeft;
-                                            Console.SetCursorPosition(msgCurLeft, msgCurTop);
-                                            Console.WriteLine($"Sending messages... Current message number: {infoNo}.");
-                                            Console.SetCursorPosition(curLeft, curTop);
-                                        }
-                                        if (msg != null)
-                                        {
-                                            foreach(var item in msg.GameObjMessage)
-                                            { 
-                                                if(item.MessageOfCharacter != null)
-                                                    teamScore[item.MessageOfCharacter.TeamID, item.MessageOfCharacter.PlayerID] = item.MessageOfCharacter.Score;
-                                            }
-                                        }
+                                    Console.WriteLine("The game doesn't come to an end because of timing up!");
+                                    return false;
+                                }
+                                serverCommunicator.SendToClient(msg);
+                                lock (cursorLock)
+                                {
+                                    var curTop = Console.CursorTop;
+                                    var curLeft = Console.CursorLeft;
+                                    Console.SetCursorPosition(msgCurLeft, msgCurTop);
+                                    Console.WriteLine($"Sending messages... Current message number: {infoNo}.");
+                                    Console.SetCursorPosition(curLeft, curTop);
+                                }
+                                if (msg != null)
+                                {
+                                    foreach(var item in msg.GameObjMessage)
+                                    { 
+                                        if(item.MessageOfCharacter != null)
+                                            teamScore[item.MessageOfCharacter.TeamID, item.MessageOfCharacter.PlayerID] = item.MessageOfCharacter.Score;
                                     }
                                 }
+                                    
                                 ++infoNo;
                                 if (msg == null)
                                 {

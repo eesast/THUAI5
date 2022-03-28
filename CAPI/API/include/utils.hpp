@@ -27,62 +27,62 @@
 /// </summary>
 PROTO2THUAI_NAMESPACE_BEGIN
     /// <summary>
-    /// 将protobuf类转换为THUAI5命名空间的结构体（人物）
+    /// 将protobuf类转换为THUAI5命名空间的结构体（机器人）
     /// </summary>
     /// <param name=""></param>
     /// <returns></returns>
-    inline std::shared_ptr<THUAI5::Character> Protobuf2THUAI5_C(const Protobuf::MessageOfCharacter& c)
+    inline std::shared_ptr<THUAI5::Robot> Protobuf2THUAI5_C(const Protobuf::MessageOfCharacter& c)
     {
-        std::shared_ptr<THUAI5::Character> character = std::make_shared<THUAI5::Character>();
-        character->activeSkillType = (THUAI5::ActiveSkillType)c.activeskilltype();
-        character->attackRange = c.attackrange();
+        std::shared_ptr<THUAI5::Robot> robot = std::make_shared<THUAI5::Robot>();
+        robot->softwareType = (THUAI5::SoftwareType)c.activeskilltype();
+        robot->attackRange = c.attackrange();
         for (auto it = c.buff().begin(); it != c.buff().end(); it++)
         {
-            character->buff.push_back((THUAI5::BuffType)(*it));
+            robot->buff.push_back((THUAI5::BuffType)(*it));
         }
-        character->bulletNum = c.bulletnum();
-        character->bulletType = (THUAI5::BulletType)c.bullettype();
-        character->canMove = c.canmove();
-        character->CD = c.cd();
-        character->gemNum = c.gemnum();
-        character->guid = c.guid();
-        character->isResetting = c.isresetting();
-        character->life = c.life();
-        character->lifeNum = c.lifenum();
-        character->passiveSkillType = (THUAI5::PassiveSkillType)c.passiveskilltype();
-        character->place = (THUAI5::PlaceType)c.place();
-        character->playerID = c.playerid();
-        character->prop = (THUAI5::PropType)c.prop();
-        character->radius = c.radius();
-        character->score = c.score();
-        character->speed = c.speed();
-        character->teamID = c.teamid();
-        character->timeUntilCommonSkillAvailable = c.timeuntilcommonskillavailable();
-        character->timeUntilUltimateSkillAvailable = c.timeuntilultimateskillavailable();
-        character->vampire = c.vampire();
-        character->x = c.x();
-        character->y = c.y();
+        robot->signalJammerNum = c.bulletnum();
+        robot->signalJammerType = (THUAI5::SignalJammerType)c.bullettype();
+        robot->canMove = c.canmove();
+        robot->CD = c.cd();
+        robot->cpuNum = c.gemnum();
+        robot->guid = c.guid();
+        robot->isResetting = c.isresetting();
+        robot->life = c.life();
+        robot->lifeNum = c.lifenum();
+        robot->hardwareType = (THUAI5::HardwareType)c.passiveskilltype();
+        robot->place = (THUAI5::PlaceType)c.place();
+        robot->playerID = c.playerid();
+        robot->prop = (THUAI5::PropType)c.prop();
+        robot->radius = c.radius();
+        robot->score = c.score();
+        robot->speed = c.speed();
+        robot->teamID = c.teamid();
+        robot->timeUntilCommonSkillAvailable = c.timeuntilcommonskillavailable();
+        robot->timeUntilUltimateSkillAvailable = c.timeuntilultimateskillavailable();
+        robot->emissionAccessory = c.vampire();
+        robot->x = c.x();
+        robot->y = c.y();
 
-        return character;
+        return robot;
     }
 
     /// <summary>
-    /// 将protobuf类转换为THUAI5命名空间的结构体（子弹）
+    /// 将protobuf类转换为THUAI5命名空间的结构体（信号干扰器）
     /// </summary>
     /// <param name=""></param>
     /// <returns></returns>
-    inline std::shared_ptr<THUAI5::Bullet> Protobuf2THUAI5_B(const Protobuf::MessageOfBullet& b)
+    inline std::shared_ptr<THUAI5::SignalJammer> Protobuf2THUAI5_B(const Protobuf::MessageOfBullet& b)
     {
-        std::shared_ptr<THUAI5::Bullet> bullet = std::make_shared<THUAI5::Bullet>();
-        bullet->facingDirection = b.facingdirection();
-        bullet->guid = b.guid();
-        bullet->parentTeamID = b.parentteamid();
-        bullet->place = (THUAI5::PlaceType)b.place();
-        bullet->type = (THUAI5::BulletType)b.type();
-        bullet->x = b.x();
-        bullet->y = b.y();
+        std::shared_ptr<THUAI5::SignalJammer> jammer = std::make_shared<THUAI5::SignalJammer>();
+        jammer->facingDirection = b.facingdirection();
+        jammer->guid = b.guid();
+        jammer->parentTeamID = b.parentteamid();
+        jammer->place = (THUAI5::PlaceType)b.place();
+        jammer->type = (THUAI5::SignalJammerType)b.type();
+        jammer->x = b.x();
+        jammer->y = b.y();
 
-        return bullet;
+        return jammer;
     }
 
     /// <summary>
@@ -119,15 +119,15 @@ PROTO2THUAI_NAMESPACE_BEGIN
             break;
         
         case 2:
-            placetype = THUAI5::PlaceType::Grass1;
+            placetype = THUAI5::PlaceType::BlindZone1;
             break;
 
         case 3:
-            placetype = THUAI5::PlaceType::Grass2;
+            placetype = THUAI5::PlaceType::BlindZone2;
             break;
 
         case 4:
-            placetype = THUAI5::PlaceType::Grass3;
+            placetype = THUAI5::PlaceType::BlindZone3;
             break;
 
         case 5:
@@ -142,7 +142,7 @@ PROTO2THUAI_NAMESPACE_BEGIN
             break;
 
         case 13:
-            placetype = THUAI5::PlaceType::GemWell;
+            placetype = THUAI5::PlaceType::CPUFactory;
         
         default:
             break;
@@ -182,12 +182,12 @@ SPACE_NAMESPACE_END
 /// </summary>
 VISION_NAMESPACE_BEGIN
     /*
-    * 人物是否可见的判定机制如下：
-    * 1.若人物不在草丛里，则看不到技能隐身和在草丛里的玩家
-    * 2.若人物在草丛里，则可以看得到与自己位于同一草丛的玩家，但是看不到技能隐身的玩家
+    * 机器人是否可见的判定机制如下：
+    * 1.若机器人不在电磁屏蔽区里，则看不到软件为干扰信号软件和在电磁屏蔽区里的机器人
+    * 2.若机器人在电磁屏蔽去里，则可以看得到与自己位于同一电磁屏蔽区的玩家，但是看不到软件为干扰信号软件的玩家
     */
 
-    inline bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfCharacter& c)
+    inline bool visible(std::shared_ptr<THUAI5::Robot> self, const Protobuf::MessageOfCharacter& c)
     {
         if(!self)
         {
@@ -218,7 +218,7 @@ VISION_NAMESPACE_BEGIN
         return true;
     }
 
-    inline bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfBullet& b)
+    inline bool visible(std::shared_ptr<THUAI5::Robot> self, const Protobuf::MessageOfBullet& b)
     {
         if(!self)
         {
@@ -230,7 +230,7 @@ VISION_NAMESPACE_BEGIN
         return distanceSquared <= Constants::Map::sightRadiusSquared;
     }
 
-    inline bool visible(std::shared_ptr<THUAI5::Character> self, const Protobuf::MessageOfProp& p)
+    inline bool visible(std::shared_ptr<THUAI5::Robot> self, const Protobuf::MessageOfProp& p)
     {
         if(!self)
         {
