@@ -30,6 +30,69 @@ void AI::play(IAPI& api)
         {
             mydirection = 1;
         }
+    }
+
+    // how to get team score
+    if (api.GetFrameCount() == 19)
+    {
+        std::cout << api.GetTeamScore() << std::endl;
+    }
+
+    // how to get the game information & how to view the game information on terminal
+    if (api.GetFrameCount() == 20)
+    {
+        auto selfinfo = api.GetSelfInfo(); // store the value
+        api.PrintSelfInfo();               // print the value in a format style
+    }
+
+    if (api.GetFrameCount() == 21)
+    {
+        auto characters = api.GetRobots();
+        api.PrintRobots();
+    }
+
+    if (api.GetFrameCount() == 22)
+    {
+        auto props = api.GetProps();
+        api.PrintProps();
+    }
+
+    if (api.GetFrameCount() == 23)
+    {
+        auto bullets = api.GetSignalJammers();
+        api.PrintSignalJammers();
+    }
+
+    if (api.GetFrameCount() == 24)
+    {
+        auto PlaceType = api.GetPlaceType(25, 25); //! use cell instead of grid!
+        std::cout << THUAI5::place_dict[PlaceType] << std::endl;
+    }
+
+    // how to execute the player
+    if (api.GetFrameCount() == 25)
+    {
+        api.Attack(1.0);
+        api.MoveDown(10);
+        api.MoveLeft(10);
+        api.MoveRight(10);
+        api.MoveUp(10);
+        api.MovePlayer(10, 1.0);
+    }
+
+    // how to convert the two types of position(cell/grid)
+    if (api.GetFrameCount() == 26)
+    {
+        uint32_t gridnumbers = api.CellToGrid(5);
+        std::cout << "cell to grid: " << gridnumbers << std::endl;
+        std::cout << "grid to cell: " << api.GridToCell(gridnumbers) << std::endl;
+    }
+
+    // how to use props
+    if (api.GetFrameCount() == 27)
+    {
+        auto props = api.GetProps();
+        if (props.size() != 0)
         else
         {
             api.MoveUp(50);
@@ -37,13 +100,12 @@ void AI::play(IAPI& api)
     }
     if (mydirection == 1)
     {
-        if (api.GetPlaceType(self->x / 1000, self->y / 1000 - 1) == THUAI5::PlaceType(1))
+
+        if (selfinfo->cpuNum != 0)
         {
-            mydirection = 2;
-        }
-        else
-        {
-            api.MoveLeft(50);
+            api.UseCPU(selfinfo->cpuNum);
+            // or you can throw it to your teammate:
+            // api.ThrowGem(10,1);
         }
     }
     if (mydirection == 2)
