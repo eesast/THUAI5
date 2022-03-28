@@ -102,7 +102,7 @@ namespace GameClass.GameObj
         public override bool CanAttack(GameObj target)
         {
             this.FacingDirection = Preparation.Utility.Tools.CorrectAngle(this.FacingDirection);
-            if (this.FacingDirection == Math.PI / 2)
+            if (Math.Abs(this.FacingDirection - Math.PI / 2) < 1e-2)
             {
                 if (target.Position.y - this.Position.y > BulletBombRange)
                     return false;
@@ -110,7 +110,7 @@ namespace GameClass.GameObj
                     return true;
                 return false;
             }
-            else if(this.FacingDirection == Math.PI * 3 / 2)
+            else if (Math.Abs(this.FacingDirection - Math.PI * 3 / 2) < 1e-2)
             {
                 if (target.Position.y - this.Position.y < -BulletBombRange)
                     return false;
@@ -118,13 +118,32 @@ namespace GameClass.GameObj
                     return true;
                 return false;
             }
-            double vertical = Math.Tan(this.FacingDirection + Math.PI);
+            else if (Math.Abs(this.FacingDirection) < 1e-2 )
+            {
+                if (target.Position.x - this.Position.x > BulletBombRange)
+                    return false;
+                if (target.Position.y < this.Position.y + GameData.numOfPosGridPerCell / 2 && target.Position.y > this.Position.y - GameData.numOfPosGridPerCell / 2)
+                    return true;
+                return false;
+            }
+            else if(Math.Abs(this.FacingDirection - Math.PI) < 1e-2)
+            {
+                if (target.Position.x - this.Position.x < -BulletBombRange)
+                    return false;
+                if (target.Position.y < this.Position.y + GameData.numOfPosGridPerCell / 2 && target.Position.y > this.Position.y - GameData.numOfPosGridPerCell / 2)
+                    return true;
+                return false;
+            }
+            double vertical = Math.Tan(this.FacingDirection + Math.PI / 2);
+            bool posValue = vertical * Math.Cos(this.FacingDirection) - Math.Sin(this.FacingDirection) > 0;
             double dist;
-            dist = Math.Abs(vertical * (target.Position.x - this.Position.x) - (target.Position.y - this.Position.y)) / (Math.Sqrt(1 + vertical * vertical));
-            if (dist > BulletBombRange)
+            dist = vertical * (target.Position.x - this.Position.x) - (target.Position.y - this.Position.y) / Math.Sqrt(1 + vertical * vertical);
+            if (Math.Abs(dist) > BulletBombRange)
+                return false;
+            else if (dist < 0 && posValue) //位于直线两侧
                 return false;
             vertical = Math.Tan(this.FacingDirection);
-            dist = Math.Abs(vertical * (target.Position.x - this.Position.x) - (target.Position.y - this.Position.y)) / (Math.Sqrt(1 + vertical * vertical));
+            dist = Math.Abs(vertical * (target.Position.x - this.Position.x) - (target.Position.y - this.Position.y)) / Math.Sqrt(1 + vertical * vertical);
             if (dist > GameData.numOfPosGridPerCell / 2)
                 return false;
             return true;
