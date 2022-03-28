@@ -166,6 +166,7 @@
       <AdditionalIncludeDirectories>..\thuai\include;..\HPSocket\win;..\tclap\include\tclap;..\protobuf\src;..\proto;$(PublicIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>

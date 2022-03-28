@@ -2,8 +2,8 @@
 #include "../include/utils.hpp"
 
 extern const bool asynchronous;
-extern const THUAI5::SoftwareType playerSoftwareSkill;
-extern const THUAI5::HardwareType playerHardwareSkill;
+extern const THUAI5::SoftwareType playerSoftware;
+extern const THUAI5::HardwareType playerHardware;
 
 
 
@@ -68,8 +68,8 @@ Protobuf::MessageToServer Logic::OnConnect()
     message.set_messagetype(Protobuf::MessageType::AddPlayer);
     message.set_playerid(playerID);
     message.set_teamid(teamID);
-    message.set_askill((Protobuf::ActiveSkillType)playerActiveSkill);
-    message.set_pskill((Protobuf::PassiveSkillType)playerPassiveSkill);
+    message.set_askill1((Protobuf::ActiveSkillType)playerSoftware);
+    message.set_pskill((Protobuf::PassiveSkillType)playerHardware);
     return message;
 }
 
