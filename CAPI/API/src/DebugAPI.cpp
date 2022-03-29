@@ -396,7 +396,6 @@ void DebugAPI::PrintRobots() const
         Out << "Robot " << i << ":" << std::endl;
         Out << "softwareType: " << THUAI5::software_dict[robots[i]->softwareType] << std::endl
                   << "attackRange: " << robots[i]->attackRange << std::endl
-                  << "buff: " << THUAI5::buff_dict[robots[i]->buff[0]] << std::endl
                   << "signalJammerNum: " << robots[i]->signalJammerNum << std::endl
                   << "signalJammerType: " << THUAI5::jammer_dict[robots[i]->signalJammerType] << std::endl
                   << "canMove: " << robots[i]->canMove << std::endl
@@ -419,6 +418,15 @@ void DebugAPI::PrintRobots() const
                   << "emissionAccessory: " << robots[i]->emissionAccessory << std::endl
                   << "x: " << robots[i]->x << std::endl
                   << "y: " << robots[i]->y << std::endl;
+        if (robots[i]->buff.size() != 0)
+        {
+            std::cout << "buff: ";
+            for (int j = 0; j < robots[i]->buff.size(); j++)
+            {
+                std::cout << THUAI5::buff_dict[robots[i]->buff[j]] << ' ';
+            }
+            std::cout << std::endl;
+        }
     }
     Out << "**********************************************" << std::endl;
 }
@@ -451,7 +459,6 @@ void DebugAPI::PrintSelfInfo() const
     {
         Out << "softwareType: " << THUAI5::software_dict[selfinfo->softwareType] << std::endl
                   << "attackRange: " << selfinfo->attackRange << std::endl
-                  << "buff: " << THUAI5::buff_dict[selfinfo->buff[0]] << std::endl
                   << "signalJammerNum: " << selfinfo->signalJammerNum << std::endl
                   << "signalJammerType: " << THUAI5::jammer_dict[selfinfo->signalJammerType] << std::endl
                   << "canMove: " << selfinfo->canMove << std::endl
@@ -474,6 +481,15 @@ void DebugAPI::PrintSelfInfo() const
                   << "emissionAccessory: " << selfinfo->emissionAccessory << std::endl
                   << "x: " << selfinfo->x << std::endl
                   << "y: " << selfinfo->y << std::endl;
+        if (selfinfo->buff.size() != 0)
+        {
+            std::cout << "buff: ";
+            for (int j = 0; j < selfinfo->buff.size(); j++)
+            {
+                std::cout << THUAI5::buff_dict[selfinfo->buff[j]] << ' ';
+            }
+            std::cout << std::endl;
+        }
     }
     Out << "********************************************" << std::endl;
 }
