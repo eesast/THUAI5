@@ -430,7 +430,7 @@ namespace GameClass.GameObj
             this.moveSpeed = OrgMoveSpeed;
             hp = MaxHp;
             propInventory = null;
-            bulletNum = maxBulletNum / 2;
+            bulletNum = maxBulletNum;
             buffManeger.ClearAll();
             isInvisible = false;
         }
