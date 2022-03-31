@@ -95,7 +95,7 @@ namespace GameClass.GameObj
                 lock (gameObjLock)
                 {
                     propInventory = value;
-                    Debugger.Output(this, " picked the prop: " + (PropInventory == null ? "null" : PropInventory.ToString()));
+                    Debugger.Output(this, " prop becomes " + (PropInventory == null ? "null" : PropInventory.ToString()));
                 }
             }
         }

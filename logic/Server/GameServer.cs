@@ -265,7 +265,8 @@ namespace Server
         {
             SendMessageToAllClients(MessageType.EndGame, false);
             mwr?.Flush();
-            SaveGameResult("test.json");
+            if(options.ResultFileName != DefaultArgumentOptions.FileName)
+                SaveGameResult(options.ResultFileName + ".json");
             endGameInfoSema.Release();
         }
         
