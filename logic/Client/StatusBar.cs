@@ -7,10 +7,10 @@ namespace Client
 {
     internal class StatusBar
     {
-        const int Width = 65;
+        const int Width = 85;
         const int Height = 15;
         const int FontSize = 12;
-        public StatusBar(Grid parent,int margin1,int margin2,int margin3,int margin4)
+        public StatusBar(Grid parent,int Row,int Column)
         {
             backGround = new();
             star = new();
@@ -20,15 +20,17 @@ namespace Client
             serial = new();
             icon = new();
             parent.Children.Add(backGround);
+            Grid.SetColumn(backGround, Column);
+            Grid.SetRow(backGround, Row);
             backGround.Background = Brushes.White;
-            backGround.Margin = new(margin1, margin2, margin3, margin4);
+            backGround.Margin = new(0);
             progressBar.Height = Height;
             progressBar.Width = Width-20;
-            progressBar.Value = 50;
+            progressBar.Value = 0;
             progressBar.Background = Brushes.White;
             backGround.Children.Add(progressBar);
             Canvas.SetTop(progressBar, 150);
-            Canvas.SetLeft(progressBar, Height+2);
+            Canvas.SetLeft(progressBar, Height+3);
 
             icon.Height = Height;
             icon.Width = Height;
@@ -37,8 +39,10 @@ namespace Client
             icon.TextWrapping = System.Windows.TextWrapping.Wrap;
             icon.BorderBrush = Brushes.White;
             icon.Background = Brushes.White;
+            icon.BorderBrush = Brushes.Black;
             backGround.Children.Add(icon);
             Canvas.SetTop(icon, 150);
+            Canvas.SetLeft(icon, 1);
             
             star.Height = Height;
             star.Text = "⭐：";
@@ -46,7 +50,6 @@ namespace Client
             star.Width = Width;
             star.FontSize = 12;
             star.BorderBrush = Brushes.White;
-            star.RenderTransformOrigin = new(0.478, 0.159);
             star.IsReadOnly = true;
             backGround.Children.Add(star);
             Canvas.SetTop(star, 130);
@@ -72,7 +75,7 @@ namespace Client
             Canvas.SetTop(scores, 115);
 
             serial.Height = 46;
-            serial.Text = "👥null🧓null\n职业：";
+            serial.Text = "👥null🧓null\n软件：";
             serial.TextWrapping = System.Windows.TextWrapping.Wrap;
             serial.Width = Width;
             serial.FontSize = 12;
@@ -89,27 +92,27 @@ namespace Client
                 case ActiveSkillType.BecomeVampire:
                     coolTime = 30000;
                     serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓"
-                        + Convert.ToString(obj.PlayerID) + "\n职业：Vampaire";
+                        + Convert.ToString(obj.PlayerID) + "\n软件：Emission";
                     break;
                 case ActiveSkillType.SuperFast:
                     coolTime = 30000;
                     serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" 
-                        + Convert.ToString(obj.PlayerID) + "\n职业：SuperFast";
+                        + Convert.ToString(obj.PlayerID) + "\n软件：Booster";
                     break;
                 case ActiveSkillType.NuclearWeapon:
                     coolTime = 30000;
                     serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" 
-                        + Convert.ToString(obj.PlayerID) + "\n职业：Nuclear";
+                        + Convert.ToString(obj.PlayerID) + "\n软件：Amplifier";
                     break;
                 case ActiveSkillType.BecomeAssassin:
                     coolTime = 30000;
                     serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" 
-                        + Convert.ToString(obj.PlayerID) + "\n职业：Assassin";
+                        + Convert.ToString(obj.PlayerID) + "\n软件：Invisible";
                     break;
                 case ActiveSkillType.NullActiveSkillType:
                     coolTime = 30000;
                     serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓" 
-                        + Convert.ToString(obj.PlayerID) + "\n职业：Null";
+                        + Convert.ToString(obj.PlayerID) + "\n软件：Null";
                     break;
             }
             initialized = true;
@@ -117,6 +120,7 @@ namespace Client
         private void SetDynamicValue(MessageOfCharacter obj)
         {
             progressBar.Value = obj.TimeUntilCommonSkillAvailable / coolTime * 100;
+            if (obj.Life == 0) progressBar.Background = Brushes.Gray; 
             star.Text = "⭐：" + Convert.ToString(obj.GemNum);
             status.Text = "🗡："
                 + Convert.ToString(obj.AttackRange)
@@ -128,7 +132,7 @@ namespace Client
             switch(obj.Prop)
             {
                 case PropType.Gem:
-                    icon.Text= "💎";
+                    icon.Text= "📱";
                     break;
                 case PropType.Shield:
                     icon.Text = "🛡";
