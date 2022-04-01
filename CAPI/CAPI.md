@@ -7,9 +7,7 @@
 
 ### windows
 
-在**x64**生成环境下，如果生成模式为**release**模式，选手首先需要将组件包中的`HPSocket.lib`和`libprotobuf.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；如果生成模式为**debug**模式，则需要将`libprotobuf.lib`换成`libprotobufd.lib`。
-
-同时，需要在visual studio中更改以下配置：在解决方案资源管理器视图中，右键点击API和Communication，选择“属性”，在`配置属性->C/C++->代码生成->运行库`一栏中，若为**debug**模式，则选择**MTd**；若为**release**模式，则选择**MT**。
+在**x64**生成环境下，**请把生成模式改为release模式**，选手首先需要将组件包中的`HPSocket.lib`和`libprotobuf.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；
 
 ![settings](../resource/APIsettings2.png)
 
