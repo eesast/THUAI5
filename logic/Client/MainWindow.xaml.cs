@@ -551,6 +551,15 @@ namespace Client
                         };
                         communicator.SendMessage(msgP);
                         break;
+                    case Key.I:
+                        MessageToServer msgI = new()
+                        {
+                            MessageType = MessageType.UseProp,
+                            PlayerID = playerID,
+                            TeamID = teamID
+                        };
+                        communicator.SendMessage(msgI);
+                        break;
                     default:
                         break;
                 }
