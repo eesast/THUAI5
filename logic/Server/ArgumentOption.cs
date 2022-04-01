@@ -4,10 +4,10 @@ namespace Server
 {
     static class DefaultArgumentOptions
     {
-        public static string FileName = "不用记啊";     // An impossible name of the playback file to indicate -f is not sepcified.
-        public static string Token = "随手推啊";         // An impossible name of the token to indicate -f is not sepcified.
-        public static string Url = "闭眼写啊";
-        public static string MapResource = "多简单啊";
+        public static string FileName = "xxxx不用记啊xxxx";     // An impossible name of the playback file to indicate -f is not sepcified.
+        public static string Token = "xxxx随手推啊xxxx";         // An impossible name of the token to indicate -f is not sepcified.
+        public static string Url = "xxxx闭眼写啊xxxx";
+        public static string MapResource = "xxxx多简单啊xxxx";
     }
 
     public class ArgumentOptions
@@ -53,5 +53,8 @@ namespace Server
 
         [Option("cheatMode", Required = false, HelpText = "Whether to open the cheat code")]
         public bool CheatMode { get; set; } = false;
+
+        [Option("resultFileName", Required = false, HelpText = "Result file name, saved as .json")]
+        public string ResultFileName { get; set; } = DefaultArgumentOptions.FileName;
     }
 }

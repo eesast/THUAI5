@@ -8,6 +8,7 @@ using GameClass.GameObj;
 using System.IO;
 using Playback;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Server
 {
@@ -264,13 +265,28 @@ namespace Server
         {
             SendMessageToAllClients(MessageType.EndGame, false);
             mwr?.Flush();
-#if DEBUG
-            //跑起来时测试用
-            for (int i = 0; i < TeamCount; i++)
-                Console.WriteLine($"Team{i} Score: {game.GetTeamScore(game.TeamList[i].TeamID)}");
-#endif
+            if(options.ResultFileName != DefaultArgumentOptions.FileName)
+                SaveGameResult(options.ResultFileName + ".json");
             endGameInfoSema.Release();
         }
+        
+        private void SaveGameResult(string path)
+        {
+            Dictionary<string, int> result = new Dictionary<string, int>();
+            for (int i = 0; i < TeamCount; i++)
+            {
+                result.Add("Team " + i.ToString(), GetTeamScore(i));
+            }
+            JsonSerializer serializer = new JsonSerializer();
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                using (JsonWriter writer = new JsonTextWriter(sw))
+                {
+                    serializer.Serialize(writer, result);
+                }
+            }
+        }
+
         private void CheckStart()
         {
             if (game.GameMap.Timer.IsGaming)

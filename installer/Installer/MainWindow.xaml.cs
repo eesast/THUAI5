@@ -31,7 +31,7 @@ namespace Installer
             InitializeComponent();
             Rebex.Licensing.Key = "==AQftydL+GH1P76OPxzLvhcaHlU3VpOwd/6xKpsB+499U==";
             client.Connect(serverIP);
-            client.Login("ubuntu","password");
+            client.Login("ubuntu","eesast_DOCKER");
         }
 
         public void SelectFile(object sender, RoutedEventArgs e)
