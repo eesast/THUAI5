@@ -61,9 +61,9 @@ bool DebugAPI::Attack(double angleInRadian)
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if (selfInfo->bulletNum == 0)
+        if (selfInfo->signalJammerNum == 0)
         {
-            Out << "[Warning: You are out of bullets.]" << std::endl;
+            Out << "[Warning: You are out of signal jammers.]" << std::endl;
             return false;
         }
     }
@@ -86,13 +86,13 @@ bool DebugAPI::UseCommonSkill()
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if(!CanUseActiveSkill(selfInfo))
+        if(!CanUseSoftware(selfInfo))
         {
             return false;
         }
         else
         {
-            Out << "[Info: Using " << THUAI5::active_dict[selfInfo->activeSkillType] << ".]" << std::endl;
+            Out << "[Info: Using " << THUAI5::software_dict[selfInfo->softwareType] << ".]" << std::endl;
         }
     }
 
@@ -207,9 +207,9 @@ bool DebugAPI::UseProp()
     return logic.SendInfo(message);
 }
 
-bool DebugAPI::ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum)
+bool DebugAPI::ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian, uint32_t cpuNum)
 {
-    Out << "Call ThrowGem(" << timeInMilliseconds << angleInRadian << gemNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Out << "Call ThrowCPU(" << timeInMilliseconds << angleInRadian << cpuNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
         
@@ -219,9 +219,9 @@ bool DebugAPI::ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint3
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if (selfInfo->gemNum == 0)
+        if (selfInfo->cpuNum == 0)
         {
-            Out << "[Warning: You don't have any gems.]" << std::endl;
+            Out << "[Warning: You don't have any CPUs.]" << std::endl;
             return false;
         }
     }
@@ -230,13 +230,13 @@ bool DebugAPI::ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint3
     message.set_messagetype(Protobuf::MessageType::ThrowGem);
     message.set_timeinmilliseconds(timeInMilliseconds);
     message.set_angle(angleInRadian);
-    message.set_gemsize(gemNum);
+    message.set_gemsize(cpuNum);
     return logic.SendInfo(message);
 }
 
-bool DebugAPI::UseGem(uint32_t gemNum)
+bool DebugAPI::UseCPU(uint32_t cpuNum)
 {
-    Out << "Call UseGem(" << gemNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Out << "Call UseCPU(" << cpuNum << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
         
@@ -246,16 +246,16 @@ bool DebugAPI::UseGem(uint32_t gemNum)
             Out << "[Warning: You have been slained.]" << std::endl;
             return false;
         }
-        if (selfInfo->gemNum == 0)
+        if (selfInfo->cpuNum == 0)
         {
-            Out << "[Warning: You don't have any gems.]" << std::endl;
+            Out << "[Warning: You don't have any CPUs.]" << std::endl;
             return false;
         }
     }
 
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::UseGem);
-    message.set_gemsize(gemNum);
+    message.set_gemsize(cpuNum);
     return logic.SendInfo(message);
 }
 
@@ -294,16 +294,16 @@ std::optional<std::string> DebugAPI::TryGetMessage()
     return info;
 }
 
-std::vector<std::shared_ptr<const THUAI5::Character>> DebugAPI::GetCharacters() const
+std::vector<std::shared_ptr<const THUAI5::Robot>> DebugAPI::GetRobots() const
 {
-    Out << "Call GetCharacters() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
-    return logic.GetCharacters();
+    Out << "Call GetRobots() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetRobots();
 }
 
-std::vector<std::shared_ptr<const THUAI5::Bullet>> DebugAPI::GetBullets() const
+std::vector<std::shared_ptr<const THUAI5::SignalJammer>> DebugAPI::GetSignalJammers() const
 {
-    Out << "Call GetBullets() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
-    return logic.GetBullets();
+    Out << "Call GetSignalJammers() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetSignalJammers();
 }
 
 std::vector<std::shared_ptr<const THUAI5::Prop>> DebugAPI::GetProps() const
@@ -312,7 +312,7 @@ std::vector<std::shared_ptr<const THUAI5::Prop>> DebugAPI::GetProps() const
     return logic.GetProps();
 }
 
-std::shared_ptr<const THUAI5::Character> DebugAPI::GetSelfInfo() const
+std::shared_ptr<const THUAI5::Robot> DebugAPI::GetSelfInfo() const
 {
     Out << "Call GetSelfInfo() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     return logic.GetSelfInfo();
@@ -342,7 +342,7 @@ int DebugAPI::GetFrameCount() const
     return logic.GetCounter();
 }
 
-bool DebugAPI::CanPick(THUAI5::PropType propType, std::shared_ptr<const THUAI5::Character>& selfInfo)
+bool DebugAPI::CanPick(THUAI5::PropType propType, std::shared_ptr<const THUAI5::Robot>& selfInfo)
 {
     Out << "(Auto revoking)";
     std::vector<std::shared_ptr<const THUAI5::Prop>> props = GetProps();
@@ -356,7 +356,7 @@ bool DebugAPI::CanPick(THUAI5::PropType propType, std::shared_ptr<const THUAI5::
 	return false;
 }
 
-bool DebugAPI::CanUseActiveSkill(std::shared_ptr<const THUAI5::Character>& selfInfo)
+bool DebugAPI::CanUseSoftware(std::shared_ptr<const THUAI5::Robot>& selfInfo)
 {
     double timeUntilCommonSkillAvailable = selfInfo->timeUntilCommonSkillAvailable;
     if(timeUntilCommonSkillAvailable==0.0)
@@ -367,58 +367,66 @@ bool DebugAPI::CanUseActiveSkill(std::shared_ptr<const THUAI5::Character>& selfI
     return false;
 }
 
-void DebugAPI::PrintBullets() const
+void DebugAPI::PrintSignalJammers() const
 {
-    Out << "Call PrintBullets() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Out << "Call PrintSignalJammers() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     Out << "******************Bullets******************" << std::endl;
-    auto bullets = logic.GetBullets();
-    for (int i = 0;i<bullets.size();i++)
+    auto jammers = logic.GetSignalJammers();
+    for (int i = 0;i< jammers.size();i++)
     {
-        Out << "Bullet " << i << ":" << std::endl;
-        Out << "facingDirection: " <<bullets[i]->facingDirection << std::endl
-                  << "guid: " << bullets[i]->guid << std::endl
-                  << "parentTeamID: " << bullets[i]->parentTeamID << std::endl
-                  << "place: " << THUAI5::place_dict[bullets[i]->place] << std::endl
-                  << "type: " << THUAI5::bullet_dict[bullets[i]->type] << std::endl
-                  << "x: " << bullets[i]->x << std::endl
-                  << "y: " << bullets[i]->y << std::endl;
+        Out << "SignalJammer " << i << ":" << std::endl;
+        Out << "facingDirection: " << jammers[i]->facingDirection << std::endl
+                  << "guid: " << jammers[i]->guid << std::endl
+                  << "parentTeamID: " << jammers[i]->parentTeamID << std::endl
+                  << "place: " << THUAI5::place_dict[jammers[i]->place] << std::endl
+                  << "type: " << THUAI5::jammer_dict[jammers[i]->type] << std::endl
+                  << "x: " << jammers[i]->x << std::endl
+                  << "y: " << jammers[i]->y << std::endl;
     }
     Out << "*******************************************" << std::endl;
 }
 
-void DebugAPI::PrintCharacters() const
+void DebugAPI::PrintRobots() const
 {
-    Out << "Call PrintCharacters() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    Out << "Call PrintRobots() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     Out << "******************Characters******************" << std::endl;
-    auto characters = logic.GetCharacters();
-    for(int i = 0;i<characters.size();i++)
+    auto robots = logic.GetRobots();
+    for(int i = 0;i<robots.size();i++)
     {
-        Out << "Character " << i << ":" << std::endl;
-        Out << "activeSkillType: " << THUAI5::active_dict[characters[i]->activeSkillType] << std::endl
-                  << "attackRange: " << characters[i]->attackRange << std::endl
-                  << "buff: " << THUAI5::buff_dict[characters[i]->buff[0]] << std::endl
-                  << "bulletNum: " << characters[i]->bulletNum << std::endl
-                  << "bulletType: " << THUAI5::bullet_dict[characters[i]->bulletType] << std::endl
-                  << "canMove: " << characters[i]->canMove << std::endl
-                  << "CD: " << characters[i]->CD << std::endl
-                  << "gemNum: " << characters[i]->gemNum << std::endl
-                  << "guid: " << characters[i]->guid << std::endl
-                  << "isResetting: " << characters[i]->isResetting << std::endl
-                  << "life: " << characters[i]->life << std::endl
-                  << "lifeNum: " << characters[i]->lifeNum << std::endl
-                  << "passiveSkillType: " << THUAI5::passive_dict[characters[i]->passiveSkillType] << std::endl
-                  << "place: " << THUAI5::place_dict[characters[i]->place] << std::endl
-                  << "playerID: " << characters[i]->playerID << std::endl
-                  << "prop: " << THUAI5::prop_dict[characters[i]->prop] << std::endl
-                  << "radius: " << characters[i]->radius << std::endl
-                  << "score: " << characters[i]->score << std::endl
-                  << "speed: " << characters[i]->speed << std::endl
-                  << "teamID: " << characters[i]->teamID << std::endl
-                  << "timeUntilCommonSkillAvailable: " << characters[i]->timeUntilCommonSkillAvailable << std::endl
-                  << "timeUntilUltimateSkillAvailable: " << characters[i]->timeUntilUltimateSkillAvailable << std::endl
-                  << "vampire: " << characters[i]->vampire << std::endl
-                  << "x: " << characters[i]->x << std::endl
-                  << "y: " << characters[i]->y << std::endl;
+        Out << "Robot " << i << ":" << std::endl;
+        Out << "softwareType: " << THUAI5::software_dict[robots[i]->softwareType] << std::endl
+                  << "attackRange: " << robots[i]->attackRange << std::endl
+                  << "signalJammerNum: " << robots[i]->signalJammerNum << std::endl
+                  << "signalJammerType: " << THUAI5::jammer_dict[robots[i]->signalJammerType] << std::endl
+                  << "canMove: " << robots[i]->canMove << std::endl
+                  << "CD: " << robots[i]->CD << std::endl
+                  << "cpuNum: " << robots[i]->cpuNum << std::endl
+                  << "guid: " << robots[i]->guid << std::endl
+                  << "isResetting: " << robots[i]->isResetting << std::endl
+                  << "life: " << robots[i]->life << std::endl
+                  << "lifeNum: " << robots[i]->lifeNum << std::endl
+                  << "hardwareType: " << THUAI5::hardware_dict[robots[i]->hardwareType] << std::endl
+                  << "place: " << THUAI5::place_dict[robots[i]->place] << std::endl
+                  << "playerID: " << robots[i]->playerID << std::endl
+                  << "prop: " << THUAI5::prop_dict[robots[i]->prop] << std::endl
+                  << "radius: " << robots[i]->radius << std::endl
+                  << "score: " << robots[i]->score << std::endl
+                  << "speed: " << robots[i]->speed << std::endl
+                  << "teamID: " << robots[i]->teamID << std::endl
+                  << "timeUntilCommonSkillAvailable: " << robots[i]->timeUntilCommonSkillAvailable << std::endl
+                  << "timeUntilUltimateSkillAvailable: " << robots[i]->timeUntilUltimateSkillAvailable << std::endl
+                  << "emissionAccessory: " << robots[i]->emissionAccessory << std::endl
+                  << "x: " << robots[i]->x << std::endl
+                  << "y: " << robots[i]->y << std::endl;
+        if (robots[i]->buff.size() != 0)
+        {
+            std::cout << "buff: ";
+            for (int j = 0; j < robots[i]->buff.size(); j++)
+            {
+                std::cout << THUAI5::buff_dict[robots[i]->buff[j]] << ' ';
+            }
+            std::cout << std::endl;
+        }
     }
     Out << "**********************************************" << std::endl;
 }
@@ -449,19 +457,18 @@ void DebugAPI::PrintSelfInfo() const
     auto selfinfo = logic.GetSelfInfo();
     if(selfinfo!=nullptr)
     {
-        Out << "activeSkillType: " << THUAI5::active_dict[selfinfo->activeSkillType] << std::endl
+        Out << "softwareType: " << THUAI5::software_dict[selfinfo->softwareType] << std::endl
                   << "attackRange: " << selfinfo->attackRange << std::endl
-                  << "buff: " << THUAI5::buff_dict[selfinfo->buff[0]] << std::endl
-                  << "bulletNum: " << selfinfo->bulletNum << std::endl
-                  << "bulletType: " << THUAI5::bullet_dict[selfinfo->bulletType] << std::endl
+                  << "signalJammerNum: " << selfinfo->signalJammerNum << std::endl
+                  << "signalJammerType: " << THUAI5::jammer_dict[selfinfo->signalJammerType] << std::endl
                   << "canMove: " << selfinfo->canMove << std::endl
                   << "CD: " << selfinfo->CD << std::endl
-                  << "gemNum: " << selfinfo->gemNum << std::endl
+                  << "cpuNum: " << selfinfo->cpuNum << std::endl
                   << "guid: " << selfinfo->guid << std::endl
                   << "isResetting: " << selfinfo->isResetting << std::endl
                   << "life: " << selfinfo->life << std::endl
                   << "lifeNum: " << selfinfo->lifeNum << std::endl
-                  << "passiveSkillType: " << THUAI5::passive_dict[selfinfo->passiveSkillType] << std::endl
+                  << "hardwareType: " << THUAI5::hardware_dict[selfinfo->hardwareType] << std::endl
                   << "place: " << THUAI5::place_dict[selfinfo->place] << std::endl
                   << "playerID: " << selfinfo->playerID << std::endl
                   << "prop: " << THUAI5::prop_dict[selfinfo->prop] << std::endl
@@ -471,9 +478,18 @@ void DebugAPI::PrintSelfInfo() const
                   << "teamID: " << selfinfo->teamID << std::endl
                   << "timeUntilCommonSkillAvailable: " << selfinfo->timeUntilCommonSkillAvailable << std::endl
                   << "timeUntilUltimateSkillAvailable: " << selfinfo->timeUntilUltimateSkillAvailable << std::endl
-                  << "vampire: " << selfinfo->vampire << std::endl
+                  << "emissionAccessory: " << selfinfo->emissionAccessory << std::endl
                   << "x: " << selfinfo->x << std::endl
                   << "y: " << selfinfo->y << std::endl;
+        if (selfinfo->buff.size() != 0)
+        {
+            std::cout << "buff: ";
+            for (int j = 0; j < selfinfo->buff.size(); j++)
+            {
+                std::cout << THUAI5::buff_dict[selfinfo->buff[j]] << ' ';
+            }
+            std::cout << std::endl;
+        }
     }
     Out << "********************************************" << std::endl;
 }

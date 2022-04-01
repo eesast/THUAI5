@@ -4,17 +4,12 @@
 
 选手所需要的组件可在[https://cloud.tsinghua.edu.cn/d/b8be040bcfc543e096c0/](https://cloud.tsinghua.edu.cn/d/b8be040bcfc543e096c0/)中下载。
 
-首先需要在`THUAI5/`文件夹下，使用下列指令拉取编译所需的`tclap`([https://github.com/mirror/tclap](https://github.com/mirror/tclap))模块和`protobuf`([https://github.com/protocolbuffers/protobuf](https://github.com/protocolbuffers/protobuf))模块。
-
-```bash
-$ git submodule update --init --recursive
-```
 
 ### windows
 
-在**x64**生成环境下，如果生成模式为**release**模式，选手首先需要将组件包中的`HPSocket.lib`和`libprotobuf.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；如果生成模式为**debug**模式，则需要将`libprotobuf.lib`换成`libprotobufd.lib`。
+在**x64**生成环境下，**请把生成模式改为release模式**，选手首先需要将组件包中的`HPSocket.lib`和`libprotobuf.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；
 
-同时，需要在visual studio中更改以下配置：点击`项目->API属性`，在`配置属性->C/C++->代码生成->运行库`一栏中，若为**debug**模式，则选择**MTd**；若为**release**模式，则选择**MT**。
+![settings](../resource/APIsettings2.png)
 
 ![settings](../resource/APIsettings.png)
 
@@ -22,7 +17,14 @@ $ git submodule update --init --recursive
 
 ### Linux
 
-参考[protobuf installation](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md)
+选手首先需要在本机安装`protobuf`([https://github.com/protocolbuffers/protobuf](https://github.com/protocolbuffers/protobuf))模块。
+
+```bash
+$ git clone git@github.com:protocolbuffers/protobuf.git
+```
+
+
+以下安装过程可以参考[protobuf installation](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md)
 
 1. 首先需要编译`protobuf`，**安装之前需要添加以下依赖项**：
 ```bash
@@ -105,44 +107,75 @@ Where:
    THUAI5 C++ interface commandline parameter introduction
 ```
 
+一些关键参数的具体说明如下：
+
+* `-f <string>` 当添加此参数后，游戏中输出的调试信息将会被输入到指定的文件中，而不是终端。
+
+* `-d` 如果此参数被指定，终端将会输出更加详细的调试信息，具体区别如下：
+
+  当使用`-d`参数时，终端（或指定文件）将输出详细的函数调用情况。
+
+  ![settings](../resource/debug.png)
+
+  当删除`-d`参数时，除了基础信息之外，系统将不会输出函数调用情况。
+
+  ![settings](../resource/no-debug.png)
+
+  当选手想要查看具体的游戏信息时，可以添加`-d`属性；但如果想要追求丝滑的游戏体验，则推荐删除该参数，否则频繁的io将拖累系统速度。
+
+* `-P <USHORT>` server端口，一般不需要改动。
+
+* `-I <string>` server IP，一般不需要改动。
+
+* `-t <0/1>` 指定team ID。
+
+* `-p <0|1|2|3>` 指定player ID。
+
+* `-w` 当`-d`参数被指定时，指定`-w`参数可以输出一些警告信息，如在人物死亡时执行移动操作，系统将输出警告信息："[Warning: You have been slained.]"。
+
 ## 用户接口
+
+**请选手先仔细阅读`CAPI/API/include/structure.h`**
 
 用户可供使用的接口如下：
 ```cpp
 class IAPI
 {
+public: 
     //***********选手可执行的操作***********//
+    
+    // 移动
     virtual bool MovePlayer(uint32_t timeInMilliseconds, double angleInRadian) = 0;
     virtual bool MoveRight(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveUp(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveLeft(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveDown(uint32_t timeInMilliseconds) = 0;
-    virtual bool Attack(uint32_t timeInMilliseconds, double angleInRadian) = 0;
+    virtual bool Attack(double angleInRadian) = 0;
     virtual bool UseCommonSkill() = 0;
-    virtual bool Send(int toPlayerID, std::string message) = 0;
-    virtual bool Pick(THUAI5::PropType type) = 0;
+    virtual bool Send(int toPlayerID,std::string) = 0;
+    virtual bool Pick(THUAI5::PropType) = 0; 
     virtual bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) = 0;
     virtual bool UseProp() = 0;
-    virtual bool ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum) = 0;
-    virtual bool UseGem(uint32_t gemNum) = 0;
+    virtual bool ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian,uint32_t cpuNum) = 0;
+    virtual bool UseCPU(uint32_t cpuNum) = 0;
     virtual bool Wait() = 0;
 
     //***********选手可获取的信息***********//
     [[nodiscard]] virtual bool MessageAvailable() = 0;
     [[nodiscard]] virtual std::optional<std::string> TryGetMessage() = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Robot>> GetRobots() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
-    [[nodiscard]] virtual THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI5::Robot> GetSelfInfo() const = 0;
+    [[nodiscard]] virtual THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const = 0;
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
     [[nodiscard]] virtual int GetFrameCount() const = 0;
 
-    //***********辅助函数***********//
-    [[nodiscard]] static constexpr inline int CellToGrid(int cell) noexcept; // 获取指定格子中心的坐标
-    [[nodiscard]] static constexpr inline int GridToCell(int grid) noexcept; // 获取指定坐标点所位于的格子的 X 序号
-}
+    //***********选手可能用到的辅助函数***********//
+    [[nodiscard]] static inline int CellToGrid(int cell) noexcept // 获取指定格子中心的坐标
+    [[nodiscard]] static inline int GridToCell(int grid) noexcept // 获取指定坐标点所位于的格
+};
 ```
 
 ### 选手主动行为
@@ -162,7 +195,7 @@ class IAPI
 * `bool UseProp()`：使用道具。
 
 #### 攻击
-* `bool Attack(double angleInRadian)`：发射子弹进行攻击。`angleInRadian`给出了子弹的发射方向，子弹的移动速度（每秒飞行的坐标数）已经在 `Constants.h` 中给出。
+* `bool Attack(double angleInRadian)`：发射信号干扰器进行攻击。`angleInRadian`给出了信号干扰器的发射方向，信号干扰器的移动速度（每秒飞行的坐标数）已经在 `Constants.h` 中给出。
 
 #### 主动技能
 * `bool UseCommonSkill()`：使用主动技能。
@@ -170,10 +203,9 @@ class IAPI
 #### 发送消息
 * `bool Send(int toPlayerID, std::string message)`：给同队的队友发送消息。`toPlayerID` 指定发送的对象，`message` 指定发送的内容。`message` 的长度**不能超过 64**，否则将发送失败！
 
-#### 宝石操作
-* `bool ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum)`：扔出手中的宝石（如果有的话），使其变为未捡起状态，可以供他人捡起。前两个参数的含义与 `MovePlayer` 相同，最后一个参数为宝石数。
-
-* `bool UseGem(uint32_t gemNum)`：使用手中的宝石，可指定使用个数。
+#### CPU操作
+* `bool ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian, uint32_t cpuNum)`：扔出手中的CPU（如果有的话），使其变为未捡起状态，可以供他人捡起。前两个参数的含义与 `MovePlayer` 相同，最后一个参数为CPU数。
+* `bool UseCPU(uint32_t cpuNum)`：使用手中的CPU，可指定使用个数。
 
 #### 信息受限
 以上**主动行为**具有频率限制，每 50ms 最多总共可以调用 50 次；主动返回 `bool` 值代表本次操作是否成功，如果超过了通信次数限制，则会返回 `false`。
@@ -185,7 +217,7 @@ class IAPI
 ### 信息获取
 
 #### 个人信息
-* `std::shared_ptr<const THUAI5::Character> GetSelfInfo() const`：返回自身的信息。
+* `std::shared_ptr<const THUAI5::Robot> GetSelfInfo() const`：返回自身的信息。
 
 #### 队伍信息
 * `uint32_t GetTeamScore() const`：返回本队当前分数。
@@ -195,11 +227,11 @@ class IAPI
 
 #### 游戏实物信息
 
-* `std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const`：返回当前场地内的所有可视玩家的信息。
+* `std::vector<std::shared_ptr<const THUAI5::Robot>> GetRobots() const`：返回当前场地内的所有可视玩家的信息。
 
 * `std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const`：返回当前场地内的所有**尚未被捡起的**的可视道具的信息。其他信息同上。
 
-* `std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const`：返回当前场地内的所有可视子弹的信息。其他信息同上。
+* `std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const`：返回当前场地内的所有可视信号干扰器的信息。其他信息同上。
 
 * `THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const`：返回某一位置场地种类信息。注意此处的`CellX`和`CellY`指的是**地图格数**，而不是**绝对坐标**。
 场地种类详见`structure.h`。

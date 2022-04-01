@@ -5,36 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         mc:Ignorable="d"
-        Title="ClientV" Height="738" Width="910" KeyDown="KeyBoardControl" Background="White" ResizeMode="NoResize" WindowStyle="None" MouseLeftButtonDown="DragWindow" MouseDoubleClick="Attack">
+        Title="ClientV" Height="738" Width="850" KeyDown="KeyBoardControl" Background="White" ResizeMode="CanResizeWithGrip" WindowStyle="None" MouseLeftButtonDown="DragWindow" MouseDoubleClick="Attack" MinHeight="738" MinWidth="1100">
     <Window.Resources>
-
         <ImageBrush x:Key="Logo" ImageSource="Logo.png"/>
-
     </Window.Resources>
-    <Grid Name="MainGrid" RenderTransformOrigin="0.902,0.078" Height="720" VerticalAlignment="Top" Margin="0">
-
-        <Grid x:Name="UnderLayerOfMap" HorizontalAlignment="Left" Height="650" Margin="182,45,0,0" VerticalAlignment="Top" Width="650"></Grid>
-        <Button x:Name="PorC" Content="▶" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Width="25" RenderTransformOrigin="0.637,-0.304" Margin="157,0,0,650" Background="Green" BorderBrush="Green" FontFamily="Microsoft YaHei" Click="ClickToPauseOrContinue"/>
-        <Button Content="❎" HorizontalAlignment="Left" Height="36" VerticalAlignment="Bottom" Width="51" RenderTransformOrigin="0.488,0.772" Margin="859,0,0,685" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToClose"/>
-        <Button Content="—" Height="34" VerticalAlignment="Bottom" RenderTransformOrigin="0.488,0.772" Margin="803,0,56,687" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToMinimize"/>
-        <Label Content="THUAI5 Client for players "  HorizontalAlignment="Right" Height="38" Margin="0,0,622,680" VerticalAlignment="Bottom" Width="254" FontSize="18" />
-        <Button x:Name="Mode" Content="⚙" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Width="25" RenderTransformOrigin="0.597,-2.532" Margin="157,0,0,620" Background="BlueViolet" BorderBrush="BlueViolet" FontFamily="Microsoft YaHei" Click="ClickToSetMode"/>
-        <Button Content="关&#xA;于&#xA;我&#xA;们&#xA;(F)" HorizontalAlignment="Left" Height="84" Margin="859,424,0,0" VerticalAlignment="Top" Width="42" Background="Ivory" Click="ClickToVisitEESAST"/>
-
-        <Image Margin="0,1,874,681" Stretch="Fill" Source="pack://siteoforigin:,,,/Logo.png" RenderTransformOrigin="0.511,1.002"/>
-        <ToolBarTray HorizontalAlignment="Left" Height="39" Margin="313,0,0,0" VerticalAlignment="Top" Width="380" Background="White">
-            <ToolBar HorizontalAlignment="Left" Height="38" VerticalAlignment="Center" Width="392" Background="White" ToolBarTray.IsLocked="True">
-                <Button Content="配置连接(C)" Height="35" VerticalAlignment="Top" Width="92" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToSetConnect" HorizontalAlignment="Left"/>
-                <Button Content="我的AI(M)" Height="35" VerticalAlignment="Top" Width="82" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToEnterVS"/>
-                <Button Content="获取更新(U)" Height="39" Width="95" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickForUpdate"/>
-                <Button Content="天梯信息(L)" Height="40" Width="93" RenderTransformOrigin="0.488,0.772" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToCheckLadder"/>
-            </ToolBar>
-        </ToolBarTray>
-        <Border BorderThickness="1" Background="Black" BorderBrush="Black" HorizontalAlignment="Left" Height="674" Margin="148,45,0,0" VerticalAlignment="Top" Width="2"/>
-        <Button Content=" 帮&#xA; 助&#xA;(H)" HorizontalAlignment="Left" Height="84" Margin="859,170,0,0" VerticalAlignment="Top" Width="42" Background="Ivory" Click="ClickForHelp"/>
-        <Grid x:Name="UpperLayerOfMap" HorizontalAlignment="Left" Height="650" Margin="182,45,0,0" VerticalAlignment="Top" Width="650" >
-        </Grid>
-        <Button Name="Connect" Content="🔗" HorizontalAlignment="Left" Margin="832,53,0,0" VerticalAlignment="Top" Width="20" Background="Aqua" Click="ClickToConnect"/>
-        <Border BorderThickness="1" Background="Black" BorderBrush="Black" HorizontalAlignment="Left" Height="2" Margin="41,37,0,0" VerticalAlignment="Top" Width="692"/>
+    <Grid Name="MainGrid" Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="0*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="58*"/>
+            <ColumnDefinition Width="58*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="362*"/>
+            <ColumnDefinition Width="71*"/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="UnderLayerOfMap" Margin="6,16,35,14" Grid.RowSpan="4" Grid.Column="3" Grid.Row="1" />
+        <Grid x:Name="UpperLayerOfMap" Margin="6,16,35,14" Grid.RowSpan="4" Grid.Column="3" Grid.Row="1" />
+        <Button x:Name="PorC" Content="▶"  Margin="0,53,0,0" Background="Green" BorderBrush="Green" FontFamily="Microsoft YaHei" Click="ClickToPauseOrContinue" Grid.Column="4" Grid.Row="1" HorizontalAlignment="Left" Width="24" Height="26" VerticalAlignment="Top"/>
+        <!--
+        <Button x:Name="Mode" Content="⚙" Margin="18,53,0,0" Background="BlueViolet" BorderBrush="BlueViolet" FontFamily="Microsoft YaHei" Click="ClickToSetMode" Grid.Column="2" Grid.Row="1" HorizontalAlignment="Left" Width="24" Height="25" VerticalAlignment="Top"/>
+-->
+        <Button Name="MaxButton" Content="🗖" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToMaxmize" Grid.Column="4" Height="40" VerticalAlignment="Center" Margin="0,0,56,0" HorizontalAlignment="Right" Width="54"/>
+        <Button Content="❎" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToClose" Grid.Column="4" Height="38" VerticalAlignment="Center" Margin="0,0,2,0" HorizontalAlignment="Right" Width="50"/>
+        <Button Content="—" Background="White" FontFamily="Microsoft YaHei" BorderBrush="White" Click="ClickToMinimize" Grid.Column="3" Height="38" VerticalAlignment="Center" Margin="0,0,118,0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="45"/>
+        <Button Content="关&#xA;于&#xA;我&#xA;们&#xA;(F)" Margin="68,115,0,0" Background="Ivory" Click="ClickToVisitEESAST" Grid.Row="3" Grid.Column="4" Grid.RowSpan="2" HorizontalAlignment="Left" Width="38" Height="97" VerticalAlignment="Top" />
+        <Image Stretch="Fill" Source="pack://siteoforigin:,,,/Logo.png" HorizontalAlignment="Left" Width="40" Height="40" VerticalAlignment="Center"/>
+        <Button Content="配置连接(C)" Height="35" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToSetConnect"  Grid.Column="3" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="90" Margin="317,0,0,0"/>
+        <Button Content="我的AI(M)" Height="35" Width="82" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToEnterVS" Grid.Column="3" Grid.Row="0" Margin="223,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Button Content="获取更新(U)" Height="35" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickForUpdate" Grid.Column="3" Grid.Row="0" Margin="120,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="93"/>
+        <Button Content="天梯信息(L)" Height="35" Background="White" FontFamily="Microsoft YaHei"  FontSize="16" BorderBrush="White" Click="ClickToCheckLadder" Grid.Column="3" Grid.Row="0" Margin="20,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="91"/>
+        <Border BorderThickness="1" Background="Black" BorderBrush="Black" HorizontalAlignment="Center" Margin="0,5,0,0" Width="2" Grid.RowSpan="4" Grid.Column="2" Grid.Row="1"/>
+        <Button Content=" 帮&#xA; 助&#xA;(H)" Margin="66,87,0,0"  Background="Ivory" Click="ClickForHelp" Grid.Row="1" Grid.Column="4" HorizontalAlignment="Left" Width="46" Height="80" VerticalAlignment="Top"/>
+        <Label Content="THUAI5 Client for players " Margin="43,0,0,0"  FontSize="15" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Left" Width="191" Height="32" VerticalAlignment="Center"/>
+        <Border BorderThickness="1" Background="Black" BorderBrush="Black" Height="2" Margin="67,37,1,0" VerticalAlignment="Top" Grid.ColumnSpan="3" Grid.Row="0" Grid.Column="1"/>
+        <Button Name="Connect" Content="🔗" Margin="0,11,0,0" VerticalAlignment="Top" Background="Aqua" Click="ClickToConnect" Height="25" Grid.Column="4" HorizontalAlignment="Left" Width="25" Grid.Row="1"/>
     </Grid>
 </Window>

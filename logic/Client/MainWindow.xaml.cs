@@ -11,7 +11,7 @@ using System.IO;
 using Communication.ClientCommunication;
 using Communication.Proto;
 using CommandLine;
-
+//注：把13改成upperlayer.length/50
 namespace Client
 {
     /// <summary>
@@ -21,15 +21,15 @@ namespace Client
     {
         public MainWindow()
         {
+            unitHeight = unitWidth = unit = 13;
             timer = new DispatcherTimer
             {
                 Interval = new TimeSpan(20000)//每20ms刷新一次
             };
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
-            SetStatusBar();
-            //DrawMap();
             timer.Start();
+            SetStatusBar();
             isClientStocked = true;
             drawPicLock = new();
             playerData = new List<MessageToClient.Types.GameObjMessage>();
@@ -78,9 +78,10 @@ namespace Client
         }
         private void SetStatusBar()
         {
-            for(int i=0;i<8;i++)
+            StatusBars = new StatusBar[8];
+            for (int i=0;i<8;i++)
             {
-                StatusBars[i] = new(MainGrid,2+80*(i%2),40+171*(i/2),764+78*(i%2),513-169*(i/2));
+                StatusBars[i] = new(MainGrid,i/2+1,i%2);
             }
         }
         //基础窗口函数
@@ -131,7 +132,7 @@ namespace Client
                 Text = text,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(data.MessageOfProp.Y * 13.0 / 1000.0 - 6.5, data.MessageOfProp.X * 13.0 / 1000.0 - 6.5, 0, 0),
+                Margin = new Thickness(data.MessageOfProp.Y * unitWidth / 1000.0 - unitWidth / 2, data.MessageOfProp.X * unitHeight / 1000.0 - unitHeight / 2, 0, 0),
                 Background = Brushes.Transparent,
                 BorderBrush=Brushes.Transparent,
                 IsReadOnly = true
@@ -142,9 +143,15 @@ namespace Client
         {
             WindowState = WindowState.Minimized;
         }
+        private void ClickToMaxmize(object sender, RoutedEventArgs e)
+        {
+            if (WindowState != WindowState.Maximized)
+                WindowState = WindowState.Maximized;
+            else WindowState = WindowState.Normal;
+        }
         private void DragWindow(object sender, RoutedEventArgs e)
         {
-            DragMove();
+            DragMove();          
         }
 
         private void Attack(object sender,RoutedEventArgs e)
@@ -157,10 +164,30 @@ namespace Client
                     PlayerID = playerID,
                     TeamID = teamID
                 };
-                double mouseY = Mouse.GetPosition(UpperLayerOfMap).X * 1000 / 13;
-                double mouseX = Mouse.GetPosition(UpperLayerOfMap).Y * 1000 / 13;
+                double mouseY = Mouse.GetPosition(UpperLayerOfMap).X * 1000 / unitWidth;
+                double mouseX = Mouse.GetPosition(UpperLayerOfMap).Y * 1000 / unitHeight;
                 msgJ.Angle = Math.Atan2(mouseY - myInfo.MessageOfCharacter.Y, mouseX - myInfo.MessageOfCharacter.X);
                 communicator.SendMessage(msgJ);
+            }
+        }
+        private void ZoomMap()
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                for (int j = 0; j < 50; j++)
+                {
+                    if (mapPatches[i, j] != null)
+                    {
+                        mapPatches[i, j].Width = UpperLayerOfMap.ActualWidth / 50;
+                        mapPatches[i, j].Height = UpperLayerOfMap.ActualHeight / 50;
+                        mapPatches[i, j].HorizontalAlignment = HorizontalAlignment.Left;
+                        mapPatches[i, j].VerticalAlignment = VerticalAlignment.Top;
+                        mapPatches[i, j].Margin = new Thickness(UpperLayerOfMap.ActualWidth / 50 * j,
+                                                                UpperLayerOfMap.ActualHeight / 50 * i,
+                                                                0,
+                                                                0);
+                    }
+                }
             }
         }
         private void DrawMap()
@@ -169,25 +196,25 @@ namespace Client
             {
                 for (int j = 0; j < defaultMap.GetLength(1); j++)
                 {
-                    Rectangle rectangle = new()
+                    mapPatches[i,j] = new()
                     {
-                        Width = 13,
-                        Height = 13,
+                        Width = unitWidth,
+                        Height = unitHeight,
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
-                        Margin = new Thickness(13 * (j ), 13 * (i ), 0, 0)
+                        Margin = new Thickness(Width * (j ), Height * (i ), 0, 0)
                     };
                     switch (defaultMap[i, j])
                     {
                         case 1:
-                            rectangle.Fill = Brushes.Brown;
-                            rectangle.Stroke = Brushes.Brown;
+                            mapPatches[i, j].Fill = Brushes.Brown;
+                            mapPatches[i, j].Stroke = Brushes.Brown;
                             break;
                         case 2:
                         case 3:
                         case 4:
-                            rectangle.Fill = Brushes.Green;
-                            rectangle.Stroke = Brushes.Green;
+                            mapPatches[i, j].Fill = Brushes.Green;
+                            mapPatches[i, j].Stroke = Brushes.Green;
                             break;
                         case 5:
                         case 6:
@@ -197,16 +224,16 @@ namespace Client
                         case 10:
                         case 11:
                         case 12:
-                            rectangle.Fill = Brushes.Yellow;
-                            rectangle.Stroke = Brushes.Yellow;
+                            mapPatches[i, j].Fill = Brushes.Yellow;
+                            mapPatches[i, j].Stroke = Brushes.Yellow;
                             break;
                         case 13:
-                            rectangle.Fill = Brushes.LightPink;
-                            rectangle.Stroke= Brushes.LightPink;
+                            mapPatches[i, j].Fill = Brushes.LightPink;
+                            mapPatches[i, j].Stroke= Brushes.LightPink;
                             break;
 
                     }
-                    UnderLayerOfMap.Children.Add(rectangle);
+                    UnderLayerOfMap.Children.Add(mapPatches[i, j]);
                 }
             }
             hasDrawed = true;
@@ -267,22 +294,23 @@ namespace Client
         //杂项功能
         private void ClickToEnterVS(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (!File.Exists("VSRoute.txt"))
-                {
-                    File.Create("VSRoute.txt");
-                    Exception ex = new("没有路径存储文件，已为您创建。请将VS路径输入该文件，并重新操作。");
-                    throw ex;
-                }//创建路径文件 
-                using StreamReader sr = new("VSRoute.txt");
-                _ = Process.Start(sr.ReadLine());
-            }
-            catch (Exception exc)
-            {
-                ErrorDisplayer error = new("发生错误。以下是系统报告:\n" + exc.ToString());
-                error.Show();
-            }
+            //try
+            //{
+            //    if (!File.Exists("VSRoute.txt"))
+            //    {
+            //        File.Create("VSRoute.txt");
+            //        Exception ex = new("没有路径存储文件，已为您创建。请将VS路径输入该文件，并重新操作。");
+            //        throw ex;
+            //    }//创建路径文件 
+            //    using StreamReader sr = new("VSRoute.txt");
+            //    _ = Process.Start(sr.ReadLine());
+            //}
+            //catch (Exception exc)
+            //{
+            //    ErrorDisplayer error = new("发生错误。以下是系统报告:\n" + exc.ToString());
+            //    error.Show();
+            //}
+            PleaseWait();
         }
 
         private void ClickToVisitEESAST(object sender, RoutedEventArgs e)
@@ -371,7 +399,7 @@ namespace Client
         }
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
-            if (!communicator.Client.IsConnected)//第一次连接失败后第二次连接会出错
+            if (!communicator.Client.IsConnected)
             {
                 try
                 {
@@ -416,8 +444,9 @@ namespace Client
 
         private void KeyBoardControl(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
+            if (communicator.Client.IsConnected)
             {
+<<<<<<< HEAD
                 case Key.W:
                     MessageToServer msgA = new MessageToServer();
                     msgA.MessageType = MessageType.Move;
@@ -510,6 +539,125 @@ namespace Client
                     break;
                 default:
                     break;
+=======
+                switch (e.Key)
+                {
+                    case Key.W:
+                        MessageToServer msgA = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = Math.PI
+                        };
+                        communicator.SendMessage(msgA);
+                        break;
+                    case Key.S:
+                        MessageToServer msgD = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = 0
+                        };
+                        communicator.SendMessage(msgD);
+                        break;
+                    case Key.D:
+                        MessageToServer msgW = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = Math.PI / 2
+                        };
+                        communicator.SendMessage(msgW);
+                        break;
+                    case Key.A:
+                        MessageToServer msgS = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = 3 * Math.PI / 2
+                        };
+                        communicator.SendMessage(msgS);
+                        break;
+                    case Key.J:
+                        MessageToServer msgJ = new()
+                        {
+                            MessageType = MessageType.Attack,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            Angle = Math.PI
+                        };
+                        communicator.SendMessage(msgJ);
+                        break;
+                    case Key.O:
+                        MessageToServer msgO = new()
+                        {
+                            MessageType = MessageType.Pick,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                        };
+                        communicator.SendMessage(msgO);
+                        break;
+                    case Key.U:
+                        MessageToServer msgU = new()
+                        {
+                            MessageType = MessageType.UseCommonSkill,
+                            PlayerID = playerID,
+                            TeamID = teamID
+                        };
+                        communicator.SendMessage(msgU);
+                        break;
+                    case Key.K:
+                        MessageToServer msgK = new()
+                        {
+                            MessageType = MessageType.UseGem,
+                            PlayerID = playerID,
+                            TeamID = teamID
+                        };
+                        communicator.SendMessage(msgK);
+                        break;
+                    case Key.L:
+                        MessageToServer msgL = new()
+                        {
+                            MessageType = MessageType.ThrowGem,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            GemSize = 1,
+                            TimeInMilliseconds = 3000,
+                            Angle = Math.PI
+                        };
+                        communicator.SendMessage(msgL);
+                        break;
+                    case Key.P:
+                        MessageToServer msgP = new()
+                        {
+                            MessageType = MessageType.Pick,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            PropType = Communication.Proto.PropType.Gem
+                        };
+                        communicator.SendMessage(msgP);
+                        break;
+                    case Key.I:
+                        MessageToServer msgI = new()
+                        {
+                            MessageType = MessageType.UseProp,
+                            PlayerID = playerID,
+                            TeamID = teamID
+                        };
+                        communicator.SendMessage(msgI);
+                        break;
+                    default:
+                        break;
+                }
+>>>>>>> 9577156720ae45332eb20a4d9f810a7e05f9ba75
             }
         }
         private void GetMap(MessageToClient.Types.GameObjMessage obj)
@@ -670,8 +818,22 @@ namespace Client
         //定时器事件，刷新地图
         private void Refresh(object? sender, EventArgs e)
         {
+            if (WindowState == WindowState.Maximized)
+                MaxButton.Content = "❐";
+            else
+                MaxButton.Content = "🗖";
+            if (StatusBars != null)
+                for (int i = 0; i < 8; i++)
+                {
+                    StatusBars[i].SetFontSize(12 * UpperLayerOfMap.ActualHeight / 650);
+                }
+            
+            //完成窗口信息更新
             if (!isClientStocked)
             {
+                unit = Math.Sqrt(UpperLayerOfMap.ActualHeight * UpperLayerOfMap.ActualWidth) / 50;
+                unitHeight = UpperLayerOfMap.ActualHeight/50;
+                unitWidth = UpperLayerOfMap.ActualWidth/50;
                 try
                 {
                     if (log != null)
@@ -686,6 +848,7 @@ namespace Client
                     UpperLayerOfMap.Children.Clear();
                     if (!communicator.Client.IsConnected)
                     {
+                        UnderLayerOfMap.Children.Clear();
                         throw new Exception("Client is unconnected.");
                     }
                     else
@@ -701,11 +864,11 @@ namespace Client
                                 {
                                     Ellipse icon = new()
                                     {
-                                        Width = 13,
-                                        Height = 13,
+                                        Width = unitWidth,
+                                        Height = unitHeight,
                                         HorizontalAlignment = HorizontalAlignment.Left,
                                         VerticalAlignment = VerticalAlignment.Top,
-                                        Margin = new Thickness(data.MessageOfCharacter.Y * 13.0 / 1000.0-6.5, data.MessageOfCharacter.X * 13.0 / 1000.0-6.5, 0, 0),
+                                        Margin = new Thickness(data.MessageOfCharacter.Y * unitWidth / 1000.0- unitWidth/2, data.MessageOfCharacter.X * unitHeight / 1000.0- unitHeight/2, 0, 0),
                                     };
                                     if (data.MessageOfCharacter.TeamID == 0)
                                         icon.Fill = Brushes.Black;
@@ -727,7 +890,7 @@ namespace Client
                                         Height = 10,
                                         HorizontalAlignment = HorizontalAlignment.Left,
                                         VerticalAlignment = VerticalAlignment.Top,
-                                        Margin = new Thickness(data.MessageOfBullet.Y * 13.0 / 1000.0-6.5, data.MessageOfBullet.X * 13.0 / 1000.0-6.5, 0, 0),
+                                        Margin = new Thickness(data.MessageOfBullet.Y * unitWidth / 1000.0-unitWidth / 2, data.MessageOfBullet.X * unitHeight / 1000.0-unitHeight / 2, 0, 0),
                                         Fill = Brushes.Red
                                     };
                                     UpperLayerOfMap.Children.Add(icon);
@@ -740,7 +903,7 @@ namespace Client
                                     switch (data.MessageOfProp.Type)
                                     {
                                         case PropType.Gem:
-                                            DrawProp(data, "💎");
+                                            DrawProp(data, "📱");
                                             break;
                                         case PropType.Shield:
                                             DrawProp(data, "🛡");
@@ -750,6 +913,9 @@ namespace Client
                                             break;
                                         case PropType.AddSpeed:
                                             DrawProp(data, "⛸");
+                                            break;
+                                        case PropType.AddLife:
+                                            DrawProp(data, "♥");
                                             break;
                                         default:
                                             DrawProp(data, "♨");
@@ -764,11 +930,11 @@ namespace Client
                                     case BulletType.FastBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 1.5 * 13;
-                                            icon.Height = 1.5 * 13;
+                                            icon.Width = 1.5 * unitWidth;
+                                            icon.Height = 1.5 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-1.5*13/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-1.5*13/2, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0-1.5* unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0-1.5* unitHeight / 2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -776,11 +942,11 @@ namespace Client
                                     case BulletType.AtomBomb:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 3 * 39;
-                                            icon.Height = 3 * 39;
+                                            icon.Width = 9*unitWidth;
+                                            icon.Height = 9 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-3*39.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-3*39.0/2, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0-9*unitWidth/2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 9 * unitHeight / 2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -788,36 +954,36 @@ namespace Client
                                     case BulletType.OrdinaryBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 39;
-                                            icon.Height = 39;
+                                            icon.Width = 9 * unitWidth;
+                                            icon.Height = 9 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-39.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-39.0/2, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - 9 * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 9 * unitHeight / 2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
                                         }
                                     case BulletType.LineBullet:
                                         {
-                                            DrawLaser(new Point(data.MessageOfBombedBullet.Y * 13.0 / 1000.0, data.MessageOfBombedBullet.X * 13.0 / 1000.0), -data.MessageOfBombedBullet.FacingDirection + Math.PI/2, 60);
+                                            DrawLaser(new Point(data.MessageOfBombedBullet.Y * unitWidth / 1000.0, data.MessageOfBombedBullet.X * unitHeight / 1000.0), -data.MessageOfBombedBullet.FacingDirection + Math.PI/2, 60);
                                             break;
                                         }
                                     default:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 65;
-                                            icon.Height = 65;
+                                            icon.Width = 5*unitWidth;
+                                            icon.Height = 5*unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * 13.0 / 1000.0-65.0/2, data.MessageOfBombedBullet.X * 13.0 / 1000.0-65.0/2, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0-5*unitWidth/2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 5 * unitHeight / 2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
                                         }
-
                                 }
                             }
                         }
+                        ZoomMap();
                     }
                 }
                 catch (Exception exc)
@@ -849,15 +1015,18 @@ namespace Client
         //以下为Mainwindow自定义属性
         private readonly DispatcherTimer timer;//定时器
         private long counter;//预留的取时间变量
-        private readonly StatusBar[] StatusBars = new StatusBar[8];
+        private StatusBar[] StatusBars;
         private readonly ClientCommunication communicator;
+        private readonly Rectangle[,] mapPatches=new Rectangle[50,50];
 
         private bool isClientStocked;
 
         private long playerID;
         private long teamID;
 
-
+        private double unit;//显示粗略的大小
+        private double unitHeight;
+        private double unitWidth;
         private List<MessageToClient.Types.GameObjMessage> playerData;
         private List<MessageToClient.Types.GameObjMessage> bulletData;
         private List<MessageToClient.Types.GameObjMessage> propData;
