@@ -1,0 +1,17 @@
+name: mirror
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  mirror_to_gitee:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: wearerequired/git-mirror-action@v1
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.GITEE_SSH_PRIVATE_KEY }}
+      with:
+        source-repo: "git@github.com:eesast/THUAI5.git"
+        destination-repo: "git@gitee.com:eesast/thuai5.git"
