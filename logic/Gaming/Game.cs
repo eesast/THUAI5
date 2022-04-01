@@ -222,7 +222,7 @@ namespace Gaming
                 _ = attackManager.Attack(player, angle);
             }
         }
-        public void UseGem(long playerID, int num)
+        public void UseGem(long playerID, int num = int.MaxValue)
         {
             if (!gameMap.Timer.IsGaming)
                 return;

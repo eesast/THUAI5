@@ -122,7 +122,7 @@ namespace GameEngine
 
             // 先找只考虑墙的最大距离
             //double maxOnlyConsiderWall = FindMaxOnlyConsiderWall(obj, moveVec);
-            double maxIgnoringWall = maxLen;
+            double maxDistance = maxLen;
             foreach (var listWithLock in lists)
             {
                 var lst = listWithLock.Item1;
@@ -195,20 +195,20 @@ namespace GameEngine
                                         tmpMax = uint.MaxValue;
                                         break;
                                 }
-                                if (tmpMax < maxIgnoringWall)
-                                    maxIgnoringWall = tmpMax;
+                                if (tmpMax < maxDistance)
+                                    maxDistance = tmpMax;
                             }
                         }
                     }
                 }
                 finally
                 {
-                    //maxLen = Math.Min(maxOnlyConsiderWall, maxIgnoringWall); //最大可能距离的最小值
+                    //maxLen = Math.Min(maxOnlyConsiderWall, maxDistance); //最大可能距离的最小值
                     listLock.ExitReadLock();
                 }
             }
             //return maxLen;
-            return maxIgnoringWall;
+            return maxDistance;
         }
 
         readonly IMap gameMap;

@@ -7,13 +7,15 @@
 
 ### windows
 
-在**x64**生成环境下，**请把生成模式改为release模式**，选手首先需要将组件包中的`HPSocket.lib`和`libprotobuf.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；
+在**x64**生成环境下，选手首先需要将组件包中的`HPSocket.lib`,`libprotobuf.lib`和`libprotobufd.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；
 
 ![settings](../resource/APIsettings2.png)
 
 ![settings](../resource/APIsettings.png)
 
-待到生成完毕后，在`THUAI5\CAPI`文件夹（即与`CAPI.sln`文件相同的目录）下，会有一个`x64`文件夹，在此文件夹中可以找到可执行文件`API.exe`，在与`API.exe`相同的文件夹下放置`HPSocket.dll`。
+
+
+**待到生成完毕后，在`THUAI5\CAPI`文件夹（即与`CAPI.sln`文件相同的目录）下，会有一个`x64`文件夹，在此文件夹中可以找到可执行文件`API.exe`，在与`API.exe`相同的文件夹下放置`HPSocket.dll`。**
 
 ### Linux
 

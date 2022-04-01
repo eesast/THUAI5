@@ -167,7 +167,9 @@ namespace Server
                 case MessageType.UseGem:
                     if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
                     {
-                        game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID], msg.GemSize);
+                        if(msg.GemSize > 0)
+                            game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID], msg.GemSize);
+                        else game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID]);
                     }
                     break;
                 case MessageType.UseProp:
@@ -302,9 +304,7 @@ namespace Server
             (
                 () =>
                 {
-#if DEBUG
                     Console.WriteLine("Game Start!");
-#endif
                     game.StartGame((int)options.GameTimeInSecond * 1000);
                     OnGameEnd();
                 }
