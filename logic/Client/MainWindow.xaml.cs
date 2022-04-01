@@ -560,6 +560,17 @@ namespace Client
                         };
                         communicator.SendMessage(msgI);
                         break;
+                    case Key.Y:
+                        MessageToServer msgY = new()
+                        {
+                            MessageType = MessageType.ThrowProp,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 3000,
+                            Angle = Math.PI
+                        };
+                        communicator.SendMessage(msgY);
+                        break;
                     default:
                         break;
                 }
@@ -847,7 +858,7 @@ namespace Client
                                     case BulletType.AtomBomb:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 9*unitWidth;
+                                            icon.Width = 9 * unitWidth;
                                             icon.Height = 9 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
@@ -859,11 +870,11 @@ namespace Client
                                     case BulletType.OrdinaryBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 9 * unitWidth;
-                                            icon.Height = 9 * unitHeight;
+                                            icon.Width = 3 * unitWidth;
+                                            icon.Height = 3 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - 9 * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 9 * unitHeight / 2, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - 3 * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 3 * unitHeight / 2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -947,7 +958,7 @@ namespace Client
         private bool mapFlag = false;
         private bool hasDrawed = false;
         public static int[,] defaultMap = new int[,]
-         {
+        {
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -964,7 +975,7 @@ namespace Client
             {1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,0,1},
             {1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,13,13,13,13,13,13,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,13,13,13,13,13,13,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
-            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,2,2,2,2,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,13,13,13,13,13,13,13,13,13,13,13,13,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -998,7 +1009,7 @@ namespace Client
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-        };
+       };
 
         ArgumentOptions? options = null;
     }

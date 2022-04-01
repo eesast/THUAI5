@@ -121,7 +121,6 @@ namespace Test
                         MessageToServer msgK = new MessageToServer();
                         msgK.MessageType = MessageType.UseGem;
                         msgK.PlayerID = playerID;
-                        msgK.GemSize = 1;
                         msgK.TeamID = teamID;
                         clientCommunication.SendMessage(msgK);
                         break;
@@ -156,6 +155,15 @@ namespace Test
                         msgI.PlayerID = playerID;
                         msgI.TeamID = teamID;
                         clientCommunication.SendMessage(msgI);
+                        break;
+                    case ConsoleKey.Y:
+                        MessageToServer msgY = new MessageToServer();
+                        msgY.MessageType = MessageType.ThrowProp;
+                        msgY.PlayerID = playerID;
+                        msgY.TeamID = teamID;
+                        msgY.TimeInMilliseconds = 3000;
+                        msgY.Angle = Math.PI;
+                        clientCommunication.SendMessage(msgY);
                         break;
                     default:
                         break;
