@@ -18,9 +18,9 @@
         <TextBox x:Name="TeamIDBox" HorizontalAlignment="Left" Height="20" Margin="183,127,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" BorderBrush="Black"/>
         <Label Content="PlayerID:" HorizontalAlignment="Left" Height="24" Margin="183,31,0,0" VerticalAlignment="Top" Width="68"/>
         <Label Content="TeamID:" HorizontalAlignment="Left" Height="24" Margin="183,103,0,0" VerticalAlignment="Top" Width="68"/>
-        <Label Content="Pskill:" HorizontalAlignment="Left" Height="24" Margin="0,175,0,0" VerticalAlignment="Top" Width="53"/>
+        <Label Content="Hardware:" HorizontalAlignment="Left" Height="24" Margin="0,175,0,0" VerticalAlignment="Top" Width="74"/>
         <TextBox x:Name="Pskill" HorizontalAlignment="Left" Height="20" Margin="2,199,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" BorderBrush="Black"/>
-        <Label Content="Askill:" HorizontalAlignment="Left" Height="24" Margin="183,175,0,0" VerticalAlignment="Top" Width="53"/>
+        <Label Content="Software:" HorizontalAlignment="Left" Height="24" Margin="183,175,0,0" VerticalAlignment="Top" Width="68"/>
         <TextBox x:Name="Askill" HorizontalAlignment="Left" Height="20" Margin="183,199,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="117" BorderBrush="Black"/>
 
     </Grid>

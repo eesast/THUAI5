@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CustomControl1.cs" />
+    <Compile Remove="status.cs" />
+    <Compile Remove="StatusBar.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Logo.png" />
     <None Remove="Player.png" />
     <None Remove="Team.png" />
