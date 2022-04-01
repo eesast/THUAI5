@@ -1,6 +1,0 @@
-[submodule "CAPI/protobuf"]
-	path = CAPI/protobuf
-	url = https://github.com/protocolbuffers/protobuf.git
-[submodule "CAPI/tclap"]
-	path = CAPI/tclap
-	url = https://github.com/mirror/tclap.git

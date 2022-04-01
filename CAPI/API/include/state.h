@@ -17,12 +17,12 @@ struct State
     uint32_t teamScore;
 
     // 自身信息
-    std::shared_ptr<THUAI5::Character> self;
+    std::shared_ptr<THUAI5::Robot> self;
 
     // 全局游戏信息
-    std::vector<std::shared_ptr<THUAI5::Character>> characters;
+    std::vector<std::shared_ptr<THUAI5::Robot>> robots;
     std::vector<std::shared_ptr<THUAI5::Prop>> props;
-    std::vector<std::shared_ptr<THUAI5::Bullet>> bullets;
+    std::vector<std::shared_ptr<THUAI5::SignalJammer>> jammers;
     THUAI5::PlaceType gamemap[51][51];
 
     // GUID信息

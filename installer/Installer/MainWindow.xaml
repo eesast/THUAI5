@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:Installer"
         mc:Ignorable="d"
         Title="Installer" Height="400" Width="600">
-
+    
     <Window.Resources>
         <local:Text x:Key="textShow" FilePath=""/>
     </Window.Resources>
-
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
@@ -48,8 +48,9 @@
                 </Button>
             </StackPanel>
 
-            <StackPanel Visibility="Hidden" Name="Down2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Width="212">
-                <Label Name="label" Content="正在下载中..." FontSize="16" VerticalAlignment="Center" HorizontalContentAlignment="Center" Width="212" Height="27"/>
+            <StackPanel Visibility="Hidden" Name="Down2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <ProgressBar Name="pb" HorizontalAlignment="Left" VerticalAlignment="Center" Height="30" Width="400"  />
+                <Label Name="label" Content="" FontSize="16" VerticalAlignment="Center" />
             </StackPanel>
         </Grid>
     </Grid>
