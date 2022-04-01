@@ -135,6 +135,8 @@ Where:
 
 ## 用户接口
 
+**请选手先仔细阅读`CAPI/API/include/structure.h`**
+
 用户可供使用的接口如下：
 ```cpp
 class IAPI
