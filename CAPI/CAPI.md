@@ -109,6 +109,32 @@ Where:
    THUAI5 C++ interface commandline parameter introduction
 ```
 
+一些关键参数的具体说明如下：
+
+* `-f <string>` 当添加此参数后，游戏中输出的调试信息将会被输入到指定的文件中，而不是终端。
+
+* `-d` 如果此参数被指定，终端将会输出更加详细的调试信息，具体区别如下：
+
+  当使用`-d`参数时，终端（或指定文件）将输出详细的函数调用情况。
+
+  ![settings](../resource/debug.png)
+
+  当删除`-d`参数时，除了基础信息之外，系统将不会输出函数调用情况。
+
+  ![settings](../resource/no-debug.png)
+
+  当选手想要查看具体的游戏信息时，可以添加`-d`属性；但如果想要追求丝滑的游戏体验，则推荐删除该参数，否则频繁的io将拖累系统速度。
+
+* `-P <USHORT>` server端口，一般不需要改动。
+
+* `-I <string>` server IP，一般不需要改动。
+
+* `-t <0/1>` 指定team ID。
+
+* `-p <0|1|2|3>` 指定player ID。
+
+* `-w` 当`-d`参数被指定时，指定`-w`参数可以输出一些警告信息，如在人物死亡时执行移动操作，系统将输出警告信息："[Warning: You have been slained.]"。
+
 ## 用户接口
 
 用户可供使用的接口如下：

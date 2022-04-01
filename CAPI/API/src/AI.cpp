@@ -44,6 +44,12 @@ void AI::play(IAPI& api)
 		std::cout << SignalJammers[0]->parentTeamID << std::endl;
 		std::cout << SignalJammers.size() << std::endl;
 	}
+	//!!!!!! 注意：千万不要写出这样的代码：
+	//! auto SignalJammers=api.GetSignalJammers();
+	//! std::cout << SignalJammers[0]->parentTeamID << std::endl;
+	//! std::cout << SignalJammers.size() << std::endl;
+	//! 当场上没有任何信号干扰器时，SignalJammers的长度将为0，如果此时直接调用SignalJammers[0]->parentTeamID，将会产生空指针，导致程序崩溃！
+	//! 编写C++程序的一个好习惯：随时判断一段代码是否会产生空指针，并写出严密的判空机制。
 
 	//获取场上机器人的信息
 	auto Robots=api.GetRobots();
