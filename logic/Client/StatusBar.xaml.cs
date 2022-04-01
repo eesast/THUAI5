@@ -72,13 +72,8 @@ namespace Client
                 + "\n🏹："
                 + Convert.ToString(obj.BulletNum)
                 + "\n🏃：" + Convert.ToString(obj.Speed)
-<<<<<<< HEAD
                 + "\n♥：" + Convert.ToString(life(obj));
             scores.Text = "Scores:" + Convert.ToString(obj.Score);
-=======
-                + "\n♥：" + Convert.ToString(obj.Life);
-            scores.Text = "Scores:" + Convert.ToString(life(obj));
->>>>>>> 9577156720ae45332eb20a4d9f810a7e05f9ba75
             switch (obj.Prop)
             {
                 case PropType.Gem:

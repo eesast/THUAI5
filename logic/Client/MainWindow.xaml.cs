@@ -560,7 +560,6 @@ namespace Client
                         };
                         communicator.SendMessage(msgI);
                         break;
-<<<<<<< HEAD
                     case Key.Y:
                         MessageToServer msgY = new()
                         {
@@ -572,8 +571,6 @@ namespace Client
                         };
                         communicator.SendMessage(msgY);
                         break;
-=======
->>>>>>> 9577156720ae45332eb20a4d9f810a7e05f9ba75
                     default:
                         break;
                 }
@@ -861,11 +858,7 @@ namespace Client
                                     case BulletType.AtomBomb:
                                         {
                                             Ellipse icon = new Ellipse();
-<<<<<<< HEAD
                                             icon.Width = 9 * unitWidth;
-=======
-                                            icon.Width = 9*unitWidth;
->>>>>>> 9577156720ae45332eb20a4d9f810a7e05f9ba75
                                             icon.Height = 9 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
@@ -877,19 +870,11 @@ namespace Client
                                     case BulletType.OrdinaryBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-<<<<<<< HEAD
                                             icon.Width = 3 * unitWidth;
                                             icon.Height = 3 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
                                             icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - 3 * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 3 * unitHeight / 2, 0, 0);
-=======
-                                            icon.Width = 9 * unitWidth;
-                                            icon.Height = 9 * unitHeight;
-                                            icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                            icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - 9 * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 9 * unitHeight / 2, 0, 0);
->>>>>>> 9577156720ae45332eb20a4d9f810a7e05f9ba75
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
