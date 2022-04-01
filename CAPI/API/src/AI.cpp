@@ -6,11 +6,12 @@
 // 为假则play()调用期间游戏状态更新阻塞，为真则只保证当前游戏状态不会被状态更新函数与IAPI的方法同时访问
 extern const bool asynchronous = false;
 
-// 选手主动技能，选手 !!必须!! 定义此变量来选择主动技能
-extern const THUAI5::ActiveSkillType playerActiveSkill = THUAI5::ActiveSkillType::NuclearWeapon;
 
-// 选手被动技能，选手 !!必须!! 定义此变量来选择被动技能
-extern const THUAI5::PassiveSkillType playerPassiveSkill = THUAI5::PassiveSkillType::RecoverAfterBattle;
+// 选手主动技能，选手 !!必须!! 定义此变量来选择主动技能(software type)
+extern const THUAI5::SoftwareType playerSoftware = THUAI5::SoftwareType::Booster;
+
+// 选手被动技能，选手 !!必须!! 定义此变量来选择被动技能(hardware type)
+extern const THUAI5::HardwareType playerHardware = THUAI5::HardwareType::EnergyConvert;
 
 namespace
 {
@@ -24,53 +25,46 @@ void AI::play(IAPI& api)
 {
 
     auto self = api.GetSelfInfo();
-    if (mydirection == 0)
-    {
-        if (api.GetPlaceType(self->x / 1000 - 1, self->y / 1000) == THUAI5::PlaceType(1))
-        {
-            mydirection = 1;
-        }
-    }
+
 
     // how to get team score
-    if (api.GetFrameCount() == 19)
     {
         std::cout << api.GetTeamScore() << std::endl;
     }
 
     // how to get the game information & how to view the game information on terminal
-    if (api.GetFrameCount() == 20)
+    if (api.GetFrameCount() % 100 == 0)
     {
         auto selfinfo = api.GetSelfInfo(); // store the value
         api.PrintSelfInfo();               // print the value in a format style
     }
 
-    if (api.GetFrameCount() == 21)
+    if (api.GetFrameCount() % 100 == 0)
     {
         auto characters = api.GetRobots();
         api.PrintRobots();
     }
 
-    if (api.GetFrameCount() == 22)
+    if (api.GetFrameCount() % 100 == 0)
     {
         auto props = api.GetProps();
         api.PrintProps();
     }
 
-    if (api.GetFrameCount() == 23)
+    if (api.GetFrameCount() % 100 == 0)
     {
         auto bullets = api.GetSignalJammers();
         api.PrintSignalJammers();
     }
 
-    if (api.GetFrameCount() == 24)
+    if (api.GetFrameCount() % 10 == 0)
     {
         auto PlaceType = api.GetPlaceType(25, 25); //! use cell instead of grid!
         std::cout << THUAI5::place_dict[PlaceType] << std::endl;
     }
 
     // how to execute the player
-    if (api.GetFrameCount() == 25)
+    if (api.GetFrameCount() <= 25)
     {
         api.Attack(1.0);
         api.MoveDown(10);
@@ -81,7 +75,6 @@ void AI::play(IAPI& api)
     }
 
     // how to convert the two types of position(cell/grid)
-    if (api.GetFrameCount() == 26)
     {
         uint32_t gridnumbers = api.CellToGrid(5);
         std::cout << "cell to grid: " << gridnumbers << std::endl;
@@ -89,10 +82,31 @@ void AI::play(IAPI& api)
     }
 
     // how to use props
-    if (api.GetFrameCount() == 27)
     {
         auto props = api.GetProps();
         if (props.size() != 0)
+        {
+            api.UseProp();
+        }
+    }
+
+    // how to use software skills
+    {
+        api.UseCommonSkill();
+    }
+
+    // how to use CPU & throw CPU
+    {
+        api.UseCPU(1);
+        api.ThrowCPU(1000,0,1);
+    }
+
+    if (mydirection == 0)
+    {
+        if (api.GetPlaceType(self->x / 1000 - 1, self->y / 1000) == THUAI5::PlaceType(1))
+        {
+            mydirection = 1;
+        }
         else
         {
             api.MoveUp(50);
@@ -100,12 +114,13 @@ void AI::play(IAPI& api)
     }
     if (mydirection == 1)
     {
-
-        if (selfinfo->cpuNum != 0)
+        if (api.GetPlaceType(self->x / 1000, self->y / 1000 - 1) == THUAI5::PlaceType(1))
         {
-            api.UseCPU(selfinfo->cpuNum);
-            // or you can throw it to your teammate:
-            // api.ThrowGem(10,1);
+            mydirection = 2;
+        }
+        else
+        {
+            api.MoveLeft(50);
         }
     }
     if (mydirection == 2)
@@ -130,6 +145,4 @@ void AI::play(IAPI& api)
             api.MoveRight(50);
         }
     }
-    
-    api.Attack(1.0);
 }
