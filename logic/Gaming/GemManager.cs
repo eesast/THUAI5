@@ -134,8 +134,10 @@ namespace Gaming
             {
                 if (!player.IsAvailable)
                     return;
-                if (size > player.GemNum || size <= 0)
+                if (size <= 0 || player.GemNum <= 0)
                     return;
+                else if (size > player.GemNum)
+                    size = player.GemNum;
                 Gem gem = new Gem(player.Position, size);
                 gameMap.GameObjLockDict[GameObjIdx.Gem].EnterWriteLock();
                 try
@@ -144,6 +146,7 @@ namespace Gaming
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitWriteLock(); }
                 moveEngine.MoveObj(gem, moveMillisecondTime, angle);
+                player.GemNum -= size;
             }
 
             public void UseGem(Character character, int num)

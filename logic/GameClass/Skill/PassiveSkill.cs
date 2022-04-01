@@ -16,11 +16,11 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
         //以上参数以后再改
         public void SkillEffect(Character player)
         {
-            const int recoverDegree = 1;  //每帧回复血量
+            const int recoverDegree = 5;  //每帧回复血量
             int nowHP = player.HP;
             int lastHP = nowHP;
             long waitTime = 0;
-            const long interval = 20000; //每隔interval时间不受伤害，角色即开始回血
+            const long interval = 30000; //每隔interval时间不受伤害，角色即开始回血
             new Thread
             (
                 () =>
@@ -41,7 +41,7 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
                                 waitTime += GameData.frameDuration;
                             }
 
-                            if (waitTime >= interval)  //回复时，每帧(50ms)回复1，即1s回复20。
+                            if (waitTime >= interval)  //回复时，每帧(50ms)回复5，即1s回复100。
                                 player.TryAddHp(recoverDegree);
                         },
                         timeInterval: GameData.frameDuration,
@@ -146,7 +146,7 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
         //以上参数以后再改
         public void SkillEffect(Character player)
         {
-            player.OriVampire = 0.1;
+            player.OriVampire = 0.5;
         }
     }
 
