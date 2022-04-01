@@ -419,98 +419,95 @@ namespace Client
             switch (e.Key)
             {
                 case Key.W:
-                    MessageToServer msgA = new()
-                    {
-                        MessageType = MessageType.Move,
-                        PlayerID = playerID,
-                        TeamID = teamID,
-                        TimeInMilliseconds = 50,
-                        Angle = Math.PI
-                    };
+                    MessageToServer msgA = new MessageToServer();
+                    msgA.MessageType = MessageType.Move;
+                    msgA.PlayerID = playerID;
+                    msgA.TeamID = teamID;
+                    msgA.TimeInMilliseconds = 50;
+                    msgA.Angle = Math.PI;
                     communicator.SendMessage(msgA);
                     break;
                 case Key.S:
-                    MessageToServer msgD = new()
-                    {
-                        MessageType = MessageType.Move,
-                        PlayerID = playerID,
-                        TeamID = teamID,
-                        TimeInMilliseconds = 50,
-                        Angle = 0
-                    };
+                    MessageToServer msgD = new MessageToServer();
+                    msgD.MessageType = MessageType.Move;
+                    msgD.PlayerID = playerID;
+                    msgD.TeamID = teamID;
+                    msgD.TimeInMilliseconds = 50;
+                    msgD.Angle = 0;
                     communicator.SendMessage(msgD);
                     break;
                 case Key.D:
-                    MessageToServer msgW = new()
-                    {
-                        MessageType = MessageType.Move,
-                        PlayerID = playerID,
-                        TeamID = teamID,
-                        TimeInMilliseconds = 50,
-                        Angle = Math.PI / 2
-                    };
+                    MessageToServer msgW = new MessageToServer();
+                    msgW.MessageType = MessageType.Move;
+                    msgW.PlayerID = playerID;
+                    msgW.TeamID = teamID;
+                    msgW.TimeInMilliseconds = 50;
+                    msgW.Angle = Math.PI / 2;
                     communicator.SendMessage(msgW);
                     break;
                 case Key.A:
-                    MessageToServer msgS = new()
-                    {
-                        MessageType = MessageType.Move,
-                        PlayerID = playerID,
-                        TeamID = teamID,
-                        TimeInMilliseconds = 50,
-                        Angle = 3 * Math.PI / 2
-                    };
+                    MessageToServer msgS = new MessageToServer();
+                    msgS.MessageType = MessageType.Move;
+                    msgS.PlayerID = playerID;
+                    msgS.TeamID = teamID;
+                    msgS.TimeInMilliseconds = 50;
+                    msgS.Angle = 3 * Math.PI / 2;
                     communicator.SendMessage(msgS);
                     break;
                 case Key.J:
-                    MessageToServer msgJ = new()
-                    {
-                        MessageType = MessageType.Attack,
-                        PlayerID = playerID,
-                        TeamID = teamID,
-                        Angle = Math.PI
-                    };
+                    MessageToServer msgJ = new MessageToServer();
+                    msgJ.MessageType = MessageType.Attack;
+                    msgJ.PlayerID = playerID;
+                    msgJ.TeamID = teamID;
+                    msgJ.Angle = Math.PI;
                     communicator.SendMessage(msgJ);
                     break;
                 case Key.U:
-                    MessageToServer msgU = new()
-                    {
-                        MessageType = MessageType.UseCommonSkill,
-                        PlayerID = playerID,
-                        TeamID = teamID
-                    };
+                    MessageToServer msgU = new MessageToServer();
+                    msgU.MessageType = MessageType.UseCommonSkill;
+                    msgU.PlayerID = playerID;
+                    msgU.TeamID = teamID;
                     communicator.SendMessage(msgU);
                     break;
                 case Key.K:
-                    MessageToServer msgK = new()
-                    {
-                        MessageType = MessageType.UseGem,
-                        PlayerID = playerID,
-                        TeamID = teamID
-                    };
+                    MessageToServer msgK = new MessageToServer();
+                    msgK.MessageType = MessageType.UseGem;
+                    msgK.PlayerID = playerID;
+                    msgK.GemSize = 1;
+                    msgK.TeamID = teamID;
                     communicator.SendMessage(msgK);
                     break;
                 case Key.L:
-                    MessageToServer msgL = new()
-                    {
-                        MessageType = MessageType.ThrowGem,
-                        PlayerID = playerID,
-                        TeamID = teamID,
-                        GemSize = 1,
-                        TimeInMilliseconds = 3000,
-                        Angle = Math.PI
-                    };
+                    MessageToServer msgL = new MessageToServer();
+                    msgL.MessageType = MessageType.ThrowGem;
+                    msgL.PlayerID = playerID;
+                    msgL.TeamID = teamID;
+                    msgL.GemSize = 1;
+                    msgL.TimeInMilliseconds = 3000;
+                    msgL.Angle = Math.PI;
                     communicator.SendMessage(msgL);
                     break;
                 case Key.P:
-                    MessageToServer msgP = new()
-                    {
-                        MessageType = MessageType.Pick,
-                        PlayerID = playerID,
-                        TeamID = teamID,
-                        PropType = Communication.Proto.PropType.Gem
-                    };
+                    MessageToServer msgP = new MessageToServer();
+                    msgP.MessageType = MessageType.Pick;
+                    msgP.PlayerID = playerID;
+                    msgP.TeamID = teamID;
+                    msgP.PropType = PropType.Gem;
                     communicator.SendMessage(msgP);
+                    break;
+                case Key.O:
+                    MessageToServer msgO = new MessageToServer();
+                    msgO.MessageType = MessageType.Pick;
+                    msgO.PlayerID = playerID;
+                    msgO.TeamID = teamID;
+                    communicator.SendMessage(msgO);
+                    break;
+                case Key.I:
+                    MessageToServer msgI = new MessageToServer();
+                    msgI.MessageType = MessageType.UseProp;
+                    msgI.PlayerID = playerID;
+                    msgI.TeamID = teamID;
+                    communicator.SendMessage(msgI);
                     break;
                 default:
                     break;

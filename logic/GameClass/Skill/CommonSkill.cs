@@ -159,7 +159,7 @@ namespace GameClass.Skill
             }
         }
     }
-    public class NuclearWeapon : ICommonSkill  //核武器：1*标准技能cd，0.5*标准持续时间
+    public class NuclearWeapon : ICommonSkill  //核武器：1*标准技能cd，0.2*标准持续时间
     {
         private const int moveSpeed = GameData.basicMoveSpeed / 6 * 5;
         public int MoveSpeed => moveSpeed;
@@ -236,7 +236,7 @@ namespace GameClass.Skill
             }
         }
     }
-    public class SuperFast : ICommonSkill  //3倍速：1*标准技能cd，1*标准持续时间
+    public class SuperFast : ICommonSkill  //3倍速：1*标准技能cd，0.3*标准持续时间
     {
         private const int moveSpeed = GameData.basicMoveSpeed;
         public int MoveSpeed => moveSpeed;
