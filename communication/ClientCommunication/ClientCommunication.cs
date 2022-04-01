@@ -29,7 +29,6 @@ namespace Communication.ClientCommunication
             {
                 Message message = new Message();
                 message.Deserialize(bytes); // 解码信息
-
                 // 欢迎补充
                 if (message.PacketType == PacketType.MessageToOneClient)
                 {

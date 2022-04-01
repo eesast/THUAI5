@@ -58,7 +58,7 @@ namespace Gaming
             newPlayer.TeamID = playerInitInfo.teamID;
             newPlayer.PlayerID = playerInitInfo.playerID;
 
-            new Thread  //检查人物位置，同时人物装弹。
+            new Thread  //人物装弹
             (
                 () =>
                 {
@@ -72,9 +72,6 @@ namespace Gaming
                         {
                             if (!newPlayer.IsResetting)
                             {
-                                //if (newPlayer.Place != PlaceType.Invisible)
-                                newPlayer.Place = gameMap.GetPlaceType(newPlayer.Position);
-
                                 long nowTime = Environment.TickCount64;
                                 if (nowTime - lastTime >= newPlayer.CD)
                                 {
@@ -119,7 +116,7 @@ namespace Gaming
 
             propManager.StartProducing();
             gemManager.StartProducingGem();
-            new Thread
+            new Thread 
             (
                 () =>
                 {
@@ -128,15 +125,21 @@ namespace Gaming
                         loopCondition: () => gameMap.Timer.IsGaming,
                         loopToDo: () =>
                         {
-                            gameMap.GameObjLockDict[GameObjIdx.Bullet].EnterWriteLock();  //检查子弹位置
-                            try
+                            foreach (var kvp in gameMap.GameObjDict) // 检查物体位置
                             {
-                                foreach(var bullet in gameMap.GameObjDict[GameObjIdx.Bullet])
+                                if (kvp.Key == GameObjIdx.Bullet || kvp.Key == GameObjIdx.Player || kvp.Key == GameObjIdx.Prop || kvp.Key == GameObjIdx.Gem)
                                 {
-                                    bullet.Place = gameMap.GetPlaceType(bullet.Position);
+                                    gameMap.GameObjLockDict[kvp.Key].EnterWriteLock();
+                                    try
+                                    {
+                                        foreach (var item in gameMap.GameObjDict[kvp.Key])
+                                        {
+                                            item.Place = gameMap.GetPlaceType(item.Position);
+                                        }
+                                    }
+                                    finally { gameMap.GameObjLockDict[kvp.Key].ExitWriteLock(); }
                                 }
                             }
-                            finally { gameMap.GameObjLockDict[GameObjIdx.Bullet].ExitWriteLock(); }
                         },
                         timeInterval: GameData.checkInterval,
                         finallyReturn: () => 0

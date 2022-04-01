@@ -2,8 +2,8 @@
 #include "../include/utils.hpp"
 
 extern const bool asynchronous;
-extern const THUAI5::ActiveSkillType playerActiveSkill;
-extern const THUAI5::PassiveSkillType playerPassiveSkill;
+extern const THUAI5::SoftwareType playerSoftware;
+extern const THUAI5::HardwareType playerHardware;
 
 
 
@@ -13,19 +13,19 @@ int Logic::GetCounter() const
     return counter_state;
 }
 
-std::vector<std::shared_ptr<const THUAI5::Character>> Logic::GetCharacters() const
+std::vector<std::shared_ptr<const THUAI5::Robot>> Logic::GetRobots() const
 {
     std::unique_lock<std::mutex> lock(mtx_buffer);
-    std::vector<std::shared_ptr<const THUAI5::Character>> temp;
-    temp.assign(pState->characters.begin(), pState->characters.end());
+    std::vector<std::shared_ptr<const THUAI5::Robot>> temp;
+    temp.assign(pState->robots.begin(), pState->robots.end());
     return temp;
 }
 
-std::vector<std::shared_ptr<const THUAI5::Bullet>> Logic::GetBullets() const
+std::vector<std::shared_ptr<const THUAI5::SignalJammer>> Logic::GetSignalJammers() const
 {
     std::unique_lock<std::mutex> lock(mtx_buffer);
-    std::vector<std::shared_ptr<const THUAI5::Bullet>> temp;
-    temp.assign(pState->bullets.begin(), pState->bullets.end());
+    std::vector<std::shared_ptr<const THUAI5::SignalJammer>> temp;
+    temp.assign(pState->jammers.begin(), pState->jammers.end());
     return temp;
 }
 
@@ -37,7 +37,7 @@ std::vector<std::shared_ptr<const THUAI5::Prop>> Logic::GetProps() const
     return temp;
 }
 
-std::shared_ptr<const THUAI5::Character> Logic::GetSelfInfo() const
+std::shared_ptr<const THUAI5::Robot> Logic::GetSelfInfo() const
 {
     std::unique_lock<std::mutex> lock(mtx_buffer);
     return pState->self;
@@ -68,8 +68,8 @@ Protobuf::MessageToServer Logic::OnConnect()
     message.set_messagetype(Protobuf::MessageType::AddPlayer);
     message.set_playerid(playerID);
     message.set_teamid(teamID);
-    message.set_askill1((Protobuf::ActiveSkillType)playerActiveSkill);
-    message.set_pskill((Protobuf::PassiveSkillType)playerPassiveSkill);
+    message.set_askill1((Protobuf::ActiveSkillType)playerSoftware);
+    message.set_pskill((Protobuf::PassiveSkillType)playerHardware);
     return message;
 }
 
@@ -107,7 +107,7 @@ bool Logic::WaitThread()
     return true;
 }
 
-Logic::Logic(int teamID, int playerID, THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType) : teamID(teamID), playerID(playerID), activeSkillType(activeSkillType), passiveSkillType(passiveSkillType)
+Logic::Logic(int teamID, int playerID, THUAI5::SoftwareType softwareType, THUAI5::HardwareType hardwareType) : teamID(teamID), playerID(playerID), softwareType(softwareType), hardwareType(hardwareType)
 {
     pState = &state[0];
     pBuffer = &state[1];
@@ -201,9 +201,9 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
         std::lock_guard<std::mutex> lck(mtx_buffer);
 
         // 1.清除原有信息
-        pBuffer->characters.clear();
+        pBuffer->robots.clear();
         pBuffer->props.clear();
-        pBuffer->bullets.clear();
+        pBuffer->jammers.clear();
 
         // 2.信息不能全盘接受，要根据现有的视野范围接受
         auto gameObjMessage = pm2c->gameobjmessage();
@@ -221,7 +221,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                 {
                     if (Vision::visible(pState->self,it->messageofcharacter()))
                     {
-                        pBuffer->characters.push_back(Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter()));
+                        pBuffer->robots.push_back(Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter()));
                     }
                 }
             }
@@ -230,7 +230,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
             {
                 if (Vision::visible(pState->self,it->messageofbullet()))
                 {
-                    pBuffer->bullets.push_back(Proto2THUAI::Protobuf2THUAI5_B(it->messageofbullet()));
+                    pBuffer->jammers.push_back(Proto2THUAI::Protobuf2THUAI5_B(it->messageofbullet()));
                 }
             }
 

@@ -59,10 +59,10 @@ namespace Gaming
             /// <param name="player"></param>
             /// <param name="propType">若不指定，则自动判断可捡起什么道具</param>
             /// <returns></returns>
-            public bool PickProp(Character player,PropType propType=PropType.Null)
+            public bool PickProp(Character player,PropType propType = PropType.Null)
             {
                 Prop? pickProp = null;
-                if(propType==PropType.Null)  //自动检查有无道具可捡
+                if(propType == PropType.Null)  //自动检查有无道具可捡
                 {
                     gameMap.GameObjLockDict[GameObjIdx.Prop].EnterReadLock();
                     try
@@ -84,7 +84,7 @@ namespace Gaming
                     {
                         foreach(Prop prop in gameMap.GameObjDict[GameObjIdx.Prop])
                         {
-                            if(prop.GetPropType()==propType)
+                            if(prop.GetPropType() == propType)
                             {
                                 if (GameData.IsInTheSameCell(prop.Position, player.Position))
                                 {
@@ -98,11 +98,19 @@ namespace Gaming
 
                 if (pickProp != null)
                 {
+                    Prop? dropProp = null;
+                    if (player.PropInventory != null) // 若角色原来有道具，则原始道具掉落在原地
+                    {
+                        dropProp = player.PropInventory;
+                        dropProp.SetNewPos(player.Position);
+                    }
                     player.PropInventory = pickProp;
                     gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
                     try
                     {
                         gameMap.GameObjDict[GameObjIdx.Prop].Remove(pickProp);
+                        if(dropProp != null)
+                            gameMap.GameObjDict[GameObjIdx.Prop].Add(dropProp);
                     }
                     finally { gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock(); }
 
@@ -192,7 +200,7 @@ namespace Gaming
                     },
                     EndMove: obj =>
                     {
-                        obj.Place = gameMap.GetPlaceType((GameObj)obj);
+                        // obj.Place = gameMap.GetPlaceType((GameObj)obj);
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                     }
                 );
@@ -201,10 +209,7 @@ namespace Gaming
                 {
                     for (int j = 0; j < gameMap.ProtoGameMap.GetLength(1); j++)
                     {
-                        if ( gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Null
-                            || gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Grass1
-                            || gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Grass2
-                            || gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Grass3 )
+                        if (gameMap.ProtoGameMap[i, j] == (int)MapInfo.MapInfoObjType.Null)
                         {
                             availableCellForGenerateProp.Add(GameData.GetCellCenterPos(i, j));
                         }

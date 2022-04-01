@@ -48,8 +48,9 @@ namespace Test
             messageToServer.TeamID = teamID;
             messageToServer.ASkill1 = ActiveSkillType.BecomeAssassin;
             messageToServer.PSkill = PassiveSkillType.SpeedUpWhenLeavingGrass;
-             
-            clientCommunication.OnReceive += () =>
+
+            clientCommunication.OnReceive += 
+            () =>
             {
                 if (clientCommunication.TryTake(out IGameMessage msg) && msg.PacketType == PacketType.MessageToClient)
                 {
@@ -139,7 +140,7 @@ namespace Test
                         msgP.MessageType = MessageType.Pick;
                         msgP.PlayerID = playerID;
                         msgP.TeamID = teamID;
-                        msgP.PropType = Communication.Proto.PropType.Gem;
+                        msgP.PropType = PropType.Gem;
                         clientCommunication.SendMessage(msgP);
                         break;
                     case ConsoleKey.O:
@@ -148,6 +149,13 @@ namespace Test
                         msgO.PlayerID = playerID;
                         msgO.TeamID = teamID;
                         clientCommunication.SendMessage(msgO);
+                        break;
+                    case ConsoleKey.I:
+                        MessageToServer msgI = new MessageToServer();
+                        msgI.MessageType = MessageType.UseProp;
+                        msgI.PlayerID = playerID;
+                        msgI.TeamID = teamID;
+                        clientCommunication.SendMessage(msgI);
                         break;
                     default:
                         break;
