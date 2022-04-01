@@ -11,7 +11,7 @@ using System.IO;
 using Communication.ClientCommunication;
 using Communication.Proto;
 using CommandLine;
-
+//注：把13改成upperlayer.length/50
 namespace Client
 {
     /// <summary>
@@ -28,7 +28,6 @@ namespace Client
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
             SetStatusBar();
-            //DrawMap();
             timer.Start();
             isClientStocked = true;
             drawPicLock = new();
@@ -80,7 +79,7 @@ namespace Client
         {
             for(int i=0;i<8;i++)
             {
-                StatusBars[i] = new(MainGrid,2+80*(i%2),40+171*(i/2),764+78*(i%2),513-169*(i/2));
+                StatusBars[i] = new(MainGrid,i/2+1,i%2);
             }
         }
         //基础窗口函数
@@ -141,6 +140,12 @@ namespace Client
         private void ClickToMinimize(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+        private void ClickToMaxmize(object sender, RoutedEventArgs e)
+        {
+            if (WindowState != WindowState.Maximized)
+                WindowState = WindowState.Maximized;
+            else WindowState = WindowState.Normal;
         }
         private void DragWindow(object sender, RoutedEventArgs e)
         {
@@ -267,22 +272,23 @@ namespace Client
         //杂项功能
         private void ClickToEnterVS(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (!File.Exists("VSRoute.txt"))
-                {
-                    File.Create("VSRoute.txt");
-                    Exception ex = new("没有路径存储文件，已为您创建。请将VS路径输入该文件，并重新操作。");
-                    throw ex;
-                }//创建路径文件 
-                using StreamReader sr = new("VSRoute.txt");
-                _ = Process.Start(sr.ReadLine());
-            }
-            catch (Exception exc)
-            {
-                ErrorDisplayer error = new("发生错误。以下是系统报告:\n" + exc.ToString());
-                error.Show();
-            }
+            //try
+            //{
+            //    if (!File.Exists("VSRoute.txt"))
+            //    {
+            //        File.Create("VSRoute.txt");
+            //        Exception ex = new("没有路径存储文件，已为您创建。请将VS路径输入该文件，并重新操作。");
+            //        throw ex;
+            //    }//创建路径文件 
+            //    using StreamReader sr = new("VSRoute.txt");
+            //    _ = Process.Start(sr.ReadLine());
+            //}
+            //catch (Exception exc)
+            //{
+            //    ErrorDisplayer error = new("发生错误。以下是系统报告:\n" + exc.ToString());
+            //    error.Show();
+            //}
+            PleaseWait();
         }
 
         private void ClickToVisitEESAST(object sender, RoutedEventArgs e)
@@ -416,101 +422,107 @@ namespace Client
 
         private void KeyBoardControl(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
+            if (communicator.Client.IsConnected)
             {
-                case Key.W:
-                    MessageToServer msgA = new MessageToServer();
-                    msgA.MessageType = MessageType.Move;
-                    msgA.PlayerID = playerID;
-                    msgA.TeamID = teamID;
-                    msgA.TimeInMilliseconds = 50;
-                    msgA.Angle = Math.PI;
-                    communicator.SendMessage(msgA);
-                    break;
-                case Key.S:
-                    MessageToServer msgD = new MessageToServer();
-                    msgD.MessageType = MessageType.Move;
-                    msgD.PlayerID = playerID;
-                    msgD.TeamID = teamID;
-                    msgD.TimeInMilliseconds = 50;
-                    msgD.Angle = 0;
-                    communicator.SendMessage(msgD);
-                    break;
-                case Key.D:
-                    MessageToServer msgW = new MessageToServer();
-                    msgW.MessageType = MessageType.Move;
-                    msgW.PlayerID = playerID;
-                    msgW.TeamID = teamID;
-                    msgW.TimeInMilliseconds = 50;
-                    msgW.Angle = Math.PI / 2;
-                    communicator.SendMessage(msgW);
-                    break;
-                case Key.A:
-                    MessageToServer msgS = new MessageToServer();
-                    msgS.MessageType = MessageType.Move;
-                    msgS.PlayerID = playerID;
-                    msgS.TeamID = teamID;
-                    msgS.TimeInMilliseconds = 50;
-                    msgS.Angle = 3 * Math.PI / 2;
-                    communicator.SendMessage(msgS);
-                    break;
-                case Key.J:
-                    MessageToServer msgJ = new MessageToServer();
-                    msgJ.MessageType = MessageType.Attack;
-                    msgJ.PlayerID = playerID;
-                    msgJ.TeamID = teamID;
-                    msgJ.Angle = Math.PI;
-                    communicator.SendMessage(msgJ);
-                    break;
-                case Key.U:
-                    MessageToServer msgU = new MessageToServer();
-                    msgU.MessageType = MessageType.UseCommonSkill;
-                    msgU.PlayerID = playerID;
-                    msgU.TeamID = teamID;
-                    communicator.SendMessage(msgU);
-                    break;
-                case Key.K:
-                    MessageToServer msgK = new MessageToServer();
-                    msgK.MessageType = MessageType.UseGem;
-                    msgK.PlayerID = playerID;
-                    msgK.GemSize = 1;
-                    msgK.TeamID = teamID;
-                    communicator.SendMessage(msgK);
-                    break;
-                case Key.L:
-                    MessageToServer msgL = new MessageToServer();
-                    msgL.MessageType = MessageType.ThrowGem;
-                    msgL.PlayerID = playerID;
-                    msgL.TeamID = teamID;
-                    msgL.GemSize = 1;
-                    msgL.TimeInMilliseconds = 3000;
-                    msgL.Angle = Math.PI;
-                    communicator.SendMessage(msgL);
-                    break;
-                case Key.P:
-                    MessageToServer msgP = new MessageToServer();
-                    msgP.MessageType = MessageType.Pick;
-                    msgP.PlayerID = playerID;
-                    msgP.TeamID = teamID;
-                    msgP.PropType = PropType.Gem;
-                    communicator.SendMessage(msgP);
-                    break;
-                case Key.O:
-                    MessageToServer msgO = new MessageToServer();
-                    msgO.MessageType = MessageType.Pick;
-                    msgO.PlayerID = playerID;
-                    msgO.TeamID = teamID;
-                    communicator.SendMessage(msgO);
-                    break;
-                case Key.I:
-                    MessageToServer msgI = new MessageToServer();
-                    msgI.MessageType = MessageType.UseProp;
-                    msgI.PlayerID = playerID;
-                    msgI.TeamID = teamID;
-                    communicator.SendMessage(msgI);
-                    break;
-                default:
-                    break;
+                switch (e.Key)
+                {
+                    case Key.W:
+                        MessageToServer msgA = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = Math.PI
+                        };
+                        communicator.SendMessage(msgA);
+                        break;
+                    case Key.S:
+                        MessageToServer msgD = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = 0
+                        };
+                        communicator.SendMessage(msgD);
+                        break;
+                    case Key.D:
+                        MessageToServer msgW = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = Math.PI / 2
+                        };
+                        communicator.SendMessage(msgW);
+                        break;
+                    case Key.A:
+                        MessageToServer msgS = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = 3 * Math.PI / 2
+                        };
+                        communicator.SendMessage(msgS);
+                        break;
+                    case Key.J:
+                        MessageToServer msgJ = new()
+                        {
+                            MessageType = MessageType.Attack,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            Angle = Math.PI
+                        };
+                        communicator.SendMessage(msgJ);
+                        break;
+                    case Key.U:
+                        MessageToServer msgU = new()
+                        {
+                            MessageType = MessageType.UseCommonSkill,
+                            PlayerID = playerID,
+                            TeamID = teamID
+                        };
+                        communicator.SendMessage(msgU);
+                        break;
+                    case Key.K:
+                        MessageToServer msgK = new()
+                        {
+                            MessageType = MessageType.UseGem,
+                            PlayerID = playerID,
+                            TeamID = teamID
+                        };
+                        communicator.SendMessage(msgK);
+                        break;
+                    case Key.L:
+                        MessageToServer msgL = new()
+                        {
+                            MessageType = MessageType.ThrowGem,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            GemSize = 1,
+                            TimeInMilliseconds = 3000,
+                            Angle = Math.PI
+                        };
+                        communicator.SendMessage(msgL);
+                        break;
+                    case Key.P:
+                        MessageToServer msgP = new()
+                        {
+                            MessageType = MessageType.Pick,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            PropType = Communication.Proto.PropType.Gem
+                        };
+                        communicator.SendMessage(msgP);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         private void GetMap(MessageToClient.Types.GameObjMessage obj)
@@ -671,6 +683,10 @@ namespace Client
         //定时器事件，刷新地图
         private void Refresh(object? sender, EventArgs e)
         {
+            //if (WindowState == WindowState.Maximized)
+            //    MaxButton.Content = "❐";
+            //else
+            //    MaxButton.Content = "🗖";
             if (!isClientStocked)
             {
                 try
@@ -741,7 +757,7 @@ namespace Client
                                     switch (data.MessageOfProp.Type)
                                     {
                                         case PropType.Gem:
-                                            DrawProp(data, "💎");
+                                            DrawProp(data, "📱");
                                             break;
                                         case PropType.Shield:
                                             DrawProp(data, "🛡");
