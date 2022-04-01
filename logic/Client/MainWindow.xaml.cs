@@ -473,7 +473,6 @@ namespace Client
                     MessageToServer msgK = new MessageToServer();
                     msgK.MessageType = MessageType.UseGem;
                     msgK.PlayerID = playerID;
-                    msgK.GemSize = 1;
                     msgK.TeamID = teamID;
                     communicator.SendMessage(msgK);
                     break;

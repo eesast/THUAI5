@@ -167,7 +167,9 @@ namespace Server
                 case MessageType.UseGem:
                     if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
                     {
-                        game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID], msg.GemSize);
+                        if(msg.GemSize > 0)
+                            game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID], msg.GemSize);
+                        else game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID]);
                     }
                     break;
                 case MessageType.UseProp:
