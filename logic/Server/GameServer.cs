@@ -304,9 +304,7 @@ namespace Server
             (
                 () =>
                 {
-#if DEBUG
                     Console.WriteLine("Game Start!");
-#endif
                     game.StartGame((int)options.GameTimeInSecond * 1000);
                     OnGameEnd();
                 }

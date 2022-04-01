@@ -156,6 +156,15 @@ namespace Test
                         msgI.TeamID = teamID;
                         clientCommunication.SendMessage(msgI);
                         break;
+                    case ConsoleKey.Y:
+                        MessageToServer msgY = new MessageToServer();
+                        msgY.MessageType = MessageType.ThrowProp;
+                        msgY.PlayerID = playerID;
+                        msgY.TeamID = teamID;
+                        msgY.TimeInMilliseconds = 3000;
+                        msgY.Angle = Math.PI;
+                        clientCommunication.SendMessage(msgY);
+                        break;
                     default:
                         break;
                 }
