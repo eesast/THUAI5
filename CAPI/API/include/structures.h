@@ -42,13 +42,13 @@ namespace THUAI5
     /// </summary>
     enum class PlaceType :unsigned char
     {
-        Land = 0,
-        Wall = 1,
-        BlindZone1 = 2,
-        BlindZone2 = 3,
-        BlindZone3 = 4,
-        BirthPlace = 5,
-        CPUFactory = 6
+        Land = 0, // 空地
+        Wall = 1, // 墙
+        BlindZone1 = 2, // 盲区1
+        BlindZone2 = 3, // 盲区2
+        BlindZone3 = 4, // 盲区3
+        BirthPlace = 5, // 出生点
+        CPUFactory = 6 // CPU工厂
     };
 
     /// <summary>
@@ -56,12 +56,12 @@ namespace THUAI5
     /// </summary>
     enum class SignalJammerType :unsigned char
     {
-        NullJammerType = 0,
-        CommonJammer1 = 1,
-        CommonJammer2 = 2,
-        FastJammer = 3,
-        OrdinaryJammer = 4,
-        StrongJammer = 5
+        NullJammerType = 0, 
+        CommonJammer1 = 1, // 普通信号干扰器
+        CommonJammer2 = 2, // 普通信号干扰器
+        FastJammer = 3, // 快速信号干扰器
+        OrdinaryJammer = 4, 
+        StrongJammer = 5 // 强力信号干扰器
     };
 
     /// <summary>
@@ -70,12 +70,12 @@ namespace THUAI5
     enum class BuffType :unsigned char
     {
         NullBuffType = 0,
-        MoveSpeed = 1,
-        AP = 2,
-        CD = 3,
-        AddLIFE = 4,
-        ShieldBuff = 5,
-        SpearBuff = 6
+        MoveSpeed = 1, // 加速
+        AP = 2, // 增加攻击力
+        CD = 3, // 减少技能冷却时间
+        AddLIFE = 4, // 增加电量
+        ShieldBuff = 5, // 护盾
+        SpearBuff = 6 // 破盾
     };
 
     /// <summary>
@@ -83,11 +83,11 @@ namespace THUAI5
     /// </summary>
     enum class HardwareType :unsigned char 
     { 
-        NullHardwareType = 0,
-        PowerBank = 1,
-        EnergyConvert = 2,
-        EmissionAccessory = 3,
-        Hardware3 = 4,
+        NullHardwareType = 0, 
+        PowerBank = 1, // 自动充电
+        EnergyConvert = 2, // 电能转化
+        EmissionAccessory = 3, // 强制功率发射配件
+        Hardware3 = 4, // coming soon
         Hardware4 = 5,
         Hardware5 = 6
     };
@@ -97,11 +97,11 @@ namespace THUAI5
     /// </summary>
     enum class SoftwareType :unsigned char
     {
-        NullSoftwareType = 0,
-        PowerEmission = 1,
-        Invisible = 2,
-        Amplification = 3,
-        Booster = 4,
+        NullSoftwareType = 0, 
+        PowerEmission = 1, // 功率发射软件
+        Invisible = 2, // 隐身
+        Amplification = 3, // 信号放大软件
+        Booster = 4, // 助推器充能软件
         Software4 = 5,
         Software5 = 6
     };
@@ -116,13 +116,13 @@ namespace THUAI5
 
         uint32_t x;                                     // x坐标
         uint32_t y;                                     // y坐标
-        uint32_t signalJammerNum;                             // 信号干扰器数量 
+        uint32_t signalJammerNum;                       // 信号干扰器数量 
         uint32_t speed;                                 // 机器人移动速度
-        uint32_t life;                                  // 生命数
+        uint32_t life;                                  // 电量（生命值）
         uint32_t cpuNum;                                // CPU数
         uint32_t radius;                                // 圆形物体的半径或正方形物体的内切圆半径
         uint32_t CD;                                    // 回复一个信号干扰器需要的时间
-        uint32_t lifeNum;		                        // 第几条命
+        uint32_t lifeNum;		                        // 第几次复活
         uint32_t score;                                 // 分数
 
         uint64_t teamID;                                // 队伍ID
@@ -133,14 +133,14 @@ namespace THUAI5
         double attackRange;                             // 攻击范围
         double timeUntilCommonSkillAvailable;           // 普通软件效果的冷却时间 
         double timeUntilUltimateSkillAvailable;         // 特殊软件效果的冷却时间
-        double emissionAccessory;                        // 强制功率发射配件工作效率
+        double emissionAccessory;                       // 强制功率发射配件工作效率
 
-        std::vector<BuffType> buff;                                  // 所拥有的buff
+        std::vector<BuffType> buff;                     // 所拥有的buff
         PropType prop;                                  // 所持有的道具
         PlaceType place;                                // 机器人所在位置
-        SignalJammerType signalJammerType;                          // 信号干扰器类型
-        HardwareType hardwareType;              // 持有的被动技能 
-        SoftwareType softwareType;                // 持有的主动技能
+        SignalJammerType signalJammerType;              // 信号干扰器类型
+        HardwareType hardwareType;                      // 持有的硬件属性（被动技能） 
+        SoftwareType softwareType;                      // 持有的软件属性（主动技能）
     };
 
     /// <summary>
@@ -154,7 +154,6 @@ namespace THUAI5
         uint32_t y;                                     // y坐标
         int64_t guid;                                   // guid
     };
-    // 注：墙的处理机制目前还不大确定，所以先不写了（这块还需要探讨一下）
 
     /// <summary>
     /// 道具
@@ -163,7 +162,7 @@ namespace THUAI5
     {
         uint32_t x;                                     // x坐标
         uint32_t y;                                     // y坐标
-        uint32_t size;                                  // 宝石大小
+        uint32_t size;                                  // 道具尺寸
         uint64_t guid;                                  // guid
 
         double facingDirection;                         // 朝向
@@ -181,11 +180,11 @@ namespace THUAI5
         uint32_t y;                                     // y坐标
 
         uint64_t guid;                                  // guid
-        uint64_t parentTeamID;                          // 所属队伍??
+        uint64_t parentTeamID;                          // 所属队伍ID
 
         double facingDirection;                         // 朝向
 
-        SignalJammerType type;                                // 子弹种类
+        SignalJammerType type;                          // 信号干扰器种类
         PlaceType place;                                // 放置位置
     };
 
