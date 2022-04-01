@@ -7,142 +7,127 @@
 extern const bool asynchronous = false;
 
 
-// 选手主动技能，选手 !!必须!! 定义此变量来选择主动技能(software type)
-extern const THUAI5::SoftwareType playerSoftware = THUAI5::SoftwareType::Booster;
+// 选手主动技能，选手 !!必须!! 定义此变量来选择主动技能
+extern const THUAI5::SoftwareType playerSoftware = THUAI5::SoftwareType::Invisible;
 
-// 选手被动技能，选手 !!必须!! 定义此变量来选择被动技能(hardware type)
-extern const THUAI5::HardwareType playerHardware = THUAI5::HardwareType::EnergyConvert;
+// 选手被动技能，选手 !!必须!! 定义此变量来选择被动技能
+extern const THUAI5::HardwareType playerHardware = THUAI5::HardwareType::PowerBank;
 
 namespace
 {
-    [[maybe_unused]] std::uniform_real_distribution<double> direction(0, 2 * 3.1415926);
-    [[maybe_unused]] std::default_random_engine e{ std::random_device{}() };
+	[[maybe_unused]] std::uniform_real_distribution<double> direction(0, 2 * 3.1415926);
+	[[maybe_unused]] std::default_random_engine e{ std::random_device{}() };
 }
-
-int mydirection = 0;
 
 void AI::play(IAPI& api)
 {
+	//获得信息
+	auto self=api.GetSelfInfo();
+	//输出个人CD
+	std::cout<<self->CD<<std::endl;
 
-    auto self = api.GetSelfInfo();
+	//e为一个方向角度
+	double e=3.1415926*0.5;
+	//向e方向攻击
+	api.Attack(e);
 
+	//cell转化为grid
+	uint32_t gridnumbers=api.CellToGrid(5);
+	//grid转化为cell
+	uint32_t cellnumbers=api.GridToCell(gridnumbers);
 
-    // how to get team score
-    {
-        std::cout << api.GetTeamScore() << std::endl;
-    }
+	//获取场上信号干扰器
+	auto SignalJammers=api.GetSignalJammers();
+	//输出第一个信号干扰器属于的队伍ID和数目
+	if (SignalJammers.size()!=0)
+	{
+		std::cout << SignalJammers[0]->parentTeamID << std::endl;
+		std::cout << SignalJammers.size() << std::endl;
+	}
 
-    // how to get the game information & how to view the game information on terminal
-    if (api.GetFrameCount() % 100 == 0)
-    {
-        auto selfinfo = api.GetSelfInfo(); // store the value
-        api.PrintSelfInfo();               // print the value in a format style
-    }
+	//获取场上机器人的信息
+	auto Robots=api.GetRobots();
+	//输出第一个机器人的攻击范围
+	if (Robots.size() != 0)
+	{
+		std::cout << Robots[0]->attackRange << std::endl;
+	}
 
-    if (api.GetFrameCount() % 100 == 0)
-    {
-        auto characters = api.GetRobots();
-        api.PrintRobots();
-    }
+	//获取游戏已经进行的帧数
+	auto Count=api.GetFrameCount();
 
-    if (api.GetFrameCount() % 100 == 0)
-    {
-        auto props = api.GetProps();
-        api.PrintProps();
-    }
+	//获取（25，25）处地点类型
+	auto PlaceType=api.GetPlaceType(25,25);
+	//判断地点类型是否为CPUFactory
+	auto cpufactory=THUAI5::PlaceType::CPUFactory;
+	std::cout<<(PlaceType==cpufactory)<<std::endl;
 
-    if (api.GetFrameCount() % 100 == 0)
-    {
-        auto bullets = api.GetSignalJammers();
-        api.PrintSignalJammers();
-    }
+	//返回一个数组，存储了场上所有玩家的GUID（全局唯一标识符）
+	auto guids=api.GetPlayerGUIDs();
 
-    if (api.GetFrameCount() % 10 == 0)
-    {
-        auto PlaceType = api.GetPlaceType(25, 25); //! use cell instead of grid!
-        std::cout << THUAI5::place_dict[PlaceType] << std::endl;
-    }
+	//获取场上的道具信息
+	auto Props=api.GetProps();
+	//判断一号道具是否为cpu
+	auto cpu=THUAI5::PropType::CPU;
+	if (Props.size() != 0)
+	{
+		std::cout << (Props[0]->type == cpu) << std::endl;
+	}
+	
+	//返回队伍得分
+	auto score=api.GetTeamScore();
 
-    // how to execute the player
-    if (api.GetFrameCount() <= 25)
-    {
-        api.Attack(1.0);
-        api.MoveDown(10);
-        api.MoveLeft(10);
-        api.MoveRight(10);
-        api.MoveUp(10);
-        api.MovePlayer(10, 1.0);
-    }
+	//捡cpu
+	api.Pick(cpu);
 
-    // how to convert the two types of position(cell/grid)
-    {
-        uint32_t gridnumbers = api.CellToGrid(5);
-        std::cout << "cell to grid: " << gridnumbers << std::endl;
-        std::cout << "grid to cell: " << api.GridToCell(gridnumbers) << std::endl;
-    }
+	//移动
+	uint32_t movespeed=300;
+	api.MoveDown(3000/movespeed);
+	api.MoveLeft(3000/movespeed);
+	api.MoveRight(3000/movespeed);
+	api.MoveUp(3000/movespeed);
+	api.MovePlayer(3000/movespeed,e);
 
-    // how to use props
-    {
-        auto props = api.GetProps();
-        if (props.size() != 0)
-        {
-            api.UseProp();
-        }
-    }
+	//asynchronous 为 true 的情况下，选手可以调用此函数，阻塞当前线程，直到下一次消息更新时继续运行。
+	api.Wait();
 
-    // how to use software skills
-    {
-        api.UseCommonSkill();
-    }
+	//查看是否有消息，有则接收消息
+	if(api.MessageAvailable())
+	{
+		auto message=api.TryGetMessage();
+	}
+	//想2号玩家发消息
+	int toPlayerID=2;
+	api.Send(toPlayerID,"this is an example");
 
-    // how to use CPU & throw CPU
-    {
-        api.UseCPU(1);
-        api.ThrowCPU(1000,0,1);
-    }
+	//玩家使用CPU,扔CPU/道具，使用技能
+	api.UseCPU(self->cpuNum);
+	api.ThrowCPU(3000/movespeed,e,0);
+	api.ThrowProp(3000/movespeed,e);
+	api.UseCommonSkill();
+	
+	/*
+	#获取 thuai5 属性type [code]:
 
-    if (mydirection == 0)
-    {
-        if (api.GetPlaceType(self->x / 1000 - 1, self->y / 1000) == THUAI5::PlaceType(1))
-        {
-            mydirection = 1;
-        }
-        else
-        {
-            api.MoveUp(50);
-        }
-    }
-    if (mydirection == 1)
-    {
-        if (api.GetPlaceType(self->x / 1000, self->y / 1000 - 1) == THUAI5::PlaceType(1))
-        {
-            mydirection = 2;
-        }
-        else
-        {
-            api.MoveLeft(50);
-        }
-    }
-    if (mydirection == 2)
-    {
-        if (api.GetPlaceType(self->x / 1000 + 1, self->y / 1000) == THUAI5::PlaceType(1))
-        {
-            mydirection = 3;
-        }
-        else
-        {
-            api.MoveDown(50);
-        }
-    }
-    if (mydirection == 3)
-    {
-        if (api.GetPlaceType(self->x / 1000, self->y / 1000 + 1) == THUAI5::PlaceType(1))
-        {
-            mydirection = 0;
-        }
-        else
-        {
-            api.MoveRight(50);
-        }
-    }
+	auto AP=THUAI5::BuffType::AP;
+	auto PowerBank=THUAI5::HardwareType::PowerBank;
+	auto Wall=THUAI5::PlaceType::Wall;
+	auto Booster=THUAI5::PropType::Booster;
+	auto Circle=THUAI5::ShapeType::Circle;
+	auto FastJammer=THUAI5::SignalJammerType::FastJammer;
+	auto PowerEmission=THUAI5::SoftwareType::PowerEmission;
+
+	#Get the (i+1)th Prop/robots and self info [code]:
+
+	auto Robots=api.GetRobots();
+	auto Props=api.GetProps();
+	auto self=api.GetSelfInfo();
+	
+	you will see the list ,just choose what you need to use.
+
+	auto Props->
+	auto self->
+	auto Robots[i]->
+
+	*/
 }
