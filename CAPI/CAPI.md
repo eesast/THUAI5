@@ -4,17 +4,14 @@
 
 选手所需要的组件可在[https://cloud.tsinghua.edu.cn/d/b8be040bcfc543e096c0/](https://cloud.tsinghua.edu.cn/d/b8be040bcfc543e096c0/)中下载。
 
-首先需要在`THUAI5/`文件夹下，使用下列指令拉取编译所需的`tclap`([https://github.com/mirror/tclap](https://github.com/mirror/tclap))模块和`protobuf`([https://github.com/protocolbuffers/protobuf](https://github.com/protocolbuffers/protobuf))模块。
-
-```bash
-$ git submodule update --init --recursive
-```
 
 ### windows
 
 在**x64**生成环境下，如果生成模式为**release**模式，选手首先需要将组件包中的`HPSocket.lib`和`libprotobuf.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；如果生成模式为**debug**模式，则需要将`libprotobuf.lib`换成`libprotobufd.lib`。
 
-同时，需要在visual studio中更改以下配置：点击`项目->API属性`，在`配置属性->C/C++->代码生成->运行库`一栏中，若为**debug**模式，则选择**MTd**；若为**release**模式，则选择**MT**。
+同时，需要在visual studio中更改以下配置：在解决方案资源管理器视图中，右键点击API和Communication，选择“属性”，在`配置属性->C/C++->代码生成->运行库`一栏中，若为**debug**模式，则选择**MTd**；若为**release**模式，则选择**MT**。
+
+![settings](../resource/APIsettings2.png)
 
 ![settings](../resource/APIsettings.png)
 
@@ -22,7 +19,14 @@ $ git submodule update --init --recursive
 
 ### Linux
 
-参考[protobuf installation](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md)
+选手首先需要在本机安装`protobuf`([https://github.com/protocolbuffers/protobuf](https://github.com/protocolbuffers/protobuf))模块。
+
+```bash
+$ git clone git@github.com:protocolbuffers/protobuf.git
+```
+
+
+以下安装过程可以参考[protobuf installation](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md)
 
 1. 首先需要编译`protobuf`，**安装之前需要添加以下依赖项**：
 ```bash

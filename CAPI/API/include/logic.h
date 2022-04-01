@@ -39,8 +39,8 @@ private:
     int playerID;
 
     // 技能记录
-    THUAI5::ActiveSkillType activeSkillType;
-    THUAI5::PassiveSkillType passiveSkillType;
+    THUAI5::SoftwareType softwareType;
+    THUAI5::HardwareType hardwareType;
 
     // 记录一场游戏中所有玩家的全部GUID信息
     std::vector<int64_t> playerGUIDS;
@@ -90,10 +90,10 @@ private:
     std::atomic_bool freshed = false;
 
     int GetCounter() const override;
-    std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const override;
+    std::vector<std::shared_ptr<const THUAI5::Robot>> GetRobots() const override;
     std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const override;
-    std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const override;
-    std::shared_ptr<const THUAI5::Character> GetSelfInfo() const override;
+    std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const override;
+    std::shared_ptr<const THUAI5::Robot> GetSelfInfo() const override;
     THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const override;
 
     uint32_t GetTeamScore() const override;
@@ -163,7 +163,7 @@ private:
   
 public:
 
-    Logic(int teamID, int playerID,THUAI5::ActiveSkillType activeSkillType, THUAI5::PassiveSkillType passiveSkillType);
+    Logic(int teamID, int playerID,THUAI5::SoftwareType softwareType, THUAI5::HardwareType hardwareType);
     ~Logic() = default;
     void Main(const char* address, uint16_t port, CreateAIFunc f, int debuglevel, std::string filename);
 };

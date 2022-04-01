@@ -14,14 +14,14 @@ namespace THUAI5
     enum class PropType :unsigned char
     {
         NullPropType = 0,
-        addHP = 1,
+        addElectricity = 1,
         addAP = 2,
-        addSpeed = 3,
-        addLIFE = 4,
+        Booster = 3,
+        Battery = 4,
         minusCD = 5,
-        Gem = 6,    
+        CPU = 6,    
         Shield = 7,
-        Spear = 8,
+        ShieldBreaker = 8,
         minusSpeed = 9,
         minusAP = 10,
         addCD = 11
@@ -44,24 +44,24 @@ namespace THUAI5
     {
         Land = 0,
         Wall = 1,
-        Grass1 = 2,
-        Grass2 = 3,
-        Grass3 = 4,
+        BlindZone1 = 2,
+        BlindZone2 = 3,
+        BlindZone3 = 4,
         BirthPlace = 5,
-        GemWell = 6
+        CPUFactory = 6
     };
 
     /// <summary>
-    /// 子弹
+    /// 信号干扰器
     /// </summary>
-    enum class BulletType :unsigned char
+    enum class SignalJammerType :unsigned char
     {
-        NullBulletType = 0,
-        CommonBullet1 = 1,
-        CommonBullet2 = 2,
-        FastBullet = 3,
-        OrdinaryBullet = 4,
-        AtomBomb = 5
+        NullJammerType = 0,
+        CommonJammer1 = 1,
+        CommonJammer2 = 2,
+        FastJammer = 3,
+        OrdinaryJammer = 4,
+        StrongJammer = 5
     };
 
     /// <summary>
@@ -79,49 +79,49 @@ namespace THUAI5
     };
 
     /// <summary>
-    /// 被动技能
+    ///  硬件
     /// </summary>
-    enum class PassiveSkillType :unsigned char 
+    enum class HardwareType :unsigned char 
     { 
-        NullPassiveSkillType = 0,
-        RecoverAfterBattle = 1,
-        SpeedUpWhenLeavingGrass = 2,
-        Vampire = 3,
-        PSkill3 = 4,
-        PSkill4 = 5,
-        PSkill5 = 6
+        NullHardwareType = 0,
+        PowerBank = 1,
+        EnergyConvert = 2,
+        EmissionAccessory = 3,
+        Hardware3 = 4,
+        Hardware4 = 5,
+        Hardware5 = 6
     };
 
     /// <summary>
-    /// 主动技能
+    /// 软件
     /// </summary>
-    enum class ActiveSkillType :unsigned char
+    enum class SoftwareType :unsigned char
     {
-        NullActiveSkillType = 0,
-        BecomeVampire = 1,
-        BecomeAssassin = 2,
-        NuclearWeapon = 3,
-        SuperFast = 4,
-        ASkill4 = 5,
-        ASkill5 = 6
+        NullSoftwareType = 0,
+        PowerEmission = 1,
+        Invisible = 2,
+        Amplification = 3,
+        Booster = 4,
+        Software4 = 5,
+        Software5 = 6
     };
 
     /// <summary>
-    /// 人物
+    /// 机器人
     /// </summary>
-    struct Character
+    struct Robot
     {
         bool canMove;                                   // 是否可以移动
         bool isResetting;                               // 是否在复活中
 
         uint32_t x;                                     // x坐标
         uint32_t y;                                     // y坐标
-        uint32_t bulletNum;                             // 子弹数量 
-        uint32_t speed;                                 // 人物移动速度
+        uint32_t signalJammerNum;                             // 信号干扰器数量 
+        uint32_t speed;                                 // 机器人移动速度
         uint32_t life;                                  // 生命数
-        uint32_t gemNum;                                // 宝石数
+        uint32_t cpuNum;                                // CPU数
         uint32_t radius;                                // 圆形物体的半径或正方形物体的内切圆半径
-        uint32_t CD;                                    // 回复一颗子弹需要的时间
+        uint32_t CD;                                    // 回复一个信号干扰器需要的时间
         uint32_t lifeNum;		                        // 第几条命
         uint32_t score;                                 // 分数
 
@@ -131,16 +131,16 @@ namespace THUAI5
                                                         // 0号guid存储单播模式中每人Client对应的GUID。
 
         double attackRange;                             // 攻击范围
-        double timeUntilCommonSkillAvailable;           // 普通主动技能的冷却时间 
-        double timeUntilUltimateSkillAvailable;         // 特殊主动技能的冷却时间
-        double vampire;                                 // 吸血率
+        double timeUntilCommonSkillAvailable;           // 普通软件效果的冷却时间 
+        double timeUntilUltimateSkillAvailable;         // 特殊软件效果的冷却时间
+        double emissionAccessory;                        // 强制功率发射配件工作效率
 
         std::vector<BuffType> buff;                                  // 所拥有的buff
         PropType prop;                                  // 所持有的道具
-        PlaceType place;                                // 人物所在位置
-        BulletType bulletType;                          // 子弹类型
-        PassiveSkillType passiveSkillType;              // 持有的被动技能 
-        ActiveSkillType activeSkillType;                // 持有的主动技能
+        PlaceType place;                                // 机器人所在位置
+        SignalJammerType signalJammerType;                          // 信号干扰器类型
+        HardwareType hardwareType;              // 持有的被动技能 
+        SoftwareType softwareType;                // 持有的主动技能
     };
 
     /// <summary>
@@ -175,7 +175,7 @@ namespace THUAI5
     /// <summary>
     /// 子弹
     /// </summary>
-    struct Bullet
+    struct SignalJammer
     {
         uint32_t x;                                     // x坐标
         uint32_t y;                                     // y坐标
@@ -185,7 +185,7 @@ namespace THUAI5
 
         double facingDirection;                         // 朝向
 
-        BulletType type;                                // 子弹种类
+        SignalJammerType type;                                // 子弹种类
         PlaceType place;                                // 放置位置
     };
 
@@ -194,14 +194,14 @@ namespace THUAI5
     inline std::map<THUAI5::PropType, std::string> prop_dict
     {
         { PropType::NullPropType,"NullPropType"},
-        { PropType::addHP,"addHP"},
+        { PropType::addElectricity,"addElectricity"},
         { PropType::addAP,"addAP"},
-        { PropType::addSpeed,"addSpeed"},
-        { PropType::addLIFE ,"addLIFE "},
+        { PropType::Booster,"Booster"},
+        { PropType::Battery ,"Battery "},
         { PropType::minusCD ,"minusCD "},
-        { PropType::Gem ,"Gem "},
+        { PropType::CPU ,"CPU "},
         { PropType::Shield ,"Shield "},
-        { PropType::Spear ,"Spear "},
+        { PropType::ShieldBreaker ,"ShieldBreaker "},
         { PropType::minusSpeed ,"minusSpeed "},
         { PropType::minusAP ,"minusAP "},
         { PropType::addCD ,"addCD "}
@@ -211,11 +211,11 @@ namespace THUAI5
     {
         { PlaceType::Land ,"Land "},
         { PlaceType::Wall ,"Wall "},
-        { PlaceType::Grass1 ,"Grass1 "},
-        { PlaceType::Grass2 ,"Grass2 "},
-        { PlaceType::Grass3 ,"Grass3 "},
+        { PlaceType::BlindZone1 ,"BlindZone1 "},
+        { PlaceType::BlindZone2 ,"BlindZone2 "},
+        { PlaceType::BlindZone3 ,"BlindZone3 "},
         { PlaceType::BirthPlace ,"BirthPlace "},
-        { PlaceType::GemWell ,"GemWell "}
+        { PlaceType::CPUFactory ,"CPUFactory "}
     };
 
     inline std::map<THUAI5::BuffType, std::string> buff_dict
@@ -229,36 +229,36 @@ namespace THUAI5
         { BuffType::SpearBuff ,"SpearBuff "},
     };
 
-    inline std::map<THUAI5::BulletType, std::string> bullet_dict
+    inline std::map<THUAI5::SignalJammerType, std::string> jammer_dict
     {
-        { BulletType::NullBulletType ,"NullBulletType "},
-        { BulletType::CommonBullet1 ,"CommonBullet1 "},
-        { BulletType::CommonBullet2 ,"CommonBullet2 "},
-        { BulletType::FastBullet ,"FastBullet "},
-        { BulletType::OrdinaryBullet ,"OrdinaryBullet "},
-        { BulletType::AtomBomb ,"AtomBomb "}
+        { SignalJammerType::NullJammerType ,"NullJammerType "},
+        { SignalJammerType::CommonJammer1 ,"CommonJammer1 "},
+        { SignalJammerType::CommonJammer2 ,"CommonJammer2 "},
+        { SignalJammerType::FastJammer ,"FastJammer "},
+        { SignalJammerType::OrdinaryJammer ,"OrdinaryJammer "},
+        { SignalJammerType::StrongJammer ,"StrongJammer "}
     };
 
-    inline std::map<THUAI5::ActiveSkillType, std::string> active_dict
+    inline std::map<THUAI5::SoftwareType, std::string> software_dict
     {
-        { ActiveSkillType::NullActiveSkillType ,"NullActiveSkillType "},
-        { ActiveSkillType::BecomeVampire ,"BecomeVampire "},
-        { ActiveSkillType::BecomeAssassin ,"BecomeAssassin "},
-        { ActiveSkillType::NuclearWeapon ,"NuclearWeapon "},
-        { ActiveSkillType::SuperFast ,"SuperFast "},
-        { ActiveSkillType::ASkill4 ,"ASkill4 "},
-        { ActiveSkillType::ASkill5 ,"ASkill5 "}
+        { SoftwareType::NullSoftwareType ,"NullSoftwareType "},
+        { SoftwareType::PowerEmission,"PowerEmission "},
+        { SoftwareType::Invisible ,"Invisible "},
+        { SoftwareType::Amplification ,"Amplification "},
+        { SoftwareType::Booster ,"Booster "},
+        { SoftwareType::Software4 ,"Software4 "},
+        { SoftwareType::Software5 ,"Software5 "}
     };
 
-    inline std::map<THUAI5::PassiveSkillType, std::string> passive_dict
+    inline std::map<THUAI5::HardwareType, std::string> hardware_dict
     {
-        { PassiveSkillType::NullPassiveSkillType ,"NullPassiveSkillType "},
-        { PassiveSkillType::RecoverAfterBattle ,"RecoverAfterBattle "},
-        { PassiveSkillType::SpeedUpWhenLeavingGrass ,"SpeedUpWhenLeavingGrass "},
-        { PassiveSkillType::Vampire ,"Vampire "},
-        { PassiveSkillType::PSkill3 ,"PSkill3 "},
-        { PassiveSkillType::PSkill4 ,"PSkill4 "},
-        { PassiveSkillType::PSkill5 ,"PSkill5 "}
+        { HardwareType::NullHardwareType ,"NullHardwareType "},
+        { HardwareType::PowerBank ,"PowerBank "},
+        { HardwareType::EnergyConvert ,"EnergyConvert "},
+        { HardwareType::EmissionAccessory ,"EmissionAccessory "},
+        { HardwareType::Hardware3 ,"Hardware3 "},
+        { HardwareType::Hardware4 ,"Hardware4 "},
+        { HardwareType::Hardware5 ,"Hardware5 "}
     };
 }
 
