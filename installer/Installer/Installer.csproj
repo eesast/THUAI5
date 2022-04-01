@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rebex.Sftp" Version="6.0.8060" />
+    <PackageReference Include="Rebex.Sftp" Version="6.0.8123" />
   </ItemGroup>
 
   <ItemGroup>
