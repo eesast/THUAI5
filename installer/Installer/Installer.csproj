@@ -4,6 +4,24 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationIcon>eesast_logo.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="eesast_logo.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="eesast_logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Rebex.Sftp" Version="6.0.8060" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="eesast_logo.jpg" />
+  </ItemGroup>
 
 </Project>

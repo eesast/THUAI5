@@ -1,0 +1,24 @@
+//Message2Server
+syntax = "proto3";
+package Protobuf;
+option csharp_namespace = "Communication.Proto";
+
+import "MessageType.proto";
+import "Message2Clients.proto";
+
+message MessageToServer
+{
+    MessageType messageType = 1;
+    int64 playerID = 2;		//消息发送者的playerID
+    int64 teamID = 3;		//消息发送者所在队伍的ID
+    PassiveSkillType pSkill = 4;  //AddPlayer时添加的被动技能，下面是添加的两个主动技能。
+    ActiveSkillType aSkill1 = 5;  
+    ActiveSkillType aSkill2 = 6;
+    PropType propType = 7;	//messageType为Pick时要捡起的道具类型
+    int64 timeInMilliseconds = 8;	//时间参数
+    double angle = 9;		//角度参数
+    int32 gemSize = 10;        //宝石量参数
+    int64 ToPlayerID = 11;	//当messageType为Send时有效，为发送对象的ID
+    string message = 12;		//当messageType为Send时有效，为发送的消息
+}
+
