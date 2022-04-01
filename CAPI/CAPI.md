@@ -115,38 +115,41 @@ Where:
 ```cpp
 class IAPI
 {
+public: 
     //***********选手可执行的操作***********//
+    
+    // 移动
     virtual bool MovePlayer(uint32_t timeInMilliseconds, double angleInRadian) = 0;
     virtual bool MoveRight(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveUp(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveLeft(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveDown(uint32_t timeInMilliseconds) = 0;
-    virtual bool Attack(uint32_t timeInMilliseconds, double angleInRadian) = 0;
+    virtual bool Attack(double angleInRadian) = 0;
     virtual bool UseCommonSkill() = 0;
-    virtual bool Send(int toPlayerID, std::string message) = 0;
-    virtual bool Pick(THUAI5::PropType type) = 0;
+    virtual bool Send(int toPlayerID,std::string) = 0;
+    virtual bool Pick(THUAI5::PropType) = 0; 
     virtual bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) = 0;
     virtual bool UseProp() = 0;
-    virtual bool ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum) = 0;
-    virtual bool UseGem(uint32_t gemNum) = 0;
+    virtual bool ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian,uint32_t cpuNum) = 0;
+    virtual bool UseCPU(uint32_t cpuNum) = 0;
     virtual bool Wait() = 0;
 
     //***********选手可获取的信息***********//
     [[nodiscard]] virtual bool MessageAvailable() = 0;
     [[nodiscard]] virtual std::optional<std::string> TryGetMessage() = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Robot>> GetRobots() const = 0;
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
-    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const = 0;
-    [[nodiscard]] virtual std::shared_ptr<const THUAI5::Character> GetSelfInfo() const = 0;
-    [[nodiscard]] virtual THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const = 0;
+    [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const = 0;
+    [[nodiscard]] virtual std::shared_ptr<const THUAI5::Robot> GetSelfInfo() const = 0;
+    [[nodiscard]] virtual THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const = 0;
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
     [[nodiscard]] virtual int GetFrameCount() const = 0;
 
-    //***********辅助函数***********//
-    [[nodiscard]] static constexpr inline int CellToGrid(int cell) noexcept; // 获取指定格子中心的坐标
-    [[nodiscard]] static constexpr inline int GridToCell(int grid) noexcept; // 获取指定坐标点所位于的格子的 X 序号
-}
+    //***********选手可能用到的辅助函数***********//
+    [[nodiscard]] static inline int CellToGrid(int cell) noexcept // 获取指定格子中心的坐标
+    [[nodiscard]] static inline int GridToCell(int grid) noexcept // 获取指定坐标点所位于的格
+};
 ```
 
 ### 选手主动行为
@@ -166,7 +169,7 @@ class IAPI
 * `bool UseProp()`：使用道具。
 
 #### 攻击
-* `bool Attack(double angleInRadian)`：发射子弹进行攻击。`angleInRadian`给出了子弹的发射方向，子弹的移动速度（每秒飞行的坐标数）已经在 `Constants.h` 中给出。
+* `bool Attack(double angleInRadian)`：发射信号干扰器进行攻击。`angleInRadian`给出了信号干扰器的发射方向，信号干扰器的移动速度（每秒飞行的坐标数）已经在 `Constants.h` 中给出。
 
 #### 主动技能
 * `bool UseCommonSkill()`：使用主动技能。
@@ -174,10 +177,9 @@ class IAPI
 #### 发送消息
 * `bool Send(int toPlayerID, std::string message)`：给同队的队友发送消息。`toPlayerID` 指定发送的对象，`message` 指定发送的内容。`message` 的长度**不能超过 64**，否则将发送失败！
 
-#### 宝石操作
-* `bool ThrowGem(uint32_t timeInMilliseconds, double angleInRadian, uint32_t gemNum)`：扔出手中的宝石（如果有的话），使其变为未捡起状态，可以供他人捡起。前两个参数的含义与 `MovePlayer` 相同，最后一个参数为宝石数。
-
-* `bool UseGem(uint32_t gemNum)`：使用手中的宝石，可指定使用个数。
+#### CPU操作
+* `bool ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian, uint32_t cpuNum)`：扔出手中的CPU（如果有的话），使其变为未捡起状态，可以供他人捡起。前两个参数的含义与 `MovePlayer` 相同，最后一个参数为CPU数。
+* `bool UseCPU(uint32_t cpuNum)`：使用手中的CPU，可指定使用个数。
 
 #### 信息受限
 以上**主动行为**具有频率限制，每 50ms 最多总共可以调用 50 次；主动返回 `bool` 值代表本次操作是否成功，如果超过了通信次数限制，则会返回 `false`。
@@ -189,7 +191,7 @@ class IAPI
 ### 信息获取
 
 #### 个人信息
-* `std::shared_ptr<const THUAI5::Character> GetSelfInfo() const`：返回自身的信息。
+* `std::shared_ptr<const THUAI5::Robot> GetSelfInfo() const`：返回自身的信息。
 
 #### 队伍信息
 * `uint32_t GetTeamScore() const`：返回本队当前分数。
@@ -199,11 +201,11 @@ class IAPI
 
 #### 游戏实物信息
 
-* `std::vector<std::shared_ptr<const THUAI5::Character>> GetCharacters() const`：返回当前场地内的所有可视玩家的信息。
+* `std::vector<std::shared_ptr<const THUAI5::Robot>> GetRobots() const`：返回当前场地内的所有可视玩家的信息。
 
 * `std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const`：返回当前场地内的所有**尚未被捡起的**的可视道具的信息。其他信息同上。
 
-* `std::vector<std::shared_ptr<const THUAI5::Bullet>> GetBullets() const`：返回当前场地内的所有可视子弹的信息。其他信息同上。
+* `std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const`：返回当前场地内的所有可视信号干扰器的信息。其他信息同上。
 
 * `THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const`：返回某一位置场地种类信息。注意此处的`CellX`和`CellY`指的是**地图格数**，而不是**绝对坐标**。
 场地种类详见`structure.h`。
