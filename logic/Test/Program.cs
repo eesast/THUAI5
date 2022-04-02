@@ -23,8 +23,14 @@ namespace Test
                             //case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
                             //    Console.WriteLine($"GUID:{obj.MessageOfCharacter.Guid} Character is at ({obj.MessageOfCharacter.X},{obj.MessageOfCharacter.Y}).");
                             //    break;
-                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
-                                Console.WriteLine($"GUID:{obj.MessageOfBullet.Guid} is at ({obj.MessageOfBullet.X},{obj.MessageOfBullet.Y})");
+                            //case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
+                            //    Console.WriteLine($"GUID:{obj.MessageOfBullet.Guid} is at ({obj.MessageOfBullet.X},{obj.MessageOfBullet.Y})");
+                            //    break;
+                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
+                                Console.WriteLine($"BombedBullet GUID:{obj.MessageOfBombedBullet.MappingID} is at ({obj.MessageOfBombedBullet.X},{obj.MessageOfBombedBullet.Y})");
+                                break;
+                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfPickedProp:
+                                Console.WriteLine($"PickedProp GUID:{obj.MessageOfPickedProp.MappingID} is at ({obj.MessageOfPickedProp.X},{obj.MessageOfPickedProp.Y})");
                                 break;
                         }
                     }

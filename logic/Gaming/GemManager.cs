@@ -119,6 +119,15 @@ namespace Gaming
                     }
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitReadLock(); }
+                if (gem != null)
+                {
+                    gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
+                    try
+                    {
+                        gameMap.GameObjDict[GameObjIdx.PickedProp].Add(new PickedProp(gem));
+                    }
+                    finally { gameMap.GameObjLockDict[GameObjIdx.PickedProp].ExitWriteLock(); }
+                }
 
                 RemoveGem(gem);
 

@@ -217,6 +217,7 @@ namespace Server
             if (requiredGaming && !game.GameMap.Timer.IsGaming)
                 return;
             var gameObjList = game.GetGameObj();
+            game.ClearLists(new Preparation.Utility.GameObjIdx[2] { Preparation.Utility.GameObjIdx.BombedBullet, Preparation.Utility.GameObjIdx.PickedProp });
             MessageToClient messageToClient = new MessageToClient();
             messageToClient.GameObjMessage.Add(MapMsg(game.GameMap));
             lock (messageToAllClientsLock)
@@ -237,8 +238,6 @@ namespace Server
                         break;
                 }
             }
-
-            game.ClearLists(new Preparation.Utility.GameObjIdx[2] { Preparation.Utility.GameObjIdx.BombedBullet, Preparation.Utility.GameObjIdx.PickedProp });
             serverCommunicator.SendToClient(messageToClient);
         }
         private void SendMessageToTeammate(MessageToServer msgToServer)
