@@ -143,9 +143,7 @@ PROTO2THUAI_NAMESPACE_BEGIN
 
         case 13:
             placetype = THUAI5::PlaceType::CPUFactory;
-        
-        default:
-            placetype = THUAI5::PlaceType::Land;
+            break;
         }
 
         return placetype;
