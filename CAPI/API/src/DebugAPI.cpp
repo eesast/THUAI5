@@ -4,8 +4,6 @@
 
 const static double PI = 3.14159265358979323846;
 
-std::ios::sync_with_stdio(false);
-
 void DebugAPI::StartTimer()
 {
     StartPoint = std::chrono::system_clock::now();
