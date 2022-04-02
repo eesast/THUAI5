@@ -12,6 +12,12 @@
         "HPSocket.Net"
       ],
       "allowedVersions": "<5.8.5"
+    },
+    {
+      "matchPackageNames": [
+        "Google.Protobuf"
+      ],
+      "allowedVersions": "<=3.19"
     }
   ]
 }
