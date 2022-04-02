@@ -21,6 +21,8 @@ namespace
 
 void AI::play(IAPI& api)
 {
+	std::ios::sync_with_stdio(false);
+	
 	//获得信息
 	auto self=api.GetSelfInfo();
 	//输出个人CD
