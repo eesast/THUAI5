@@ -259,7 +259,7 @@ namespace Communication.ServerCommunication
             _ = playerDict.TryGetValue(key, out connId);
             if (server.Send(connId, bytes, bytes.Length))
             {
-                Console.WriteLine($"Only send to {key >> 16} {key & 0xffff} with connId {connId}");
+                // Console.WriteLine($"Only send to {key >> 16} {key & 0xffff} with connId {connId}");
             }
             else
             {
