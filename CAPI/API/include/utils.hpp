@@ -282,6 +282,10 @@ VISION_NAMESPACE_BEGIN
 
     inline bool visible(std::shared_ptr<THUAI5::Robot> self, const Protobuf::MessageOfBullet& b)
     {
+        if(!self) // 防止在第一帧出现空指针
+        {
+            return false;
+        }
         if (b.place() == Protobuf::PlaceType::Grass1 || b.place() == Protobuf::PlaceType::Grass2 || b.place() == Protobuf::PlaceType::Grass3) // 子弹在草丛中
         {
             if (self->place == _placedict[b.place()]) // 在同一片草丛中则可视
@@ -298,6 +302,10 @@ VISION_NAMESPACE_BEGIN
 
     inline bool visible(std::shared_ptr<THUAI5::Robot> self, const Protobuf::MessageOfProp& p)
     {
+        if(!self) // 防止在第一帧出现空指针
+        {
+            return false;
+        }
         if (p.place() == Protobuf::PlaceType::Grass1 || p.place() == Protobuf::PlaceType::Grass2 || p.place() == Protobuf::PlaceType::Grass3) // 道具在草丛中
         {
             if (self->place == _placedict[p.place()]) // 在同一片草丛中则可视
