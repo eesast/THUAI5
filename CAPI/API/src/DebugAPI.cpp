@@ -369,8 +369,9 @@ bool DebugAPI::CanUseSoftware(std::shared_ptr<const THUAI5::Robot>& selfInfo)
 
 void DebugAPI::PrintSignalJammers() const
 {
+    std::ios::sync_with_stdio(false);
     Out << "Call PrintSignalJammers() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
-    Out << "******************Bullets******************" << std::endl;
+    Out << "******************SignalJammers******************" << std::endl;
     auto jammers = logic.GetSignalJammers();
     for (int i = 0;i< jammers.size();i++)
     {
@@ -383,13 +384,14 @@ void DebugAPI::PrintSignalJammers() const
                   << "x: " << jammers[i]->x << std::endl
                   << "y: " << jammers[i]->y << std::endl;
     }
-    Out << "*******************************************" << std::endl;
+    Out << "*************************************************" << std::endl;
 }
 
 void DebugAPI::PrintRobots() const
 {
+    std::ios::sync_with_stdio(false);
     Out << "Call PrintRobots() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
-    Out << "******************Characters******************" << std::endl;
+    Out << "******************Robots******************" << std::endl;
     auto robots = logic.GetRobots();
     for(int i = 0;i<robots.size();i++)
     {
@@ -427,12 +429,18 @@ void DebugAPI::PrintRobots() const
             }
             std::cout << std::endl;
         }
+        else
+        {
+            std::cout << "no buff." << std::endl;
+        }
+
     }
-    Out << "**********************************************" << std::endl;
+    Out << "******************************************" << std::endl;
 }
 
 void DebugAPI::PrintProps() const
 {
+    std::ios::sync_with_stdio(false);
     Out << "Call PrintProps() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     Out << "******************Props******************" << std::endl;
     auto props = logic.GetProps();
@@ -489,6 +497,10 @@ void DebugAPI::PrintSelfInfo() const
                 std::cout << THUAI5::buff_dict[selfinfo->buff[j]] << ' ';
             }
             std::cout << std::endl;
+        }
+        else
+        {
+            std::cout << "no buff." << std::endl;
         }
     }
     Out << "********************************************" << std::endl;
