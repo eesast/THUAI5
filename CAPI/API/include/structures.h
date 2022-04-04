@@ -14,17 +14,11 @@ namespace THUAI5
     enum class PropType :unsigned char
     {
         NullPropType = 0,
-        addElectricity = 1,
-        addAP = 2,
-        Booster = 3,
-        Battery = 4,
-        minusCD = 5,
-        CPU = 6,    
-        Shield = 7,
-        ShieldBreaker = 8,
-        minusSpeed = 9,
-        minusAP = 10,
-        addCD = 11
+        Booster = 1,
+        Battery = 2,
+        CPU = 3,    
+        Shield = 4,
+        ShieldBreaker = 5,
     };
 
     /// <summary>
