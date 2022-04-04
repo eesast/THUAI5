@@ -119,6 +119,15 @@ namespace Gaming
                     }
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitReadLock(); }
+                if (gem != null)
+                {
+                    gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
+                    try
+                    {
+                        gameMap.GameObjDict[GameObjIdx.PickedProp].Add(new PickedProp(gem));
+                    }
+                    finally { gameMap.GameObjLockDict[GameObjIdx.PickedProp].ExitWriteLock(); }
+                }
 
                 RemoveGem(gem);
 
@@ -138,6 +147,7 @@ namespace Gaming
                     return;
                 else if (size > player.GemNum)
                     size = player.GemNum;
+                player.GemNum -= size;
                 Gem gem = new Gem(player.Position, size);
                 gameMap.GameObjLockDict[GameObjIdx.Gem].EnterWriteLock();
                 try
@@ -146,7 +156,6 @@ namespace Gaming
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitWriteLock(); }
                 moveEngine.MoveObj(gem, moveMillisecondTime, angle);
-                player.GemNum -= size;
             }
 
             public void UseGem(Character character, int num)

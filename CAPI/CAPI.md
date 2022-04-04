@@ -7,15 +7,15 @@
 
 ### windows
 
-在**x64**生成环境下，如果生成模式为**release**模式，选手首先需要将组件包中的`HPSocket.lib`和`libprotobuf.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；如果生成模式为**debug**模式，则需要将`libprotobuf.lib`换成`libprotobufd.lib`。
-
-同时，需要在visual studio中更改以下配置：在解决方案资源管理器视图中，右键点击API和Communication，选择“属性”，在`配置属性->C/C++->代码生成->运行库`一栏中，若为**debug**模式，则选择**MTd**；若为**release**模式，则选择**MT**。
+在**x64**生成环境下，选手首先需要将组件包中的`HPSocket.lib`,`libprotobuf.lib`和`libprotobufd.lib`放在 `THUAI5\CAPI\API`文件夹（即与`API.vcxproj`文件相同的目录）下；
 
 ![settings](../resource/APIsettings2.png)
 
 ![settings](../resource/APIsettings.png)
 
-待到生成完毕后，在`THUAI5\CAPI`文件夹（即与`CAPI.sln`文件相同的目录）下，会有一个`x64`文件夹，在此文件夹中可以找到可执行文件`API.exe`，在与`API.exe`相同的文件夹下放置`HPSocket.dll`。
+
+
+**待到生成完毕后，在`THUAI5\CAPI`文件夹（即与`CAPI.sln`文件相同的目录）下，会有一个`x64`文件夹，在此文件夹中可以找到可执行文件`API.exe`，在与`API.exe`相同的文件夹下放置`HPSocket.dll`。**
 
 ### Linux
 
@@ -136,6 +136,8 @@ Where:
 * `-w` 当`-d`参数被指定时，指定`-w`参数可以输出一些警告信息，如在人物死亡时执行移动操作，系统将输出警告信息："[Warning: You have been slained.]"。
 
 ## 用户接口
+
+**请选手先仔细阅读`CAPI/API/include/structure.h`**
 
 用户可供使用的接口如下：
 ```cpp

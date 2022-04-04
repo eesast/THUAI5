@@ -167,7 +167,9 @@ namespace Server
                 case MessageType.UseGem:
                     if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
                     {
-                        game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID], msg.GemSize);
+                        if(msg.GemSize > 0)
+                            game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID], msg.GemSize);
+                        else game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID]);
                     }
                     break;
                 case MessageType.UseProp:
@@ -215,6 +217,7 @@ namespace Server
             if (requiredGaming && !game.GameMap.Timer.IsGaming)
                 return;
             var gameObjList = game.GetGameObj();
+            game.ClearLists(new Preparation.Utility.GameObjIdx[2] { Preparation.Utility.GameObjIdx.BombedBullet, Preparation.Utility.GameObjIdx.PickedProp });
             MessageToClient messageToClient = new MessageToClient();
             messageToClient.GameObjMessage.Add(MapMsg(game.GameMap));
             lock (messageToAllClientsLock)
@@ -235,8 +238,6 @@ namespace Server
                         break;
                 }
             }
-
-            game.ClearLists(new Preparation.Utility.GameObjIdx[2] { Preparation.Utility.GameObjIdx.BombedBullet, Preparation.Utility.GameObjIdx.PickedProp });
             serverCommunicator.SendToClient(messageToClient);
         }
         private void SendMessageToTeammate(MessageToServer msgToServer)
@@ -302,9 +303,7 @@ namespace Server
             (
                 () =>
                 {
-#if DEBUG
                     Console.WriteLine("Game Start!");
-#endif
                     game.StartGame((int)options.GameTimeInSecond * 1000);
                     OnGameEnd();
                 }

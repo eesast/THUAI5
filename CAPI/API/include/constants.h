@@ -36,33 +36,33 @@ namespace Constants
 		struct Speed
 		{
 		private:
-			M_SCI::std::int32_t BasicSpeed = Map::numOfGridPerCell;
-		public:
-			M_SCI::std::int32_t PowerEmission = 3000;
-			M_SCI::std::int32_t Invisible = 4000;
-			M_SCI::std::int32_t Amplification = 3000;
-			M_SCI::std::int32_t Booster = 2500;
+			M_SCI::std::int32_t BasicSpeed = Map::numOfGridPerCell;  
+		public:	
+			M_SCI::std::int32_t PowerEmission = 3000;    // 功率发射软件速度 3000
+			M_SCI::std::int32_t Invisible = 4000;        // 干扰信号软件速度 4000
+			M_SCI::std::int32_t Amplification = 2500;    // 信号放大软件速度 2500
+			M_SCI::std::int32_t Booster = 3000;          // 助推器充能软件速度 3000
 		};
 
 		struct HP
 		{
-			M_SCI::std::int32_t PowerEmission = 9500;
-			M_SCI::std::int32_t Invisible = 5000;
-			M_SCI::std::int32_t Amplification = 3600;
-			M_SCI::std::int32_t Booster = 6000;
+			M_SCI::std::int32_t PowerEmission = 9500;   // 功率发射软件最大电量  9500
+			M_SCI::std::int32_t Invisible = 5000;       // 干扰信号软件最大电量  5000
+			M_SCI::std::int32_t Amplification = 3600;   // 信号放大软件最大电量  3600
+			M_SCI::std::int32_t Booster = 6000;         // 助推器充能软件最大电量  6000
 		};
 
 		struct SkillTime
 		{
-			M_SCI::std::int32_t PowerEmission = 10000;
-			M_SCI::std::int32_t Invisible = 5000;
-			M_SCI::std::int32_t Amplification = 3000;
-			M_SCI::std::int32_t Booster = 2000;
+			M_SCI::std::int32_t PowerEmission = 10000;  // 功率发射软件技能持续时间  10000
+			M_SCI::std::int32_t Invisible = 5000;       // 干扰信号软件技能持续时间  5000
+			M_SCI::std::int32_t Amplification = 2000;   // 信号放大软件技能持续时间  2000
+			M_SCI::std::int32_t Booster = 3000;         // 助推器充能软件技能持续时间  3000
 		};
 
-		M_SCI::std::int32_t AttackCD = 3000;
-		M_SCI::std::int32_t SkillCD = 30000;
-		M_SCI::std::int32_t MaxBulletNum = 5;
+		M_SCI::std::int32_t AttackCD = 3000;      // 攻击冷却时间 3000
+		M_SCI::std::int32_t SkillCD = 30000;      // 技能冷却时间 30000
+		M_SCI::std::int32_t MaxBulletNum = 5;     // 最大子弹数  5
 	};
 
 	// hardware skill constants
@@ -70,9 +70,9 @@ namespace Constants
 	{
 		struct AttackRange
 		{
-			M_SCI::std::int32_t PowerBank = 4500;
-			M_SCI::std::int32_t EnergyConvert = 900;
-			M_SCI::std::int32_t EmissionAccessory = 90000;
+			M_SCI::std::int32_t PowerBank = 4500;        // 自动充电装置攻击范围 4500
+			M_SCI::std::int32_t EnergyConvert = 9000;    // 电能转换装置攻击范围 9000
+			M_SCI::std::int32_t EmissionAccessory = 900; // 强制功率发射配件攻击范围 900
 		};
 	};
 }
