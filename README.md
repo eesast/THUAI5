@@ -1,6 +1,8 @@
 # THUAI5
 
-THUAI5：清华大学第五届人工智能挑战赛电子系赛道（原电子系第二十三届队式程序设计大赛 teamstyle23）
+THUAI5：清华大学第五届人工智能挑战赛电子系赛道（原电子系第二十三届队式程序设计大赛 teamstyle23）  
+
+更多内容参见 [THUAI5 Github Wiki](https://github.com/eesast/THUAI5/wiki)
 
 ## 赛题简介
 
