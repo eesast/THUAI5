@@ -25,7 +25,7 @@ namespace Preparation.Utility
         }
         public static double Distance(XYPosition p1, XYPosition p2)
         {
-            return Math.Sqrt(((p1.x - p2.x) * (p1.x - p2.x)) + ((p1.y - p2.y) * (p1.y - p2.y)));
+            return Math.Sqrt(((long)(p1.x - p2.x) * (p1.x - p2.x)) + ((long)(p1.y - p2.y) * (p1.y - p2.y)));
         }
         /*public static XYPosition[] GetSquareRange(uint edgeLen) // 从THUAI4的BULLET.CS移植而来，不知还有用否
         {

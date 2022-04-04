@@ -23,8 +23,14 @@ namespace Test
                             //case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
                             //    Console.WriteLine($"GUID:{obj.MessageOfCharacter.Guid} Character is at ({obj.MessageOfCharacter.X},{obj.MessageOfCharacter.Y}).");
                             //    break;
-                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
-                                Console.WriteLine($"GUID:{obj.MessageOfBullet.Guid} is at ({obj.MessageOfBullet.X},{obj.MessageOfBullet.Y})");
+                            //case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
+                            //    Console.WriteLine($"GUID:{obj.MessageOfBullet.Guid} is at ({obj.MessageOfBullet.X},{obj.MessageOfBullet.Y})");
+                            //    break;
+                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
+                                Console.WriteLine($"BombedBullet GUID:{obj.MessageOfBombedBullet.MappingID} is at ({obj.MessageOfBombedBullet.X},{obj.MessageOfBombedBullet.Y})");
+                                break;
+                            case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfPickedProp:
+                                Console.WriteLine($"PickedProp GUID:{obj.MessageOfPickedProp.MappingID} is at ({obj.MessageOfPickedProp.X},{obj.MessageOfPickedProp.Y})");
                                 break;
                         }
                     }
@@ -121,7 +127,6 @@ namespace Test
                         MessageToServer msgK = new MessageToServer();
                         msgK.MessageType = MessageType.UseGem;
                         msgK.PlayerID = playerID;
-                        msgK.GemSize = 1;
                         msgK.TeamID = teamID;
                         clientCommunication.SendMessage(msgK);
                         break;
@@ -156,6 +161,15 @@ namespace Test
                         msgI.PlayerID = playerID;
                         msgI.TeamID = teamID;
                         clientCommunication.SendMessage(msgI);
+                        break;
+                    case ConsoleKey.Y:
+                        MessageToServer msgY = new MessageToServer();
+                        msgY.MessageType = MessageType.ThrowProp;
+                        msgY.PlayerID = playerID;
+                        msgY.TeamID = teamID;
+                        msgY.TimeInMilliseconds = 3000;
+                        msgY.Angle = Math.PI;
+                        clientCommunication.SendMessage(msgY);
                         break;
                     default:
                         break;

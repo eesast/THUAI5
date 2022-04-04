@@ -438,15 +438,17 @@ namespace GameClass.GameObj
         public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj is BirthPoint)
+            if (targetObj.Type == GameObjType.BirthPoint)
+            {
                 if (object.ReferenceEquals(((BirthPoint)targetObj).Parent, this))    // 自己的出生点可以忽略碰撞
                 {
                     return true;
                 }
-            //else if (targetObj is DebuffMine && ((DebuffMine)targetObj).Parent?.TeamID == TeamID)   // 自己队的地雷忽略碰撞
-            //{
-            //    return true;
-            //}
+            }
+            else if (targetObj.Type == GameObjType.Prop)   // 自己队的地雷忽略碰撞
+            {
+                return true;
+            }
             return false;
         }
     }

@@ -4,7 +4,7 @@ using Preparation.GameData;
 
 namespace GameClass.GameObj
 {
-    public sealed class Gem:Prop  //宝石算作一种特殊的道具
+    public sealed class Gem: Prop  //宝石算作一种特殊的道具
     {
         public override PropType GetPropType()
         {
@@ -27,6 +27,10 @@ namespace GameClass.GameObj
             else this.size++;
         }
         public override ShapeType Shape => ShapeType.Circle;
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj) => true;	//道具不与任何东西碰撞
+        protected override bool IgnoreCollideExecutor(IGameObj targetObj)
+        {
+            if (targetObj.Type == GameObjType.BirthPoint || targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet || targetObj.Type == GameObjType.Character) return true;
+            return false;
+        }
     }
 }
