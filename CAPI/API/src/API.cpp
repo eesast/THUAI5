@@ -161,6 +161,7 @@ THUAI5::PlaceType API::GetPlaceType(int32_t CellX, int32_t CellY) const
 
 void API::PrintSignalJammers() const
 {
+    std::ios::sync_with_stdio(false);
     std::cout << "******************Bullets******************" << std::endl;
     auto jammers = logic.GetSignalJammers();
     for (int i = 0;i<jammers.size();i++)
@@ -179,6 +180,7 @@ void API::PrintSignalJammers() const
 
 void API::PrintRobots() const
 {
+    std::ios::sync_with_stdio(false);
     std::cout << "******************Characters******************" << std::endl;
     auto robots = logic.GetRobots();
     for(int i = 0;i< robots.size();i++)
@@ -217,12 +219,17 @@ void API::PrintRobots() const
             }
             std::cout << std::endl;
         }
+        else
+        {
+            std::cout << "no buff." << std::endl;
+        }
     }
     std::cout << "**********************************************" << std::endl;
 }
 
 void API::PrintProps() const
 {
+    std::ios::sync_with_stdio(false);
     std::cout << "******************Props******************" << std::endl;
     auto props = logic.GetProps();
     for(int i = 0;i<props.size();i++)
@@ -241,6 +248,7 @@ void API::PrintProps() const
 
 void API::PrintSelfInfo() const
 {
+    std::ios::sync_with_stdio(false);
     std::cout << "******************Selfinfo******************" << std::endl;
     auto selfinfo = logic.GetSelfInfo();
     if (selfinfo != nullptr)
@@ -278,6 +286,12 @@ void API::PrintSelfInfo() const
             }
             std::cout << std::endl;
         }
+        else
+        {
+            std::cout << "no buff." << std::endl;
+        }
     }
     std::cout << "********************************************" << std::endl;
 }
+
+

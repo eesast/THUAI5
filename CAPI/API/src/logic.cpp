@@ -208,7 +208,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
         // 2.信息不能全盘接受，要根据现有的视野范围接受
         auto gameObjMessage = pm2c->gameobjmessage();
         for (auto it = gameObjMessage.begin(); it != gameObjMessage.end(); it++)
-        {
+        {   
             if (it->has_messageofcharacter())
             {
                 // 此信息是属于自身的
