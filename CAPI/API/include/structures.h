@@ -47,8 +47,15 @@ namespace THUAI5
         BlindZone1 = 2, // 盲区1
         BlindZone2 = 3, // 盲区2
         BlindZone3 = 4, // 盲区3
-        BirthPlace = 5, // 出生点
-        CPUFactory = 6 // CPU工厂
+        BirthPlace1 = 5, // 出生点1-8
+        BirthPlace2 = 6,
+        BirthPlace3 = 7,
+        BirthPlace4 = 8,
+        BirthPlace5 = 9,
+        BirthPlace6 = 10,
+        BirthPlace7 = 11,
+        BirthPlace8 = 12,
+        CPUFactory = 13 // CPU工厂
     };
 
     /// <summary>
@@ -57,11 +64,10 @@ namespace THUAI5
     enum class SignalJammerType :unsigned char
     {
         NullJammerType = 0, 
-        CommonJammer1 = 1, // 普通信号干扰器
-        CommonJammer2 = 2, // 普通信号干扰器
-        FastJammer = 3, // 快速信号干扰器
-        OrdinaryJammer = 4, 
-        StrongJammer = 5 // 强力信号干扰器
+        LineJammer = 1, // 普通干扰弹
+        CommonJammer = 2, // 激光干扰弹
+        FastJammer = 3, // 快速干扰弹
+        StrongJammer = 4 // 强力干扰弹
     };
 
     /// <summary>
@@ -71,11 +77,9 @@ namespace THUAI5
     {
         NullBuffType = 0,
         MoveSpeed = 1, // 加速
-        AP = 2, // 增加攻击力
-        CD = 3, // 减少技能冷却时间
-        AddLIFE = 4, // 增加电量
-        ShieldBuff = 5, // 护盾
-        SpearBuff = 6 // 破盾
+        AddLIFE = 2, // 增加攻击力
+        ShieldBuff = 3, // 护盾
+        SpearBuff = 4 // 破盾
     };
 
     /// <summary>
@@ -213,7 +217,14 @@ namespace THUAI5
         { PlaceType::BlindZone1 ,"BlindZone1 "},
         { PlaceType::BlindZone2 ,"BlindZone2 "},
         { PlaceType::BlindZone3 ,"BlindZone3 "},
-        { PlaceType::BirthPlace ,"BirthPlace "},
+        { PlaceType::BirthPlace1 ,"BirthPlace1 "},
+        { PlaceType::BirthPlace2 ,"BirthPlace2 "},
+        { PlaceType::BirthPlace3 ,"BirthPlace3 "},
+        { PlaceType::BirthPlace4 ,"BirthPlace4 "},
+        { PlaceType::BirthPlace5 ,"BirthPlace5 "},
+        { PlaceType::BirthPlace6 ,"BirthPlace6 "},
+        { PlaceType::BirthPlace7 ,"BirthPlace7 "},
+        { PlaceType::BirthPlace8 ,"BirthPlace8 "},
         { PlaceType::CPUFactory ,"CPUFactory "}
     };
 
@@ -221,8 +232,6 @@ namespace THUAI5
     {
         { BuffType::NullBuffType ,"NullBuffType "},
         { BuffType::MoveSpeed ,"MoveSpeed "},
-        { BuffType::AP ,"AP "},
-        { BuffType::CD ,"CD "},
         { BuffType::AddLIFE ,"AddLIFE "},
         { BuffType::ShieldBuff ,"ShieldBuff "},
         { BuffType::SpearBuff ,"SpearBuff "},
@@ -231,10 +240,9 @@ namespace THUAI5
     inline std::map<THUAI5::SignalJammerType, std::string> jammer_dict
     {
         { SignalJammerType::NullJammerType ,"NullJammerType "},
-        { SignalJammerType::CommonJammer1 ,"CommonJammer1 "},
-        { SignalJammerType::CommonJammer2 ,"CommonJammer2 "},
+        { SignalJammerType::LineJammer ,"LineJammer "},
+        { SignalJammerType::CommonJammer ,"CommonJammer "},
         { SignalJammerType::FastJammer ,"FastJammer "},
-        { SignalJammerType::OrdinaryJammer ,"OrdinaryJammer "},
         { SignalJammerType::StrongJammer ,"StrongJammer "}
     };
 
