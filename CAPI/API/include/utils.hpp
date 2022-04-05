@@ -72,6 +72,55 @@ inline std::map<Protobuf::PlaceType, THUAI5::PlaceType> _placedict
     {Protobuf::PlaceType::Grass3,THUAI5::PlaceType::BlindZone3},
 };
 
+inline std::map<THUAI5::SoftwareType, Protobuf::ActiveSkillType> _softwaredict_rev
+{
+    {THUAI5::SoftwareType::Invisible, Protobuf::ActiveSkillType::BecomeAssassin},
+    {THUAI5::SoftwareType::PowerEmission, Protobuf::ActiveSkillType::BecomeVampire },
+    {THUAI5::SoftwareType::Booster, Protobuf::ActiveSkillType::SuperFast},
+    {THUAI5::SoftwareType::Amplification, Protobuf::ActiveSkillType::NuclearWeapon},
+};
+
+inline std::map<THUAI5::HardwareType, Protobuf::PassiveSkillType> _hardwaredict_rev
+{
+    {THUAI5::HardwareType::PowerBank, Protobuf::PassiveSkillType::RecoverAfterBattle},
+    {THUAI5::HardwareType::EnergyConvert, Protobuf::PassiveSkillType::SpeedUpWhenLeavingGrass},
+    {THUAI5::HardwareType::EmissionAccessory, Protobuf::PassiveSkillType::Vampire,}
+};
+
+inline std::map<THUAI5::PropType, Protobuf::PropType> _propdict_rev
+{
+    {THUAI5::PropType::CPU, Protobuf::PropType::Gem},
+    {THUAI5::PropType::Booster,Protobuf::PropType::addSpeed},
+    {THUAI5::PropType::Battery, Protobuf::PropType::addLIFE},
+    {THUAI5::PropType::Shield, Protobuf::PropType::Shield},
+    {THUAI5::PropType::ShieldBreaker, Protobuf::PropType::Spear}
+};
+
+inline std::map<THUAI5::SignalJammerType, Protobuf::BulletType> _jammerdict_rev
+{
+    {THUAI5::SignalJammerType::LineJammer, Protobuf::BulletType::LineBullet},
+    {THUAI5::SignalJammerType::CommonJammer, Protobuf::BulletType::OrdinaryBullet},
+    {THUAI5::SignalJammerType::FastJammer, Protobuf::BulletType::FastBullet},
+    {THUAI5::SignalJammerType::StrongJammer, Protobuf::BulletType::AtomBomb},
+};
+
+inline std::map< THUAI5::BuffType, Protobuf::BuffType> _buffdict_rev
+{
+    {THUAI5::BuffType::MoveSpeed, Protobuf::BuffType::MoveSpeed},
+    {THUAI5::BuffType::AddLIFE, Protobuf::BuffType::AddLIFE},
+    {THUAI5::BuffType::ShieldBuff, Protobuf::BuffType::ShieldBuff},
+    {THUAI5::BuffType::SpearBuff, Protobuf::BuffType::SpearBuff}
+};
+
+inline std::map<THUAI5::PlaceType, Protobuf::PlaceType> _placedict_rev
+{
+    {THUAI5::PlaceType::Land, Protobuf::PlaceType::Land},
+    {THUAI5::PlaceType::BlindZone1, Protobuf::PlaceType::Grass1},
+    {THUAI5::PlaceType::BlindZone2, Protobuf::PlaceType::Grass2},
+    {THUAI5::PlaceType::BlindZone3, Protobuf::PlaceType::Grass3},
+};
+
+
 /// <summary>
 /// 辅助函数：将Proto类转换为THUAI类
 /// </summary>
@@ -84,7 +133,7 @@ PROTO2THUAI_NAMESPACE_BEGIN
     inline std::shared_ptr<THUAI5::Robot> Protobuf2THUAI5_C(const Protobuf::MessageOfCharacter& c)
     {
         std::shared_ptr<THUAI5::Robot> robot = std::make_shared<THUAI5::Robot>();
-        robot->softwareType = (THUAI5::SoftwareType)c.activeskilltype();
+        robot->softwareType = _softwaredict[c.activeskilltype()];
         robot->attackRange = c.attackrange();
         for (auto it = c.buff().begin(); it != c.buff().end(); it++)
         {
@@ -241,7 +290,7 @@ TIME_NAMESPACE_END
 SPACE_NAMESPACE_BEGIN
     inline bool InSameCell(uint32_t x1, uint32_t y1, uint32_t x2, uint32_t y2)
     {
-        return (x1 / Constants::Map::numOfGridPerCell == x2 / Constants::Map::numOfGridPerCell) ||
+        return (x1 / Constants::Map::numOfGridPerCell == x2 / Constants::Map::numOfGridPerCell) &&
                (y1 / Constants::Map::numOfGridPerCell == y2 / Constants::Map::numOfGridPerCell);
     }
 SPACE_NAMESPACE_END

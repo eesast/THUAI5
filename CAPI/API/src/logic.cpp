@@ -68,8 +68,8 @@ Protobuf::MessageToServer Logic::OnConnect()
     message.set_messagetype(Protobuf::MessageType::AddPlayer);
     message.set_playerid(playerID);
     message.set_teamid(teamID);
-    message.set_askill1((Protobuf::ActiveSkillType)playerSoftware);
-    message.set_pskill((Protobuf::PassiveSkillType)playerHardware);
+    message.set_askill1(_softwaredict_rev[playerSoftware]);
+    message.set_pskill(_hardwaredict_rev[playerHardware]);
     return message;
 }
 

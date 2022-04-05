@@ -14,17 +14,11 @@ namespace THUAI5
     enum class PropType :unsigned char
     {
         NullPropType = 0,
-        addElectricity = 1,
-        addAP = 2,
-        Booster = 3,
-        Battery = 4,
-        minusCD = 5,
-        CPU = 6,    
-        Shield = 7,
-        ShieldBreaker = 8,
-        minusSpeed = 9,
-        minusAP = 10,
-        addCD = 11
+        Booster = 1,
+        Battery = 2,
+        CPU = 3,
+        Shield = 4,
+        ShieldBreaker = 5
     };
 
     /// <summary>
@@ -55,7 +49,8 @@ namespace THUAI5
         BirthPlace6 = 10,
         BirthPlace7 = 11,
         BirthPlace8 = 12,
-        CPUFactory = 13 // CPU工厂
+        CPUFactory = 13, // CPU工厂
+        NullPlaceType = 14 // 非法PlaceType
     };
 
     /// <summary>
@@ -91,9 +86,6 @@ namespace THUAI5
         PowerBank = 1, // 自动充电
         EnergyConvert = 2, // 电能转化
         EmissionAccessory = 3, // 强制功率发射配件
-        Hardware3 = 4, // coming soon
-        Hardware4 = 5,
-        Hardware5 = 6
     };
 
     /// <summary>
@@ -106,8 +98,6 @@ namespace THUAI5
         Invisible = 2, // 隐身
         Amplification = 3, // 信号放大软件
         Booster = 4, // 助推器充能软件
-        Software4 = 5,
-        Software5 = 6
     };
 
     /// <summary>
@@ -166,7 +156,7 @@ namespace THUAI5
     {
         uint32_t x;                                     // x坐标
         uint32_t y;                                     // y坐标
-        uint32_t size;                                  // 道具尺寸
+        uint32_t size;                                  // CPU个数，仅当道具为CPU时有效，其它道具默认为0
         uint64_t guid;                                  // guid
 
         double facingDirection;                         // 朝向
@@ -197,17 +187,11 @@ namespace THUAI5
     inline std::map<THUAI5::PropType, std::string> prop_dict
     {
         { PropType::NullPropType,"NullPropType"},
-        { PropType::addElectricity,"addElectricity"},
-        { PropType::addAP,"addAP"},
         { PropType::Booster,"Booster"},
         { PropType::Battery ,"Battery "},
-        { PropType::minusCD ,"minusCD "},
         { PropType::CPU ,"CPU "},
         { PropType::Shield ,"Shield "},
         { PropType::ShieldBreaker ,"ShieldBreaker "},
-        { PropType::minusSpeed ,"minusSpeed "},
-        { PropType::minusAP ,"minusAP "},
-        { PropType::addCD ,"addCD "}
     };
 
     inline std::map<THUAI5::PlaceType, std::string> place_dict
@@ -253,8 +237,6 @@ namespace THUAI5
         { SoftwareType::Invisible ,"Invisible "},
         { SoftwareType::Amplification ,"Amplification "},
         { SoftwareType::Booster ,"Booster "},
-        { SoftwareType::Software4 ,"Software4 "},
-        { SoftwareType::Software5 ,"Software5 "}
     };
 
     inline std::map<THUAI5::HardwareType, std::string> hardware_dict
@@ -263,9 +245,6 @@ namespace THUAI5
         { HardwareType::PowerBank ,"PowerBank "},
         { HardwareType::EnergyConvert ,"EnergyConvert "},
         { HardwareType::EmissionAccessory ,"EmissionAccessory "},
-        { HardwareType::Hardware3 ,"Hardware3 "},
-        { HardwareType::Hardware4 ,"Hardware4 "},
-        { HardwareType::Hardware5 ,"Hardware5 "}
     };
 }
 

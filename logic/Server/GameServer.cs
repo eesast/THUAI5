@@ -257,6 +257,9 @@ namespace Server
                 msg.TeamID = msgToServer.TeamID;
                 msg.Message = msgToServer.Message;
                 msg.MessageType = MessageType.Send;
+#if DEBUG
+                Console.WriteLine(msg);
+#endif
                 serverCommunicator.SendToClient(msg);
             }
 

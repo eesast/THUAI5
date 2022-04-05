@@ -1,5 +1,6 @@
 #include <random>
 #include "../include/AI.h"
+#pragma warning(disable:C26495)
 
 /* 请于 VS2019 项目属性中开启 C++17 标准：/std:c++17 */
 
@@ -8,7 +9,7 @@ extern const bool asynchronous = false;
 
 
 // 选手主动技能，选手 !!必须!! 定义此变量来选择主动技能
-extern const THUAI5::SoftwareType playerSoftware = THUAI5::SoftwareType::Invisible;
+extern const THUAI5::SoftwareType playerSoftware = THUAI5::SoftwareType::Amplification;
 
 // 选手被动技能，选手 !!必须!! 定义此变量来选择被动技能
 extern const THUAI5::HardwareType playerHardware = THUAI5::HardwareType::PowerBank;
@@ -18,124 +19,188 @@ namespace
 	[[maybe_unused]] std::uniform_real_distribution<double> direction(0, 2 * 3.1415926);
 	[[maybe_unused]] std::default_random_engine e{ std::random_device{}() };
 }
+const double PI = 3.1415926;
 
+THUAI5::PlaceType GetPlaceTCL(IAPI& api, int32_t cellX, int32_t cellY)
+{
+	if (cellX < 0 || cellX >= 50 || cellY < 0 || cellY >= 50)
+		return THUAI5::PlaceType::Land;
+	else return api.GetPlaceType(cellX, cellY);
+}
+
+double getDirection(uint32_t selfPoisitionX, uint32_t selfPoisitionY, uint32_t aimPositionX, uint32_t aimPositionY)//获取角度的内联函数
+{
+	double delta_x = double(aimPositionX) - double(selfPoisitionX);
+	double delta_y = double(aimPositionY) - double(selfPoisitionY);
+	double direction = atan2(delta_y, delta_x);
+	if (direction < 0)
+	{
+		direction = 2 * PI + direction;
+	}
+	return direction;
+}
+
+double getDistance(uint32_t selfPoisitionX, uint32_t selfPoisitionY, uint32_t aimPositionX, uint32_t aimPositionY)
+{
+	return sqrt((aimPositionX - selfPoisitionX) * (aimPositionX - selfPoisitionX) + (aimPositionY - selfPoisitionY) * (aimPositionY - selfPoisitionY));
+}
+void dash(IAPI& api, uint32_t selfPoisitionX, uint32_t selfPoisitionY, uint32_t aimPositionX, uint32_t aimPositionY, uint32_t movespeed)
+{
+	double direction = getDirection(selfPoisitionX, selfPoisitionY, aimPositionX, aimPositionY);
+	double distance = getDistance(selfPoisitionX, selfPoisitionY, aimPositionX, aimPositionY);
+	api.MovePlayer(1000 * distance / movespeed, direction);
+}
+bool Attackornot(std::shared_ptr<const THUAI5::Robot> self, uint32_t selfPoisitionX, uint32_t selfPoisitionY, uint32_t aimPositionX, uint32_t aimPositionY)
+{
+	double ATTACK_R = self->attackRange;
+	return ATTACK_R > sqrt((aimPositionX - selfPoisitionX) * (aimPositionX - selfPoisitionX) + (aimPositionY - selfPoisitionY) * (aimPositionY - selfPoisitionY));
+}
+
+void attackaround(IAPI& api, std::shared_ptr<const THUAI5::Robot> self)
+{
+	auto player = api.GetRobots();
+	if (!player.empty() && self->signalJammerNum > 0)
+	{
+		for (int i = 0; i < player.size(); i++)
+		{
+			if (self->teamID != player[i]->teamID && !player[i]->isResetting && Attackornot(self, self->x, self->y, player[i]->x, player[i]->y))
+			{
+				uint32_t px = player[i]->x;
+				uint32_t py = player[i]->y;
+				double e = getDirection(self->x, self->y, px, py);
+				api.Attack(e);
+				api.Attack(e);
+				api.Attack(e);
+				api.Attack(e);
+				api.Attack(e);
+			}
+		}
+	}
+}
+uint32_t getCellPosition(uint32_t t)
+{
+	return t / 1000;
+}
+
+bool moveable_diagonal(IAPI& api, uint32_t selfPoisitionX, uint32_t selfPoisitionY, uint32_t aimPositionX, uint32_t aimPositionY)
+{
+	uint32_t maxX = (selfPoisitionX < aimPositionX ? aimPositionX : selfPoisitionX);
+	uint32_t maxY = (selfPoisitionY < aimPositionY ? aimPositionY : selfPoisitionY);
+	uint32_t minX = (selfPoisitionX > aimPositionX ? aimPositionX : selfPoisitionX);
+	uint32_t minY = (selfPoisitionY > aimPositionY ? aimPositionY : selfPoisitionY);
+	auto wall = THUAI5::PlaceType::Wall;
+	for (int i = getCellPosition(minX); i <= getCellPosition(maxX); i++)
+	{
+		for (int j = getCellPosition(minY); j <= getCellPosition(maxY); j++)
+		{
+			if (GetPlaceTCL(api, i, j) == wall)
+				return false;
+		}
+	}
+	return true;
+}
+bool moveable_y(IAPI& api, uint32_t selfPoisitionX, uint32_t selfPoisitionY, uint32_t aimPositionY)
+{
+	uint32_t maxY = (selfPoisitionY < aimPositionY ? aimPositionY : selfPoisitionY);
+	uint32_t minY = (selfPoisitionY > aimPositionY ? aimPositionY : selfPoisitionY);
+	auto wall = THUAI5::PlaceType::Wall;
+	for (int i = getCellPosition(minY); i <= getCellPosition(maxY); i++)
+	{
+		if (GetPlaceTCL(api, selfPoisitionX / 1000 + 1, i) == wall || GetPlaceTCL(api, selfPoisitionX, i) == wall || GetPlaceTCL(api, selfPoisitionX / 1000 - 1, i) == wall)
+			return false;
+	}
+	return true;
+}
+bool moveable_x(IAPI& api, uint32_t selfPoisitionX, uint32_t selfPoisitionY, uint32_t aimPositionX)
+{
+	uint32_t maxX = (selfPoisitionX < aimPositionX ? aimPositionX : selfPoisitionX);
+	uint32_t minX = (selfPoisitionX > aimPositionX ? aimPositionX : selfPoisitionX);
+	auto wall = THUAI5::PlaceType::Wall;
+	for (int i = getCellPosition(minX); i <= getCellPosition(maxX); i++)
+	{
+		if (GetPlaceTCL(api, i, selfPoisitionY / 1000 + 1) == wall || GetPlaceTCL(api, i, selfPoisitionY / 1000) == wall || GetPlaceTCL(api, i, selfPoisitionY / 1000 - 1) == wall)
+			return false;
+	}
+	return true;
+}
+void hunt(IAPI& api, std::shared_ptr<const THUAI5::Robot> self, uint32_t x, uint32_t y)
+{
+	uint32_t selfx = self->x;
+	uint32_t selfy = self->y;
+	if (selfx != x && selfy != y)
+	{
+		if (moveable_diagonal(api, selfx, selfy, x, y))
+		{
+			dash(api, selfx, selfy, x, y, self->speed);
+		}
+		else if (selfx != x && moveable_x(api, selfx, selfy, x))
+		{
+			if (selfx < x)
+			{
+				api.MoveDown(100);
+			}
+			else
+			{
+				api.MoveUp(100);
+			}
+		}
+		else if (selfy != y && moveable_y(api, selfx, selfy, y))
+		{
+			if (selfy < y)
+			{
+				api.MoveRight(100);
+			}
+			else
+			{
+				api.MoveLeft(100);
+			}
+		}
+		else
+		{
+			bool moveable;
+			if (selfy < y)
+			{
+				moveable = api.MoveLeft(100);
+			}
+			else
+			{
+				moveable = api.MoveRight(100);
+			}
+			if (!moveable && selfx > x)
+			{
+				api.MoveDown(100);
+			}
+			else
+			{
+				api.MoveUp(100);
+			}
+		}
+	}
+}
 void AI::play(IAPI& api)
 {
 	std::ios::sync_with_stdio(false);
-	
-	//获得信息
-	auto self=api.GetSelfInfo();
-	//输出个人CD
-	std::cout<<self->CD<<std::endl;
-
-	//e为一个方向角度
-	double e=3.1415926*0.5;
-	//向e方向攻击
-	api.Attack(e);
-
-	//cell转化为grid
-	uint32_t gridnumbers=api.CellToGrid(5);
-	//grid转化为cell
-	uint32_t cellnumbers=api.GridToCell(gridnumbers);
-
-	//获取场上信号干扰器
-	auto SignalJammers=api.GetSignalJammers();
-	//输出第一个信号干扰器属于的队伍ID和数目
-	if (SignalJammers.size()!=0)
+	auto self = api.GetSelfInfo();
+	auto prop = api.GetProps();
+    for (int i = prop.size() - 1; i > 0; i--)
+    {
+        if (prop[i]->x / 1000 == self->x / 1000 && prop[i]->y / 1000 == self->y / 1000)
+            api.Pick(prop[i]->type);
+        else
+            hunt(api, self, prop[i]->x, prop[i]->y);
+    }
+	for (int i = 0; i < 3; i++)
 	{
-		std::cout << SignalJammers[0]->parentTeamID << std::endl;
-		std::cout << SignalJammers.size() << std::endl;
+		std::string s = "000";
+		api.Send(i, s);
 	}
-	//!!!!!! 注意：千万不要写出这样的代码：
-	//! auto SignalJammers=api.GetSignalJammers();
-	//! std::cout << SignalJammers[0]->parentTeamID << std::endl;
-	//! std::cout << SignalJammers.size() << std::endl;
-	//! 当场上没有任何信号干扰器时，SignalJammers的长度将为0，如果此时直接调用SignalJammers[0]->parentTeamID，将会产生空指针，导致程序崩溃！
-	//! 编写C++程序的一个好习惯：随时判断一段代码是否会产生空指针，并写出严密的判空机制。
-
-	//获取场上机器人的信息
-	auto Robots=api.GetRobots();
-	//输出第一个机器人的攻击范围
-	if (Robots.size() != 0)
+	if (api.MessageAvailable())
 	{
-		std::cout << Robots[0]->attackRange << std::endl;
+		auto s = api.TryGetMessage();
+		std::cout << s.value();
 	}
-
-	//获取游戏已经进行的帧数
-	auto Count=api.GetFrameCount();
-
-	//获取（25，25）处地点类型
-	auto PlaceType=api.GetPlaceType(25,25);
-	//判断地点类型是否为CPUFactory
-	auto cpufactory=THUAI5::PlaceType::CPUFactory;
-	std::cout<<(PlaceType==cpufactory)<<std::endl;
-
-	//返回一个数组，存储了场上所有玩家的GUID（全局唯一标识符）
-	auto guids=api.GetPlayerGUIDs();
-
-	//获取场上的道具信息
-	auto Props=api.GetProps();
-	//判断一号道具是否为cpu
-	auto cpu=THUAI5::PropType::CPU;
-	if (Props.size() != 0)
-	{
-		std::cout << (Props[0]->type == cpu) << std::endl;
-	}
-	
-	//返回队伍得分
-	auto score=api.GetTeamScore();
-
-	//捡cpu
-	api.Pick(cpu);
-
-	//移动
-	uint32_t movespeed=300;
-	api.MoveDown(3000/movespeed);
-	api.MoveLeft(3000/movespeed);
-	api.MoveRight(3000/movespeed);
-	api.MoveUp(3000/movespeed);
-	api.MovePlayer(3000/movespeed,e);
-
-	//asynchronous 为 true 的情况下，选手可以调用此函数，阻塞当前线程，直到下一次消息更新时继续运行。
-	api.Wait();
-
-	//查看是否有消息，有则接收消息
-	if(api.MessageAvailable())
-	{
-		auto message=api.TryGetMessage();
-	}
-	//想2号玩家发消息
-	int toPlayerID=2;
-	api.Send(toPlayerID,"this is an example");
-
-	//玩家使用CPU,扔CPU/道具，使用技能
-	api.UseCPU(self->cpuNum);
-	api.ThrowCPU(3000/movespeed,e,0);
-	api.ThrowProp(3000/movespeed,e);
+	attackaround(api, self);
 	api.UseCommonSkill();
-	
-	/*
-	#获取 thuai5 属性type [code]:
-
-	auto AP=THUAI5::BuffType::AP;
-	auto PowerBank=THUAI5::HardwareType::PowerBank;
-	auto Wall=THUAI5::PlaceType::Wall;
-	auto Booster=THUAI5::PropType::Booster;
-	auto Circle=THUAI5::ShapeType::Circle;
-	auto FastJammer=THUAI5::SignalJammerType::FastJammer;
-	auto PowerEmission=THUAI5::SoftwareType::PowerEmission;
-
-	#Get the (i+1)th Prop/robots and self info [code]:
-
-	auto Robots=api.GetRobots();
-	auto Props=api.GetProps();
-	auto self=api.GetSelfInfo();
-	
-	you will see the list ,just choose what you need to use.
-
-	auto Props->
-	auto self->
-	auto Robots[i]->
-
-	*/
+	api.ThrowCPU(50, PI, 2);
+	api.ThrowProp(50, PI);
 }
