@@ -2,6 +2,7 @@
 #include "../API/include/AI.h"
 #include "../API/include/logic.h"
 #include "../API/include/structures.h"
+#include "../API/include/utils.hpp"
 
 #ifdef _MSC_VER
 #pragma warning(disable:4996)

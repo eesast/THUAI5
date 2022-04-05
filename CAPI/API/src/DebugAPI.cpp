@@ -79,7 +79,6 @@ bool DebugAPI::UseCommonSkill()
     Out << "Call UseCommonSkill() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting)
         {
@@ -113,7 +112,7 @@ bool DebugAPI::Send(int toPlayerID, std::string to_message)
         }
         else
         {
-            Out << "[Info: The message is " << to_message << ".]" << std::endl;
+            Out << "[Info: The message is: " << to_message << ".]" << std::endl;
         }
     }
 
@@ -129,7 +128,6 @@ bool DebugAPI::Pick(THUAI5::PropType proptype)
     Out << "Call Pick(" << THUAI5::prop_dict[proptype] << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting)
         {
@@ -145,7 +143,7 @@ bool DebugAPI::Pick(THUAI5::PropType proptype)
 
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Pick);
-    message.set_proptype(Protobuf::PropType(proptype));
+    message.set_proptype(_propdict_rev[proptype]);
     return logic.SendInfo(message);
 }
 
@@ -320,7 +318,12 @@ std::shared_ptr<const THUAI5::Robot> DebugAPI::GetSelfInfo() const
 
 THUAI5::PlaceType DebugAPI::GetPlaceType(int32_t CellX, int32_t CellY) const
 {
-    Out << "Call GetPlaceType(" << CellX << "," << CellY << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    // Out << "Call GetPlaceType(" << CellX << "," << CellY << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (CellX < 0 || CellX >= 50 || CellY < 0 || CellY >= 50)
+    {
+        Out << "[Warning: index out of bounds. You will get `NullPlaceType`.]" << std::endl;
+        return THUAI5::PlaceType::NullPlaceType;
+    }
     return logic.GetPlaceType(CellX, CellY);
 }
 
@@ -363,7 +366,7 @@ bool DebugAPI::CanUseSoftware(std::shared_ptr<const THUAI5::Robot>& selfInfo)
     {
         return true;
     }
-    Out << "[Warning: common skill is not available, please wait for " << timeUntilCommonSkillAvailable << " s.]" << std::endl;  
+    Out << "[Warning: common skill is not available, please wait for " << timeUntilCommonSkillAvailable << " ms.]" << std::endl;  
     return false;
 }
 

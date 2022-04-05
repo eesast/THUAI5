@@ -36,6 +36,7 @@ using pointer_m2c = std::variant<std::shared_ptr<Protobuf::MessageToClient>, std
 #define TYPEM2OC 1
 #define TYPEM2I 2
 
+
 /// <summary>
 /// 信息的委托接口，是指ClientCommunication依赖于MultiThreadClientCommunication的部分
 /// </summary>

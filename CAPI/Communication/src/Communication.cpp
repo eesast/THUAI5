@@ -2,6 +2,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <ctime>
 
 #ifdef COMMUNICATION_DEBUG
 const std::string toHexString(const unsigned char* input, const int datasize)
@@ -44,29 +45,24 @@ namespace GameMessage
 		{
 			type |= ((uint32_t)data[i]) << (8 * i);
 		}
+
 		pointer_m2c pm2c;
+		std::shared_ptr<Protobuf::MessageToOneClient> p1 = std::make_shared<Protobuf::MessageToOneClient>();
+		std::shared_ptr<Protobuf::MessageToClient> p2 = std::make_shared<Protobuf::MessageToClient>();
 		switch (type)
 		{
 			case int(PacketType::MessageToOneClient) :
-			{
-				std::shared_ptr<Protobuf::MessageToOneClient> p = std::make_shared<Protobuf::MessageToOneClient>();
-				p->ParseFromArray(data + 4, length - 4);
-				pm2c = p;
+				p1->ParseFromArray(data + 4, length - 4);
+				pm2c = p1;
 				break;
-			}
-
+			
 			case int(PacketType::MessageToClient) :
-			{
-				std::shared_ptr<Protobuf::MessageToClient> p = std::make_shared<Protobuf::MessageToClient>();
-				p->ParseFromArray(data + 4, length - 4);
-				pm2c = p;
+				p2->ParseFromArray(data + 4, length - 4);
+				pm2c = p2;
 				break;
-			}
 
 			default:
-			{
 				pm2c = nullptr;
-			}
 		}
 		return pm2c;
 	}
@@ -83,14 +79,14 @@ namespace GameMessage
 			data[i] = (int(PacketType::MessageToServer) >> (8 * i)) & 0xff;
 		}
 		int msg_size = m2s.ByteSizeLong();
-#ifdef COMMUNICATION_DEBUG
-		std::cout << "the length is " << msg_size + 4 << std::endl;
-		std::cout << "the content is " << m2s.DebugString() << std::endl;
-#endif
+//#ifdef COMMUNICATION_DEBUG
+//		std::cout << "the length is " << msg_size + 4 << std::endl;
+//		std::cout << "the content is " << m2s.DebugString() << std::endl;
+//#endif
 		m2s.SerializeToArray(data + 4, msg_size);
-#ifdef COMMUNICATION_DEBUG
-        std::cout << "after serialize: " << toHexString(data, msg_size + 4) << std::endl;
-#endif
+//#ifdef COMMUNICATION_DEBUG
+//        std::cout << "after serialize: " << toHexString(data, msg_size + 4) << std::endl;
+//#endif
 	}
 };
 
@@ -116,16 +112,16 @@ EnHandleResult ClientCommunication::OnClose(ITcpClient* pSender, CONNID dwConnID
 bool ClientCommunication::Connect(const char* address, uint16_t port)
 {
 	std::cout << "Connecting......" << std::endl;
-#ifdef COMMUNICATION_DEBUG
-    std::cout << "pclient->IsConnected(): " << pclient->IsConnected() << std::endl;
-#endif
+//#ifdef COMMUNICATION_DEBUG
+//    std::cout << "pclient->IsConnected(): " << pclient->IsConnected() << std::endl;
+//#endif
 	while (!pclient->IsConnected())
 	{
 
         bool is_started = pclient->Start(address,port);
-#ifdef COMMUNICATION_DEBUG
-        std::cout << "is_started: " << is_started << std::endl;
-#endif
+//#ifdef COMMUNICATION_DEBUG
+//        std::cout << "is_started: " << is_started << std::endl;
+//#endif
 		if (!is_started)
 		{
 			std::cerr << "Failed to connect with the server" << std::endl;
@@ -139,6 +135,18 @@ bool ClientCommunication::Connect(const char* address, uint16_t port)
 
 void ClientCommunication::Send(const Protobuf::MessageToServer& m2s)
 {
+#ifdef COMMUNICATION_DEBUG
+#pragma warning(disable:4996)
+	std::ios::sync_with_stdio(false);
+	std::time_t t = std::time(0);   // get time now
+	std::tm* now = std::localtime(&t);
+	if (now->tm_sec % 8 == 0)
+	{
+		std::cout << "The message will be sent:" << std::endl;
+		std::cout << m2s.DebugString() << std::endl;
+	}
+#endif
+
 	unsigned char data[max_length];
 	int msgSize = m2s.ByteSizeLong();
     GameMessage::Serialize(data, m2s);
@@ -167,7 +175,7 @@ void MultiThreadClientCommunication::OnConnect()
 
 void MultiThreadClientCommunication::OnReceive(pointer_m2c p2M)
 {
-	if (p2M.index() == TYPEM2C)
+	if (p2M.index() == TYPEM2C || p2M.index() == TYPEM2OC)
 	{
 		counter = 0;
 		queue.emplace(p2M);

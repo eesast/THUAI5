@@ -61,7 +61,7 @@ bool API::Pick(THUAI5::PropType proptype)
 {
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Pick);
-    message.set_proptype(Protobuf::PropType(proptype));
+    message.set_proptype(_propdict_rev[proptype]);
     return logic.SendInfo(message);
 }
 
@@ -156,13 +156,17 @@ int API::GetFrameCount() const
 
 THUAI5::PlaceType API::GetPlaceType(int32_t CellX, int32_t CellY) const
 {
+    if (CellX < 0 || CellX >= 50 || CellY < 0 || CellY >= 50)
+    {
+        return THUAI5::PlaceType::NullPlaceType;
+    }
     return logic.GetPlaceType(CellX, CellY);
 }
 
 void API::PrintSignalJammers() const
 {
     std::ios::sync_with_stdio(false);
-    std::cout << "******************Bullets******************" << std::endl;
+    std::cout << "******************SignalJammers******************" << std::endl;
     auto jammers = logic.GetSignalJammers();
     for (int i = 0;i<jammers.size();i++)
     {
@@ -175,13 +179,13 @@ void API::PrintSignalJammers() const
                   << "x: " << jammers[i]->x << std::endl
                   << "y: " << jammers[i]->y << std::endl;
     }
-    std::cout << "*******************************************" << std::endl;
+    std::cout << "*************************************************" << std::endl;
 }
 
 void API::PrintRobots() const
 {
     std::ios::sync_with_stdio(false);
-    std::cout << "******************Characters******************" << std::endl;
+    std::cout << "******************Robots******************" << std::endl;
     auto robots = logic.GetRobots();
     for(int i = 0;i< robots.size();i++)
     {
@@ -224,7 +228,7 @@ void API::PrintRobots() const
             std::cout << "no buff." << std::endl;
         }
     }
-    std::cout << "**********************************************" << std::endl;
+    std::cout << "******************************************" << std::endl;
 }
 
 void API::PrintProps() const
