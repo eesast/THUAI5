@@ -427,8 +427,9 @@ namespace GameClass.GameObj
         {
             _ = AddDeathCount();
             base.Reset();
-            this.moveSpeed = OrgMoveSpeed;
+            this.MoveSpeed = OrgMoveSpeed;
             hp = MaxHp;
+            gemNum = 0;
             propInventory = null;
             bulletNum = maxBulletNum;
             buffManeger.ClearAll();
