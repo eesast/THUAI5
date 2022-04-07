@@ -56,6 +56,7 @@ namespace Gaming
                     if(playerBeingShot.GemNum > 0)
                     {
                         Gem gem = new Gem(playerBeingShot.Position, playerBeingShot.GemNum);
+                        playerBeingShot.GemNum = 0;
                         gameMap.GameObjLockDict[GameObjIdx.Gem].EnterWriteLock();
                         try 
                         {

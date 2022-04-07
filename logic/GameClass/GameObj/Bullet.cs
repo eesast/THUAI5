@@ -29,7 +29,7 @@ namespace GameClass.GameObj
 
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
         {
-            if (targetObj is BirthPoint || targetObj.Type == GameObjType.Prop) return true;	// 子弹不会与出生点和道具碰撞
+            if (targetObj.Type == GameObjType.BirthPoint || targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet) return true;
             return false;
         }
         public Bullet(Character player, int radius) : base(player.Position, radius, PlaceType.Null)

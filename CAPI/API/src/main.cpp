@@ -2,6 +2,7 @@
 #include "../API/include/AI.h"
 #include "../API/include/logic.h"
 #include "../API/include/structures.h"
+#include "../API/include/utils.hpp"
 
 #ifdef _MSC_VER
 #pragma warning(disable:4996)
@@ -82,7 +83,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
     std::cout << "team ID: " << tID << std::endl;
     std::cout << "port ID: " << pID << std::endl;
     std::cout << "software type: " << THUAI5::software_dict[software] << std::endl;
-    std::cout << "passive skill type: " << THUAI5::software_dict[software] << std::endl;
+    std::cout << "hardware type: " << THUAI5::hardware_dict[hardware] << std::endl;
     std::cout << "debug level: " << level << std::endl;
     std::cout << "file name: " << filename << std::endl;
     std::cout << "************************************************" << std::endl;

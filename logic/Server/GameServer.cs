@@ -167,7 +167,9 @@ namespace Server
                 case MessageType.UseGem:
                     if (ValidTeamIDAndPlayerID(msg.TeamID, msg.PlayerID))
                     {
-                        game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID], msg.GemSize);
+                        if(msg.GemSize > 0)
+                            game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID], msg.GemSize);
+                        else game.UseGem(communicationToGameID[msg.TeamID, msg.PlayerID]);
                     }
                     break;
                 case MessageType.UseProp:
@@ -215,6 +217,7 @@ namespace Server
             if (requiredGaming && !game.GameMap.Timer.IsGaming)
                 return;
             var gameObjList = game.GetGameObj();
+            game.ClearLists(new Preparation.Utility.GameObjIdx[2] { Preparation.Utility.GameObjIdx.BombedBullet, Preparation.Utility.GameObjIdx.PickedProp });
             MessageToClient messageToClient = new MessageToClient();
             messageToClient.GameObjMessage.Add(MapMsg(game.GameMap));
             lock (messageToAllClientsLock)
@@ -235,8 +238,6 @@ namespace Server
                         break;
                 }
             }
-
-            game.ClearLists(new Preparation.Utility.GameObjIdx[2] { Preparation.Utility.GameObjIdx.BombedBullet, Preparation.Utility.GameObjIdx.PickedProp });
             serverCommunicator.SendToClient(messageToClient);
         }
         private void SendMessageToTeammate(MessageToServer msgToServer)
@@ -256,6 +257,9 @@ namespace Server
                 msg.TeamID = msgToServer.TeamID;
                 msg.Message = msgToServer.Message;
                 msg.MessageType = MessageType.Send;
+#if DEBUG
+                Console.WriteLine(msg);
+#endif
                 serverCommunicator.SendToClient(msg);
             }
 
@@ -264,6 +268,7 @@ namespace Server
         private void OnGameEnd()
         {
             SendMessageToAllClients(MessageType.EndGame, false);
+            game.ClearAllLists();
             mwr?.Flush();
             if(options.ResultFileName != DefaultArgumentOptions.FileName)
                 SaveGameResult(options.ResultFileName + ".json");
@@ -302,9 +307,7 @@ namespace Server
             (
                 () =>
                 {
-#if DEBUG
                     Console.WriteLine("Game Start!");
-#endif
                     game.StartGame((int)options.GameTimeInSecond * 1000);
                     OnGameEnd();
                 }

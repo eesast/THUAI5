@@ -9,9 +9,13 @@ namespace GameClass.GameObj
         protected bool laid = false;
         public bool Laid => laid;   // 道具是否放置在地图上
 
-        public override bool IsRigid => false;
+        public override bool IsRigid => true;
 
-        protected override bool IgnoreCollideExecutor(IGameObj targetObj) => true;	//道具不与任何东西碰撞
+        protected override bool IgnoreCollideExecutor(IGameObj targetObj)
+        {
+            if (targetObj.Type == GameObjType.BirthPoint || targetObj.Type == GameObjType.Prop || targetObj.Type == GameObjType.Bullet || targetObj.Type == GameObjType.Character) return true;  
+            return false;
+        }
 
         public override ShapeType Shape => ShapeType.Square;
 
@@ -19,8 +23,9 @@ namespace GameClass.GameObj
 
         public Prop(XYPosition initPos, int radius = GameData.PropRadius) : base(initPos, radius, PlaceType.Land)
         {
-            this.CanMove = false;
+            this.CanMove = true;
             this.Type = GameObjType.Prop;
+            this.moveSpeed = GameData.PropMoveSpeed;
         }
         public void SetNewPos(XYPosition pos)
         {

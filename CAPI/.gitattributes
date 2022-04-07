@@ -1,0 +1,7 @@
+protobuf/** linguist-vendored
+tclap/** linguist-vendored
+HPSocket/** linguist-vendored
+
+proto/** linguist-generated
+
+*.h linguist-language=C++
