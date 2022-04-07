@@ -268,6 +268,7 @@ namespace Server
         private void OnGameEnd()
         {
             SendMessageToAllClients(MessageType.EndGame, false);
+            game.ClearAllLists();
             mwr?.Flush();
             if(options.ResultFileName != DefaultArgumentOptions.FileName)
                 SaveGameResult(options.ResultFileName + ".json");
