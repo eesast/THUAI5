@@ -48,7 +48,7 @@ namespace GameClass.GameObj
         }
         /// <summary>
         /// 50*50
-        /// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3 
+        /// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3
         /// </summary>
         public static uint[,] defaultMap = new uint[,]
         {
