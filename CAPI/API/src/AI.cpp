@@ -5,7 +5,7 @@
 /* 请于 VS2019 项目属性中开启 C++17 标准：/std:c++17 */
 
 // 为假则play()调用期间游戏状态更新阻塞，为真则只保证当前游戏状态不会被状态更新函数与IAPI的方法同时访问
-extern const bool asynchronous = false;
+extern const bool asynchronous = true;
 
 
 // 选手主动技能，选手 !!必须!! 定义此变量来选择主动技能
@@ -189,6 +189,7 @@ void AI::play(IAPI& api)
         else
             hunt(api, self, prop[i]->x, prop[i]->y);
     }
+	api.Wait();
 	for (int i = 0; i < 3; i++)
 	{
 		std::string s = "000";

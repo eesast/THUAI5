@@ -144,7 +144,7 @@ public:
     // 使用手中的CPU
     virtual bool UseCPU(uint32_t cpuNum) = 0;
 
-    // 在`asynchronous` 为 `true` 的情况下，选手可以调用此函数，阻塞当前线程，直到下一次消息更新时继续运行。
+    // 在`asynchronous` 为 `false` 的情况下，选手可以调用此函数，阻塞当前线程，直到下一次消息更新时继续运行。`asynchronous` 为 `true` 的情况下无用
     virtual bool Wait() = 0;
 
     //***********选手可获取的信息***********//
