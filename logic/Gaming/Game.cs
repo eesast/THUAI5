@@ -156,27 +156,6 @@ namespace Gaming
 
             EndGame(); //游戏结束时要做的事
 
-            //清除所有非地图对象
-            foreach (var keyValuePair in gameMap.GameObjDict)
-            {
-                if (keyValuePair.Key != GameObjIdx.Map)
-                {
-                    gameMap.GameObjLockDict[keyValuePair.Key].EnterWriteLock();
-                    try
-                    {
-                        if (keyValuePair.Key == GameObjIdx.Player)
-                        {
-                            foreach (Character player in gameMap.GameObjDict[GameObjIdx.Player])
-                            {
-                                player.CanMove = false;
-                            }
-                        }
-                        gameMap.GameObjDict[keyValuePair.Key].Clear();
-                    }
-                    finally { gameMap.GameObjLockDict[keyValuePair.Key].ExitWriteLock(); }
-                }
-            }
-
             return true;
         }
 
@@ -326,6 +305,28 @@ namespace Gaming
                         gameMap.GameObjDict[idx].Clear();
                     }
                     finally { gameMap.GameObjLockDict[idx].ExitWriteLock(); }
+                }
+            }
+        }
+        public void ClearAllLists()
+        {
+            foreach (var keyValuePair in gameMap.GameObjDict)
+            {
+                if (keyValuePair.Key != GameObjIdx.Map)
+                {
+                    gameMap.GameObjLockDict[keyValuePair.Key].EnterWriteLock();
+                    try
+                    {
+                        if (keyValuePair.Key == GameObjIdx.Player)
+                        {
+                            foreach (Character player in gameMap.GameObjDict[GameObjIdx.Player])
+                            {
+                                player.CanMove = false;
+                            }
+                        }
+                        gameMap.GameObjDict[keyValuePair.Key].Clear();
+                    }
+                    finally { gameMap.GameObjLockDict[keyValuePair.Key].ExitWriteLock(); }
                 }
             }
         }

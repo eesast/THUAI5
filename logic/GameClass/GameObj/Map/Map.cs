@@ -21,15 +21,19 @@ namespace GameClass.GameObj
         public readonly uint[,] ProtoGameMap;
         public PlaceType GetPlaceType(GameObj obj)
         {
-            uint type = ProtoGameMap[obj.Position.x / GameData.numOfPosGridPerCell, obj.Position.y / GameData.numOfPosGridPerCell];
-            if (type == 1)
-                return PlaceType.Grass1;
-            else if (type == 2)
-                return PlaceType.Grass2;
-            else if (type == 3)
-                return PlaceType.Grass3;
-            else
-                return PlaceType.Land;  //其他情况均返回land
+            try
+            {
+                uint type = ProtoGameMap[obj.Position.x / GameData.numOfPosGridPerCell, obj.Position.y / GameData.numOfPosGridPerCell];
+                if (type == 1)
+                    return PlaceType.Grass1;
+                else if (type == 2)
+                    return PlaceType.Grass2;
+                else if (type == 3)
+                    return PlaceType.Grass3;
+                else
+                    return PlaceType.Land;  //其他情况均返回land
+            }
+            catch { return PlaceType.Land; }
         }
         public bool IsOutOfBound(IGameObj obj)
         {
