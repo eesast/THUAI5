@@ -323,6 +323,7 @@ void Logic::UnBlockBuffer()
 
 void Logic::Update() noexcept
 {
+    if(!asynchronous)
     {
         std::unique_lock<std::mutex> lck_buffer(mtx_buffer);
 

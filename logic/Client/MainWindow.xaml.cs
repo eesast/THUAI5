@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Threading;
 using System.IO;
 using Communication.ClientCommunication;
 using Communication.Proto;
@@ -22,6 +23,7 @@ namespace Client
         public MainWindow()
         {
             unitHeight = unitWidth = unit = 13;
+            bonusflag = true;
             timer = new DispatcherTimer
             {
                 Interval = new TimeSpan(20000)//每20ms刷新一次
@@ -37,6 +39,10 @@ namespace Client
             propData = new List<MessageToClient.Types.GameObjMessage>();
             bombedBulletData = new List<MessageToClient.Types.GameObjMessage>();
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            ReactToCommandline();
+        }
+        private void ReactToCommandline()
+        {
             string[] args = Environment.GetCommandLineArgs();
             _ = Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o => { options = o; });
             if (options == null || options.cl == false)
@@ -72,9 +78,6 @@ namespace Client
                     communicator.OnReceive += OnReceive;
                 }
             }
-            //注：队伍用边框区分，人物编号以背景颜色区分
-            //角色死亡则对应信息框变灰
-            //被动技能和buff在人物编号后用彩色文字注明
         }
         private void SetStatusBar()
         {
@@ -86,11 +89,7 @@ namespace Client
         }
         //基础窗口函数
         private void ClickToClose(object sender, RoutedEventArgs e)
-        {
-            if (communicator.Client.IsConnected)
-            {
-                _ = communicator.Stop();
-            }
+        {  
             Application.Current.Shutdown();
         }
         private void DrawLaser(Point source, double theta, double range)//三个参数分别为攻击者的位置，攻击方位角（窗口坐标）和攻击半径
@@ -734,6 +733,7 @@ namespace Client
         //定时器事件，刷新地图
         private void Refresh(object? sender, EventArgs e)
         {
+            Bonus();
             if (WindowState == WindowState.Maximized)
                 MaxButton.Content = "❐";
             else
@@ -928,11 +928,36 @@ namespace Client
                 error.Show();
             }
         }
+        /// <summary>
+        /// 彩蛋
+        /// </summary>
+        private void Bonus()
+        {
+            if (bonusflag)
+            {
+                Random rd = new();
+                if (rd.Next(0, 10000) == 2022)
+                {
+                    for (int i = 0; i < 40; i++)
+                    {
+                        ErrorDisplayer ex = new("すぐにけせ");
+                        ex.WindowStartupLocation = WindowStartupLocation.Manual;
+                        ex.Left = rd.Next(300, 1200);
+                        ex.Top = rd.Next(200, 600);
+                        ex.Show();
+                        Thread.Sleep((50 - i) * 10 + 100);
+                    }
+                    Thread.Sleep(1000);
+                    Application.Current.Shutdown();
+                }
+                else bonusflag = false;
+            }
+        }
         //以下为Mainwindow自定义属性
         private readonly DispatcherTimer timer;//定时器
         private long counter;//预留的取时间变量
         private StatusBar[] StatusBars;
-        private readonly ClientCommunication communicator;
+        private ClientCommunication communicator;
         private readonly Rectangle[,] mapPatches=new Rectangle[50,50];
 
         private bool isClientStocked;
@@ -951,6 +976,7 @@ namespace Client
         private MessageToClient.Types.GameObjMessage? myInfo = null;  //这个client自己的message
         private ErrorDisplayer log;
 
+        private bool bonusflag;
         /// <summary>
         /// 50*50
         /// 1:Wall; 2:Grass1; 3:Grass2 ; 4:Grass3 

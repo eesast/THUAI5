@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 
 namespace Function
 {
    internal class Program
     {
         static int[,] map;
+        static int size;
         static readonly double P1 = 0.7;//不建议小于0.2或大于0.9，否则会爆栈。建议加入错误处理
         static readonly double Pturn = 0.33;
         static int count = 0;
@@ -21,7 +23,7 @@ namespace Function
             flag = false;
             map = new int[size, size];
             Grow(size/5, size/2, size, size*size*P1*Pturn,3);
-            Grow(size*13/20, size / 2-size*13/100, size, 2 * size * size * P1 * Pturn,1);
+            Grow(size * 13 / 20, size / 2 - size * 13 / 100, size, 2 * size * size * P1 * Pturn, 1);
             Grow(size * 13 / 20, size / 2+ size * 13 / 100, size, size * size * P1,2);
             for (int i = 0; i < size; i++)
             {
@@ -181,32 +183,86 @@ namespace Function
                 grasscount = 0;
             }
         }
+        static int ThingsAround(int i, int j,int type)
+        {
+            bool up = (i == 0) ? true : (map[i - 1, j] == type);
+            bool down = (i == size - 1) ? true : (map[i + 1, j] == type);
+            bool left = (j == 0) ? true : (map[i, j - 1] == type);
+            bool right = (j == size - 1) ? true : (map[i, j + 1] == type);
+            return ((up?1:0) + (down?1:0) + (left?1:0) + (right?1:0));
+        }
+        static void Process(int times)//处理
+        {
+            do
+            {
+                for (int i = 0; i < size; i++)
+                {
+                    for (int j = 0; j < size; j++)
+                    {
+                        if (map[i, j] != 0 && ThingsAround(i, j, 0) > 2)
+                        {
+                            map[i, j] = 0;
+                        }
+                        if (ThingsAround(i, j, 0) < 1 || ThingsAround(i, j, 0) > 2)//墙削减
+                        {
+                            map[i, j] = 1;
+                        }
+                        if (ThingsAround(i, j, 4) >= 2)//草丛方形化
+                        {
+                            map[i, j] = 4;
+                        }
+                        if (i == 0 || i == size - 1 || j == 0 || j == size - 1)//边界墙
+                        {
+                            map[i, j] = 0;
+                        }
+                    }
+                }
+            }
+            while (times-->0);
+        }
+        static void OutPut()
+        {
+            StreamWriter sw = new StreamWriter("map_array.txt");
+            for (int i = 0; i < size; i++)
+            {
+                sw.Write("{");
+                for (int j = 0; j < size; j++)
+                {
+                    if (map[i, j] == 4)//草丛
+                    {
+                        Console.Write("::");
+                        sw.Write(j == size - 1 ? "2" : "2,");
+                    }
+                    else if(map[i,j]==0)//墙
+                    {
+                        Console.Write("0 ");
+                        sw.Write(j == size - 1 ? "1" : "1,");
+                    }
+                    else//空地
+                    {
+                        Console.Write(". ");
+                        sw.Write(j == size - 1 ? "0" : "0,");
+                    }
+                    //Console.Write(Convert.ToString(map[i, j]));
+                    //Console.Write(' ');//数字显示
+                }
+                Console.WriteLine();
+                sw.Write(i == size - 1 ? "}" : "},\n");
+            }
+            Console.WriteLine();
+            sw.Close();
+        }
         static void Main()
         {
-            int size = 50;
-            while (Console.ReadLine()=="a")//input a to generate a map
+            size = 50;
+            while (Console.ReadLine()!="q")//input not q to generate a map
             {
                 Console.WriteLine("Begin:"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff:ffffff"));
                 CreateMap(size);
                 CreateGrass(3);
                 Console.WriteLine("Done:"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff:ffffff"));
-                for (int i = 0; i < size; i++)
-                {
-                    for (int j = 0; j < size; j++)
-                    {
-                        if (map[i, j] != 0 && map[i, j] != 4)
-                        {
-                            Console.Write(". ");
-                        }
-                        else if (map[i, j] == 4)
-                            Console.Write("::");
-                        else Console.Write("0 ");//图形显示
-                        //Console.Write(Convert.ToString(map[i, j]));
-                        //Console.Write(' ');//数字显示
-                    }
-                    Console.WriteLine();
-                }
-                Console.WriteLine();
+                Process(5);
+                OutPut();
             }
         }
     }

@@ -34,7 +34,7 @@ $ wget https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/pro
 $ unzip protobuf-cpp-3.19.1.zip
 ```
 
-3. 按照以下流程进行编译：
+3. 按照以下流程进行编译（大概1小时左右，C++编译很慢的）：
 
 ```bash
 $ cd protobuf-cpp-3.19.1
@@ -62,9 +62,10 @@ $ make
 ```
 之后就可以在`CAPI/`文件夹下看到`capi`可执行文件。若想清空生成物，只需执行`make clean`。
 
-3. 在`linux`文件夹下，运行`RunServer.sh`，启动Server。
+#### 运行
 
-4. 运行`RunClient`，启动Client。
+1. 在`linux`文件夹下，运行`RunServer.sh`，启动Server。
+2. 运行`RunClient.sh`，启动Client。
 
 ## 命令行参数
 
