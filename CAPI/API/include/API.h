@@ -111,28 +111,28 @@ public:
     
     // 移动
 
-    // 指挥本角色进行移动，`timeInMilliseconds` 为移动时间，单位为毫秒；`angleInRadian` 表示移动的方向，单位是弧度，使用极坐标——竖直向下方向为 x 轴，水平向右方向为 y 轴。
+    // 指挥本角色进行移动，`timeInMilliseconds` 为移动时间，单位为毫秒；`angleInRadian` 表示移动的方向，单位是弧度，使用极坐标——竖直向下方向为 x 轴，水平向右方向为 y 轴
     virtual bool MovePlayer(uint32_t timeInMilliseconds, double angleInRadian) = 0;
 
-    // 向特定方向移动。
+    // 向特定方向移动
     virtual bool MoveRight(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveUp(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveLeft(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveDown(uint32_t timeInMilliseconds) = 0;
 
-    // 发射信号干扰器进行攻击。`angleInRadian`给出了信号干扰器的发射方向。
+    // 发射信号干扰器进行攻击。`angleInRadian`给出了信号干扰器的发射方向
     virtual bool Attack(double angleInRadian) = 0;
 
     // 使用主动技能。
     virtual bool UseCommonSkill() = 0;
 
-    // 给同队的队友发送消息。`toPlayerID` 指定发送的对象，`message` 指定发送的内容。
+    // 给同队的队友发送消息。`toPlayerID` 指定发送的对象，`message` 指定发送的内容
     virtual bool Send(int toPlayerID,std::string) = 0;
 
     // 捡起与自己处于同一个格子（cell）的道具。需要指定道具种类
     virtual bool Pick(THUAI5::PropType) = 0;
 
-    // 扔出手中的道具（如果有的话），使其变为未捡起状态，可以供他人捡起。
+    // 扔出手中的道具（如果有的话），使其变为未捡起状态，可以供他人捡起
     virtual bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) = 0;
 
     // 使用道具
@@ -148,28 +148,28 @@ public:
     virtual bool Wait() = 0;
 
     //***********选手可获取的信息***********//
-    // 查看目前是否有队友发来的尚未接收的信息。
+    // 查看目前是否有队友发来的尚未接收的信息
     [[nodiscard]] virtual bool MessageAvailable() = 0;
 
-    // 获取队友发来的信息，注意当信息队列为空时，返回`nullptr`。
+    // 获取队友发来的信息，注意当信息队列为空时，返回`std::nullopt`
     [[nodiscard]] virtual std::optional<std::string> TryGetMessage() = 0;
 
-    // 获取场地内所有可视玩家的信息。
+    // 获取场地内所有可视玩家的信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Robot>> GetRobots() const = 0;
 
-    // 获取当前场地内的所有尚未被捡起的的可视道具的信息。
+    // 获取当前场地内的所有尚未被捡起的的可视道具的信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::Prop>> GetProps() const = 0;
 
-    // 获取当前场地内的所有可视信号干扰器的信息。
+    // 获取当前场地内的所有可视信号干扰器的信息
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const = 0;
 
     // 获取自身信息
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Robot> GetSelfInfo() const = 0;
 
-    // 返回某一位置场地种类信息。注意此处的`CellX`和`CellY`指的是地图格数，而不是绝对坐标。
+    // 返回某一位置场地种类信息。注意此处的`CellX`和`CellY`指的是地图格数，而不是绝对坐标
     [[nodiscard]] virtual THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const = 0;
 
-    // 获取队伍分数。
+    // 获取队伍分数
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
 
     // 获取所有玩家的GUID（全局唯一标识符）
