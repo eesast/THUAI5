@@ -244,7 +244,7 @@ namespace Server
         {
             if (!ValidTeamIDAndPlayerID(msgToServer.TeamID, msgToServer.PlayerID))
                 return;
-            if (msgToServer.Message.Length > 64)
+            if (msgToServer.Message.Length > 256)
             {
 #if DEBUG
                 Console.WriteLine("Message string is too long!");

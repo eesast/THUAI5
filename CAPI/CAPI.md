@@ -17,24 +17,28 @@
 
 **待到生成完毕后，在`THUAI5\CAPI`文件夹（即与`CAPI.sln`文件相同的目录）下，会有一个`x64`文件夹，在此文件夹中可以找到可执行文件`API.exe`，在与`API.exe`相同的文件夹下放置`HPSocket.dll`。**
 
-### Linux
+### Linux(以Ubuntu为例)
 
-选手首先需要在本机安装`protobuf`([https://github.com/protocolbuffers/protobuf](https://github.com/protocolbuffers/protobuf))模块。
+#### protobuf安装
 
-```bash
-$ git clone git@github.com:protocolbuffers/protobuf.git
-```
+选手首先需要在本机安装`protobuf`([https://github.com/protocolbuffers/protobuf](https://github.com/protocolbuffers/protobuf))模块，以下安装过程可以参考[protobuf installation](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md)。
 
-
-以下安装过程可以参考[protobuf installation](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md)
-
-1. 首先需要编译`protobuf`，**安装之前需要添加以下依赖项**：
+1. **安装之前需要添加以下依赖项**：
 ```bash
 $ sudo apt-get install autoconf automake libtool curl make g++ unzip
 ```
-按照以下流程进行编译：
+2. 下载并解压`protobuf`压缩包：
+
 ```bash
-$ cd CAPI/protobuf
+$ wget https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/protobuf-cpp-3.19.1.zip #（也可点击链接直接手动下载）
+$ unzip protobuf-cpp-3.19.1.zip
+```
+
+3. 按照以下流程进行编译：
+
+```bash
+$ cd protobuf-cpp-3.19.1
+$ chmod +x autogen.sh
 $ ./autogen.sh
 $ ./configure
 $ make
@@ -43,11 +47,14 @@ $ sudo make install
 $ sudo ldconfig
 ```
 
-执行完上述指令后，与`protobuf`有关的头文件会存放在`/usr/local/include`中，有关的库会放在`/usr/local/lib`中。
+​	执行完上述指令后，与`protobuf`有关的头文件会存放在`/usr/local/include`中，有关的库会放在`/usr/local/lib`中。
 
-2. 将组件包中的所有`.a`文件放在`CAPI/lib/a`文件夹下，将所有`so.5`和`.so`文件放在`CAPI/lib/so`文件夹下。
+#### 编译
 
-3. 使用cmake生成capi可执行文件：
+1. 在`CAPI`文件夹下创建文件夹`lib`，将[组件包](https://cloud.tsinghua.edu.cn/d/b8be040bcfc543e096c0/)`linux/a`中的所有`.a`文件放在`CAPI/lib/a`文件夹下，将`linux/so`所有`so.5`和`.so`文件放在`CAPI/lib/so`文件夹下。
+
+2. 使用cmake生成capi可执行文件：
+
 ```bash
 $ cd CAPI
 $ cmake CMakeLists.txt
@@ -55,9 +62,9 @@ $ make
 ```
 之后就可以在`CAPI/`文件夹下看到`capi`可执行文件。若想清空生成物，只需执行`make clean`。
 
-4. 在`THUAI5/logic/Server`下执行`dotnet publish`，生成server可执行文件。
+3. 在`linux`文件夹下，运行`RunServer.sh`，启动Server。
 
-5. 之后，只需先运行`THUAI5/logic/bash/*.sh`，再运行`THUAI5/CAPI/bash/*.sh`即可。
+4. 运行`RunClient`，启动Client。
 
 ## 命令行参数
 
@@ -153,7 +160,7 @@ public:
     virtual bool MoveLeft(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveDown(uint32_t timeInMilliseconds) = 0;
     virtual bool Attack(double angleInRadian) = 0;
-    virtual bool UseCommonSkill() = 0;
+    virtual bool UseSoftware() = 0;
     virtual bool Send(int toPlayerID,std::string) = 0;
     virtual bool Pick(THUAI5::PropType) = 0; 
     virtual bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) = 0;
@@ -199,8 +206,8 @@ public:
 #### 攻击
 * `bool Attack(double angleInRadian)`：发射信号干扰器进行攻击。`angleInRadian`给出了信号干扰器的发射方向，信号干扰器的移动速度（每秒飞行的坐标数）已经在 `Constants.h` 中给出。
 
-#### 主动技能
-* `bool UseCommonSkill()`：使用主动技能。
+#### 软件
+* `bool UseSoftware()`：使用软件。
 
 #### 发送消息
 * `bool Send(int toPlayerID, std::string message)`：给同队的队友发送消息。`toPlayerID` 指定发送的对象，`message` 指定发送的内容。`message` 的长度**不能超过 64**，否则将发送失败！
