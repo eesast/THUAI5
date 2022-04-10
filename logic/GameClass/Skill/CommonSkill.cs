@@ -184,7 +184,9 @@ namespace GameClass.Skill
                 (() =>
                 {
                     BulletType b = player.BulletOfPlayer;
+                    double oriAttackRange = player.AttackRange;
                     player.BulletOfPlayer = BulletType.AtomBomb;
+                    player.SetAttackRange(3 * GameData.numOfPosGridPerCell);
                     Debugger.Output(player, "uses atombomb!");
                     new FrameRateTaskExecutor<int>
                     (
@@ -203,6 +205,7 @@ namespace GameClass.Skill
                     }.Start();
 
                     player.BulletOfPlayer = b;
+                    player.SetAttackRange(oriAttackRange);
                     Debugger.Output(player, "return to normal.");
 
                     new FrameRateTaskExecutor<int>

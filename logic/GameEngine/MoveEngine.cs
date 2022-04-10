@@ -59,6 +59,8 @@ namespace GameEngine
 
         public void MoveObj(IMoveable obj, int moveTime, double direction)
         {
+            if (obj.IsMoving) //已经移动的物体不能再移动
+                return;
             new Thread
             (
                 ()=>
@@ -66,9 +68,7 @@ namespace GameEngine
                     if (!obj.IsAvailable&&gameTimer.IsGaming) //不能动就直接return，后面都是能动的情况
                             return;
                     lock (obj.MoveLock)
-                    {	
                         obj.IsMoving = true;
-                    }
 
                     Vector moveVec = new(direction, 0.0);
                     double deltaLen = moveVec.length - Math.Sqrt(obj.Move(moveVec));  //转向，并用deltaLen存储行走的误差
@@ -119,7 +119,7 @@ namespace GameEngine
                                 flag = false;
                                 if (!isDestroyed)
                                 {
-                                    moveVec.length = deltaLen + leftTime * obj.MoveSpeed / 1000;
+                                    moveVec.length = deltaLen + leftTime * obj.MoveSpeed / GameData.numOfPosGridPerCell;
                                     if ((collisionObj = collisionChecker.CheckCollision(obj, moveVec)) == null)
                                     {
                                         obj.Move(moveVec);
@@ -145,10 +145,10 @@ namespace GameEngine
                             } while (flag);
                             if (leftTime != 0)
                             {
-                                Thread.Sleep(leftTime);
+                                Thread.Sleep(leftTime); //多移动的在这里补回来
                             }
-
-                            obj.IsMoving = false;        //结束移动
+                            lock(obj.MoveLock)
+                                obj.IsMoving = false;        //结束移动
                             EndMove(obj);
                             return 0;
                         },

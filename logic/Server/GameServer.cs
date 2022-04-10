@@ -9,6 +9,7 @@ using System.IO;
 using Playback;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Server
 {
@@ -24,6 +25,7 @@ namespace Server
         public static readonly long SendMessageToClientIntervalInMilliseconds = 50;
         private readonly Semaphore endGameInfoSema = new(0, 1);
         private MessageWriter? mwr = null;
+        private HttpSender? httpSender;
         public override int GetTeamScore(long teamID)
         {
             return game.GetTeamScore(teamID);
@@ -244,7 +246,7 @@ namespace Server
         {
             if (!ValidTeamIDAndPlayerID(msgToServer.TeamID, msgToServer.PlayerID))
                 return;
-            if (msgToServer.Message.Length > 64)
+            if (msgToServer.Message.Length > 256)
             {
 #if DEBUG
                 Console.WriteLine("Message string is too long!");
@@ -273,8 +275,23 @@ namespace Server
             if(options.ResultFileName != DefaultArgumentOptions.FileName)
                 SaveGameResult(options.ResultFileName + ".json");
             endGameInfoSema.Release();
+            SendGameResult();
         }
-        
+        protected virtual void SendGameResult()		// 天梯的 Server 给网站发消息记录比赛结果
+        {
+            var scores = new JObject[options.TeamCount];
+            for (ushort i = 0; i < options.TeamCount; ++i)
+            {
+                scores[i] = new JObject { ["team_id"] = i.ToString(), ["score"] = GetTeamScore(i) };
+            }
+            httpSender?.SendHttpRequest
+                (
+                    new JObject
+                    {
+                        ["result"] = new JArray(scores)
+                    }
+                );
+        }
         private void SaveGameResult(string path)
         {
             Dictionary<string, int> result = new Dictionary<string, int>();
@@ -450,10 +467,10 @@ namespace Server
                 }
             }
 
-            //if (options.Token != DefaultArgumentOptions.Token && options.Url != DefaultArgumentOptions.Url)
-            //{
-            //    httpSender = new HttpSender(options.Url, options.Token, "PUT");
-            //}
+            if(options.Url != DefaultArgumentOptions.Url && options.Token != DefaultArgumentOptions.Token)
+            {
+                this.httpSender = new HttpSender(options.Url, options.Token, "PUT");
+            }
         }
     }
 }
