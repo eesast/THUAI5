@@ -223,6 +223,7 @@ namespace Function
         static void OutPut()
         {
             StreamWriter sw = new StreamWriter("map_array.txt");
+            StreamWriter sw1 = new StreamWriter("space_array.txt");
             for (int i = 0; i < size; i++)
             {
                 sw.Write("{");
@@ -232,25 +233,30 @@ namespace Function
                     {
                         Console.Write("::");
                         sw.Write(j == size - 1 ? "2" : "2,");
+                        sw1.Write(j == size - 1 ? "2" : "2 ");
                     }
                     else if(map[i,j]==0)//墙
                     {
                         Console.Write("0 ");
                         sw.Write(j == size - 1 ? "1" : "1,");
+                        sw1.Write(j == size - 1 ? "1" : "1 ");
                     }
                     else//空地
                     {
                         Console.Write(". ");
                         sw.Write(j == size - 1 ? "0" : "0,");
+                        sw1.Write(j == size - 1 ? "0" : "0 ");
                     }
                     //Console.Write(Convert.ToString(map[i, j]));
                     //Console.Write(' ');//数字显示
                 }
                 Console.WriteLine();
                 sw.Write(i == size - 1 ? "}" : "},\n");
+                sw1.Write(i == size - 1 ? "" : "\n");
             }
             Console.WriteLine();
             sw.Close();
+            sw1.Close();
         }
         static void Main()
         {
