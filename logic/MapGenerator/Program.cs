@@ -5,9 +5,12 @@ namespace Function
 {
    internal class Program
     {
+        static readonly int grassnum = 3;
+        static readonly int gemwellnum = 1;
+
         static int[,] map;
         static int size;
-        static readonly double P1 = 0.7;//不建议小于0.2或大于0.9，否则会爆栈。建议加入错误处理
+        static readonly double P1 = 0.6;//不建议小于0.2或大于0.9，否则会爆栈。建议加入错误处理
         static readonly double Pturn = 0.33;
         static int count = 0;
         static int grasscount = 0;
@@ -119,47 +122,47 @@ namespace Function
                 }
             }
         }
-        static void Grass(int x, int y, int size, double lim)
+        static void Grass(int x, int y, int size, double lim, int id)//扩展草坪/宝石井
         {
             if (grasscount <= lim)
             {
                 if (x >= size)
                 {
-                    Grass(x - 1, y, size, lim);
+                    Grass(x - 1, y, size, lim, id);
                 }
                 else if (y >= size)
                 {
-                    Grass(x, y - 1, size, lim);
+                    Grass(x, y - 1, size, lim, id);
                 }
                 else if (x < 0)
                 {
-                    Grass(x + 1, y, size, lim);
+                    Grass(x + 1, y, size, lim, id);
                 }
                 else if (y < 0)
                 {
-                    Grass(x, y + 1, size, lim);
+                    Grass(x, y + 1, size, lim, id);
                 }
                 else
                 {
-                    if (map[x, y] != 4)
+                    if (map[x, y] != id)
                     {
                         grasscount++;
-                        map[x, y] = 4;
+                        map[x, y] = id;
                     }
                     int r = Rand(4);
                     switch (r)
                     {
                         case 0://上
-                            Grass(x - 1, y, size, lim);
+                            Grass(x - 1, y, size, lim, id);
                             break;
                         case 1://左
-                            Grass(x, y - 1, size, lim);
+                            Grass(x, y - 1, size, lim, id);
                             break;
                         case 2://下
-                            Grass(x + 1, y, size, lim);
+                            Grass(x + 1, y, size, lim, id);
                             break;
                         case 3://右
-                            Grass(x, y + 1, size, lim);
+                            Grass(x, y + 1, size, lim, id);
                             break;
                         default:
                             return;
@@ -172,14 +175,29 @@ namespace Function
         {
             for(int i=0; i < n;i++)
             {
-                int x, y;
+                int x1, y1;
                 do
                 {
-                    x = Rand(50);
-                    y = Rand(50);
+                    x1 = Rand(50);
+                    y1 = Rand(50);
                 }
-                while (map[x, y] == 0);
-                Grass(x, y, 50, 30);
+                while (map[x1, y1] == 0);
+                Grass(x1, y1, 50, 40, i + 4);//最小为4
+                grasscount = 0;
+            }
+        }
+        static void CreateGemWell(int n)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                int x1, y1;
+                do
+                {
+                    x1 = Rand(50);
+                    y1 = Rand(50);
+                }
+                while (map[x1, y1] == 0);
+                Grass(x1, y1, 50, 60, i + 13);//最小13
                 grasscount = 0;
             }
         }
@@ -207,9 +225,19 @@ namespace Function
                         {
                             map[i, j] = 1;
                         }
-                        if (ThingsAround(i, j, 4) >= 2)//草丛方形化
+                        for(int k=4;k<=3+grassnum;k++)
                         {
-                            map[i, j] = 4;
+                            if (ThingsAround(i, j, k) >= 2)//草丛方形化
+                            {
+                                map[i, j] = k;
+                            }
+                        }
+                        for (int k = 13; k <= 12 + gemwellnum; k++)
+                        {
+                            if (ThingsAround(i, j, k) >= 2)//宝石井方形化
+                            {
+                                map[i, j] = k;
+                            }
                         }
                         if (i == 0 || i == size - 1 || j == 0 || j == size - 1)//边界墙
                         {
@@ -219,6 +247,7 @@ namespace Function
                 }
             }
             while (times-->0);
+            
         }
         static void OutPut()
         {
@@ -229,11 +258,32 @@ namespace Function
                 sw.Write("{");
                 for (int j = 0; j < size; j++)
                 {
-                    if (map[i, j] == 4)//草丛
+                    if (map[i, j] == 4|| map[i, j] == 5 || map[i, j] == 6)//草丛
                     {
                         Console.Write("::");
-                        sw.Write(j == size - 1 ? "2" : "2,");
-                        sw1.Write(j == size - 1 ? "2" : "2 ");
+                        switch (map[i, j])
+                        {
+                            case 4:
+                                sw.Write(j == size - 1 ? "2" : "2,");
+                                sw1.Write(j == size - 1 ? "2" : "2 ");
+                                break;
+                            case 5:
+                                sw.Write(j == size - 1 ? "3" : "3,");
+                                sw1.Write(j == size - 1 ? "3" : "3 ");
+                                break;
+                            case 6:
+                                sw.Write(j == size - 1 ? "4" : "4,");
+                                sw1.Write(j == size - 1 ? "4" : "4 ");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    else if(map[i, j] == 13)//宝石井
+                    {
+                        Console.Write("w ");
+                        sw.Write(j == size - 1 ? "13" : "13,");
+                        sw1.Write(j == size - 1 ? "13" : "13 ");
                     }
                     else if(map[i,j]==0)//墙
                     {
@@ -265,9 +315,10 @@ namespace Function
             {
                 Console.WriteLine("Begin:"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff:ffffff"));
                 CreateMap(size);
-                CreateGrass(3);
+                CreateGrass(grassnum);
+                CreateGemWell(gemwellnum);
                 Console.WriteLine("Done:"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff:ffffff"));
-                Process(5);
+                Process(3);
                 OutPut();
             }
         }
