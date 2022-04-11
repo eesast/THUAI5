@@ -53,8 +53,16 @@ namespace GameClass.GameObj
             get => score;
         }
 
-        private readonly double attackRange;
+        private double attackRange;
         public double AttackRange => attackRange;
+
+        public void SetAttackRange(double range)
+        {
+            lock(gameObjLock)
+            {
+                this.attackRange = range;
+            }
+        }
 
         private double vampire = 0; // 回血率：0-1之间
         public double Vampire

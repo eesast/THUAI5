@@ -34,7 +34,7 @@ $ wget https://github.com/protocolbuffers/protobuf/releases/download/v3.19.1/pro
 $ unzip protobuf-cpp-3.19.1.zip
 ```
 
-3. 按照以下流程进行编译：
+3. 按照以下流程进行编译（大概1小时左右，C++编译很慢的）：
 
 ```bash
 $ cd protobuf-cpp-3.19.1
@@ -62,9 +62,10 @@ $ make
 ```
 之后就可以在`CAPI/`文件夹下看到`capi`可执行文件。若想清空生成物，只需执行`make clean`。
 
-3. 在`THUAI5/logic/Server`下执行`dotnet publish`，生成server可执行文件。
+#### 运行
 
-4. 之后，只需先运行`THUAI5/logic/bash/*.sh`，再运行`THUAI5/CAPI/bash/*.sh`即可。
+1. 在`linux`文件夹下，运行`RunServer.sh`，启动Server。
+2. 运行`RunClient.sh`，启动Client。
 
 ## 命令行参数
 
@@ -160,7 +161,7 @@ public:
     virtual bool MoveLeft(uint32_t timeInMilliseconds) = 0;
     virtual bool MoveDown(uint32_t timeInMilliseconds) = 0;
     virtual bool Attack(double angleInRadian) = 0;
-    virtual bool UseCommonSkill() = 0;
+    virtual bool UseSoftware() = 0;
     virtual bool Send(int toPlayerID,std::string) = 0;
     virtual bool Pick(THUAI5::PropType) = 0; 
     virtual bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) = 0;
@@ -206,8 +207,8 @@ public:
 #### 攻击
 * `bool Attack(double angleInRadian)`：发射信号干扰器进行攻击。`angleInRadian`给出了信号干扰器的发射方向，信号干扰器的移动速度（每秒飞行的坐标数）已经在 `Constants.h` 中给出。
 
-#### 主动技能
-* `bool UseCommonSkill()`：使用主动技能。
+#### 软件
+* `bool UseSoftware()`：使用软件。
 
 #### 发送消息
 * `bool Send(int toPlayerID, std::string message)`：给同队的队友发送消息。`toPlayerID` 指定发送的对象，`message` 指定发送的内容。`message` 的长度**不能超过 64**，否则将发送失败！
