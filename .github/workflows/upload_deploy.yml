@@ -1,5 +1,11 @@
 name: "upload_deploy"
 
+###############################################################################
+# This ci is skipped in THUAI5 for THUAI5 use cloud disk to distribute.
+# To use automatically distribution, comment out `if: false` in the following
+# two jobs.
+###############################################################################
+
 on:
   push:
     branches: [ master, dev ]
@@ -7,7 +13,7 @@ on:
 jobs:
   build_upload:
     runs-on: windows-latest
-    if: false        # Forbid this job
+    if: false        # Skip this job
     steps:
     - uses: actions/checkout@v1
 
@@ -42,6 +48,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    if: false        # Skip this job
     steps:
     - uses: actions/checkout@v1
     
