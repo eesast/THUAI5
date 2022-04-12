@@ -2,11 +2,12 @@ name: "upload_deploy"
 
 on:
   push:
-    branches: [ master, dev, test/ci]
+    branches: [ master, dev ]
 
 jobs:
   build_upload:
     runs-on: windows-latest
+    if: false        # Forbid this job
     steps:
     - uses: actions/checkout@v1
 
