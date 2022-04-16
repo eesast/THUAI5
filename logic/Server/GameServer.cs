@@ -274,8 +274,8 @@ namespace Server
             mwr?.Flush();
             if(options.ResultFileName != DefaultArgumentOptions.FileName)
                 SaveGameResult(options.ResultFileName + ".json");
-            endGameInfoSema.Release();
             SendGameResult();
+            endGameInfoSema.Release();
         }
         protected virtual void SendGameResult()		// 天梯的 Server 给网站发消息记录比赛结果
         {
