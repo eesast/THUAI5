@@ -28,18 +28,14 @@ namespace Server
 				var raw = Encoding.UTF8.GetBytes(body.ToString());
 				request.GetRequestStream().Write(raw, 0, raw.Length);
 
-#if DEBUG
-				var response =
-#endif
-				request.GetResponse();
-
-#if DEBUG
+				Console.WriteLine("Send to web successfully!");
+				var response = request.GetResponse();
 				Console.WriteLine($"Web response: {response}");
-#endif
 
 			}
 			catch (Exception e)
 			{
+				Console.WriteLine("Fail to send msg to web!");
 				Console.WriteLine(e);
 			}
 		}

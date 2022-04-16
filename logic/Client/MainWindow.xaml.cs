@@ -448,6 +448,7 @@ namespace Client
                 switch (e.Key)
                 {
                     case Key.W:
+                    case Key.NumPad8:
                         MessageToServer msgA = new()
                         {
                             MessageType = MessageType.Move,
@@ -458,6 +459,7 @@ namespace Client
                         };
                         communicator.SendMessage(msgA);
                         break;
+                    case Key.NumPad2:
                     case Key.S:
                         MessageToServer msgD = new()
                         {
@@ -470,6 +472,7 @@ namespace Client
                         communicator.SendMessage(msgD);
                         break;
                     case Key.D:
+                    case Key.NumPad6:
                         MessageToServer msgW = new()
                         {
                             MessageType = MessageType.Move,
@@ -481,6 +484,7 @@ namespace Client
                         communicator.SendMessage(msgW);
                         break;
                     case Key.A:
+                    case Key.NumPad4:
                         MessageToServer msgS = new()
                         {
                             MessageType = MessageType.Move,
@@ -569,6 +573,50 @@ namespace Client
                             Angle = Math.PI
                         };
                         communicator.SendMessage(msgY);
+                        break;
+                    case Key.NumPad7:
+                        MessageToServer msg7 = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = 5 * Math.PI / 4
+                        };
+                        communicator.SendMessage(msg7);
+                        break;
+                    case Key.NumPad9:
+                        MessageToServer msg9 = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = 3 * Math.PI / 4
+                        };
+                        communicator.SendMessage(msg9);
+                        break;
+                    case Key.NumPad3:
+                        MessageToServer msg3 = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = Math.PI / 4
+                        };
+                        communicator.SendMessage(msg3);
+                        break;
+                    case Key.NumPad1:
+                        MessageToServer msg1 = new()
+                        {
+                            MessageType = MessageType.Move,
+                            PlayerID = playerID,
+                            TeamID = teamID,
+                            TimeInMilliseconds = 50,
+                            Angle = 7 * Math.PI / 4
+                        };
+                        communicator.SendMessage(msg1);
                         break;
                     default:
                         break;
@@ -887,8 +935,8 @@ namespace Client
                                     default:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 5*unitWidth;
-                                            icon.Height = 5*unitHeight;
+                                            icon.Width = 5 * unitWidth;
+                                            icon.Height = 5 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
                                             icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0-5*unitWidth/2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 5 * unitHeight / 2, 0, 0);
