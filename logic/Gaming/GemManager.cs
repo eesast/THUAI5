@@ -39,6 +39,8 @@ namespace Gaming
             private void ProduceGemsInWell()
             {
                 int len = gemWellList.Count;
+                if (len == 0)
+                    return;
                 Random r = new Random(Environment.TickCount);
                 new Thread
                 (
