@@ -297,7 +297,7 @@ namespace Server
             Dictionary<string, int> result = new Dictionary<string, int>();
             for (int i = 0; i < TeamCount; i++)
             {
-                result.Add("Team " + i.ToString(), GetTeamScore(i));
+                result.Add("Team" + i.ToString(), GetTeamScore(i));
             }
             JsonSerializer serializer = new JsonSerializer();
             using (StreamWriter sw = new StreamWriter(path))
