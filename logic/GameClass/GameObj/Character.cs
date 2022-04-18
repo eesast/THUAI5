@@ -41,7 +41,7 @@ namespace GameClass.GameObj
             set
             {
                 lock (gameObjLock)
-                    hp = value;
+                    hp = value <= MaxHp ? value: MaxHp;
             }
         }
         private int deathCount = 0;
@@ -443,6 +443,7 @@ namespace GameClass.GameObj
             bulletNum = maxBulletNum;
             buffManeger.ClearAll();
             isInvisible = false;
+            this.vampire = this.OriVampire;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;

@@ -140,6 +140,7 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
         public void SkillEffect(Character player)
         {
             player.OriVampire = 0.5;
+            player.Vampire = player.OriVampire;
         }
     }
 

@@ -6,7 +6,7 @@ namespace CSharpInterface
     public partial class ClientInterface
     {
         public readonly ActiveSkillType activeSkillType = ActiveSkillType.NuclearWeapon;
-        public readonly PassiveSkillType passiveSkillType = PassiveSkillType.RecoverAfterBattle;
+        public readonly PassiveSkillType passiveSkillType = PassiveSkillType.Vampire;
 
         int[,] map = null;
         Random random = new Random();
