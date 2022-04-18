@@ -42,15 +42,15 @@ namespace Gaming
                 {
                     playerBeingShot.CanMove = false;
                     playerBeingShot.IsResetting = true;
-                    gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
-                    try
-                    {
-                        gameMap.GameObjDict[GameObjIdx.Player].Remove(playerBeingShot);
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock();
-                    }
+                    //gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
+                    //try
+                    //{
+                    //    gameMap.GameObjDict[GameObjIdx.Player].Remove(playerBeingShot);
+                    //}
+                    //finally
+                    //{
+                    //    gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock();
+                    //}
 
                     //人死了应该要生成宝石的
                     if(playerBeingShot.GemNum > 0)
