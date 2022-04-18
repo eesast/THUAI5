@@ -50,6 +50,7 @@ namespace Preparation.GameData
         public const double basicBulletBombRange = 3000;           // 基本子弹爆炸范围
         public const int basicMoveSpeed = 3000;                   // 基本移动速度，单位：s-1
         public const int basicBulletMoveSpeed = 3000;             // 基本子弹移动速度，单位：s-1
+        public const int characterMaxSpeed = 12000;              // 最大速度 
         public const int addScoreWhenKillOneLevelPlayer = 30;   // 击杀一级角色获得的加分
         public const int commonSkillCD = 30000;    //普通技能标准冷却时间
         public const int commonSkillTime = 10000;  //普通技能标准持续时间

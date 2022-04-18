@@ -41,7 +41,7 @@ namespace GameClass.GameObj
             set
             {
                 lock (gameObjLock)
-                    hp = value;
+                    hp = value <= MaxHp ? value: MaxHp;
             }
         }
         private int deathCount = 0;
@@ -382,7 +382,8 @@ namespace GameClass.GameObj
         #endregion
 
         #region 角色拥有的buff相关属性、方法
-        public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManeger.AddMoveSpeed(add, buffTime, newVal => { MoveSpeed = newVal; }, OrgMoveSpeed);
+        public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManeger.AddMoveSpeed(add, buffTime, newVal => 
+        { MoveSpeed = newVal < GameData.characterMaxSpeed ? newVal: GameData.characterMaxSpeed; }, OrgMoveSpeed);
         public bool HasFasterSpeed => buffManeger.HasFasterSpeed;
 
         public void AddShield(int shieldTime) => buffManeger.AddShield(shieldTime);
@@ -442,6 +443,7 @@ namespace GameClass.GameObj
             bulletNum = maxBulletNum;
             buffManeger.ClearAll();
             isInvisible = false;
+            this.vampire = this.OriVampire;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;

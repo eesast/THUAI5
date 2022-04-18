@@ -263,7 +263,7 @@ namespace GameClass.Skill
                 new Thread
                 (() =>
                 {
-                    player.SetMoveSpeed(3 * player.OrgMoveSpeed);
+                    player.AddMoveSpeed(this.DurationTime, 3.0);
                     Debugger.Output(player, "moves very fast!");
                     new FrameRateTaskExecutor<int>
                     (
@@ -281,7 +281,6 @@ namespace GameClass.Skill
                         MaxTolerantTimeExceedCount = ulong.MaxValue,
                     }.Start();
 
-                    player.SetMoveSpeed(player.OrgMoveSpeed);
                     Debugger.Output(player, "return to normal.");
 
                     new FrameRateTaskExecutor<int>
