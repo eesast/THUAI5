@@ -666,7 +666,9 @@ namespace Client
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
                                         if (obj.MessageOfCharacter.PlayerID == playerID && obj.MessageOfCharacter.TeamID == teamID)
+                                        {
                                             myInfo = obj;
+                                        }
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -692,7 +694,9 @@ namespace Client
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
                                         if (obj.MessageOfCharacter.PlayerID == playerID && obj.MessageOfCharacter.TeamID == teamID)
+                                        {
                                             myInfo = obj;
+                                        }
                                         playerData.Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
@@ -744,6 +748,8 @@ namespace Client
                 if (myInfo.MessageOfCharacter.Guid == msg.Guid) //自己能看见自己
                     return true;
             }
+            if (msg.IsResetting)
+                return false;
             if (msg.IsInvisible)
                 return false;
             if (msg.Place == PlaceType.Land)

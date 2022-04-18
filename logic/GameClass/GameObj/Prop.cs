@@ -23,7 +23,7 @@ namespace GameClass.GameObj
 
         public Prop(XYPosition initPos, int radius = GameData.PropRadius) : base(initPos, radius, PlaceType.Land)
         {
-            this.CanMove = true;
+            this.CanMove = false;
             this.Type = GameObjType.Prop;
             this.moveSpeed = GameData.PropMoveSpeed;
         }

@@ -68,7 +68,7 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
             { IsBackground = true }.Start();
         }
     }
-    public class SpeedUpWhenLeavingGrass : IPassiveSkill //出草丛时加速并免疫减速，但隐身时出草丛不会有该效果，快子弹
+    public class SpeedUpWhenLeavingGrass : IPassiveSkill // 3倍速
     {
         private readonly BulletType initBullet = BulletType.FastBullet;
         public BulletType InitBullet => initBullet;
@@ -79,9 +79,8 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
         {
             PlaceType nowPlace = player.Place;
             PlaceType lastPlace = nowPlace;
-            bool beginSpeedUp = false;
-            int speedUpTimes = 0;
-            const int maxSpeedUpTimes = (int)(2000 / GameData.frameDuration); //加速时间：2s
+            bool speedup = false;
+            const int SpeedUpTime =  2000; //加速时间：2s
             new Thread
             (
                 () =>
@@ -95,21 +94,15 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
                             nowPlace = player.Place;
                             if ((lastPlace == PlaceType.Grass1 || lastPlace == PlaceType.Grass2 || lastPlace == PlaceType.Grass3) && nowPlace == PlaceType.Land)
                             {
-                                beginSpeedUp = true;
-                                speedUpTimes = 0;
-                            }
-                            if (beginSpeedUp)
-                            {
-                                if (speedUpTimes <= maxSpeedUpTimes)
+                                if (!speedup)
                                 {
-                                    speedUpTimes++;
-                                    player.SetMoveSpeed(player.OrgMoveSpeed * 3);  //3倍速
-                                }
-                                else
-                                {
-                                    speedUpTimes = 0;
-                                    beginSpeedUp = false;
-                                    player.SetMoveSpeed(player.OrgMoveSpeed);
+                                    new Thread(() =>
+                                    {
+                                        speedup = true;
+                                        player.AddMoveSpeed(SpeedUpTime, 3.0);
+                                        speedup = false;
+                                    })
+                                    { IsBackground = true }.Start();
                                 }
                             }
                         },
@@ -147,6 +140,7 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
         public void SkillEffect(Character player)
         {
             player.OriVampire = 0.5;
+            player.Vampire = player.OriVampire;
         }
     }
 
