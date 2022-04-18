@@ -98,6 +98,7 @@ namespace Gaming
 
                 if (pickProp != null)
                 {
+                    pickProp.CanMove = false;
                     Prop? dropProp = null;
                     if (player.PropInventory != null) // 若角色原来有道具，则原始道具掉落在原地
                     {
@@ -133,6 +134,7 @@ namespace Gaming
                     return;
                 Prop prop = player.PropInventory;
                 player.PropInventory = null;
+                prop.CanMove = true;
                 prop.SetNewPos(player.Position);
                 gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
                 try
@@ -201,6 +203,7 @@ namespace Gaming
                     EndMove: obj =>
                     {
                         // obj.Place = gameMap.GetPlaceType((GameObj)obj);
+                        obj.CanMove = false;
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                     }
                 );
