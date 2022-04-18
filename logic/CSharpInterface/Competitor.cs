@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace CSharpInterface
 {
@@ -8,51 +9,19 @@ namespace CSharpInterface
         public readonly PassiveSkillType passiveSkillType = PassiveSkillType.RecoverAfterBattle;
 
         int[,] map = null;
-        int direction = 0; // 0 1 2 3：上左下右
         Random random = new Random();
         public void Play()
         {
-            if (map == null)
-                map = GetMap();
+            Thread.Sleep(10);
             var self = GetSelfInfo();
-            if(direction == 0)
+            var props = GetNoGemProps();
+            foreach(var prop in props)
             {
-                if (map[self.X / 1000 - 1, self.Y / 1000] == 1 || (map[self.X / 1000 - 1, self.Y / 1000] >= 5 && map[self.X / 1000 - 1, self.Y / 1000] <= 12))
-                    direction = 1;
-                else
+                if (self.X / 1000 == prop.X / 1000 && self.Y / 1000 == prop.Y / 1000)
                 {
-                    MoveUp(50);
+                    Pick(PropType.Null);
                 }
             }
-            if (direction == 1)
-            {
-                if (map[self.X / 1000, self.Y / 1000 - 1] == 1 || (map[self.X / 1000, self.Y / 1000 - 1] >= 5 && map[self.X / 1000, self.Y / 1000 - 1] <= 12))
-                    direction = 2;
-                else
-                {
-                    MoveLeft(50);
-                }
-            }
-            if (direction == 2)
-            {
-                if (map[self.X / 1000 + 1, self.Y / 1000] == 1 || (map[self.X / 1000 + 1, self.Y / 1000] >= 5 && map[self.X / 1000 + 1, self.Y / 1000] <= 12))
-                    direction = 3;
-                else
-                {
-                    MoveDown(50);
-                }
-            }
-            if (direction == 3)
-            {
-                if (map[self.X / 1000, self.Y / 1000 + 1] == 1 || (map[self.X / 1000, self.Y / 1000 + 1] >= 5 && map[self.X / 1000, self.Y / 1000 + 1] <= 12))
-                    direction = 0;
-                else
-                {
-                    MoveRight(50);
-                }
-            }
-            // if (random.Next(14) == 13)
-            Attack(random.NextDouble() * Math.PI * 2);
         }
     }
 }

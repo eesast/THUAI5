@@ -102,7 +102,7 @@ namespace Gaming
                     if (player.PropInventory != null) // 若角色原来有道具，则原始道具掉落在原地
                     {
                         dropProp = player.PropInventory;
-                        dropProp.SetNewPos(player.Position);
+                        dropProp.SetNewPos(GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell));
                     }
                     player.PropInventory = pickProp;
                     gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
