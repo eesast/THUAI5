@@ -149,10 +149,6 @@ namespace GameEngine
                                             {
                                                 tmpMax = 0;
                                             }
-                                            else if ((listObj.Position - obj.Position).ToVector2() * moveVec.ToVector2() <= 0)
-                                                continue;      //如果相对位置和运动方向反向，那么不会发生碰撞
-                                            else if (mod * Math.Cos(Math.Atan2(orgDeltaY, orgDeltaX) - moveVec.angle) > obj.Radius + listObj.Radius) // 如果沿着moveVec方向移动不会撞，就真的不会撞
-                                                continue;
                                             else
                                             {
                                                 double tmp = mod - obj.Radius - listObj.Radius;
