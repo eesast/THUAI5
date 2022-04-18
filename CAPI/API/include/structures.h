@@ -108,8 +108,8 @@ namespace THUAI5
         bool canMove;                                   // 是否可以移动
         bool isResetting;                               // 是否在复活中
 
-        uint32_t x;                                     // x坐标
-        uint32_t y;                                     // y坐标
+        int32_t x;                                      // x坐标
+        int32_t y;                                      // y坐标
         uint32_t signalJammerNum;                       // 信号干扰器数量 
         uint32_t speed;                                 // 机器人移动速度
         uint32_t life;                                  // 电量（生命值）
@@ -144,8 +144,8 @@ namespace THUAI5
     {
         ShapeType shapeType;                            // 墙的形状（正方形）
         uint16_t radius;                                // 圆形物体的半径或正方形内切圆半径
-        uint32_t x;                                     // x坐标
-        uint32_t y;                                     // y坐标
+        int32_t x;                                      // x坐标
+        int32_t y;                                      // y坐标
         int64_t guid;                                   // guid
     };
 
@@ -154,8 +154,8 @@ namespace THUAI5
     /// </summary>
     struct Prop
     {
-        uint32_t x;                                     // x坐标
-        uint32_t y;                                     // y坐标
+        int32_t x;                                      // x坐标
+        int32_t y;                                      // y坐标
         uint32_t size;                                  // CPU个数，仅当道具为CPU时有效，其它道具默认为0
         uint64_t guid;                                  // guid
 
@@ -170,8 +170,8 @@ namespace THUAI5
     /// </summary>
     struct SignalJammer
     {
-        uint32_t x;                                     // x坐标
-        uint32_t y;                                     // y坐标
+        int32_t x;                                      // x坐标
+        int32_t y;                                      // y坐标
 
         uint64_t guid;                                  // guid
         uint64_t parentTeamID;                          // 所属队伍ID

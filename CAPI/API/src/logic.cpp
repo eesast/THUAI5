@@ -217,7 +217,8 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                     pBuffer->self = Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter());
                     pBuffer->teamScore = it->messageofcharacter().score();
                 }
-                else
+                // 其它玩家在场
+                else if(!it->messageofcharacter().isresetting())
                 {
                     if (Vision::visible(pState->self,it->messageofcharacter()))
                     {
