@@ -161,7 +161,6 @@ PROTO2THUAI_NAMESPACE_BEGIN
         robot->emissionAccessory = c.vampire();
         robot->x = c.x();
         robot->y = c.y();
-
         return robot;
     }
 
@@ -213,6 +212,10 @@ PROTO2THUAI_NAMESPACE_BEGIN
         THUAI5::PlaceType placetype = THUAI5::PlaceType::Land;
         switch (data)
         {
+        case 0:
+            placetype = THUAI5::PlaceType::Land;
+            break;
+
         case 1:
             placetype = THUAI5::PlaceType::Wall;
             break;
@@ -315,7 +318,7 @@ VISION_NAMESPACE_BEGIN
         {
             return false;
         }
-        if (c.place() == Protobuf::PlaceType::Grass1 ||c.place() == Protobuf::PlaceType::Grass2 || c.place() == Protobuf::PlaceType::Grass3) // 人物在草丛中
+        if (c.place() == Protobuf::PlaceType::Grass1 || c.place() == Protobuf::PlaceType::Grass2 || c.place() == Protobuf::PlaceType::Grass3) // 人物在草丛中
         {
             if (self->place == _placedict[c.place()]) // 在同一片草丛中则可视
             {

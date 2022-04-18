@@ -191,7 +191,7 @@ void AI::play(IAPI& api)
     }
 	api.Wait();
 	std::cout << self->isResetting;
-	/*for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		std::string s = "000";
 		api.Send(i, s);
@@ -200,7 +200,7 @@ void AI::play(IAPI& api)
 	{
 		auto s = api.TryGetMessage();
 		std::cout << s.value();
-	}*/
+	}
 	attackaround(api, self);
 	api.UseCommonSkill();
 	api.ThrowCPU(50, PI, 2);
