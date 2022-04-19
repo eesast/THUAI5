@@ -741,6 +741,8 @@ namespace Client
         }
         private bool CanSee(MessageOfCharacter msg)
         {
+            if (msg.IsResetting)
+                return false;
             if (playerID >= 2022 || teamID >= 2022)
                 return true;
             if (myInfo != null)

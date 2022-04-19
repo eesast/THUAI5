@@ -121,8 +121,7 @@ namespace THUAI5
 
         uint64_t teamID;                                // 队伍ID
         uint64_t playerID;                              // 玩家ID
-        uint64_t guid;                                  // 操作方法：Client和Server互相约定guid。非负整数中，1-8这8个guid预留给8个人物，其余在子弹或道具被创造/破坏时分发和回收。Client端用向量[guid]储存物体信息和对应的控件实例。
-                                                        // 0号guid存储单播模式中每人Client对应的GUID。
+        uint64_t guid;                                  // 全局唯一ID
 
         double attackRange;                             // 攻击范围
         double timeUntilCommonSkillAvailable;           // 普通软件效果的冷却时间 
