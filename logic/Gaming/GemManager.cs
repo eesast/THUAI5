@@ -105,7 +105,7 @@ namespace Gaming
             }
             public bool PickGem(Character player)
             {
-                if (!player.IsAvailable)
+                if (player.IsResetting)
                     return false;
                 Gem? gem = null;
                 gameMap.GameObjLockDict[GameObjIdx.Gem].EnterReadLock();
@@ -143,7 +143,7 @@ namespace Gaming
 
             public void ThrowGem(Character player, int moveMillisecondTime, double angle, int size=1)
             {
-                if (!player.IsAvailable)
+                if (player.IsResetting)  // 移动中也能扔，但由于“惯性”，可能初始位置会有点变化
                     return;
                 if (size <= 0 || player.GemNum <= 0)
                     return;
@@ -162,7 +162,7 @@ namespace Gaming
 
             public void UseGem(Character character, int num)
             {
-                if (!character.IsAvailable)
+                if (character.IsResetting)
                     return;
                 if (num > character.GemNum)
                     num = character.GemNum;

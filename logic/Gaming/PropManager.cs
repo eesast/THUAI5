@@ -31,7 +31,7 @@ namespace Gaming
 
             public void UseProp(Character player)
             {
-                if (!player.IsAvailable)
+                if (player.IsResetting)
                     return;
                 Prop? prop = player.UseProp();
                 switch(prop?.GetPropType())
@@ -61,6 +61,8 @@ namespace Gaming
             /// <returns></returns>
             public bool PickProp(Character player,PropType propType = PropType.Null)
             {
+                if (player.IsResetting)
+                    return false;
                 Prop? pickProp = null;
                 if(propType == PropType.Null)  //自动检查有无道具可捡
                 {
@@ -130,10 +132,12 @@ namespace Gaming
             {
                 if (!gameMap.Timer.IsGaming)
                     return;
-                if (player.PropInventory == null)
+                if (player.IsResetting) // 移动中也能扔，但由于“惯性”，可能初始位置会有点变化
                     return;
-                Prop prop = player.PropInventory;
-                player.PropInventory = null;
+                Prop? prop = player.UseProp();
+                if (prop == null)
+                    return;
+
                 prop.CanMove = true;
                 prop.SetNewPos(player.Position);
                 gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
