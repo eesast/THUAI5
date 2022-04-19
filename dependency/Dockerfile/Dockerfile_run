@@ -1,14 +1,15 @@
 FROM ubuntu:18.04
 Maintainer eesast.com
 WORKDIR /usr/local
-RUN mkdir /usr/local/play && mkdir /usr/local/Server
-RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make libprotobuf-dev wget curl ca-certificates
+RUN mkdir /usr/local/team1 && mkdir /usr/local/team2 && mkdir /usr/local/playback && mkdir /usr/local/Server
+RUN apt-get update && apt-get install --no-install-recommends -y gcc g++ make libprotobuf-dev wget curl ca-certificates cmake autoconf automake libtool unzip
 RUN wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb \
     && rm packages-microsoft-prod.deb
 RUN apt-get update && apt-get install -y apt-transport-https && apt-get update && apt-get install -y aspnetcore-runtime-5.0
-COPY ./Server/ ./usr/local/Server/
-COPY ./dependency/shell/run.sh ./usr/local/
-ENTRYPOINT ["dotnet", "./Server/Server.dll"]
-CMD ["-p", "20000", "--teamCount", "2", "--playerCount", "4", "-t", "600", "--fileName", 'video']
-ENTRYPOINT ["bash", "./usr/local/run.sh"]
+COPY ./CAPI /usr/local/CAPI
+COPY ./Server /usr/local/Server/
+COPY ./dependency/shell/run.sh /usr/local/
+RUN cd /usr/local/CAPI/protobuf && ./autogen.sh && ./configure && make && make install && ldconfig
+RUN cd /usr/local && mkdir ./CAPI/lib && wget -O dependency.zip https://cloud.tsinghua.edu.cn/f/9257418fd0ed40049c00/?dl=1 && unzip dependency.zip && mv -f ./linux/a ./CAPI/lib && mv -f ./linux/so ./CAPI/lib
+ENTRYPOINT ["bash", "/usr/local/run.sh"]
