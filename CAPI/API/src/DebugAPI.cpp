@@ -54,17 +54,14 @@ bool DebugAPI::Attack(double angleInRadian)
     Out << "Call Attack(" << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting)
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (selfInfo->signalJammerNum == 0)
         {
             Out << "[Warning: You are out of signal jammers.]" << std::endl;
-            return false;
         }
     }
 
@@ -83,11 +80,33 @@ bool DebugAPI::UseCommonSkill()
         if (selfInfo->isResetting)
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
-        if(!CanUseSoftware(selfInfo))
+        if (!CanUseSoftware(selfInfo))
         {
-            return false;
+        }
+        else
+        {
+            Out << "[Info: Using " << THUAI5::software_dict[selfInfo->softwareType] << ".]" << std::endl;
+        }
+    }
+
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::UseCommonSkill);
+    return logic.SendInfo(message);
+}
+
+bool DebugAPI::UseSoftware()
+{
+    Out << "Call UseCommonSkill() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (ExamineValidity)
+    {
+        auto selfInfo = logic.GetSelfInfo();
+        if (selfInfo->isResetting)
+        {
+            Out << "[Warning: You have been slained.]" << std::endl;
+        }
+        if (!CanUseSoftware(selfInfo))
+        {
         }
         else
         {
@@ -108,7 +127,6 @@ bool DebugAPI::Send(int toPlayerID, std::string to_message)
         if (toPlayerID < 0 || toPlayerID >= 4)
         {
             Out << "[Error: Illegal player ID.]" << std::endl;
-            return false;
         }
         else
         {
@@ -132,12 +150,10 @@ bool DebugAPI::Pick(THUAI5::PropType proptype)
         if (selfInfo->isResetting)
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (!CanPick(proptype, selfInfo))
         {
             Out << "[Warning: No such property to pick within the cell.]" << std::endl;
-            return false;
         }
     }
 
@@ -157,12 +173,10 @@ bool DebugAPI::ThrowProp(uint32_t timeInMilliseconds, double angleInRadian)
         if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (selfInfo->prop == THUAI5::PropType::NullPropType)
         {
             Out << "[Warning: You don't have any props.]" << std::endl;
-            return false;
         }
         else
         {
@@ -187,12 +201,10 @@ bool DebugAPI::UseProp()
         if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (selfInfo->prop == THUAI5::PropType::NullPropType)
         {
             Out << "[Warning: You don't have any props.]" << std::endl;
-            return false;
         }
         else
         {
@@ -215,12 +227,10 @@ bool DebugAPI::ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian, uint3
         if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (selfInfo->cpuNum == 0)
         {
             Out << "[Warning: You don't have any CPUs.]" << std::endl;
-            return false;
         }
     }
 
@@ -242,12 +252,10 @@ bool DebugAPI::UseCPU(uint32_t cpuNum)
         if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (selfInfo->cpuNum == 0)
         {
             Out << "[Warning: You don't have any CPUs.]" << std::endl;
-            return false;
         }
     }
 

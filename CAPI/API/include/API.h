@@ -125,6 +125,7 @@ public:
 
     // 使用主动技能。
     virtual bool UseCommonSkill() = 0;
+    virtual bool UseSoftware() = 0;
 
     // 给同队的队友发送消息。`toPlayerID` 指定发送的对象，`message` 指定发送的内容
     virtual bool Send(int toPlayerID,std::string) = 0;
@@ -241,6 +242,7 @@ public:
     // 攻击
     bool Attack(double angleInRadian) override;
     bool UseCommonSkill() override;
+    bool UseSoftware() override;
 
     // 通信
     bool Send(int toPlayerID, std::string) override;
@@ -296,6 +298,7 @@ public:
     // 攻击
     bool Attack(double angleInRadian) override;
     bool UseCommonSkill() override;
+    bool UseSoftware() override;
 
     // 通信
     bool Send(int toPlayerID, std::string) override;

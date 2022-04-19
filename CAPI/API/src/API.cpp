@@ -48,6 +48,13 @@ bool API::UseCommonSkill()
     return logic.SendInfo(message);
 }
 
+bool API::UseSoftware()
+{
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::UseCommonSkill);
+    return logic.SendInfo(message);
+}
+
 bool API::Send(int toPlayerID, std::string to_message)
 {
     Protobuf::MessageToServer message;
