@@ -123,6 +123,7 @@ namespace Gaming
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitReadLock(); }
                 if (gem != null)
                 {
+                    gem.CanMove = false;
                     gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
                     try
                     {
@@ -130,7 +131,6 @@ namespace Gaming
                     }
                     finally { gameMap.GameObjLockDict[GameObjIdx.PickedProp].ExitWriteLock(); }
                 }
-
                 RemoveGem(gem);
 
                 if (gem != null)
@@ -157,6 +157,7 @@ namespace Gaming
                     gameMap.GameObjDict[GameObjIdx.Gem].Add(gem);
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitWriteLock(); }
+                gem.CanMove = true;
                 moveEngine.MoveObj(gem, moveMillisecondTime, angle);
             }
 
@@ -213,7 +214,7 @@ namespace Gaming
                     },
                     EndMove: obj =>
                      {
-                         // obj.Place = gameMap.GetPlaceType((GameObj)obj);
+                         obj.CanMove = false;
                          Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                      }
                 );
