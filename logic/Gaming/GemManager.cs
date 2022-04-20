@@ -32,7 +32,7 @@ namespace Gaming
                  自动生成宝石。
                 宝石的生成可能应该分为两类：
                 1、宝石井附近生成。
-                2、地图上随机生成。
+                2、地图上随机生成。 (这个已经弃用了)
                 地图上随机生成还没写。
                  */
             }
@@ -46,6 +46,8 @@ namespace Gaming
                 (
                     () =>
                     {
+                        while (!gameMap.Timer.IsGaming)
+                            Thread.Sleep(1000);
                         new FrameRateTaskExecutor<int>
                         (
                             () => gameMap.Timer.IsGaming,
