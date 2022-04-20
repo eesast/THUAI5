@@ -156,6 +156,8 @@ namespace Gaming
                 (
                     () =>
                     {
+                        while (!gameMap.Timer.IsGaming)
+                            Thread.Sleep(1000);
                         new FrameRateTaskExecutor<int>
                         (
                             () => gameMap.Timer.IsGaming,

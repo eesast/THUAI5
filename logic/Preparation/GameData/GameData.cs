@@ -68,7 +68,7 @@ namespace Preparation.GameData
         public const int MaxGemSize = 5; //随机生成的宝石最大size
         public const long GemProduceTime = 10000;
         public const long PropProduceTime = 10000;
-        public const int PropDuration = 5000;
+        public const int PropDuration = 10000;
         #endregion
         #region 游戏帧相关
         public const long checkInterval = 50;  //检查位置标志、补充子弹的帧时长
