@@ -132,6 +132,21 @@ namespace GameClass.GameObj
                 return oldProp;
             }
         }
+
+        public Gem? UseGems(int size)
+        {
+            if (size <= 0)
+                return null;
+            lock (gameObjLock)
+            {
+                if (this.gemNum <= 0)
+                    return null;
+                if (size >= this.gemNum)
+                    size = this.gemNum;
+                this.gemNum -= size;
+                return new Gem(this.Position, size);
+            }
+        }
         /// <summary>
         /// 是否正在更换道具（包括捡起与抛出）
         /// </summary>
