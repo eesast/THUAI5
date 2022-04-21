@@ -9,9 +9,8 @@ namespace GameClass.GameObj
 {
     public partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...
     {
-        public readonly object propLock = new();
         private readonly object beAttackedLock = new();
-        public object PropLock => propLock;
+
         #region 角色的基本属性及方法，包括与道具、子弹的交互方法
         /// <summary>
         /// 装弹冷却
