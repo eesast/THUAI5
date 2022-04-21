@@ -1,6 +1,6 @@
 #! /bin/bash
 cd /usr/local/Server
-./Server --port 7777 --teamCount 2 --playerCount 4 --gameTimeInSecond 60 --url $URL --token $TOKEN --fileName /usr/local/playback/video --resultFileName /usr/local/playback/result >/usr/local/playback/server_log.txt 2>&1 &
+./Server --port 7777 --teamCount 2 --playerCount 4 --gameTimeInSecond 600 --url $URL --token $TOKEN --fileName /usr/local/playback/video --resultFileName /usr/local/playback/result >/usr/local/playback/server_log.txt 2>&1 &
 server_pid=$!
 sleep 5
 cd /usr/local/team1
