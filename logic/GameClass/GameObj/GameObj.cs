@@ -168,12 +168,11 @@ namespace GameClass.GameObj
         {
             lock (gameObjLock)
             {
-
-                FacingDirection = 0.0;
-                IsMoving = false;
-                CanMove = false;
-                IsResetting = true;
-                this.Position = birthPos;
+                facingDirection = 0.0;
+                isMoving = false;
+                canMove = false;
+                isResetting = true;
+                this.position = birthPos;
             }
         }
         /// <summary>
