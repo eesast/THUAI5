@@ -147,12 +147,9 @@ namespace Gaming
             {
                 if (player.IsResetting)  // 移动中也能扔，但由于“惯性”，可能初始位置会有点变化
                     return;
-                if (size <= 0 || player.GemNum <= 0)
+                Gem? gem = player.UseGems(size);
+                if (gem == null)
                     return;
-                else if (size > player.GemNum)
-                    size = player.GemNum;
-                player.GemNum -= size;
-                Gem gem = new Gem(player.Position, size);
                 gameMap.GameObjLockDict[GameObjIdx.Gem].EnterWriteLock();
                 try
                 {
@@ -167,14 +164,10 @@ namespace Gaming
             {
                 if (character.IsResetting)
                     return;
-                if (num > character.GemNum)
-                    num = character.GemNum;
-
-                if (num > 0)
-                {
-                    character.GemNum -= num;
-                    character.AddScore(GemToScore(num));
-                }
+                Gem? gem = character.UseGems(num);
+                if (gem == null)
+                    return;
+                character.AddScore(GemToScore(gem.Size));
             }
             public void UseAllGem(Character character)
             {
