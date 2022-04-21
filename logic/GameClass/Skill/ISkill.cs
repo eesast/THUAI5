@@ -1,5 +1,6 @@
 ﻿using GameClass.GameObj;
 using Preparation.Utility;
+using System.Threading;
 
 namespace GameClass.Skill
 {
@@ -19,6 +20,7 @@ namespace GameClass.Skill
         public int DurationTime { get; } //技能持续时间
         public int SkillCD { get; }
     }
+
     //public class UtimateSkill
     //{
     //    /*public double AttackRange { get; }
