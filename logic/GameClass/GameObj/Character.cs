@@ -452,13 +452,16 @@ namespace GameClass.GameObj
             _ = AddDeathCount();
             base.Reset();
             this.MoveSpeed = OrgMoveSpeed;
-            hp = MaxHp;
-            gemNum = 0;
-            propInventory = null;
-            bulletNum = maxBulletNum;
+            HP = MaxHp;
+            GemNum = 0;
+            PropInventory = null;
+
+            lock(gameObjLock)
+                bulletNum = maxBulletNum;
+
             buffManeger.ClearAll();
-            isInvisible = false;
-            this.vampire = this.OriVampire;
+            IsInvisible = false;
+            this.Vampire = this.OriVampire;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;
