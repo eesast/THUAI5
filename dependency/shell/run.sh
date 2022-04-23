@@ -29,4 +29,4 @@ parse_json() {
 result=$(cat /usr/local/playback/result.json)
 score0=$(parse_json $result "Team0")
 score1=$(parse_json $result "Team1")
-curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"result":[{"team_id":0, "score":'${score0}'}, {"team_id":1, "score":'${score1}'}]}'
+curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"result":[{"team_id":0, "score":'${score0}'}, {"team_id":1, "score":'${score1}'}], "mode":'${MODE}'}'
