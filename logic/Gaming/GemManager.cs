@@ -115,7 +115,7 @@ namespace Gaming
                 {
                     foreach (Gem g in gameMap.GameObjDict[GameObjIdx.Gem])
                     {
-                        if (GameData.IsInTheSameCell(g.Position,player.Position))
+                        if (GameData.IsInTheSameCell(g.Position,player.Position) && g.CanMove == false)
                         {
                             gem = g;
                             break;

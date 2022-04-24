@@ -71,7 +71,7 @@ namespace Gaming
                     {
                         foreach(Prop prop in gameMap.GameObjDict[GameObjIdx.Prop])
                         {
-                            if(GameData.IsInTheSameCell(prop.Position,player.Position))
+                            if(GameData.IsInTheSameCell(prop.Position,player.Position) && prop.CanMove == false)
                             {
                                 pickProp = prop;
                             }
@@ -88,7 +88,7 @@ namespace Gaming
                         {
                             if(prop.GetPropType() == propType)
                             {
-                                if (GameData.IsInTheSameCell(prop.Position, player.Position))
+                                if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
                                 {
                                     pickProp = prop;
                                 }
@@ -100,7 +100,7 @@ namespace Gaming
 
                 if (pickProp != null)
                 {
-                    pickProp.CanMove = false;
+                    //pickProp.CanMove = false;
                     Prop? dropProp = null;
                     if (player.PropInventory != null) // 若角色原来有道具，则原始道具掉落在原地
                     {
