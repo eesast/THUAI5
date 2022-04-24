@@ -24,17 +24,37 @@ namespace GameClass.GameObj
             try
             {
                 uint type = ProtoGameMap[obj.Position.x / GameData.numOfPosGridPerCell, obj.Position.y / GameData.numOfPosGridPerCell];
-                if (type == 1)
+                if (type == 2)
                     return PlaceType.Grass1;
-                else if (type == 2)
-                    return PlaceType.Grass2;
                 else if (type == 3)
+                    return PlaceType.Grass2;
+                else if (type == 4)
                     return PlaceType.Grass3;
                 else
                     return PlaceType.Land;  //其他情况均返回land
             }
             catch { return PlaceType.Land; }
         }
+
+        public PlaceType GetPlaceType(XYPosition pos)
+        {
+            try
+            {
+                switch (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell])
+                {
+                    case 2:
+                        return PlaceType.Grass1;
+                    case 3:
+                        return PlaceType.Grass2;
+                    case 4:
+                        return PlaceType.Grass3;
+                    default:
+                        return PlaceType.Land;
+                }
+            }
+            catch { return PlaceType.Land; }
+        }
+
         public bool IsOutOfBound(IGameObj obj)
         {
             return obj.Position.x >= GameData.lengthOfMap - obj.Radius
@@ -47,32 +67,6 @@ namespace GameClass.GameObj
             return new OutOfBoundBlock(pos);
         }
 
-        public PlaceType GetPlaceType(XYPosition pos)
-        {
-            switch (ProtoGameMap[pos.x / GameData.numOfPosGridPerCell, pos.y / GameData.numOfPosGridPerCell])
-            {
-                case 0:
-                case 1:
-                case 5:
-                case 6:
-                case 7:
-                case 8:
-                case 9:
-                case 10:
-                case 11:
-                case 12:
-                case 13:
-                    return PlaceType.Land;
-                case 2:
-                    return PlaceType.Grass1;
-                case 3:
-                    return PlaceType.Grass2;
-                case 4:
-                    return PlaceType.Grass3;
-                default:
-                    return PlaceType.Null;
-            }
-        }
         public Character? FindPlayer(long playerID)
         {
             Character? player = null;
