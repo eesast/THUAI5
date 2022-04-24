@@ -426,7 +426,15 @@ namespace Server
                                 string[] nums = line.Split(' ');
                                 foreach (string item in nums)
                                 {
-                                    map[i, j] = (uint)int.Parse(item);
+                                    if (item.Length > 1)//以兼容原方案
+                                    {
+                                        map[i, j] = (uint)int.Parse(item);
+                                    }
+                                    else
+                                    {
+                                        //2022-04-22 by LHR 十六进制编码地图方案（防止地图编辑员瞎眼x
+                                        map[i, j] = (uint)Preparation.Utility.MapEncoder.Hex2Dec(char.Parse(item));
+                                    }
                                     j++;
                                     if (j >= GameData.cols)
                                     {

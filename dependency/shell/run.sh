@@ -1,6 +1,6 @@
 #! /bin/bash
 cd /usr/local/Server
-./Server --port 7777 --teamCount 2 --playerCount 4 --gameTimeInSecond 60 --url $URL --token $TOKEN --fileName /usr/local/playback/video --resultFileName /usr/local/playback/result >/usr/local/playback/server_log.txt 2>&1 &
+./Server --port 7777 --teamCount 2 --playerCount 4 --gameTimeInSecond 600 --url $URL --token $TOKEN --fileName /usr/local/playback/video --resultFileName /usr/local/playback/result >/usr/local/playback/server_log.txt 2>&1 &
 server_pid=$!
 sleep 5
 cd /usr/local/team1
@@ -29,4 +29,4 @@ parse_json() {
 result=$(cat /usr/local/playback/result.json)
 score0=$(parse_json $result "Team0")
 score1=$(parse_json $result "Team1")
-curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"result":[{"team_id":0, "score":'${score0}'}, {"team_id":1, "score":'${score1}'}]}'
+curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"result":[{"team_id":0, "score":'${score0}'}, {"team_id":1, "score":'${score1}'}], "mode":'${MODE}'}'

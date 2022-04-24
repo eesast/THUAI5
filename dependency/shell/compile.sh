@@ -12,11 +12,12 @@ do
     if [ $? -ne 0 ]; then
         flag=0
     fi
+    mv ./compile_log$i.txt ../mnt/compile_log$i.txt
     let "i++"
 done
-mv ./compile_log.txt ../mnt/compile_log.txt
+
 if [ $flag -eq 1 ]; then
-    curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"compile_status":"compiled"}'
+    curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"compile_status":"compiled"}' > ../mnt/curl_log.txt
 else
-    curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"compile_status":"failed"}'
+    curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"compile_status":"failed"}' > ../mnt/curl_log.txt
 fi
