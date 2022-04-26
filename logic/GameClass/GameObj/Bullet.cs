@@ -46,12 +46,12 @@ namespace GameClass.GameObj
         
     }
 
-    internal sealed class AtomBomb : Bullet  //3倍爆炸范围，3倍攻击力，1倍速
+    internal sealed class AtomBomb : Bullet  
     {
         public AtomBomb(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
-        public override double BulletBombRange => 3 * GameData.basicBulletBombRange;
-        public override int AP => 3 * GameData.basicAp;
-        public override int Speed => GameData.basicBulletMoveSpeed;
+        public override double BulletBombRange =>  GameData.basicBulletBombRange / 3 * 7;
+        public override int AP => GameData.basicAp / 3 * 7;
+        public override int Speed => GameData.basicBulletMoveSpeed / 3 * 2;
         public override bool CanAttack(GameObj target)
         {
             // 圆形攻击范围
@@ -64,9 +64,9 @@ namespace GameClass.GameObj
     internal sealed class OrdinaryBullet : Bullet //1倍攻击范围，1倍攻击力，一倍速
     {
         public OrdinaryBullet(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
-        public override double BulletBombRange => GameData.basicBulletBombRange;
-        public override int AP => GameData.basicAp;
-        public override int Speed => GameData.basicBulletMoveSpeed;
+        public override double BulletBombRange => GameData.basicBulletBombRange / 6 * 5;
+        public override int AP => GameData.basicAp / 6 * 5;
+        public override int Speed => GameData.basicBulletMoveSpeed / 6 * 5;
         public override bool CanAttack(GameObj target)
         {
             // 圆形攻击范围
@@ -80,8 +80,8 @@ namespace GameClass.GameObj
     {
         public FastBullet(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
         public override double BulletBombRange => GameData.basicBulletBombRange / 4 * 2;
-        public override int AP => (int)(0.2 * GameData.basicAp);
-        public override int Speed => 2 * GameData.basicBulletMoveSpeed;
+        public override int AP => (int)(0.5 * GameData.basicAp);
+        public override int Speed => 5 * GameData.basicBulletMoveSpeed / 3;
             
         public override bool CanAttack(GameObj target)
         {
@@ -92,12 +92,12 @@ namespace GameClass.GameObj
         public override BulletType TypeOfBullet => BulletType.FastBullet;
     }
 
-    internal sealed class LineBullet : Bullet //直线爆炸，宽度1格，长度为2倍攻击范围，1倍攻击力，1倍速
+    internal sealed class LineBullet : Bullet //直线爆炸，宽度1格，长度为2倍爆炸范围
     {
         public LineBullet(Character player, int radius = GameData.bulletRadius) : base(player, radius) { }
-        public override double BulletBombRange => 2 * GameData.basicBulletBombRange;
-        public override int AP => GameData.basicAp;
-        public override int Speed =>  GameData.basicBulletMoveSpeed;
+        public override double BulletBombRange => GameData.basicBulletBombRange / 3 * 4;
+        public override int AP => GameData.basicAp / 3 * 2;
+        public override int Speed =>  GameData.basicBulletMoveSpeed / 3;
 
         public override bool CanAttack(GameObj target)
         {
