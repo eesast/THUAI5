@@ -125,7 +125,7 @@ namespace Gaming
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitReadLock(); }
                 if (gem != null)
                 {
-                    gem.CanMove = false;
+                    //gem.CanMove = false;
                     gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
                     try
                     {
@@ -182,19 +182,19 @@ namespace Gaming
             private int GemToScore(int num)
             {
                 //先用分段线性
-                if (num < 5)
+                if (num < 3)
                     return 0;
+                else if (num < 5)
+                    return num * GameData.gemToScore / 4 * 3;
                 else if (num < 10)
-                    return num * GameData.gemToScore / 4;
+                    return num * GameData.gemToScore / 4 * 6;
                 else if (num < 15)
-                    return num * GameData.gemToScore / 2;
+                    return num * GameData.gemToScore / 4 * 10;
                 else if (num < 20)
-                    return num * GameData.gemToScore;
+                    return num * GameData.gemToScore / 4 * 15;
                 else if (num < 25)
-                    return 2 * num * GameData.gemToScore;
-                else if (num < 30)
-                    return 4 * num * GameData.gemToScore;
-                else return 8 * num * GameData.gemToScore;
+                    return num * GameData.gemToScore / 4 * 22;
+                else return num * GameData.gemToScore * 8;
             }
 
             public GemManager(Map gameMap)  //宝石不能扔过墙

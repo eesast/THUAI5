@@ -43,7 +43,7 @@ namespace Preparation.GameData
         public const int basicAp = 3000;	// 初始攻击力
         public const int basicHp = 6000;	// 初始血量
         public const int basicCD = 3000;    // 初始子弹冷却
-        public const int basicBulletNum = 5;   // 初始子弹量
+        public const int basicBulletNum = 3;   // 基本初始子弹量
         public const int MinAP = 0; // 最小攻击力
         public const int MaxAP = int.MaxValue;  //最大攻击力
         public const double basicAttackRange = 9000;               // 基本攻击范围
