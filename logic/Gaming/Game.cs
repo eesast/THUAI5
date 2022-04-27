@@ -73,6 +73,8 @@ namespace Gaming
                             if (!newPlayer.IsResetting)
                             {
                                 long nowTime = Environment.TickCount64;
+                                if (newPlayer.BulletNum == newPlayer.MaxBulletNum)
+                                    lastTime = nowTime;
                                 if (nowTime - lastTime >= newPlayer.CD)
                                 {
                                     _ = newPlayer.TryAddBulletNum();
