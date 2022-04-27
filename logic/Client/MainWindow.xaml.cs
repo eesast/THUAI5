@@ -26,7 +26,7 @@ namespace Client
             bonusflag = true;
             timer = new DispatcherTimer
             {
-                Interval = new TimeSpan(20000)//每20ms刷新一次
+                Interval = new TimeSpan(50000)//每50ms刷新一次
             };
             timer.Tick += new EventHandler(Refresh);    //定时器初始化
             InitializeComponent();
@@ -92,9 +92,8 @@ namespace Client
         {  
             Application.Current.Shutdown();
         }
-        private void DrawLaser(Point source, double theta, double range)//三个参数分别为攻击者的位置，攻击方位角（窗口坐标）和攻击半径
+        private void DrawLaser(Point source, double theta, double range,double Width)//三个参数分别为攻击者的位置，攻击方位角（窗口坐标）和攻击半径
         {
-            double Width = 5;
             Point[] endPoint = new Point[4];
             Point target = new();
             target.X = source.X + range * Math.Cos(theta);
@@ -901,7 +900,7 @@ namespace Client
                                 {
                                     case BulletType.FastBullet:
                                         {
-                                            Ellipse icon = new Ellipse();
+                                            Ellipse icon = new();
                                             icon.Width = 1.5 * unitWidth;
                                             icon.Height = 1.5 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
@@ -914,11 +913,11 @@ namespace Client
                                     case BulletType.AtomBomb:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 9 * unitWidth;
-                                            icon.Height = 9 * unitHeight;
+                                            icon.Width = 7 * unitWidth;
+                                            icon.Height = 7 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0-9*unitWidth/2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 9 * unitHeight / 2, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - 7 * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 7 * unitHeight / 2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -926,18 +925,18 @@ namespace Client
                                     case BulletType.OrdinaryBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 3 * unitWidth;
-                                            icon.Height = 3 * unitHeight;
+                                            icon.Width = 2.5 * unitWidth;
+                                            icon.Height = 2.5 * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - 3 * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 3 * unitHeight / 2, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - 2.5 * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 2.5 * unitHeight / 2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
                                         }
                                     case BulletType.LineBullet:
                                         {
-                                            DrawLaser(new Point(data.MessageOfBombedBullet.Y * unitWidth / 1000.0, data.MessageOfBombedBullet.X * unitHeight / 1000.0), -data.MessageOfBombedBullet.FacingDirection + Math.PI/2, 60);
+                                            DrawLaser(new Point(data.MessageOfBombedBullet.Y * unitWidth / 1000.0, data.MessageOfBombedBullet.X * unitHeight / 1000.0), -data.MessageOfBombedBullet.FacingDirection + Math.PI/2, 52, 6.5);
                                             break;
                                         }
                                     default:
