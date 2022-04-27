@@ -57,8 +57,12 @@ namespace Client
         }
         private void SetDynamicValue(MessageOfCharacter obj)
         {
-            skillprogress.Value = coolTime - obj.TimeUntilCommonSkillAvailable / coolTime * 100;
-            if (obj.IsResetting) skillprogress.Background = Brushes.Gray;
+            skillprogress.Value = 100 - obj.TimeUntilCommonSkillAvailable / coolTime * 100;
+            if (obj.IsResetting)
+            {
+                skillprogress.Value = 0;
+                skillprogress.Background = Brushes.Gray;
+            }
             else skillprogress.Background = Brushes.White;
             Func<MessageOfCharacter,int> life=
             (obj) =>
