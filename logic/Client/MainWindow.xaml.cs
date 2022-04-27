@@ -750,8 +750,6 @@ namespace Client
                 if (myInfo.MessageOfCharacter.Guid == msg.Guid) //自己能看见自己
                     return true;
             }
-            if (msg.IsResetting)
-                return false;
             if (msg.IsInvisible)
                 return false;
             if (msg.Place == PlaceType.Land)
