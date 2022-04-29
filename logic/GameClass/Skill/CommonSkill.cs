@@ -2,6 +2,7 @@
 using System.Threading;
 using Preparation.Utility;
 using Preparation.GameData;
+using System;
 using Timothy.FrameRateTask;
 
 namespace GameClass.Skill
@@ -25,70 +26,20 @@ namespace GameClass.Skill
         public int DurationTime => GameData.commonSkillTime;
 
         private readonly object commonSkillLock = new object();
+        public object CommonSkillLock => commonSkillLock;
 
         public bool SkillEffect(Character player)
         {
-            lock (commonSkillLock)
+            return CommonSkillFactory.SkillEffect(this, player, () =>
             {
-                if (player.TimeUntilCommonSkillAvailable == 0)
-                {
-                    player.TimeUntilCommonSkillAvailable = SkillCD;
-                    new Thread
-                    (() =>
-                    {
-                        player.Vampire += 0.5;
-                        Debugger.Output(player, "becomes vampire!");
-
-                        new FrameRateTaskExecutor<int>
-                        (
-                            () => !player.IsResetting,
-                            () =>
-                            {
-                                player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
-                            },
-                            timeInterval: GameData.frameDuration,
-                            () => 0,
-                            maxTotalDuration: (long)(DurationTime)
-                        )
-                        {
-                            AllowTimeExceed = true,
-                            MaxTolerantTimeExceedCount = ulong.MaxValue,
-                        }.Start();
-
-                        double tempVam = player.Vampire - 0.5;
-                        player.Vampire = tempVam < player.OriVampire ? player.OriVampire : tempVam;
-                        Debugger.Output(player, "return to normal.");
-
-                        new FrameRateTaskExecutor<int>
-                         (
-                             () => player.TimeUntilCommonSkillAvailable > 0 && !player.IsResetting,
-                             () =>
-                             {
-                                 player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
-                             },
-                             timeInterval: GameData.frameDuration,
-                             () => 0,
-                             maxTotalDuration: (long)(SkillCD - DurationTime)
-                         )
-                        {
-                            AllowTimeExceed = true,
-                            MaxTolerantTimeExceedCount = ulong.MaxValue,
-                        }.Start();
-
-                        player.TimeUntilCommonSkillAvailable = 0;
-                        Debugger.Output(player, "CommonSkill is ready.");
-                    }
-                    )
-                    { IsBackground = true }.Start();
-
-                    return true;
-                }
-                else
-                {
-                    Debugger.Output(player, "CommonSkill is cooling down!");
-                    return false;
-                }
-            }
+                player.Vampire += 0.5;
+                Debugger.Output(player, "becomes vampire!");
+            },
+            () => 
+            {
+                double tempVam = player.Vampire - 0.5;
+                player.Vampire = tempVam < player.OriVampire ? player.OriVampire : tempVam;
+            });
         }
     }
     public class BecomeAssassin : ICommonSkill  //化身刺客，隐身
@@ -109,67 +60,15 @@ namespace GameClass.Skill
         public int DurationTime => GameData.commonSkillTime / 10 * 6;
 
         private readonly object commonSkillLock = new object();
+        public object CommonSkillLock => commonSkillLock;
         public bool SkillEffect(Character player)
         {
-            lock (commonSkillLock)
+            return CommonSkillFactory.SkillEffect(this, player, () =>
             {
-                if (player.TimeUntilCommonSkillAvailable == 0)
-                {
-                    player.TimeUntilCommonSkillAvailable = SkillCD;
-                    new Thread
-                    (() =>
-                    {
-                        player.IsInvisible = true;
-                        Debugger.Output(player, "becomes assassin!");
-                        new FrameRateTaskExecutor<int>
-                        (
-                            () => !player.IsResetting,
-                            () =>
-                            {
-                                player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
-                            },
-                            timeInterval: GameData.frameDuration,
-                            () => 0,
-                            maxTotalDuration: (long)(DurationTime)
-                        )
-                        {
-                            AllowTimeExceed = true,
-                            MaxTolerantTimeExceedCount = ulong.MaxValue,
-                        }.Start();
-
-                        player.IsInvisible = false;
-                        Debugger.Output(player, "returns to normal.");
-
-                        new FrameRateTaskExecutor<int>
-                         (
-                             () => player.TimeUntilCommonSkillAvailable > 0 && !player.IsResetting,
-                             () =>
-                             {
-                                 player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
-                             },
-                             timeInterval: GameData.frameDuration,
-                             () => 0,
-                             maxTotalDuration: (long)(SkillCD - DurationTime)
-                         )
-                        {
-                            AllowTimeExceed = true,
-                            MaxTolerantTimeExceedCount = ulong.MaxValue,
-                        }.Start();
-
-                        player.TimeUntilCommonSkillAvailable = 0;
-                        Debugger.Output(player, "CommonSkill is ready.");
-                    }
-                    )
-                    { IsBackground = true }.Start();
-
-                    return true;
-                }
-                else
-                {
-                    Debugger.Output(player, "CommonSkill is cooling down!");
-                    return false;
-                }
-            }
+                player.IsInvisible = true;
+                Debugger.Output(player, "uses atombomb!");
+            },
+            () => { player.IsInvisible = false; });
         }
     }
     public class NuclearWeapon : ICommonSkill  //核武器
@@ -189,71 +88,15 @@ namespace GameClass.Skill
         public int SkillCD => GameData.commonSkillCD / 3 * 7;
         public int DurationTime => GameData.commonSkillTime / 10;
         private readonly object commonSkillLock = new object();
+        public object CommonSkillLock => commonSkillLock;
         public bool SkillEffect(Character player)
         {
-            lock (commonSkillLock)
+            return CommonSkillFactory.SkillEffect(this, player, () =>
             {
-                if (player.TimeUntilCommonSkillAvailable == 0)
-                {
-                    player.TimeUntilCommonSkillAvailable = SkillCD;
-                    new Thread
-                    (() =>
-                    {
-                        BulletType b = player.BulletOfPlayer;
-                        double oriAttackRange = player.AttackRange;
-                        player.BulletOfPlayer = BulletType.AtomBomb;
-                        player.SetAttackRange(2 * GameData.numOfPosGridPerCell);
-                        Debugger.Output(player, "uses atombomb!");
-                        new FrameRateTaskExecutor<int>
-                        (
-                            () => !player.IsResetting,
-                            () =>
-                            {
-                                player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
-                            },
-                            timeInterval: GameData.frameDuration,
-                            () => 0,
-                            maxTotalDuration: (long)(DurationTime)
-                        )
-                        {
-                            AllowTimeExceed = true,
-                            MaxTolerantTimeExceedCount = ulong.MaxValue,
-                        }.Start();
-
-                        player.BulletOfPlayer = b;
-                        player.SetAttackRange(oriAttackRange);
-                        Debugger.Output(player, "return to normal.");
-
-                        new FrameRateTaskExecutor<int>
-                         (
-                             () => player.TimeUntilCommonSkillAvailable > 0 && !player.IsResetting,
-                             () =>
-                             {
-                                 player.TimeUntilCommonSkillAvailable -= (int)GameData.frameDuration;
-                             },
-                             timeInterval: GameData.frameDuration,
-                             () => 0,
-                             maxTotalDuration: (long)(SkillCD - DurationTime)
-                         )
-                        {
-                            AllowTimeExceed = true,
-                            MaxTolerantTimeExceedCount = ulong.MaxValue,
-                        }.Start();
-
-                        player.TimeUntilCommonSkillAvailable = 0;
-                        Debugger.Output(player, "CommonSkill is ready.");
-                    }
-                    )
-                    { IsBackground = true }.Start();
-
-                    return true;
-                }
-                else
-                {
-                    Debugger.Output(player, "CommonSkill is cooling down!");
-                    return false;
-                }
-            }
+                player.BulletOfPlayer = BulletType.AtomBomb;
+                Debugger.Output(player, "uses atombomb!");
+            },
+            () => { player.BulletOfPlayer = player.OriBulletOfPlayer; });
         }
     }
     public class SuperFast : ICommonSkill  //3倍速
@@ -273,18 +116,54 @@ namespace GameClass.Skill
         public int SkillCD => GameData.commonSkillCD;
         public int DurationTime => GameData.commonSkillTime / 10 * 4;
         private readonly object commonSkillLock = new object();
+        public object CommonSkillLock => commonSkillLock;
         public bool SkillEffect(Character player)
         {
-            lock (commonSkillLock)
+            return CommonSkillFactory.SkillEffect(this, player, () =>
+            {
+                player.AddMoveSpeed(this.DurationTime, 3.0);
+                Debugger.Output(player, "moves very fast!");
+            },
+            () => { });
+        }
+    }
+    public class NoCommonSkill : ICommonSkill  //这种情况不该发生，定义着以防意外
+    {
+        private const int moveSpeed = GameData.basicMoveSpeed;
+        public int MoveSpeed => moveSpeed;
+
+        private const int maxHp = GameData.basicHp;
+        public int MaxHp => maxHp;
+
+        private const int cd = GameData.basicCD;
+        public int CD => cd;
+
+        private const int maxBulletNum = GameData.basicBulletNum;
+        public int MaxBulletNum => maxBulletNum;
+        // 以上参数以后再改
+        public int SkillCD => GameData.commonSkillCD;
+        public int DurationTime => GameData.commonSkillTime;
+        private readonly object commonSkillLock = new object();
+        public object CommonSkillLock => commonSkillLock;
+        public bool SkillEffect(Character player)
+        {
+            return false;
+        }
+    }
+
+    public static class CommonSkillFactory
+    {
+        public static bool SkillEffect(ICommonSkill commonSkill, Character player, Action startSkill, Action endSkill)
+        {
+            lock (commonSkill.CommonSkillLock)
             {
                 if (player.TimeUntilCommonSkillAvailable == 0)
                 {
-                    player.TimeUntilCommonSkillAvailable = SkillCD;
+                    player.TimeUntilCommonSkillAvailable = commonSkill.SkillCD;
                     new Thread
                     (() =>
                     {
-                        player.AddMoveSpeed(this.DurationTime, 3.0);
-                        Debugger.Output(player, "moves very fast!");
+                        startSkill();
                         new FrameRateTaskExecutor<int>
                         (
                             () => !player.IsResetting,
@@ -294,13 +173,14 @@ namespace GameClass.Skill
                             },
                             timeInterval: GameData.frameDuration,
                             () => 0,
-                            maxTotalDuration: (long)(DurationTime)
+                            maxTotalDuration: (long)(commonSkill.DurationTime)
                         )
                         {
                             AllowTimeExceed = true,
                             MaxTolerantTimeExceedCount = ulong.MaxValue,
                         }.Start();
 
+                        endSkill();
                         Debugger.Output(player, "return to normal.");
 
                         new FrameRateTaskExecutor<int>
@@ -312,7 +192,7 @@ namespace GameClass.Skill
                              },
                              timeInterval: GameData.frameDuration,
                              () => 0,
-                             maxTotalDuration: (long)(SkillCD - DurationTime)
+                             maxTotalDuration: (long)(commonSkill.SkillCD - commonSkill.DurationTime)
                          )
                         {
                             AllowTimeExceed = true,
@@ -333,27 +213,6 @@ namespace GameClass.Skill
                     return false;
                 }
             }
-        }
-    }
-    public class NoCommonSkill : ICommonSkill  //这种情况不该发生，定义着以防意外
-    {
-        private const int moveSpeed = GameData.basicMoveSpeed;
-        public int MoveSpeed => moveSpeed;
-
-        private const int maxHp = GameData.basicHp;
-        public int MaxHp => maxHp;
-
-        private const int cd = GameData.basicCD;
-        public int CD => cd;
-
-        private const int maxBulletNum = GameData.basicBulletNum;
-        public int MaxBulletNum => maxBulletNum;
-        // 以上参数以后再改
-        public int SkillCD => GameData.commonSkillCD;
-        public int DurationTime => GameData.commonSkillTime;
-        public bool SkillEffect(Character player)
-        {
-            return false;
         }
     }
 }
