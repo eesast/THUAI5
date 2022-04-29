@@ -78,7 +78,6 @@ namespace GameClass.GameObj
                     cSkill = new NoCommonSkill();
                     break;
             }
-            this.attackRange = pSkill.AttackRange;
             this.MaxHp = cSkill.MaxHp;
             this.hp = cSkill.MaxHp;
             this.OrgMoveSpeed = cSkill.MoveSpeed;
@@ -87,6 +86,7 @@ namespace GameClass.GameObj
             this.maxBulletNum = cSkill.MaxBulletNum;
             this.bulletNum = maxBulletNum;
             this.bulletOfPlayer = pSkill.InitBullet;
+            this.OriBulletOfPlayer = pSkill.InitBullet;
             this.passiveSkill = pSkill.SkillEffect;
             this.commonSkill = cSkill.SkillEffect;
             this.passiveSkillType = passiveSkillType;
