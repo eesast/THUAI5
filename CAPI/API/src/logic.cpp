@@ -254,9 +254,14 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                     {
                         pBuffer->self = Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter());
                     }
+                    // 队友
+                    else if (Vision::visible(pState->self, it->messageofcharacter()))
+                    {
+                        pBuffer->robots.push_back(Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter()));
+                    }
                 }
-                // 其它玩家在场
-                if (!it->messageofcharacter().isresetting())
+                // 其它队伍玩家
+                else
                 {
                     if (Vision::visible(pState->self, it->messageofcharacter()))
                     {
