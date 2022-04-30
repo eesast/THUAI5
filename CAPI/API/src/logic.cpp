@@ -5,8 +5,6 @@ extern const bool asynchronous;
 extern const THUAI5::SoftwareType playerSoftware;
 extern const THUAI5::HardwareType playerHardware;
 
-
-
 int Logic::GetCounter() const
 {
     std::unique_lock<std::mutex> lock(mtx_buffer);
@@ -155,6 +153,27 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
         break;
 
     case Protobuf::MessageType::Gaming:
+        if (AI_loop == false)
+        {
+            LoadBuffer(pm2c); // 加载信息到buffer
+
+            // 对guid进行重新载入（只载入玩家的guid信息）
+            playerGUIDS.clear();
+            for (auto it = pm2c->gameobjmessage().begin(); it != pm2c->gameobjmessage().end(); it++)
+            {
+                if (it->has_messageofcharacter())
+                {
+                    playerGUIDS.push_back(it->messageofcharacter().guid());
+                }
+            }
+            pState->guids = playerGUIDS;
+            pBuffer->guids = playerGUIDS;
+
+            AI_loop = true;
+            UnBlockAI();
+            std::cout << "Start Game!" << std::endl;
+            AI_loop == true;
+        }
         LoadBuffer(pm2c);
         break;
 
