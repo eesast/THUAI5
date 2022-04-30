@@ -899,11 +899,12 @@ namespace Client
                                     case BulletType.FastBullet:
                                         {
                                             Ellipse icon = new();
-                                            icon.Width = 1.5 * unitWidth;
-                                            icon.Height = 1.5 * unitHeight;
+                                            double bombRange = data.MessageOfBombedBullet.BombRange / 1000;
+                                            icon.Width = bombRange * unitWidth;
+                                            icon.Height = bombRange * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0-1.5* unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0-1.5* unitHeight / 2, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - bombRange * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - bombRange * unitHeight / 2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -911,11 +912,12 @@ namespace Client
                                     case BulletType.AtomBomb:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 7 * unitWidth;
-                                            icon.Height = 7 * unitHeight;
+                                            double bombRange = data.MessageOfBombedBullet.BombRange / 1000;
+                                            icon.Width = bombRange * unitWidth;
+                                            icon.Height = bombRange * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - 7 * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 7 * unitHeight / 2, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - bombRange * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - bombRange * unitHeight / 2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
@@ -923,32 +925,24 @@ namespace Client
                                     case BulletType.OrdinaryBullet:
                                         {
                                             Ellipse icon = new Ellipse();
-                                            icon.Width = 2.5 * unitWidth;
-                                            icon.Height = 2.5 * unitHeight;
+                                            double bombRange = data.MessageOfBombedBullet.BombRange / 1000;
+                                            icon.Width = bombRange * unitWidth;
+                                            icon.Height = bombRange * unitHeight;
                                             icon.HorizontalAlignment = HorizontalAlignment.Left;
                                             icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - 2.5 * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 2.5 * unitHeight / 2, 0, 0);
+                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0 - bombRange * unitWidth / 2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - bombRange * unitHeight / 2, 0, 0);
                                             icon.Fill = Brushes.Red;
                                             UpperLayerOfMap.Children.Add(icon);
                                             break;
                                         }
                                     case BulletType.LineBullet:
                                         {
-                                            DrawLaser(new Point(data.MessageOfBombedBullet.Y * unitWidth / 1000.0, data.MessageOfBombedBullet.X * unitHeight / 1000.0), -data.MessageOfBombedBullet.FacingDirection + Math.PI/2, 52, 6.5);
+                                            double bombRange = data.MessageOfBombedBullet.BombRange / 1000;
+                                            DrawLaser(new Point(data.MessageOfBombedBullet.Y * unitWidth / 1000.0, data.MessageOfBombedBullet.X * unitHeight / 1000.0), -data.MessageOfBombedBullet.FacingDirection + Math.PI/2, bombRange * unitHeight, 0.5 * unitWidth);
                                             break;
                                         }
                                     default:
-                                        {
-                                            Ellipse icon = new Ellipse();
-                                            icon.Width = 5 * unitWidth;
-                                            icon.Height = 5 * unitHeight;
-                                            icon.HorizontalAlignment = HorizontalAlignment.Left;
-                                            icon.VerticalAlignment = VerticalAlignment.Top;
-                                            icon.Margin = new Thickness(data.MessageOfBombedBullet.Y * unitWidth / 1000.0-5*unitWidth/2, data.MessageOfBombedBullet.X * unitHeight / 1000.0 - 5 * unitHeight / 2, 0, 0);
-                                            icon.Fill = Brushes.Red;
-                                            UpperLayerOfMap.Children.Add(icon);
-                                            break;
-                                        }
+                                        break;
                                 }
                             }
                         }
