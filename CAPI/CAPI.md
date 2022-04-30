@@ -166,7 +166,7 @@ public:
     virtual bool Pick(THUAI5::PropType) = 0; 
     virtual bool ThrowProp(uint32_t timeInMilliseconds, double angleInRadian) = 0;
     virtual bool UseProp() = 0;
-    virtual bool ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian,uint32_t cpuNum) = 0;
+    virtual bool ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian, uint32_t cpuNum) = 0;
     virtual bool UseCPU(uint32_t cpuNum) = 0;
     virtual bool Wait() = 0;
 
@@ -178,6 +178,8 @@ public:
     [[nodiscard]] virtual std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const = 0;
     [[nodiscard]] virtual std::shared_ptr<const THUAI5::Robot> GetSelfInfo() const = 0;
     [[nodiscard]] virtual THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const = 0;
+    [[nodiscard]] virtual std::array<std::array<THUAI5::PlaceType, 50>, 50> GetFullMap() const = 0;
+
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
     [[nodiscard]] virtual const std::vector<int64_t> GetPlayerGUIDs() const = 0;
     [[nodiscard]] virtual int GetFrameCount() const = 0;
@@ -243,8 +245,9 @@ public:
 
 * `std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const`：返回当前场地内的所有可视信号干扰器的信息。其他信息同上。
 
-* `THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const`：返回某一位置场地种类信息。注意此处的`CellX`和`CellY`指的是**地图格数**，而不是**绝对坐标**。
-场地种类详见`structure.h`。
+* `THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const`：返回某一位置场地种类信息。注意此处的`CellX`和`CellY`指的是**地图格数**，而不是**绝对坐标**。场地种类详见`structure.h`。
+
+* `std::array<std::array<THUAI5::PlaceType, 50>, 50> GetFullMap()`：返回当前场地的全部信息。场地种类详见`structure.h`。
 
 #### 队友信息
 * `bool MessageAvailable()`：如果当前有队友发来的尚未接收的信息，返回 `true`。

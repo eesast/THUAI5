@@ -41,10 +41,24 @@ std::shared_ptr<const THUAI5::Robot> Logic::GetSelfInfo() const
     return pState->self;
 }
 
-THUAI5::PlaceType Logic::GetPlaceType(int CellX,int CellY) const
+THUAI5::PlaceType Logic::GetPlaceType(int CellX, int CellY) const
 {
     std::unique_lock<std::mutex> lock(mtx_buffer);
     return pState->gamemap[CellX][CellY];
+}
+
+std::array<std::array<THUAI5::PlaceType, 50>, 50> Logic::GetFullMap() const
+{
+    std::unique_lock<std::mutex> lock(mtx_buffer);
+    std::array<std::array<THUAI5::PlaceType, 50>, 50> temp;
+    for (int i = 0; i < 50; i++)
+    {
+        for (int j = 0; j < 50; j++)
+        {
+            temp[i].at(j) = pState->gamemap[i][j];
+        }
+    }
+    return temp;
 }
 
 uint32_t Logic::GetTeamScore() const
@@ -82,7 +96,7 @@ void Logic::OnClose()
     UnBlockBuffer();
 }
 
-bool Logic::SendInfo(Protobuf::MessageToServer& m2s)
+bool Logic::SendInfo(Protobuf::MessageToServer &m2s)
 {
     m2s.set_playerid(playerID);
     m2s.set_teamid(teamID);
@@ -126,8 +140,8 @@ void Logic::ProcessMessage(pointer_m2c p2m)
     }
 }
 
-// 子过程 
- 
+// 子过程
+
 void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 {
     switch (pm2c->messagetype())
@@ -195,10 +209,10 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
 
 void Logic::ProcessMessageToOneClient(std::shared_ptr<Protobuf::MessageToOneClient> pm2oc)
 {
-    switch (pm2oc->messagetype()) 
+    switch (pm2oc->messagetype())
     {
     case Protobuf::MessageType::ValidPlayer:
-        std::cout << "Valid player: " <<pm2oc->teamid() << " " << pm2oc->playerid() << std::endl;
+        std::cout << "Valid player: " << pm2oc->teamid() << " " << pm2oc->playerid() << std::endl;
         break;
     case Protobuf::MessageType::InvalidPlayer:
         AI_loop = false;
@@ -223,23 +237,28 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
         pBuffer->robots.clear();
         pBuffer->props.clear();
         pBuffer->jammers.clear();
+        pBuffer->teamScore = 0;
 
         // 2.信息不能全盘接受，要根据现有的视野范围接受
         auto gameObjMessage = pm2c->gameobjmessage();
         for (auto it = gameObjMessage.begin(); it != gameObjMessage.end(); it++)
-        {   
+        {
             if (it->has_messageofcharacter())
             {
-                // 此信息是属于自身的
-                if (it->messageofcharacter().teamid() == teamID && it->messageofcharacter().playerid() == playerID)
-                {
-                    pBuffer->self = Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter());
-                    pBuffer->teamScore = it->messageofcharacter().score();
+                // 此信息是属于本队的
+                if (it->messageofcharacter().teamid() == teamID)
+                {   
+                    pBuffer->teamScore += it->messageofcharacter().score();
+                    // 此信息是属于本玩家的
+                    if(it->messageofcharacter().playerid() == playerID)
+                    {
+                        pBuffer->self = Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter());
+                    }
                 }
                 // 其它玩家在场
-                else if(!it->messageofcharacter().isresetting())
+                if (!it->messageofcharacter().isresetting())
                 {
-                    if (Vision::visible(pState->self,it->messageofcharacter()))
+                    if (Vision::visible(pState->self, it->messageofcharacter()))
                     {
                         pBuffer->robots.push_back(Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter()));
                     }
@@ -248,7 +267,7 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 
             else if (it->has_messageofbullet())
             {
-                if (Vision::visible(pState->self,it->messageofbullet()))
+                if (Vision::visible(pState->self, it->messageofbullet()))
                 {
                     pBuffer->jammers.push_back(Proto2THUAI::Protobuf2THUAI5_B(it->messageofbullet()));
                 }
@@ -256,21 +275,21 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
 
             else if (it->has_messageofprop())
             {
-                if (Vision::visible(pState->self,it->messageofprop()))
+                if (Vision::visible(pState->self, it->messageofprop()))
                 {
                     pBuffer->props.push_back(Proto2THUAI::Protobuf2THUAI5_P(it->messageofprop()));
                 }
             }
 
-            else if(it->has_messageofmap())
+            else if (it->has_messageofmap())
             {
                 auto Row = it->messageofmap().row();
                 int row_id = 0;
-                for(auto it_row=Row.begin();it_row!=Row.end();it_row++)
+                for (auto it_row = Row.begin(); it_row != Row.end(); it_row++)
                 {
                     auto Col = it_row->col();
                     int col_id = 0;
-                    for(auto it_col = Col.begin();it_col!=Col.end();it_col++)
+                    for (auto it_col = Col.begin(); it_col != Col.end(); it_col++)
                     {
                         pBuffer->gamemap[row_id][col_id] = Proto2THUAI::Protobuf2THUAI5_M(*it_col);
                         col_id++;
@@ -279,9 +298,8 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                 }
             }
 
-            else if(it->has_messageofbombedbullet() || it->has_messageofpickedprop())
+            else if (it->has_messageofbombedbullet() || it->has_messageofpickedprop())
             {
-                
             }
 
             else
@@ -294,11 +312,11 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
         {
             {
                 std::lock_guard<std::mutex> lck(mtx_state);
-                State* temp = pState;
+                State *temp = pState;
                 pState = pBuffer;
                 pBuffer = pState;
             }
-            freshed = true;  
+            freshed = true;
         }
         else
         {
@@ -315,7 +333,8 @@ void Logic::PlayerWrapper(std::function<void()> player)
 {
     {
         std::unique_lock<std::mutex> lock(mtx_ai);
-        cv_ai.wait(lock, [this]() {return AI_start; }); 
+        cv_ai.wait(lock, [this]()
+                   { return AI_start; });
     }
     while (AI_loop)
     {
@@ -343,7 +362,7 @@ void Logic::UnBlockBuffer()
 
 void Logic::Update() noexcept
 {
-    if(!asynchronous)
+    if (!asynchronous)
     {
         std::unique_lock<std::mutex> lck_buffer(mtx_buffer);
 
@@ -373,7 +392,7 @@ void Logic::Wait() noexcept
     }
 }
 
-void Logic::Main(const char* address, uint16_t port, CreateAIFunc f, int debuglevel, std::string filename)
+void Logic::Main(const char *address, uint16_t port, CreateAIFunc f, int debuglevel, std::string filename)
 {
     // 构造AI
     pAI = f();

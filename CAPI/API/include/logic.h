@@ -10,6 +10,7 @@
 #include <tuple>
 #include <atomic>
 #include <fstream>
+#include <array>
 
 #include <Message2Clients.pb.h>
 #include <Message2Server.pb.h>
@@ -31,7 +32,7 @@
 /// <summary>
 /// 封装了通信组件和AI对象进行操作
 /// </summary>
-class Logic: public ISubscripter, public ILogic
+class Logic : public ISubscripter, public ILogic
 {
 private:
     // ID记录
@@ -46,10 +47,10 @@ private:
     std::vector<int64_t> playerGUIDS;
 
     std::unique_ptr<MultiThreadClientCommunication> pComm; // 通信组件指针
-    std::unique_ptr<IAI> pAI; // 玩家指针
-    std::shared_ptr<IAPI_For_Logic> pAPI; // API指针
+    std::unique_ptr<IAI> pAI;                              // 玩家指针
+    std::shared_ptr<IAPI_For_Logic> pAPI;                  // API指针
 
-    std::thread tAI; // 需要对玩家单开线程 
+    std::thread tAI; // 需要对玩家单开线程
 
     // 互斥锁
     mutable std::mutex mtx_ai;
@@ -71,8 +72,8 @@ private:
     State state[2];
 
     // 操作储存状态的指针（不是动态内存，不需要开智能指针）
-    State* pState;
-    State* pBuffer;
+    State *pState;
+    State *pBuffer;
 
     // 此时是否应该循环执行player()
     std::atomic_bool AI_loop = true;
@@ -95,6 +96,7 @@ private:
     std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const override;
     std::shared_ptr<const THUAI5::Robot> GetSelfInfo() const override;
     THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const override;
+    std::array<std::array<THUAI5::PlaceType, 50>, 50> GetFullMap() const override;
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
@@ -104,7 +106,7 @@ private:
     void OnReceive(pointer_m2c p2M) override;
     void OnClose() override;
 
-    bool SendInfo(Protobuf::MessageToServer&) override;
+    bool SendInfo(Protobuf::MessageToServer &) override;
     bool Empty() override;
     std::optional<std::string> GetInfo() override;
     bool WaitThread() override;
@@ -160,12 +162,11 @@ private:
     /// </summary>
     /// <returns></returns>
     void Wait() noexcept;
-  
-public:
 
-    Logic(int teamID, int playerID,THUAI5::SoftwareType softwareType, THUAI5::HardwareType hardwareType);
+public:
+    Logic(int teamID, int playerID, THUAI5::SoftwareType softwareType, THUAI5::HardwareType hardwareType);
     ~Logic() = default;
-    void Main(const char* address, uint16_t port, CreateAIFunc f, int debuglevel, std::string filename);
+    void Main(const char *address, uint16_t port, CreateAIFunc f, int debuglevel, std::string filename);
 };
 
 #endif
