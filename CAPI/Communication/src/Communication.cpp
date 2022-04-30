@@ -112,6 +112,7 @@ EnHandleResult ClientCommunication::OnClose(ITcpClient* pSender, CONNID dwConnID
 bool ClientCommunication::Connect(const char* address, uint16_t port)
 {
 	std::cout << "Connecting......" << std::endl;
+	int retry_times = 0;
 //#ifdef COMMUNICATION_DEBUG
 //    std::cout << "pclient->IsConnected(): " << pclient->IsConnected() << std::endl;
 //#endif
@@ -124,10 +125,16 @@ bool ClientCommunication::Connect(const char* address, uint16_t port)
 //#endif
 		if (!is_started)
 		{
-			std::cerr << "Failed to connect with the server" << std::endl;
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			std::cout << "retry:" << retry_times << std::endl;
+			retry_times++;
+		}
+
+		if (retry_times > 10)
+		{
+			std::cerr << "Failed to start the server!" << std::endl;
 			return false;
 		}
-		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
     std::cout << "Successfully connect to the server!" << std::endl;
 	return true;
@@ -185,7 +192,7 @@ void MultiThreadClientCommunication::OnReceive(pointer_m2c p2M)
 
 void MultiThreadClientCommunication::OnClose()
 {
-	std::cout << "Connection was closed." << std::endl;
+	// std::cout << "Connection was closed." << std::endl;
 	loop = false;
 	UnBlock();
 	subscripter.OnClose();
