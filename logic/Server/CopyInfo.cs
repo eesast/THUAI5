@@ -187,6 +187,7 @@ namespace Server
             msg.MessageOfBullet = new MessageOfBullet();
             msg.MessageOfBullet.FacingDirection = bullet.FacingDirection;
             msg.MessageOfBullet.Guid = bullet.ID;
+            msg.MessageOfBullet.BombRange = BulletFactory.BulletBombRange(bullet.TypeOfBullet);
             switch (bullet.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.AtomBomb:
@@ -297,6 +298,7 @@ namespace Server
             msg.MessageOfBombedBullet.X = bombedBullet.bulletHasBombed.Position.x;
             msg.MessageOfBombedBullet.Y = bombedBullet.bulletHasBombed.Position.y;
             msg.MessageOfBombedBullet.MappingID = bombedBullet.MappingID;
+            msg.MessageOfBombedBullet.BombRange = BulletFactory.BulletBombRange(bombedBullet.bulletHasBombed.TypeOfBullet);
             switch (bombedBullet.bulletHasBombed.TypeOfBullet)
             {
                 case Preparation.Utility.BulletType.OrdinaryBullet:
