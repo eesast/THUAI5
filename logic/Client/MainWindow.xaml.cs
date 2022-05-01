@@ -33,11 +33,13 @@ namespace Client
             timer.Start();
             SetStatusBar();
             isClientStocked = true;
+            isPlaybackMode = false;
             drawPicLock = new();
-            playerData = new List<MessageToClient.Types.GameObjMessage>();
-            bulletData = new List<MessageToClient.Types.GameObjMessage>();
-            propData = new List<MessageToClient.Types.GameObjMessage>();
-            bombedBulletData = new List<MessageToClient.Types.GameObjMessage>();
+            dataDict = new Dictionary<GameObjType, List<MessageToClient.Types.GameObjMessage>>();
+            dataDict.Add(GameObjType.Character, new List<MessageToClient.Types.GameObjMessage>());
+            dataDict.Add(GameObjType.Bullet, new List<MessageToClient.Types.GameObjMessage>());
+            dataDict.Add(GameObjType.Prop, new List<MessageToClient.Types.GameObjMessage>());
+            dataDict.Add(GameObjType.BombedBullet, new List<MessageToClient.Types.GameObjMessage>());
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
             ReactToCommandline();
         }
@@ -52,9 +54,9 @@ namespace Client
             }
             else
             {
-                try
+                if (options.PlaybackFile == DefaultArgumentOptions.FileName)
                 {
-                    if (options.PlaybackFile == DefaultArgumentOptions.FileName)
+                    try
                     {
                         communicator = new ClientCommunication();
                         communicator.OnReceive += OnReceive;
@@ -67,16 +69,29 @@ namespace Client
                         comInfo[5] = options.Software;
                         ConnectToServer(comInfo);
                     }
-                    else
+                    catch
                     {
-                        // 直接回放，饼 (2022/3/15 画)
+                        communicator = new ClientCommunication();
+                        communicator.OnReceive += OnReceive;
                     }
                 }
-                catch
+                else
                 {
-                    communicator = new ClientCommunication();
-                    communicator.OnReceive += OnReceive;
+                    // 直接回放，饼 (2022/3/15 画)
+                    var pbClient = new PlaybackClient(options.PlaybackFile, options.PlaybackSpeed);
+                    if (pbClient.ReadDataFromFile(dataDict, drawPicLock, defaultMap))
+                    {
+                        isClientStocked = false;
+                        isPlaybackMode = true;
+                        mapFlag = true;         // 有可能出现加载地图不对的情况，这里我使用了鸵鸟算法
+                    }
+                    else 
+                    {
+                        MessageBox.Show("Failed to read the playback file!");
+                        isClientStocked = true;
+                    }
                 }
+                
             }
         }
         private void SetStatusBar()
@@ -154,18 +169,21 @@ namespace Client
 
         private void Attack(object sender,RoutedEventArgs e)
         {
-            if (communicator.Client.IsConnected&&myInfo!=null)
+            if (!isPlaybackMode)
             {
-                MessageToServer msgJ = new()
+                if (communicator.Client.IsConnected && myInfo != null)
                 {
-                    MessageType = MessageType.Attack,
-                    PlayerID = playerID,
-                    TeamID = teamID
-                };
-                double mouseY = Mouse.GetPosition(UpperLayerOfMap).X * 1000 / unitWidth;
-                double mouseX = Mouse.GetPosition(UpperLayerOfMap).Y * 1000 / unitHeight;
-                msgJ.Angle = Math.Atan2(mouseY - myInfo.MessageOfCharacter.Y, mouseX - myInfo.MessageOfCharacter.X);
-                communicator.SendMessage(msgJ);
+                    MessageToServer msgJ = new()
+                    {
+                        MessageType = MessageType.Attack,
+                        PlayerID = playerID,
+                        TeamID = teamID
+                    };
+                    double mouseY = Mouse.GetPosition(UpperLayerOfMap).X * 1000 / unitWidth;
+                    double mouseX = Mouse.GetPosition(UpperLayerOfMap).Y * 1000 / unitHeight;
+                    msgJ.Angle = Math.Atan2(mouseY - myInfo.MessageOfCharacter.Y, mouseX - myInfo.MessageOfCharacter.X);
+                    communicator.SendMessage(msgJ);
+                }
             }
         }
         private void ZoomMap()
@@ -245,7 +263,7 @@ namespace Client
                 isClientStocked = true;
                 PorC.Content = "▶";
             }
-            else
+            else if(!isPlaybackMode)
             {
                 try
                 {
@@ -330,295 +348,304 @@ namespace Client
         }
         private void ConnectToServer(string[] comInfo)
         {
-            if (comInfo.Length != 6)
-                throw new Exception("注册信息有误！");
-            playerID = Convert.ToInt64(comInfo[2]);
-            teamID = Convert.ToInt64(comInfo[3]);
-            Connect.Background = Brushes.Gray;
-            if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
+            if (!isPlaybackMode)
             {
-                Connect.Background = Brushes.Aqua;
-                Exception exc = new("TimeOut");
-                throw exc;
-            }
-            else if (communicator.Client.IsConnected)
-            {
-                MessageToServer msg = new();
-                msg.MessageType = MessageType.AddPlayer;
-                msg.PlayerID = playerID;
-                msg.TeamID = teamID;
-                msg.PSkill = Convert.ToInt64(comInfo[4]) switch
+                if (comInfo.Length != 6)
+                    throw new Exception("注册信息有误！");
+                playerID = Convert.ToInt64(comInfo[2]);
+                teamID = Convert.ToInt64(comInfo[3]);
+                Connect.Background = Brushes.Gray;
+                if (!communicator.Connect(comInfo[0], Convert.ToUInt16(comInfo[1])))//没加错误处理
                 {
-                    0 => PassiveSkillType.NullPassiveSkillType,
-                    1 => PassiveSkillType.RecoverAfterBattle,
-                    2 => PassiveSkillType.SpeedUpWhenLeavingGrass,
-                    3 => PassiveSkillType.Vampire,
-                    4 => PassiveSkillType.Pskill3,
-                    5 => PassiveSkillType.Pskill4,
-                    _ => PassiveSkillType.Pskill5,
-                };
-                switch (Convert.ToInt64(comInfo[5]))
-                {
-                    case 0:
-                        msg.ASkill1 = ActiveSkillType.NullActiveSkillType;
-                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                        break;
-                    case 1:
-                        msg.ASkill1 = ActiveSkillType.BecomeAssassin;
-                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                        break;
-                    case 2:
-                        msg.ASkill1 = ActiveSkillType.BecomeVampire;
-                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                        break;
-                    case 3:
-                        msg.ASkill1 = ActiveSkillType.NuclearWeapon;
-                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                        break;
-                    case 4:
-                        msg.ASkill1 = ActiveSkillType.SuperFast;
-                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                        break;
-                    case 5:
-                        msg.ASkill1 = ActiveSkillType.Askill4;
-                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                        break;
-                    default:
-                        msg.ASkill1 = ActiveSkillType.Askill5;
-                        msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
-                        break;
+                    Connect.Background = Brushes.Aqua;
+                    Exception exc = new("TimeOut");
+                    throw exc;
                 }
-                communicator.SendMessage(msg);
-                Connect.Background = Brushes.Transparent;
-                isClientStocked = false;
-                PorC.Content = "⏸";
-                //建立连接的同时加入人物
+                else if (communicator.Client.IsConnected)
+                {
+                    MessageToServer msg = new();
+                    msg.MessageType = MessageType.AddPlayer;
+                    msg.PlayerID = playerID;
+                    msg.TeamID = teamID;
+                    msg.PSkill = Convert.ToInt64(comInfo[4]) switch
+                    {
+                        0 => PassiveSkillType.NullPassiveSkillType,
+                        1 => PassiveSkillType.RecoverAfterBattle,
+                        2 => PassiveSkillType.SpeedUpWhenLeavingGrass,
+                        3 => PassiveSkillType.Vampire,
+                        4 => PassiveSkillType.Pskill3,
+                        5 => PassiveSkillType.Pskill4,
+                        _ => PassiveSkillType.Pskill5,
+                    };
+                    switch (Convert.ToInt64(comInfo[5]))
+                    {
+                        case 0:
+                            msg.ASkill1 = ActiveSkillType.NullActiveSkillType;
+                            msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                            break;
+                        case 1:
+                            msg.ASkill1 = ActiveSkillType.BecomeAssassin;
+                            msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                            break;
+                        case 2:
+                            msg.ASkill1 = ActiveSkillType.BecomeVampire;
+                            msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                            break;
+                        case 3:
+                            msg.ASkill1 = ActiveSkillType.NuclearWeapon;
+                            msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                            break;
+                        case 4:
+                            msg.ASkill1 = ActiveSkillType.SuperFast;
+                            msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                            break;
+                        case 5:
+                            msg.ASkill1 = ActiveSkillType.Askill4;
+                            msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                            break;
+                        default:
+                            msg.ASkill1 = ActiveSkillType.Askill5;
+                            msg.ASkill2 = ActiveSkillType.NullActiveSkillType;
+                            break;
+                    }
+                    communicator.SendMessage(msg);
+                    Connect.Background = Brushes.Transparent;
+                    isClientStocked = false;
+                    PorC.Content = "⏸";
+                    //建立连接的同时加入人物
+                }
             }
         }
         private void ClickToConnect(object sender, RoutedEventArgs e)
         {
-            if (!communicator.Client.IsConnected)
+            if (!isPlaybackMode)
             {
-                try
+                if (!communicator.Client.IsConnected)
                 {
-                    using (var sr = new StreamReader(".\\ConnectInfo.txt"))
+                    try
                     {
-                        string[] comInfo = sr.ReadLine().Split(' ');
-                        if (comInfo[0] == "" ||
-                            comInfo[1] == "" ||
-                            comInfo[2] == "" ||
-                            comInfo[3] == "" ||
-                            comInfo[4] == "" ||
-                            comInfo[5] == "")
+                        using (var sr = new StreamReader(".\\ConnectInfo.txt"))
                         {
-                            throw new Exception("Input data not sufficent");
+                            string[] comInfo = sr.ReadLine().Split(' ');
+                            if (comInfo[0] == "" ||
+                                comInfo[1] == "" ||
+                                comInfo[2] == "" ||
+                                comInfo[3] == "" ||
+                                comInfo[4] == "" ||
+                                comInfo[5] == "")
+                            {
+                                throw new Exception("Input data not sufficent");
+                            }
+                            ConnectToServer(comInfo);
                         }
-                        ConnectToServer(comInfo);
+                    }
+                    catch (Exception exc)
+                    {
+                        if (exc.Message == "Input data not sufficent")
+                        {
+                            ConnectRegister crg = new();
+                            crg.State.Text = "配置非法，请重新输入或检查配置文件。";
+                            crg.Show();
+                        }
+                        else
+                        {
+                            ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
+                            error.Show();
+                            Connect.Background = Brushes.Aqua;
+                        }
                     }
                 }
-                catch (Exception exc)
+                else
                 {
-                    if (exc.Message == "Input data not sufficent")
-                    {
-                        ConnectRegister crg = new();
-                        crg.State.Text = "配置非法，请重新输入或检查配置文件。";
-                        crg.Show();
-                    }
-                    else
-                    {
-                        ErrorDisplayer error = new("与服务器建立连接时出错：\n" + exc.ToString());
-                        error.Show();
-                        Connect.Background = Brushes.Aqua;
-                    }
+                    //_ = communicator.Stop();
+                    //Connect.Background = Brushes.Aqua;
+                    MessageBox.Show("您已连接服务器！！");
                 }
-            }
-            else
-            {
-                //_ = communicator.Stop();
-                //Connect.Background = Brushes.Aqua;
-                MessageBox.Show("您已连接服务器！！");
             }
         }
 
         private void KeyBoardControl(object sender, KeyEventArgs e)
         {
-            if (communicator.Client.IsConnected)
+            if(!isPlaybackMode)
             {
-                switch (e.Key)
+                if (communicator.Client.IsConnected)
                 {
-                    case Key.W:
-                    case Key.NumPad8:
-                        MessageToServer msgA = new()
-                        {
-                            MessageType = MessageType.Move,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            TimeInMilliseconds = 50,
-                            Angle = Math.PI
-                        };
-                        communicator.SendMessage(msgA);
-                        break;
-                    case Key.NumPad2:
-                    case Key.S:
-                        MessageToServer msgD = new()
-                        {
-                            MessageType = MessageType.Move,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            TimeInMilliseconds = 50,
-                            Angle = 0
-                        };
-                        communicator.SendMessage(msgD);
-                        break;
-                    case Key.D:
-                    case Key.NumPad6:
-                        MessageToServer msgW = new()
-                        {
-                            MessageType = MessageType.Move,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            TimeInMilliseconds = 50,
-                            Angle = Math.PI / 2
-                        };
-                        communicator.SendMessage(msgW);
-                        break;
-                    case Key.A:
-                    case Key.NumPad4:
-                        MessageToServer msgS = new()
-                        {
-                            MessageType = MessageType.Move,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            TimeInMilliseconds = 50,
-                            Angle = 3 * Math.PI / 2
-                        };
-                        communicator.SendMessage(msgS);
-                        break;
-                    case Key.J:
-                        MessageToServer msgJ = new()
-                        {
-                            MessageType = MessageType.Attack,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            Angle = Math.PI
-                        };
-                        communicator.SendMessage(msgJ);
-                        break;
-                    case Key.O:
-                        MessageToServer msgO = new()
-                        {
-                            MessageType = MessageType.Pick,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                        };
-                        communicator.SendMessage(msgO);
-                        break;
-                    case Key.U:
-                        MessageToServer msgU = new()
-                        {
-                            MessageType = MessageType.UseCommonSkill,
-                            PlayerID = playerID,
-                            TeamID = teamID
-                        };
-                        communicator.SendMessage(msgU);
-                        break;
-                    case Key.K:
-                        MessageToServer msgK = new()
-                        {
-                            MessageType = MessageType.UseGem,
-                            PlayerID = playerID,
-                            TeamID = teamID
-                        };
-                        communicator.SendMessage(msgK);
-                        break;
-                    case Key.L:
-                        MessageToServer msgL = new()
-                        {
-                            MessageType = MessageType.ThrowGem,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            GemSize = 1,
-                            TimeInMilliseconds = 3000,
-                            Angle = Math.PI
-                        };
-                        communicator.SendMessage(msgL);
-                        break;
-                    case Key.P:
-                        MessageToServer msgP = new()
-                        {
-                            MessageType = MessageType.Pick,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            PropType = Communication.Proto.PropType.Gem
-                        };
-                        communicator.SendMessage(msgP);
-                        break;
-                    case Key.I:
-                        MessageToServer msgI = new()
-                        {
-                            MessageType = MessageType.UseProp,
-                            PlayerID = playerID,
-                            TeamID = teamID
-                        };
-                        communicator.SendMessage(msgI);
-                        break;
-                    case Key.Y:
-                        MessageToServer msgY = new()
-                        {
-                            MessageType = MessageType.ThrowProp,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            TimeInMilliseconds = 3000,
-                            Angle = Math.PI
-                        };
-                        communicator.SendMessage(msgY);
-                        break;
-                    case Key.NumPad7:
-                        MessageToServer msg7 = new()
-                        {
-                            MessageType = MessageType.Move,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            TimeInMilliseconds = 50,
-                            Angle = 5 * Math.PI / 4
-                        };
-                        communicator.SendMessage(msg7);
-                        break;
-                    case Key.NumPad9:
-                        MessageToServer msg9 = new()
-                        {
-                            MessageType = MessageType.Move,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            TimeInMilliseconds = 50,
-                            Angle = 3 * Math.PI / 4
-                        };
-                        communicator.SendMessage(msg9);
-                        break;
-                    case Key.NumPad3:
-                        MessageToServer msg3 = new()
-                        {
-                            MessageType = MessageType.Move,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            TimeInMilliseconds = 50,
-                            Angle = Math.PI / 4
-                        };
-                        communicator.SendMessage(msg3);
-                        break;
-                    case Key.NumPad1:
-                        MessageToServer msg1 = new()
-                        {
-                            MessageType = MessageType.Move,
-                            PlayerID = playerID,
-                            TeamID = teamID,
-                            TimeInMilliseconds = 50,
-                            Angle = 7 * Math.PI / 4
-                        };
-                        communicator.SendMessage(msg1);
-                        break;
-                    default:
-                        break;
+                    switch (e.Key)
+                    {
+                        case Key.W:
+                        case Key.NumPad8:
+                            MessageToServer msgA = new()
+                            {
+                                MessageType = MessageType.Move,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                TimeInMilliseconds = 50,
+                                Angle = Math.PI
+                            };
+                            communicator.SendMessage(msgA);
+                            break;
+                        case Key.NumPad2:
+                        case Key.S:
+                            MessageToServer msgD = new()
+                            {
+                                MessageType = MessageType.Move,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                TimeInMilliseconds = 50,
+                                Angle = 0
+                            };
+                            communicator.SendMessage(msgD);
+                            break;
+                        case Key.D:
+                        case Key.NumPad6:
+                            MessageToServer msgW = new()
+                            {
+                                MessageType = MessageType.Move,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                TimeInMilliseconds = 50,
+                                Angle = Math.PI / 2
+                            };
+                            communicator.SendMessage(msgW);
+                            break;
+                        case Key.A:
+                        case Key.NumPad4:
+                            MessageToServer msgS = new()
+                            {
+                                MessageType = MessageType.Move,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                TimeInMilliseconds = 50,
+                                Angle = 3 * Math.PI / 2
+                            };
+                            communicator.SendMessage(msgS);
+                            break;
+                        case Key.J:
+                            MessageToServer msgJ = new()
+                            {
+                                MessageType = MessageType.Attack,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                Angle = Math.PI
+                            };
+                            communicator.SendMessage(msgJ);
+                            break;
+                        case Key.O:
+                            MessageToServer msgO = new()
+                            {
+                                MessageType = MessageType.Pick,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                            };
+                            communicator.SendMessage(msgO);
+                            break;
+                        case Key.U:
+                            MessageToServer msgU = new()
+                            {
+                                MessageType = MessageType.UseCommonSkill,
+                                PlayerID = playerID,
+                                TeamID = teamID
+                            };
+                            communicator.SendMessage(msgU);
+                            break;
+                        case Key.K:
+                            MessageToServer msgK = new()
+                            {
+                                MessageType = MessageType.UseGem,
+                                PlayerID = playerID,
+                                TeamID = teamID
+                            };
+                            communicator.SendMessage(msgK);
+                            break;
+                        case Key.L:
+                            MessageToServer msgL = new()
+                            {
+                                MessageType = MessageType.ThrowGem,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                GemSize = 1,
+                                TimeInMilliseconds = 3000,
+                                Angle = Math.PI
+                            };
+                            communicator.SendMessage(msgL);
+                            break;
+                        case Key.P:
+                            MessageToServer msgP = new()
+                            {
+                                MessageType = MessageType.Pick,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                PropType = Communication.Proto.PropType.Gem
+                            };
+                            communicator.SendMessage(msgP);
+                            break;
+                        case Key.I:
+                            MessageToServer msgI = new()
+                            {
+                                MessageType = MessageType.UseProp,
+                                PlayerID = playerID,
+                                TeamID = teamID
+                            };
+                            communicator.SendMessage(msgI);
+                            break;
+                        case Key.Y:
+                            MessageToServer msgY = new()
+                            {
+                                MessageType = MessageType.ThrowProp,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                TimeInMilliseconds = 3000,
+                                Angle = Math.PI
+                            };
+                            communicator.SendMessage(msgY);
+                            break;
+                        case Key.NumPad7:
+                            MessageToServer msg7 = new()
+                            {
+                                MessageType = MessageType.Move,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                TimeInMilliseconds = 50,
+                                Angle = 5 * Math.PI / 4
+                            };
+                            communicator.SendMessage(msg7);
+                            break;
+                        case Key.NumPad9:
+                            MessageToServer msg9 = new()
+                            {
+                                MessageType = MessageType.Move,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                TimeInMilliseconds = 50,
+                                Angle = 3 * Math.PI / 4
+                            };
+                            communicator.SendMessage(msg9);
+                            break;
+                        case Key.NumPad3:
+                            MessageToServer msg3 = new()
+                            {
+                                MessageType = MessageType.Move,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                TimeInMilliseconds = 50,
+                                Angle = Math.PI / 4
+                            };
+                            communicator.SendMessage(msg3);
+                            break;
+                        case Key.NumPad1:
+                            MessageToServer msg1 = new()
+                            {
+                                MessageType = MessageType.Move,
+                                PlayerID = playerID,
+                                TeamID = teamID,
+                                TimeInMilliseconds = 50,
+                                Angle = 7 * Math.PI / 4
+                            };
+                            communicator.SendMessage(msg1);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -651,10 +678,10 @@ namespace Client
             {
                 lock (drawPicLock)  //加锁是必要的，画图操作和接收信息操作不能同时进行，否则画图时foreach会有bug
                 {
-                    playerData.Clear();
-                    propData.Clear();
-                    bulletData.Clear();
-                    bombedBulletData.Clear();
+                    dataDict[GameObjType.Character].Clear();
+                    dataDict[GameObjType.Prop].Clear();
+                    dataDict[GameObjType.Bullet].Clear();
+                    dataDict[GameObjType.BombedBullet].Clear();
                     MessageToClient content = (MessageToClient)msg.Content;
                     switch (content.MessageType)
                     {
@@ -668,16 +695,16 @@ namespace Client
                                         {
                                             myInfo = obj;
                                         }
-                                        playerData.Add(obj);
+                                        dataDict[GameObjType.Character].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
-                                        bulletData.Add(obj);
+                                        dataDict[GameObjType.Bullet].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
-                                        propData.Add(obj);
+                                        dataDict[GameObjType.Prop].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
-                                        bombedBulletData.Add(obj);
+                                        dataDict[GameObjType.BombedBullet].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap:
                                         GetMap(obj);
@@ -696,16 +723,16 @@ namespace Client
                                         {
                                             myInfo = obj;
                                         }
-                                        playerData.Add(obj);
+                                        dataDict[GameObjType.Character].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
-                                        bulletData.Add(obj);
+                                        dataDict[GameObjType.Bullet].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
-                                        propData.Add(obj);
+                                        dataDict[GameObjType.Prop].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
-                                        bombedBulletData.Add(obj);
+                                        dataDict[GameObjType.BombedBullet].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap:
                                         if (!mapFlag)
@@ -720,16 +747,16 @@ namespace Client
                                 switch (obj.ObjCase)
                                 {
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfCharacter:
-                                        playerData.Add(obj);
+                                        dataDict[GameObjType.Character].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBullet:
-                                        bulletData.Add(obj);
+                                        dataDict[GameObjType.Bullet].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfProp:
-                                        propData.Add(obj);
+                                        dataDict[GameObjType.Prop].Add(obj);
                                         break;
                                     case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
-                                        bombedBulletData.Add(obj);
+                                        dataDict[GameObjType.BombedBullet].Add(obj);
                                         break;
                                 }
                             }
@@ -808,14 +835,14 @@ namespace Client
                     if (log != null)
                     {
                         string temp = "";
-                        for (int i = 0; i < playerData.Count; i++)
+                        for (int i = 0; i < dataDict[GameObjType.Character].Count; i++)
                         {
-                            temp += Convert.ToString(playerData[i].MessageOfCharacter.TeamID) + "\n";
+                            temp += Convert.ToString(dataDict[GameObjType.Character][i].MessageOfCharacter.TeamID) + "\n";
                         }
                         log.Content = temp; 
                     }
                     UpperLayerOfMap.Children.Clear();
-                    if (!communicator.Client.IsConnected)
+                    if ((communicator == null || !communicator.Client.IsConnected) && !isPlaybackMode)
                     {
                         UnderLayerOfMap.Children.Clear();
                         throw new Exception("Client is unconnected.");
@@ -826,7 +853,7 @@ namespace Client
                         {
                             if (!hasDrawed && mapFlag)
                                 DrawMap();
-                            foreach (var data in playerData)
+                            foreach (var data in dataDict[GameObjType.Character])
                             {
                                 StatusBars[data.MessageOfCharacter.TeamID * 4 + data.MessageOfCharacter.PlayerID].SetValue(data.MessageOfCharacter);
                                 if (CanSee(data.MessageOfCharacter))
@@ -849,7 +876,7 @@ namespace Client
                                     UpperLayerOfMap.Children.Add(icon);
                                 }
                             }
-                            foreach (var data in bulletData)
+                            foreach (var data in dataDict[GameObjType.Bullet])
                             {
                                 if (CanSee(data.MessageOfBullet))
                                 {
@@ -865,7 +892,7 @@ namespace Client
                                     UpperLayerOfMap.Children.Add(icon);
                                 }
                             }
-                            foreach (var data in propData)
+                            foreach (var data in dataDict[GameObjType.Prop])
                             {
                                 if (CanSee(data.MessageOfProp))
                                 {
@@ -892,7 +919,7 @@ namespace Client
                                     }
                                 }
                             }
-                            foreach(var data in bombedBulletData)
+                            foreach(var data in dataDict[GameObjType.BombedBullet])
                             {
                                 switch(data.MessageOfBombedBullet.Type)
                                 {
@@ -1008,6 +1035,7 @@ namespace Client
         private readonly Rectangle[,] mapPatches=new Rectangle[50,50];
 
         private bool isClientStocked;
+        private bool isPlaybackMode;
 
         private long playerID;
         private long teamID;
@@ -1015,10 +1043,7 @@ namespace Client
         private double unit;//显示粗略的大小
         private double unitHeight;
         private double unitWidth;
-        private List<MessageToClient.Types.GameObjMessage> playerData;
-        private List<MessageToClient.Types.GameObjMessage> bulletData;
-        private List<MessageToClient.Types.GameObjMessage> propData;
-        private List<MessageToClient.Types.GameObjMessage> bombedBulletData;
+        private Dictionary<GameObjType, List<MessageToClient.Types.GameObjMessage>> dataDict;
         private object drawPicLock = new object();
         private MessageToClient.Types.GameObjMessage? myInfo = null;  //这个client自己的message
         private ErrorDisplayer log;
@@ -1030,7 +1055,7 @@ namespace Client
         /// </summary>
         private bool mapFlag = false;
         private bool hasDrawed = false;
-        public static int[,] defaultMap = new int[,]
+        public int[,] defaultMap = new int[,]
         {
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
