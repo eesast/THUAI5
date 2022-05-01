@@ -46,6 +46,11 @@ namespace Client
         private void ReactToCommandline()
         {
             string[] args = Environment.GetCommandLineArgs();
+            if(args.Length == 2)
+            {
+                Playback(args[1]);
+                return;
+            }
             _ = Parser.Default.ParseArguments<ArgumentOptions>(args).WithParsed(o => { options = o; });
             if (options == null || options.cl == false)
             {
@@ -77,21 +82,24 @@ namespace Client
                 }
                 else
                 {
-                    // 直接回放，饼 (2022/3/15 画)
-                    var pbClient = new PlaybackClient(options.PlaybackFile, options.PlaybackSpeed);
-                    if (pbClient.ReadDataFromFile(dataDict, drawPicLock, defaultMap))
-                    {
-                        isClientStocked = false;
-                        isPlaybackMode = true;
-                        mapFlag = true;         // 有可能出现加载地图不对的情况，这里我使用了鸵鸟算法
-                    }
-                    else 
-                    {
-                        MessageBox.Show("Failed to read the playback file!");
-                        isClientStocked = true;
-                    }
+                    Playback(options.PlaybackFile, options.PlaybackSpeed);
                 }
                 
+            }
+        }
+        private void Playback(string fileName, double pbSpeed = 2.0)
+        {
+            var pbClient = new PlaybackClient(fileName, pbSpeed);
+            if (pbClient.ReadDataFromFile(dataDict, drawPicLock, defaultMap))
+            {
+                isClientStocked = false;
+                isPlaybackMode = true;
+                mapFlag = true;         // 有可能出现加载地图不对的情况，这里我使用了鸵鸟算法
+            }
+            else
+            {
+                MessageBox.Show("Failed to read the playback file!");
+                isClientStocked = true;
             }
         }
         private void SetStatusBar()
