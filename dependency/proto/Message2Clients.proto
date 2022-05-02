@@ -51,6 +51,7 @@ message MessageOfProp
     int64 guid=5;
     int32 size=6;  //宝石大小
     PlaceType place = 7;
+    bool isMoving = 8;
 }
 
 message MessageOfBullet

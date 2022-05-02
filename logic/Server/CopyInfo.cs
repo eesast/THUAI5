@@ -237,6 +237,7 @@ namespace Server
             msg.MessageOfProp = new MessageOfProp();
             msg.MessageOfProp.FacingDirection = prop.FacingDirection;
             msg.MessageOfProp.Guid = prop.ID;
+            msg.MessageOfProp.IsMoving = prop.IsMoving;
             switch (prop.GetPropType())
             {
                 case Preparation.Utility.PropType.Gem:

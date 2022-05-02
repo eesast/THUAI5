@@ -40,42 +40,42 @@ namespace Communication.Proto {
             "FCABKAUSCgoCQ0QYFSABKAUSDwoHbGlmZU51bRgWIAEoBRINCgVzY29yZRgX",
             "IAEoBRIOCgZ0ZWFtSUQYGCABKAMSEAoIcGxheWVySUQYGSABKAMSEwoLaXNJ",
             "bnZpc2libGUYGiABKAgSIAoEYnVmZhgbIAMoDjISLlByb3RvYnVmLkJ1ZmZU",
-            "eXBlIqABCg1NZXNzYWdlT2ZQcm9wEiAKBHR5cGUYASABKA4yEi5Qcm90b2J1",
+            "eXBlIrIBCg1NZXNzYWdlT2ZQcm9wEiAKBHR5cGUYASABKA4yEi5Qcm90b2J1",
             "Zi5Qcm9wVHlwZRIJCgF4GAIgASgFEgkKAXkYAyABKAUSFwoPZmFjaW5nRGly",
             "ZWN0aW9uGAQgASgBEgwKBGd1aWQYBSABKAMSDAoEc2l6ZRgGIAEoBRIiCgVw",
-            "bGFjZRgHIAEoDjITLlByb3RvYnVmLlBsYWNlVHlwZSK/AQoPTWVzc2FnZU9m",
-            "QnVsbGV0EiIKBHR5cGUYASABKA4yFC5Qcm90b2J1Zi5CdWxsZXRUeXBlEgkK",
+            "bGFjZRgHIAEoDjITLlByb3RvYnVmLlBsYWNlVHlwZRIQCghpc01vdmluZxgI",
+            "IAEoCCK/AQoPTWVzc2FnZU9mQnVsbGV0EiIKBHR5cGUYASABKA4yFC5Qcm90",
+            "b2J1Zi5CdWxsZXRUeXBlEgkKAXgYAiABKAUSCQoBeRgDIAEoBRIXCg9mYWNp",
+            "bmdEaXJlY3Rpb24YBCABKAESDAoEZ3VpZBgFIAEoAxIUCgxwYXJlbnRUZWFt",
+            "SUQYBiABKAMSIgoFcGxhY2UYByABKA4yEy5Qcm90b2J1Zi5QbGFjZVR5cGUS",
+            "EQoJYm9tYlJhbmdlGAggASgBIpABChVNZXNzYWdlT2ZCb21iZWRCdWxsZXQS",
+            "IgoEdHlwZRgBIAEoDjIULlByb3RvYnVmLkJ1bGxldFR5cGUSCQoBeBgCIAEo",
+            "BRIJCgF5GAMgASgFEhcKD2ZhY2luZ0RpcmVjdGlvbhgEIAEoARIRCgltYXBw",
+            "aW5nSUQYBSABKAMSEQoJYm9tYlJhbmdlGAYgASgBInkKE01lc3NhZ2VPZlBp",
+            "Y2tlZFByb3ASIAoEdHlwZRgBIAEoDjISLlByb3RvYnVmLlByb3BUeXBlEgkK",
             "AXgYAiABKAUSCQoBeRgDIAEoBRIXCg9mYWNpbmdEaXJlY3Rpb24YBCABKAES",
-            "DAoEZ3VpZBgFIAEoAxIUCgxwYXJlbnRUZWFtSUQYBiABKAMSIgoFcGxhY2UY",
-            "ByABKA4yEy5Qcm90b2J1Zi5QbGFjZVR5cGUSEQoJYm9tYlJhbmdlGAggASgB",
-            "IpABChVNZXNzYWdlT2ZCb21iZWRCdWxsZXQSIgoEdHlwZRgBIAEoDjIULlBy",
-            "b3RvYnVmLkJ1bGxldFR5cGUSCQoBeBgCIAEoBRIJCgF5GAMgASgFEhcKD2Zh",
-            "Y2luZ0RpcmVjdGlvbhgEIAEoARIRCgltYXBwaW5nSUQYBSABKAMSEQoJYm9t",
-            "YlJhbmdlGAYgASgBInkKE01lc3NhZ2VPZlBpY2tlZFByb3ASIAoEdHlwZRgB",
-            "IAEoDjISLlByb3RvYnVmLlByb3BUeXBlEgkKAXgYAiABKAUSCQoBeRgDIAEo",
-            "BRIXCg9mYWNpbmdEaXJlY3Rpb24YBCABKAESEQoJbWFwcGluZ0lEGAUgASgD",
-            "IksKDE1lc3NhZ2VPZk1hcBInCgNyb3cYMyADKAsyGi5Qcm90b2J1Zi5NZXNz",
-            "YWdlT2ZNYXAuUm93GhIKA1JvdxILCgNjb2wYASADKAUi7QMKD01lc3NhZ2VU",
-            "b0NsaWVudBJACg5nYW1lT2JqTWVzc2FnZRgBIAMoCzIoLlByb3RvYnVmLk1l",
-            "c3NhZ2VUb0NsaWVudC5HYW1lT2JqTWVzc2FnZRIqCgttZXNzYWdlVHlwZRgC",
-            "IAEoDjIVLlByb3RvYnVmLk1lc3NhZ2VUeXBlGusCCg5HYW1lT2JqTWVzc2Fn",
-            "ZRI6ChJtZXNzYWdlT2ZDaGFyYWN0ZXIYASABKAsyHC5Qcm90b2J1Zi5NZXNz",
-            "YWdlT2ZDaGFyYWN0ZXJIABI0Cg9tZXNzYWdlT2ZCdWxsZXQYAiABKAsyGS5Q",
-            "cm90b2J1Zi5NZXNzYWdlT2ZCdWxsZXRIABIwCg1tZXNzYWdlT2ZQcm9wGAMg",
-            "ASgLMhcuUHJvdG9idWYuTWVzc2FnZU9mUHJvcEgAEi4KDG1lc3NhZ2VPZk1h",
-            "cBgEIAEoCzIWLlByb3RvYnVmLk1lc3NhZ2VPZk1hcEgAEkAKFU1lc3NhZ2VP",
-            "ZkJvbWJlZEJ1bGxldBgFIAEoCzIfLlByb3RvYnVmLk1lc3NhZ2VPZkJvbWJl",
-            "ZEJ1bGxldEgAEjwKE21lc3NhZ2VPZlBpY2tlZFByb3AYBiABKAsyHS5Qcm90",
-            "b2J1Zi5NZXNzYWdlT2ZQaWNrZWRQcm9wSABCBQoDb2JqIoEBChJNZXNzYWdl",
-            "VG9PbmVDbGllbnQSEAoIcGxheWVySUQYASABKAMSDgoGdGVhbUlEGAIgASgD",
-            "EioKC21lc3NhZ2VUeXBlGAMgASgOMhUuUHJvdG9idWYuTWVzc2FnZVR5cGUS",
-            "DAoEZ3VpZBgEIAEoAxIPCgdtZXNzYWdlGAUgASgJQhaqAhNDb21tdW5pY2F0",
-            "aW9uLlByb3RvYgZwcm90bzM="));
+            "EQoJbWFwcGluZ0lEGAUgASgDIksKDE1lc3NhZ2VPZk1hcBInCgNyb3cYMyAD",
+            "KAsyGi5Qcm90b2J1Zi5NZXNzYWdlT2ZNYXAuUm93GhIKA1JvdxILCgNjb2wY",
+            "ASADKAUi7QMKD01lc3NhZ2VUb0NsaWVudBJACg5nYW1lT2JqTWVzc2FnZRgB",
+            "IAMoCzIoLlByb3RvYnVmLk1lc3NhZ2VUb0NsaWVudC5HYW1lT2JqTWVzc2Fn",
+            "ZRIqCgttZXNzYWdlVHlwZRgCIAEoDjIVLlByb3RvYnVmLk1lc3NhZ2VUeXBl",
+            "GusCCg5HYW1lT2JqTWVzc2FnZRI6ChJtZXNzYWdlT2ZDaGFyYWN0ZXIYASAB",
+            "KAsyHC5Qcm90b2J1Zi5NZXNzYWdlT2ZDaGFyYWN0ZXJIABI0Cg9tZXNzYWdl",
+            "T2ZCdWxsZXQYAiABKAsyGS5Qcm90b2J1Zi5NZXNzYWdlT2ZCdWxsZXRIABIw",
+            "Cg1tZXNzYWdlT2ZQcm9wGAMgASgLMhcuUHJvdG9idWYuTWVzc2FnZU9mUHJv",
+            "cEgAEi4KDG1lc3NhZ2VPZk1hcBgEIAEoCzIWLlByb3RvYnVmLk1lc3NhZ2VP",
+            "Zk1hcEgAEkAKFU1lc3NhZ2VPZkJvbWJlZEJ1bGxldBgFIAEoCzIfLlByb3Rv",
+            "YnVmLk1lc3NhZ2VPZkJvbWJlZEJ1bGxldEgAEjwKE21lc3NhZ2VPZlBpY2tl",
+            "ZFByb3AYBiABKAsyHS5Qcm90b2J1Zi5NZXNzYWdlT2ZQaWNrZWRQcm9wSABC",
+            "BQoDb2JqIoEBChJNZXNzYWdlVG9PbmVDbGllbnQSEAoIcGxheWVySUQYASAB",
+            "KAMSDgoGdGVhbUlEGAIgASgDEioKC21lc3NhZ2VUeXBlGAMgASgOMhUuUHJv",
+            "dG9idWYuTWVzc2FnZVR5cGUSDAoEZ3VpZBgEIAEoAxIPCgdtZXNzYWdlGAUg",
+            "ASgJQhaqAhNDb21tdW5pY2F0aW9uLlByb3RvYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Communication.Proto.MessageTypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfCharacter), global::Communication.Proto.MessageOfCharacter.Parser, new[]{ "X", "Y", "AttackRange", "BulletNum", "Speed", "Life", "TimeUntilCommonSkillAvailable", "TimeUntilUltimateSkillAvailable", "GemNum", "FacingDirection", "Prop", "Place", "Vampire", "BulletType", "IsResetting", "PassiveSkillType", "ActiveSkillType", "Guid", "CanMove", "Radius", "CD", "LifeNum", "Score", "TeamID", "PlayerID", "IsInvisible", "Buff" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfProp), global::Communication.Proto.MessageOfProp.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "Size", "Place" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfProp), global::Communication.Proto.MessageOfProp.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "Size", "Place", "IsMoving" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfBullet), global::Communication.Proto.MessageOfBullet.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "ParentTeamID", "Place", "BombRange" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfBombedBullet), global::Communication.Proto.MessageOfBombedBullet.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "MappingID", "BombRange" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfPickedProp), global::Communication.Proto.MessageOfPickedProp.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "MappingID" }, null, null, null, null),
@@ -1325,6 +1325,7 @@ namespace Communication.Proto {
       guid_ = other.guid_;
       size_ = other.size_;
       place_ = other.place_;
+      isMoving_ = other.isMoving_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1421,6 +1422,18 @@ namespace Communication.Proto {
       }
     }
 
+    /// <summary>Field number for the "isMoving" field.</summary>
+    public const int IsMovingFieldNumber = 8;
+    private bool isMoving_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsMoving {
+      get { return isMoving_; }
+      set {
+        isMoving_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1443,6 +1456,7 @@ namespace Communication.Proto {
       if (Guid != other.Guid) return false;
       if (Size != other.Size) return false;
       if (Place != other.Place) return false;
+      if (IsMoving != other.IsMoving) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1457,6 +1471,7 @@ namespace Communication.Proto {
       if (Guid != 0L) hash ^= Guid.GetHashCode();
       if (Size != 0) hash ^= Size.GetHashCode();
       if (Place != global::Communication.Proto.PlaceType.NullPlaceType) hash ^= Place.GetHashCode();
+      if (IsMoving != false) hash ^= IsMoving.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1503,6 +1518,10 @@ namespace Communication.Proto {
         output.WriteRawTag(56);
         output.WriteEnum((int) Place);
       }
+      if (IsMoving != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(IsMoving);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1541,6 +1560,10 @@ namespace Communication.Proto {
         output.WriteRawTag(56);
         output.WriteEnum((int) Place);
       }
+      if (IsMoving != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(IsMoving);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1571,6 +1594,9 @@ namespace Communication.Proto {
       }
       if (Place != global::Communication.Proto.PlaceType.NullPlaceType) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Place);
+      }
+      if (IsMoving != false) {
+        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1604,6 +1630,9 @@ namespace Communication.Proto {
       }
       if (other.Place != global::Communication.Proto.PlaceType.NullPlaceType) {
         Place = other.Place;
+      }
+      if (other.IsMoving != false) {
+        IsMoving = other.IsMoving;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1648,6 +1677,10 @@ namespace Communication.Proto {
             Place = (global::Communication.Proto.PlaceType) input.ReadEnum();
             break;
           }
+          case 64: {
+            IsMoving = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -1689,6 +1722,10 @@ namespace Communication.Proto {
           }
           case 56: {
             Place = (global::Communication.Proto.PlaceType) input.ReadEnum();
+            break;
+          }
+          case 64: {
+            IsMoving = input.ReadBool();
             break;
           }
         }

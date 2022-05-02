@@ -29,7 +29,8 @@ THUAI5::PlaceType map[50][50] = {};
 
 void AI::play(IAPI& api)
 {
-	
+	std::ios::sync_with_stdio(false);
+	auto self = api.GetSelfInfo();
 }
 
 
