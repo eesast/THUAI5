@@ -13,7 +13,7 @@ namespace Playback
 		{
 			this.fileName = fileName;
 		}
-		public override string Message => $"The file: " + this.fileName + " is not a legal playback file for THUAI4.";
+		public override string Message => $"The file: " + this.fileName + " is not a legal playback file for THUAI5.";
 	}
 
 	public class MessageReader : IDisposable
@@ -45,6 +45,11 @@ namespace Playback
 				fs.Read(bt, 0, bt.Length);
 				for (int i = 0; i < prefixLen; ++i)
 				{
+					if (i == 2)
+					{
+						if (bt[i] == 0) 
+							continue;
+					}
 					if (bt[i] != PlaybackConstantForUnity.Prefix[i]) throw new FileFormatNotLegalException(fileName);
 				}
 
