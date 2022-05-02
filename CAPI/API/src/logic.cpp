@@ -261,12 +261,9 @@ void Logic::LoadBuffer(std::shared_ptr<Protobuf::MessageToClient> pm2c)
                     }
                 }
                 // 其它队伍玩家
-                else
+                else if (Vision::visible(pState->self, it->messageofcharacter()))
                 {
-                    if (Vision::visible(pState->self, it->messageofcharacter()))
-                    {
-                        pBuffer->robots.push_back(Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter()));
-                    }
+                    pBuffer->robots.push_back(Proto2THUAI::Protobuf2THUAI5_C(it->messageofcharacter()));
                 }
             }
 

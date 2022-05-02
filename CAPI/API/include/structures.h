@@ -158,10 +158,11 @@ namespace THUAI5
         uint32_t size; // CPU个数，仅当道具为CPU时有效，其它道具默认为0
         uint64_t guid; // guid
 
-        double facingDirection; // 朝向
+        double facingDirection;    // 朝向
 
-        PropType type;   // 种类
-        PlaceType place; // 道具放置位置
+        PropType type;    // 种类
+        PlaceType place;  // 道具放置位置
+        bool isMoving;    // 是否在移动
     };
 
     /// <summary>
@@ -172,13 +173,13 @@ namespace THUAI5
         int32_t x; // x坐标
         int32_t y; // y坐标
 
-        uint64_t guid;         // guid
-        uint64_t parentTeamID; // 所属队伍ID
+        uint64_t guid;          // guid
+        uint64_t parentTeamID;  // 所属队伍ID
 
         double facingDirection; // 朝向
 
-        SignalJammerType type; // 信号干扰器种类
-        PlaceType place;       // 放置位置
+        SignalJammerType type;  // 信号干扰器种类
+        PlaceType place;        // 放置位置
     };
 
     // debug方便使用。名称可以改动
