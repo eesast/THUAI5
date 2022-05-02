@@ -146,6 +146,7 @@ namespace Gaming
                     gameMap.GameObjDict[GameObjIdx.Prop].Add(prop);
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock(); }
+                timeInMilliseconds = timeInMilliseconds < GameData.PropMaxMoveDistance / prop.MoveSpeed * 1000 ? timeInMilliseconds : GameData.PropMaxMoveDistance / prop.MoveSpeed * 1000;
                 moveEngine.MoveObj(prop, timeInMilliseconds, angle);
             }
             private void ProduceProp()

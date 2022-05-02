@@ -40,43 +40,44 @@ namespace Communication.Proto {
             "FCABKAUSCgoCQ0QYFSABKAUSDwoHbGlmZU51bRgWIAEoBRINCgVzY29yZRgX",
             "IAEoBRIOCgZ0ZWFtSUQYGCABKAMSEAoIcGxheWVySUQYGSABKAMSEwoLaXNJ",
             "bnZpc2libGUYGiABKAgSIAoEYnVmZhgbIAMoDjISLlByb3RvYnVmLkJ1ZmZU",
-            "eXBlIqABCg1NZXNzYWdlT2ZQcm9wEiAKBHR5cGUYASABKA4yEi5Qcm90b2J1",
+            "eXBlIrIBCg1NZXNzYWdlT2ZQcm9wEiAKBHR5cGUYASABKA4yEi5Qcm90b2J1",
             "Zi5Qcm9wVHlwZRIJCgF4GAIgASgFEgkKAXkYAyABKAUSFwoPZmFjaW5nRGly",
             "ZWN0aW9uGAQgASgBEgwKBGd1aWQYBSABKAMSDAoEc2l6ZRgGIAEoBRIiCgVw",
-            "bGFjZRgHIAEoDjITLlByb3RvYnVmLlBsYWNlVHlwZSKsAQoPTWVzc2FnZU9m",
-            "QnVsbGV0EiIKBHR5cGUYASABKA4yFC5Qcm90b2J1Zi5CdWxsZXRUeXBlEgkK",
+            "bGFjZRgHIAEoDjITLlByb3RvYnVmLlBsYWNlVHlwZRIQCghpc01vdmluZxgI",
+            "IAEoCCK/AQoPTWVzc2FnZU9mQnVsbGV0EiIKBHR5cGUYASABKA4yFC5Qcm90",
+            "b2J1Zi5CdWxsZXRUeXBlEgkKAXgYAiABKAUSCQoBeRgDIAEoBRIXCg9mYWNp",
+            "bmdEaXJlY3Rpb24YBCABKAESDAoEZ3VpZBgFIAEoAxIUCgxwYXJlbnRUZWFt",
+            "SUQYBiABKAMSIgoFcGxhY2UYByABKA4yEy5Qcm90b2J1Zi5QbGFjZVR5cGUS",
+            "EQoJYm9tYlJhbmdlGAggASgBIpABChVNZXNzYWdlT2ZCb21iZWRCdWxsZXQS",
+            "IgoEdHlwZRgBIAEoDjIULlByb3RvYnVmLkJ1bGxldFR5cGUSCQoBeBgCIAEo",
+            "BRIJCgF5GAMgASgFEhcKD2ZhY2luZ0RpcmVjdGlvbhgEIAEoARIRCgltYXBw",
+            "aW5nSUQYBSABKAMSEQoJYm9tYlJhbmdlGAYgASgBInkKE01lc3NhZ2VPZlBp",
+            "Y2tlZFByb3ASIAoEdHlwZRgBIAEoDjISLlByb3RvYnVmLlByb3BUeXBlEgkK",
             "AXgYAiABKAUSCQoBeRgDIAEoBRIXCg9mYWNpbmdEaXJlY3Rpb24YBCABKAES",
-            "DAoEZ3VpZBgFIAEoAxIUCgxwYXJlbnRUZWFtSUQYBiABKAMSIgoFcGxhY2UY",
-            "ByABKA4yEy5Qcm90b2J1Zi5QbGFjZVR5cGUifQoVTWVzc2FnZU9mQm9tYmVk",
-            "QnVsbGV0EiIKBHR5cGUYASABKA4yFC5Qcm90b2J1Zi5CdWxsZXRUeXBlEgkK",
-            "AXgYAiABKAUSCQoBeRgDIAEoBRIXCg9mYWNpbmdEaXJlY3Rpb24YBCABKAES",
-            "EQoJbWFwcGluZ0lEGAUgASgDInkKE01lc3NhZ2VPZlBpY2tlZFByb3ASIAoE",
-            "dHlwZRgBIAEoDjISLlByb3RvYnVmLlByb3BUeXBlEgkKAXgYAiABKAUSCQoB",
-            "eRgDIAEoBRIXCg9mYWNpbmdEaXJlY3Rpb24YBCABKAESEQoJbWFwcGluZ0lE",
-            "GAUgASgDIksKDE1lc3NhZ2VPZk1hcBInCgNyb3cYMyADKAsyGi5Qcm90b2J1",
-            "Zi5NZXNzYWdlT2ZNYXAuUm93GhIKA1JvdxILCgNjb2wYASADKAUi7QMKD01l",
-            "c3NhZ2VUb0NsaWVudBJACg5nYW1lT2JqTWVzc2FnZRgBIAMoCzIoLlByb3Rv",
-            "YnVmLk1lc3NhZ2VUb0NsaWVudC5HYW1lT2JqTWVzc2FnZRIqCgttZXNzYWdl",
-            "VHlwZRgCIAEoDjIVLlByb3RvYnVmLk1lc3NhZ2VUeXBlGusCCg5HYW1lT2Jq",
-            "TWVzc2FnZRI6ChJtZXNzYWdlT2ZDaGFyYWN0ZXIYASABKAsyHC5Qcm90b2J1",
-            "Zi5NZXNzYWdlT2ZDaGFyYWN0ZXJIABI0Cg9tZXNzYWdlT2ZCdWxsZXQYAiAB",
-            "KAsyGS5Qcm90b2J1Zi5NZXNzYWdlT2ZCdWxsZXRIABIwCg1tZXNzYWdlT2ZQ",
-            "cm9wGAMgASgLMhcuUHJvdG9idWYuTWVzc2FnZU9mUHJvcEgAEi4KDG1lc3Nh",
-            "Z2VPZk1hcBgEIAEoCzIWLlByb3RvYnVmLk1lc3NhZ2VPZk1hcEgAEkAKFU1l",
-            "c3NhZ2VPZkJvbWJlZEJ1bGxldBgFIAEoCzIfLlByb3RvYnVmLk1lc3NhZ2VP",
-            "ZkJvbWJlZEJ1bGxldEgAEjwKE21lc3NhZ2VPZlBpY2tlZFByb3AYBiABKAsy",
-            "HS5Qcm90b2J1Zi5NZXNzYWdlT2ZQaWNrZWRQcm9wSABCBQoDb2JqIoEBChJN",
-            "ZXNzYWdlVG9PbmVDbGllbnQSEAoIcGxheWVySUQYASABKAMSDgoGdGVhbUlE",
-            "GAIgASgDEioKC21lc3NhZ2VUeXBlGAMgASgOMhUuUHJvdG9idWYuTWVzc2Fn",
-            "ZVR5cGUSDAoEZ3VpZBgEIAEoAxIPCgdtZXNzYWdlGAUgASgJQhaqAhNDb21t",
-            "dW5pY2F0aW9uLlByb3RvYgZwcm90bzM="));
+            "EQoJbWFwcGluZ0lEGAUgASgDIksKDE1lc3NhZ2VPZk1hcBInCgNyb3cYMyAD",
+            "KAsyGi5Qcm90b2J1Zi5NZXNzYWdlT2ZNYXAuUm93GhIKA1JvdxILCgNjb2wY",
+            "ASADKAUi7QMKD01lc3NhZ2VUb0NsaWVudBJACg5nYW1lT2JqTWVzc2FnZRgB",
+            "IAMoCzIoLlByb3RvYnVmLk1lc3NhZ2VUb0NsaWVudC5HYW1lT2JqTWVzc2Fn",
+            "ZRIqCgttZXNzYWdlVHlwZRgCIAEoDjIVLlByb3RvYnVmLk1lc3NhZ2VUeXBl",
+            "GusCCg5HYW1lT2JqTWVzc2FnZRI6ChJtZXNzYWdlT2ZDaGFyYWN0ZXIYASAB",
+            "KAsyHC5Qcm90b2J1Zi5NZXNzYWdlT2ZDaGFyYWN0ZXJIABI0Cg9tZXNzYWdl",
+            "T2ZCdWxsZXQYAiABKAsyGS5Qcm90b2J1Zi5NZXNzYWdlT2ZCdWxsZXRIABIw",
+            "Cg1tZXNzYWdlT2ZQcm9wGAMgASgLMhcuUHJvdG9idWYuTWVzc2FnZU9mUHJv",
+            "cEgAEi4KDG1lc3NhZ2VPZk1hcBgEIAEoCzIWLlByb3RvYnVmLk1lc3NhZ2VP",
+            "Zk1hcEgAEkAKFU1lc3NhZ2VPZkJvbWJlZEJ1bGxldBgFIAEoCzIfLlByb3Rv",
+            "YnVmLk1lc3NhZ2VPZkJvbWJlZEJ1bGxldEgAEjwKE21lc3NhZ2VPZlBpY2tl",
+            "ZFByb3AYBiABKAsyHS5Qcm90b2J1Zi5NZXNzYWdlT2ZQaWNrZWRQcm9wSABC",
+            "BQoDb2JqIoEBChJNZXNzYWdlVG9PbmVDbGllbnQSEAoIcGxheWVySUQYASAB",
+            "KAMSDgoGdGVhbUlEGAIgASgDEioKC21lc3NhZ2VUeXBlGAMgASgOMhUuUHJv",
+            "dG9idWYuTWVzc2FnZVR5cGUSDAoEZ3VpZBgEIAEoAxIPCgdtZXNzYWdlGAUg",
+            "ASgJQhaqAhNDb21tdW5pY2F0aW9uLlByb3RvYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Communication.Proto.MessageTypeReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfCharacter), global::Communication.Proto.MessageOfCharacter.Parser, new[]{ "X", "Y", "AttackRange", "BulletNum", "Speed", "Life", "TimeUntilCommonSkillAvailable", "TimeUntilUltimateSkillAvailable", "GemNum", "FacingDirection", "Prop", "Place", "Vampire", "BulletType", "IsResetting", "PassiveSkillType", "ActiveSkillType", "Guid", "CanMove", "Radius", "CD", "LifeNum", "Score", "TeamID", "PlayerID", "IsInvisible", "Buff" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfProp), global::Communication.Proto.MessageOfProp.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "Size", "Place" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfBullet), global::Communication.Proto.MessageOfBullet.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "ParentTeamID", "Place" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfBombedBullet), global::Communication.Proto.MessageOfBombedBullet.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "MappingID" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfProp), global::Communication.Proto.MessageOfProp.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "Size", "Place", "IsMoving" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfBullet), global::Communication.Proto.MessageOfBullet.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "Guid", "ParentTeamID", "Place", "BombRange" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfBombedBullet), global::Communication.Proto.MessageOfBombedBullet.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "MappingID", "BombRange" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfPickedProp), global::Communication.Proto.MessageOfPickedProp.Parser, new[]{ "Type", "X", "Y", "FacingDirection", "MappingID" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfMap), global::Communication.Proto.MessageOfMap.Parser, new[]{ "Row" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageOfMap.Types.Row), global::Communication.Proto.MessageOfMap.Types.Row.Parser, new[]{ "Col" }, null, null, null, null)}),
             new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageToClient), global::Communication.Proto.MessageToClient.Parser, new[]{ "GameObjMessage", "MessageType" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::Communication.Proto.MessageToClient.Types.GameObjMessage), global::Communication.Proto.MessageToClient.Types.GameObjMessage.Parser, new[]{ "MessageOfCharacter", "MessageOfBullet", "MessageOfProp", "MessageOfMap", "MessageOfBombedBullet", "MessageOfPickedProp" }, new[]{ "Obj" }, null, null, null)}),
@@ -1324,6 +1325,7 @@ namespace Communication.Proto {
       guid_ = other.guid_;
       size_ = other.size_;
       place_ = other.place_;
+      isMoving_ = other.isMoving_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1420,6 +1422,18 @@ namespace Communication.Proto {
       }
     }
 
+    /// <summary>Field number for the "isMoving" field.</summary>
+    public const int IsMovingFieldNumber = 8;
+    private bool isMoving_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsMoving {
+      get { return isMoving_; }
+      set {
+        isMoving_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1442,6 +1456,7 @@ namespace Communication.Proto {
       if (Guid != other.Guid) return false;
       if (Size != other.Size) return false;
       if (Place != other.Place) return false;
+      if (IsMoving != other.IsMoving) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1456,6 +1471,7 @@ namespace Communication.Proto {
       if (Guid != 0L) hash ^= Guid.GetHashCode();
       if (Size != 0) hash ^= Size.GetHashCode();
       if (Place != global::Communication.Proto.PlaceType.NullPlaceType) hash ^= Place.GetHashCode();
+      if (IsMoving != false) hash ^= IsMoving.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1502,6 +1518,10 @@ namespace Communication.Proto {
         output.WriteRawTag(56);
         output.WriteEnum((int) Place);
       }
+      if (IsMoving != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(IsMoving);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1540,6 +1560,10 @@ namespace Communication.Proto {
         output.WriteRawTag(56);
         output.WriteEnum((int) Place);
       }
+      if (IsMoving != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(IsMoving);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1570,6 +1594,9 @@ namespace Communication.Proto {
       }
       if (Place != global::Communication.Proto.PlaceType.NullPlaceType) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Place);
+      }
+      if (IsMoving != false) {
+        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1603,6 +1630,9 @@ namespace Communication.Proto {
       }
       if (other.Place != global::Communication.Proto.PlaceType.NullPlaceType) {
         Place = other.Place;
+      }
+      if (other.IsMoving != false) {
+        IsMoving = other.IsMoving;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1647,6 +1677,10 @@ namespace Communication.Proto {
             Place = (global::Communication.Proto.PlaceType) input.ReadEnum();
             break;
           }
+          case 64: {
+            IsMoving = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -1688,6 +1722,10 @@ namespace Communication.Proto {
           }
           case 56: {
             Place = (global::Communication.Proto.PlaceType) input.ReadEnum();
+            break;
+          }
+          case 64: {
+            IsMoving = input.ReadBool();
             break;
           }
         }
@@ -1738,6 +1776,7 @@ namespace Communication.Proto {
       guid_ = other.guid_;
       parentTeamID_ = other.parentTeamID_;
       place_ = other.place_;
+      bombRange_ = other.bombRange_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1831,6 +1870,18 @@ namespace Communication.Proto {
       }
     }
 
+    /// <summary>Field number for the "bombRange" field.</summary>
+    public const int BombRangeFieldNumber = 8;
+    private double bombRange_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double BombRange {
+      get { return bombRange_; }
+      set {
+        bombRange_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1853,6 +1904,7 @@ namespace Communication.Proto {
       if (Guid != other.Guid) return false;
       if (ParentTeamID != other.ParentTeamID) return false;
       if (Place != other.Place) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(BombRange, other.BombRange)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1867,6 +1919,7 @@ namespace Communication.Proto {
       if (Guid != 0L) hash ^= Guid.GetHashCode();
       if (ParentTeamID != 0L) hash ^= ParentTeamID.GetHashCode();
       if (Place != global::Communication.Proto.PlaceType.NullPlaceType) hash ^= Place.GetHashCode();
+      if (BombRange != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(BombRange);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1913,6 +1966,10 @@ namespace Communication.Proto {
         output.WriteRawTag(56);
         output.WriteEnum((int) Place);
       }
+      if (BombRange != 0D) {
+        output.WriteRawTag(65);
+        output.WriteDouble(BombRange);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1951,6 +2008,10 @@ namespace Communication.Proto {
         output.WriteRawTag(56);
         output.WriteEnum((int) Place);
       }
+      if (BombRange != 0D) {
+        output.WriteRawTag(65);
+        output.WriteDouble(BombRange);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1981,6 +2042,9 @@ namespace Communication.Proto {
       }
       if (Place != global::Communication.Proto.PlaceType.NullPlaceType) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Place);
+      }
+      if (BombRange != 0D) {
+        size += 1 + 8;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2014,6 +2078,9 @@ namespace Communication.Proto {
       }
       if (other.Place != global::Communication.Proto.PlaceType.NullPlaceType) {
         Place = other.Place;
+      }
+      if (other.BombRange != 0D) {
+        BombRange = other.BombRange;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2058,6 +2125,10 @@ namespace Communication.Proto {
             Place = (global::Communication.Proto.PlaceType) input.ReadEnum();
             break;
           }
+          case 65: {
+            BombRange = input.ReadDouble();
+            break;
+          }
         }
       }
     #endif
@@ -2099,6 +2170,10 @@ namespace Communication.Proto {
           }
           case 56: {
             Place = (global::Communication.Proto.PlaceType) input.ReadEnum();
+            break;
+          }
+          case 65: {
+            BombRange = input.ReadDouble();
             break;
           }
         }
@@ -2147,6 +2222,7 @@ namespace Communication.Proto {
       y_ = other.y_;
       facingDirection_ = other.facingDirection_;
       mappingID_ = other.mappingID_;
+      bombRange_ = other.bombRange_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2216,6 +2292,18 @@ namespace Communication.Proto {
       }
     }
 
+    /// <summary>Field number for the "bombRange" field.</summary>
+    public const int BombRangeFieldNumber = 6;
+    private double bombRange_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double BombRange {
+      get { return bombRange_; }
+      set {
+        bombRange_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2236,6 +2324,7 @@ namespace Communication.Proto {
       if (Y != other.Y) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(FacingDirection, other.FacingDirection)) return false;
       if (MappingID != other.MappingID) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(BombRange, other.BombRange)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2248,6 +2337,7 @@ namespace Communication.Proto {
       if (Y != 0) hash ^= Y.GetHashCode();
       if (FacingDirection != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(FacingDirection);
       if (MappingID != 0L) hash ^= MappingID.GetHashCode();
+      if (BombRange != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(BombRange);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2286,6 +2376,10 @@ namespace Communication.Proto {
         output.WriteRawTag(40);
         output.WriteInt64(MappingID);
       }
+      if (BombRange != 0D) {
+        output.WriteRawTag(49);
+        output.WriteDouble(BombRange);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2316,6 +2410,10 @@ namespace Communication.Proto {
         output.WriteRawTag(40);
         output.WriteInt64(MappingID);
       }
+      if (BombRange != 0D) {
+        output.WriteRawTag(49);
+        output.WriteDouble(BombRange);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2340,6 +2438,9 @@ namespace Communication.Proto {
       }
       if (MappingID != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(MappingID);
+      }
+      if (BombRange != 0D) {
+        size += 1 + 8;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2367,6 +2468,9 @@ namespace Communication.Proto {
       }
       if (other.MappingID != 0L) {
         MappingID = other.MappingID;
+      }
+      if (other.BombRange != 0D) {
+        BombRange = other.BombRange;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2403,6 +2507,10 @@ namespace Communication.Proto {
             MappingID = input.ReadInt64();
             break;
           }
+          case 49: {
+            BombRange = input.ReadDouble();
+            break;
+          }
         }
       }
     #endif
@@ -2436,6 +2544,10 @@ namespace Communication.Proto {
           }
           case 40: {
             MappingID = input.ReadInt64();
+            break;
+          }
+          case 49: {
+            BombRange = input.ReadDouble();
             break;
           }
         }

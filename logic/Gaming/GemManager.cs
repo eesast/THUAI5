@@ -156,6 +156,7 @@ namespace Gaming
                     gameMap.GameObjDict[GameObjIdx.Gem].Add(gem);
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitWriteLock(); }
+                moveMillisecondTime = moveMillisecondTime < GameData.PropMaxMoveDistance / gem.MoveSpeed * 1000 ? moveMillisecondTime : GameData.PropMaxMoveDistance / gem.MoveSpeed * 1000;
                 gem.CanMove = true;
                 moveEngine.MoveObj(gem, moveMillisecondTime, angle);
             }
