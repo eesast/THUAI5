@@ -672,6 +672,7 @@ class MessageOfProp final :
     kSizeFieldNumber = 6,
     kGuidFieldNumber = 5,
     kPlaceFieldNumber = 7,
+    kIsMovingFieldNumber = 8,
   };
   // .Protobuf.PropType type = 1;
   void clear_type();
@@ -736,6 +737,15 @@ class MessageOfProp final :
   void _internal_set_place(::Protobuf::PlaceType value);
   public:
 
+  // bool isMoving = 8;
+  void clear_ismoving();
+  bool ismoving() const;
+  void set_ismoving(bool value);
+  private:
+  bool _internal_ismoving() const;
+  void _internal_set_ismoving(bool value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protobuf.MessageOfProp)
  private:
   class _Internal;
@@ -750,6 +760,7 @@ class MessageOfProp final :
   int32_t size_;
   int64_t guid_;
   int place_;
+  bool ismoving_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
 };
@@ -3045,6 +3056,26 @@ inline void MessageOfProp::_internal_set_place(::Protobuf::PlaceType value) {
 inline void MessageOfProp::set_place(::Protobuf::PlaceType value) {
   _internal_set_place(value);
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfProp.place)
+}
+
+// bool isMoving = 8;
+inline void MessageOfProp::clear_ismoving() {
+  ismoving_ = false;
+}
+inline bool MessageOfProp::_internal_ismoving() const {
+  return ismoving_;
+}
+inline bool MessageOfProp::ismoving() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfProp.isMoving)
+  return _internal_ismoving();
+}
+inline void MessageOfProp::_internal_set_ismoving(bool value) {
+  
+  ismoving_ = value;
+}
+inline void MessageOfProp::set_ismoving(bool value) {
+  _internal_set_ismoving(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfProp.isMoving)
 }
 
 // -------------------------------------------------------------------

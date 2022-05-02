@@ -71,7 +71,8 @@ constexpr MessageOfProp::MessageOfProp(
   , size_(0)
   , guid_(int64_t{0})
   , place_(0)
-{}
+
+  , ismoving_(false){}
 struct MessageOfPropDefaultTypeInternal {
   constexpr MessageOfPropDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -257,6 +258,7 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, guid_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, size_),
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, place_),
+  PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfProp, ismoving_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protobuf::MessageOfBullet, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -344,14 +346,14 @@ const uint32_t TableStruct_Message2Clients_2eproto::offsets[] PROTOBUF_SECTION_V
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::Protobuf::MessageOfCharacter)},
   { 33, -1, -1, sizeof(::Protobuf::MessageOfProp)},
-  { 46, -1, -1, sizeof(::Protobuf::MessageOfBullet)},
-  { 60, -1, -1, sizeof(::Protobuf::MessageOfBombedBullet)},
-  { 72, -1, -1, sizeof(::Protobuf::MessageOfPickedProp)},
-  { 83, -1, -1, sizeof(::Protobuf::MessageOfMap_Row)},
-  { 90, -1, -1, sizeof(::Protobuf::MessageOfMap)},
-  { 97, -1, -1, sizeof(::Protobuf::MessageToClient_GameObjMessage)},
-  { 110, -1, -1, sizeof(::Protobuf::MessageToClient)},
-  { 118, -1, -1, sizeof(::Protobuf::MessageToOneClient)},
+  { 47, -1, -1, sizeof(::Protobuf::MessageOfBullet)},
+  { 61, -1, -1, sizeof(::Protobuf::MessageOfBombedBullet)},
+  { 73, -1, -1, sizeof(::Protobuf::MessageOfPickedProp)},
+  { 84, -1, -1, sizeof(::Protobuf::MessageOfMap_Row)},
+  { 91, -1, -1, sizeof(::Protobuf::MessageOfMap)},
+  { 98, -1, -1, sizeof(::Protobuf::MessageToClient_GameObjMessage)},
+  { 111, -1, -1, sizeof(::Protobuf::MessageToClient)},
+  { 119, -1, -1, sizeof(::Protobuf::MessageToOneClient)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -386,48 +388,48 @@ const char descriptor_table_protodef_Message2Clients_2eproto[] PROTOBUF_SECTION_
   "(\005\022\017\n\007lifeNum\030\026 \001(\005\022\r\n\005score\030\027 \001(\005\022\016\n\006te"
   "amID\030\030 \001(\003\022\020\n\010playerID\030\031 \001(\003\022\023\n\013isInvisi"
   "ble\030\032 \001(\010\022 \n\004buff\030\033 \003(\0162\022.Protobuf.BuffT"
-  "ype\"\240\001\n\rMessageOfProp\022 \n\004type\030\001 \001(\0162\022.Pr"
+  "ype\"\262\001\n\rMessageOfProp\022 \n\004type\030\001 \001(\0162\022.Pr"
   "otobuf.PropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n"
   "\017facingDirection\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\014\n\004"
   "size\030\006 \001(\005\022\"\n\005place\030\007 \001(\0162\023.Protobuf.Pla"
-  "ceType\"\277\001\n\017MessageOfBullet\022\"\n\004type\030\001 \001(\016"
-  "2\024.Protobuf.BulletType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003"
-  " \001(\005\022\027\n\017facingDirection\030\004 \001(\001\022\014\n\004guid\030\005 "
-  "\001(\003\022\024\n\014parentTeamID\030\006 \001(\003\022\"\n\005place\030\007 \001(\016"
-  "2\023.Protobuf.PlaceType\022\021\n\tbombRange\030\010 \001(\001"
-  "\"\220\001\n\025MessageOfBombedBullet\022\"\n\004type\030\001 \001(\016"
-  "2\024.Protobuf.BulletType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003"
+  "ceType\022\020\n\010isMoving\030\010 \001(\010\"\277\001\n\017MessageOfBu"
+  "llet\022\"\n\004type\030\001 \001(\0162\024.Protobuf.BulletType"
+  "\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDirectio"
+  "n\030\004 \001(\001\022\014\n\004guid\030\005 \001(\003\022\024\n\014parentTeamID\030\006 "
+  "\001(\003\022\"\n\005place\030\007 \001(\0162\023.Protobuf.PlaceType\022"
+  "\021\n\tbombRange\030\010 \001(\001\"\220\001\n\025MessageOfBombedBu"
+  "llet\022\"\n\004type\030\001 \001(\0162\024.Protobuf.BulletType"
+  "\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDirectio"
+  "n\030\004 \001(\001\022\021\n\tmappingID\030\005 \001(\003\022\021\n\tbombRange\030"
+  "\006 \001(\001\"y\n\023MessageOfPickedProp\022 \n\004type\030\001 \001"
+  "(\0162\022.Protobuf.PropType\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003"
   " \001(\005\022\027\n\017facingDirection\030\004 \001(\001\022\021\n\tmapping"
-  "ID\030\005 \001(\003\022\021\n\tbombRange\030\006 \001(\001\"y\n\023MessageOf"
-  "PickedProp\022 \n\004type\030\001 \001(\0162\022.Protobuf.Prop"
-  "Type\022\t\n\001x\030\002 \001(\005\022\t\n\001y\030\003 \001(\005\022\027\n\017facingDire"
-  "ction\030\004 \001(\001\022\021\n\tmappingID\030\005 \001(\003\"K\n\014Messag"
-  "eOfMap\022\'\n\003row\0303 \003(\0132\032.Protobuf.MessageOf"
-  "Map.Row\032\022\n\003Row\022\013\n\003col\030\001 \003(\005\"\355\003\n\017MessageT"
-  "oClient\022@\n\016gameObjMessage\030\001 \003(\0132(.Protob"
-  "uf.MessageToClient.GameObjMessage\022*\n\013mes"
-  "sageType\030\002 \001(\0162\025.Protobuf.MessageType\032\353\002"
-  "\n\016GameObjMessage\022:\n\022messageOfCharacter\030\001"
-  " \001(\0132\034.Protobuf.MessageOfCharacterH\000\0224\n\017"
-  "messageOfBullet\030\002 \001(\0132\031.Protobuf.Message"
-  "OfBulletH\000\0220\n\rmessageOfProp\030\003 \001(\0132\027.Prot"
-  "obuf.MessageOfPropH\000\022.\n\014messageOfMap\030\004 \001"
-  "(\0132\026.Protobuf.MessageOfMapH\000\022@\n\025MessageO"
-  "fBombedBullet\030\005 \001(\0132\037.Protobuf.MessageOf"
-  "BombedBulletH\000\022<\n\023messageOfPickedProp\030\006 "
-  "\001(\0132\035.Protobuf.MessageOfPickedPropH\000B\005\n\003"
-  "obj\"\201\001\n\022MessageToOneClient\022\020\n\010playerID\030\001"
-  " \001(\003\022\016\n\006teamID\030\002 \001(\003\022*\n\013messageType\030\003 \001("
-  "\0162\025.Protobuf.MessageType\022\014\n\004guid\030\004 \001(\003\022\017"
-  "\n\007message\030\005 \001(\tB\026\252\002\023Communication.Protob"
-  "\006proto3"
+  "ID\030\005 \001(\003\"K\n\014MessageOfMap\022\'\n\003row\0303 \003(\0132\032."
+  "Protobuf.MessageOfMap.Row\032\022\n\003Row\022\013\n\003col\030"
+  "\001 \003(\005\"\355\003\n\017MessageToClient\022@\n\016gameObjMess"
+  "age\030\001 \003(\0132(.Protobuf.MessageToClient.Gam"
+  "eObjMessage\022*\n\013messageType\030\002 \001(\0162\025.Proto"
+  "buf.MessageType\032\353\002\n\016GameObjMessage\022:\n\022me"
+  "ssageOfCharacter\030\001 \001(\0132\034.Protobuf.Messag"
+  "eOfCharacterH\000\0224\n\017messageOfBullet\030\002 \001(\0132"
+  "\031.Protobuf.MessageOfBulletH\000\0220\n\rmessageO"
+  "fProp\030\003 \001(\0132\027.Protobuf.MessageOfPropH\000\022."
+  "\n\014messageOfMap\030\004 \001(\0132\026.Protobuf.MessageO"
+  "fMapH\000\022@\n\025MessageOfBombedBullet\030\005 \001(\0132\037."
+  "Protobuf.MessageOfBombedBulletH\000\022<\n\023mess"
+  "ageOfPickedProp\030\006 \001(\0132\035.Protobuf.Message"
+  "OfPickedPropH\000B\005\n\003obj\"\201\001\n\022MessageToOneCl"
+  "ient\022\020\n\010playerID\030\001 \001(\003\022\016\n\006teamID\030\002 \001(\003\022*"
+  "\n\013messageType\030\003 \001(\0162\025.Protobuf.MessageTy"
+  "pe\022\014\n\004guid\030\004 \001(\003\022\017\n\007message\030\005 \001(\tB\026\252\002\023Co"
+  "mmunication.Protob\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Message2Clients_2eproto_deps[1] = {
   &::descriptor_table_MessageType_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Message2Clients_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Message2Clients_2eproto = {
-  false, false, 2087, descriptor_table_protodef_Message2Clients_2eproto, "Message2Clients.proto", 
+  false, false, 2105, descriptor_table_protodef_Message2Clients_2eproto, "Message2Clients.proto", 
   &descriptor_table_Message2Clients_2eproto_once, descriptor_table_Message2Clients_2eproto_deps, 1, 10,
   schemas, file_default_instances, TableStruct_Message2Clients_2eproto::offsets,
   file_level_metadata_Message2Clients_2eproto, file_level_enum_descriptors_Message2Clients_2eproto, file_level_service_descriptors_Message2Clients_2eproto,
@@ -1332,16 +1334,16 @@ MessageOfProp::MessageOfProp(const MessageOfProp& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&type_, &from.type_,
-    static_cast<size_t>(reinterpret_cast<char*>(&place_) -
-    reinterpret_cast<char*>(&type_)) + sizeof(place_));
+    static_cast<size_t>(reinterpret_cast<char*>(&ismoving_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(ismoving_));
   // @@protoc_insertion_point(copy_constructor:Protobuf.MessageOfProp)
 }
 
 inline void MessageOfProp::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&type_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&place_) -
-    reinterpret_cast<char*>(&type_)) + sizeof(place_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&ismoving_) -
+    reinterpret_cast<char*>(&type_)) + sizeof(ismoving_));
 }
 
 MessageOfProp::~MessageOfProp() {
@@ -1372,8 +1374,8 @@ void MessageOfProp::Clear() {
   (void) cached_has_bits;
 
   ::memset(&type_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&place_) -
-      reinterpret_cast<char*>(&type_)) + sizeof(place_));
+      reinterpret_cast<char*>(&ismoving_) -
+      reinterpret_cast<char*>(&type_)) + sizeof(ismoving_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1438,6 +1440,14 @@ const char* MessageOfProp::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
           uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
           _internal_set_place(static_cast<::Protobuf::PlaceType>(val));
+        } else
+          goto handle_unusual;
+        continue;
+      // bool isMoving = 8;
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64)) {
+          ismoving_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
@@ -1518,6 +1528,12 @@ uint8_t* MessageOfProp::_InternalSerialize(
       7, this->_internal_place(), target);
   }
 
+  // bool isMoving = 8;
+  if (this->_internal_ismoving() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(8, this->_internal_ismoving(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -1575,6 +1591,11 @@ size_t MessageOfProp::ByteSizeLong() const {
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_place());
   }
 
+  // bool isMoving = 8;
+  if (this->_internal_ismoving() != 0) {
+    total_size += 1 + 1;
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
@@ -1622,6 +1643,9 @@ void MessageOfProp::MergeFrom(const MessageOfProp& from) {
   if (from._internal_place() != 0) {
     _internal_set_place(from._internal_place());
   }
+  if (from._internal_ismoving() != 0) {
+    _internal_set_ismoving(from._internal_ismoving());
+  }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -1640,8 +1664,8 @@ void MessageOfProp::InternalSwap(MessageOfProp* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(MessageOfProp, place_)
-      + sizeof(MessageOfProp::place_)
+      PROTOBUF_FIELD_OFFSET(MessageOfProp, ismoving_)
+      + sizeof(MessageOfProp::ismoving_)
       - PROTOBUF_FIELD_OFFSET(MessageOfProp, type_)>(
           reinterpret_cast<char*>(&type_),
           reinterpret_cast<char*>(&other->type_));
