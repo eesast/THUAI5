@@ -10,6 +10,6 @@ RUN apt-get update && apt-get install -y apt-transport-https && apt-get update &
 COPY ./CAPI /usr/local/CAPI
 COPY ./Server /usr/local/Server/
 COPY ./dependency/shell/run.sh /usr/local/
-RUN cd /usr/local/CAPI/protobuf && ./autogen.sh && ./configure && make && make install && ldconfig
+# RUN cd /usr/local/CAPI/protobuf && ./autogen.sh && ./configure && make && make install && ldconfig
 RUN cd /usr/local && mkdir ./CAPI/lib && wget -O dependency.zip https://cloud.tsinghua.edu.cn/f/9257418fd0ed40049c00/?dl=1 && unzip dependency.zip && mv -f ./linux/a ./CAPI/lib && mv -f ./linux/so ./CAPI/lib
 ENTRYPOINT ["bash", "/usr/local/run.sh"]
