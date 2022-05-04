@@ -35,7 +35,7 @@ jobs:
         architecture: 'x64'
       
     - name: Git Submodule
-      run: cd ./CAPI && git submodule update --init --recursive && cd ..
+      run: git submodule update --init --recursive
 
     - name: Pip Install paramiko
       run: pip install paramiko
@@ -48,7 +48,6 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    if: false        # Skip this job
     steps:
     - uses: actions/checkout@v1
     
@@ -64,7 +63,7 @@ jobs:
         dotnet-version: 5.0.x
 
     - name: Git Submodule
-      run: cd ./CAPI && git submodule update --init --recursive && cd ..
+      run: pushd ./CAPI && git submodule update --init --recursive && popd
 
     - name: Build CAPI_compile docker image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile .
