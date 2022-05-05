@@ -90,11 +90,13 @@ namespace Client
         private void Playback(string fileName, double pbSpeed = 2.0)
         {
             var pbClient = new PlaybackClient(fileName, pbSpeed);
-            if (pbClient.ReadDataFromFile(dataDict, drawPicLock, defaultMap))
+            int[,]? map;
+            if ((map = pbClient.ReadDataFromFile(dataDict, drawPicLock)) != null)
             {
                 isClientStocked = false;
                 isPlaybackMode = true;
-                mapFlag = true;         // 有可能出现加载地图不对的情况，这里我使用了鸵鸟算法
+                defaultMap = map;
+                mapFlag = true;        
             }
             else
             {

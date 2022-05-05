@@ -34,14 +34,48 @@ namespace Client
             }
         }
 
-        public bool ReadDataFromFile(Dictionary<GameObjType, List<MessageToClient.Types.GameObjMessage>> dataDict, object dataLock, int[,] defaultMap)
+        public int[, ]? ReadDataFromFile(Dictionary<GameObjType, List<MessageToClient.Types.GameObjMessage>> dataDict, object dataLock)
         {
             if (Reader == null)
-                return false;
+                return null;
             Sema.Wait();
             bool endFile = false;
-            bool mapFlag = false;
+            bool mapFlag = false;    // 是否获取了地图
+            int[,] map = new int[50, 50];
             long frame = (long)(this.frameTimeInMilliseconds / this.playbackSpeed);
+            var mapCollecter = new MessageReader(this.fileName);
+            while(!mapFlag)
+            {
+                var msg = mapCollecter.ReadOne();
+                if (msg == null)
+                    throw new Exception("Map messgae is not in the playback file!");
+                foreach (MessageToClient.Types.GameObjMessage obj in msg.GameObjMessage)
+                {
+                    if (obj.ObjCase == MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap)
+                    {
+                        try
+                        {
+                            for (int i = 0; i < 50; i++)
+                            {
+                                for (int j = 0; j < 50; j++)
+                                {
+                                    map[i, j] = obj.MessageOfMap.Row[i].Col[j];
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            mapFlag = false;
+                        }
+                        finally
+                        {
+                            mapFlag = true;
+                        }
+                        break;
+                    }
+                }
+            };
+
             new Thread(() =>
             {
                 new FrameRateTaskExecutor<int>
@@ -79,28 +113,6 @@ namespace Client
                                                 case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
                                                     dataDict[GameObjType.BombedBullet].Add(obj);
                                                     break;
-                                                case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap:
-                                                    int[,] map = new int[50, 50];
-                                                    try
-                                                    {
-                                                        for (int i = 0; i < 50; i++)
-                                                        {
-                                                            for (int j = 0; j < 50; j++)
-                                                            {
-                                                                map[i, j] = obj.MessageOfMap.Row[i].Col[j];
-                                                            }
-                                                        }
-                                                    }
-                                                    catch
-                                                    {
-                                                        mapFlag = false;
-                                                    }
-                                                    finally
-                                                    {
-                                                        defaultMap = map;
-                                                        mapFlag = true;
-                                                    }
-                                                    break;
                                             }
                                         }
                                         break;
@@ -121,31 +133,6 @@ namespace Client
                                                     break;
                                                 case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfBombedBullet:
                                                     dataDict[GameObjType.BombedBullet].Add(obj);
-                                                    break;
-                                                case MessageToClient.Types.GameObjMessage.ObjOneofCase.MessageOfMap:
-                                                    if (!mapFlag)
-                                                    {
-                                                        int[,] map = new int[50, 50];
-                                                        try
-                                                        {
-                                                            for (int i = 0; i < 50; i++)
-                                                            {
-                                                                for (int j = 0; j < 50; j++)
-                                                                {
-                                                                    map[i, j] = obj.MessageOfMap.Row[i].Col[j];
-                                                                }
-                                                            }
-                                                        }
-                                                        catch
-                                                        {
-                                                            mapFlag = false;
-                                                        }
-                                                        finally
-                                                        {
-                                                            defaultMap = map;
-                                                            mapFlag = true;
-                                                        }
-                                                    }
                                                     break;
                                             }
                                         }
@@ -185,7 +172,7 @@ namespace Client
                 { AllowTimeExceed = true }.Start();
             })
             { IsBackground = true }.Start();
-            return true;
+            return map;
         }
     }   
 }
