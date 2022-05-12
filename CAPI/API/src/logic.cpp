@@ -186,7 +186,6 @@ void Logic::ProcessMessageToClient(std::shared_ptr<Protobuf::MessageToClient> pm
             AI_loop = true;
             UnBlockAI();
             std::cout << "Start Game!" << std::endl;
-            AI_loop == true;
         }
         LoadBuffer(pm2c);
         break;
