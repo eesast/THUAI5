@@ -143,7 +143,7 @@ namespace GameEngine
                                     }
                                 }
                             } while (flag);
-                            if (leftTime != 0)
+                            if (leftTime > 0)
                             {
                                 Thread.Sleep(leftTime); //多移动的在这里补回来
                             }
