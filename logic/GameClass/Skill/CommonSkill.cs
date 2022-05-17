@@ -73,7 +73,7 @@ namespace GameClass.Skill
     }
     public class NuclearWeapon : ICommonSkill  //核武器
     {
-        private const int moveSpeed = GameData.basicMoveSpeed / 6 * 4;
+        private const int moveSpeed = GameData.basicMoveSpeed / 3 * 4;
         public int MoveSpeed => moveSpeed;
 
         private const int maxHp = GameData.basicHp;
