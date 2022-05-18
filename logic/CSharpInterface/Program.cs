@@ -21,14 +21,14 @@ namespace CSharpInterface
 
         private void MessageProcessing(MessageToClient content)
         {
-            playerData.Clear();
-            propData.Clear();
-            bulletData.Clear();
             playerDataLock.EnterWriteLock();
             bulletDataLock.EnterWriteLock();
             propDataLock.EnterWriteLock();
             try
             {
+                playerData.Clear();
+                propData.Clear();
+                bulletData.Clear();
                 switch (content.MessageType)
                 {
                     case MessageType.StartGame:

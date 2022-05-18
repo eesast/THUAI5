@@ -1,12 +1,12 @@
 ﻿using GameClass.GameObj;
 using Preparation.Utility;
+using System.Threading;
 
 namespace GameClass.Skill
 {
     public interface IPassiveSkill
     {
         public BulletType InitBullet { get; }
-        public double AttackRange { get; }
         public void SkillEffect(Character player);
     }
     public interface ICommonSkill
@@ -18,7 +18,9 @@ namespace GameClass.Skill
         public bool SkillEffect(Character player);
         public int DurationTime { get; } //技能持续时间
         public int SkillCD { get; }
+        public object CommonSkillLock { get; }
     }
+
     //public class UtimateSkill
     //{
     //    /*public double AttackRange { get; }

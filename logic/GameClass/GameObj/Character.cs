@@ -3,14 +3,14 @@ using Preparation.Interface;
 using Preparation.Utility;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace GameClass.GameObj
 {
     public partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...
     {
-        public readonly object propLock = new();
         private readonly object beAttackedLock = new();
-        public object PropLock => propLock;
+
         #region 角色的基本属性及方法，包括与道具、子弹的交互方法
         /// <summary>
         /// 装弹冷却
@@ -41,7 +41,7 @@ namespace GameClass.GameObj
             set
             {
                 lock (gameObjLock)
-                    hp = value;
+                    hp = value <= MaxHp ? value: MaxHp;
             }
         }
         private int deathCount = 0;
@@ -53,8 +53,7 @@ namespace GameClass.GameObj
             get => score;
         }
 
-        private readonly double attackRange;
-        public double AttackRange => attackRange;
+        public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
 
         private double vampire = 0; // 回血率：0-1之间
         public double Vampire
@@ -75,6 +74,7 @@ namespace GameClass.GameObj
         }
         public double OriVampire = 0;
 
+        public readonly BulletType OriBulletOfPlayer;
         private BulletType bulletOfPlayer;
         public BulletType BulletOfPlayer
         {
@@ -122,6 +122,21 @@ namespace GameClass.GameObj
                 var oldProp = PropInventory;
                 PropInventory = null;
                 return oldProp;
+            }
+        }
+
+        public Gem? UseGems(int size)
+        {
+            if (size <= 0)
+                return null;
+            lock (gameObjLock)
+            {
+                if (this.gemNum <= 0)
+                    return null;
+                if (size >= this.gemNum)
+                    size = this.gemNum;
+                this.gemNum -= size;
+                return new Gem(this.Position, size);
             }
         }
         /// <summary>
@@ -374,7 +389,8 @@ namespace GameClass.GameObj
         #endregion
 
         #region 角色拥有的buff相关属性、方法
-        public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManeger.AddMoveSpeed(add, buffTime, newVal => { MoveSpeed = newVal; }, OrgMoveSpeed);
+        public void AddMoveSpeed(int buffTime, double add = 2.0) => buffManeger.AddMoveSpeed(add, buffTime, newVal => 
+        { MoveSpeed = newVal < GameData.characterMaxSpeed ? newVal: GameData.characterMaxSpeed; }, OrgMoveSpeed);
         public bool HasFasterSpeed => buffManeger.HasFasterSpeed;
 
         public void AddShield(int shieldTime) => buffManeger.AddShield(shieldTime);
@@ -427,12 +443,17 @@ namespace GameClass.GameObj
         {
             _ = AddDeathCount();
             base.Reset();
-            this.moveSpeed = OrgMoveSpeed;
-            hp = MaxHp;
-            propInventory = null;
-            bulletNum = maxBulletNum;
+            this.MoveSpeed = OrgMoveSpeed;
+            HP = MaxHp;
+            GemNum = 0;
+            PropInventory = null;
+            BulletOfPlayer = OriBulletOfPlayer;
+            lock(gameObjLock)
+                bulletNum = maxBulletNum;
+
             buffManeger.ClearAll();
-            isInvisible = false;
+            IsInvisible = false;
+            this.Vampire = this.OriVampire;
         }
         public override bool IsRigid => true;
         public override ShapeType Shape => ShapeType.Circle;

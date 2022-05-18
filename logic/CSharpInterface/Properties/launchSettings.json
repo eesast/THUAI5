@@ -2,7 +2,7 @@
   "profiles": {
     "CSharpInterface": {
       "commandName": "Project",
-      "commandLineArgs": "0 0 30000"
+      "commandLineArgs": "1 0"
     }
   }
 }

@@ -43,13 +43,14 @@ namespace Preparation.GameData
         public const int basicAp = 3000;	// 初始攻击力
         public const int basicHp = 6000;	// 初始血量
         public const int basicCD = 3000;    // 初始子弹冷却
-        public const int basicBulletNum = 5;   // 初始子弹量
+        public const int basicBulletNum = 3;   // 基本初始子弹量
         public const int MinAP = 0; // 最小攻击力
         public const int MaxAP = int.MaxValue;  //最大攻击力
         public const double basicAttackRange = 9000;               // 基本攻击范围
         public const double basicBulletBombRange = 3000;           // 基本子弹爆炸范围
         public const int basicMoveSpeed = 3000;                   // 基本移动速度，单位：s-1
         public const int basicBulletMoveSpeed = 3000;             // 基本子弹移动速度，单位：s-1
+        public const int characterMaxSpeed = 12000;              // 最大速度 
         public const int addScoreWhenKillOneLevelPlayer = 30;   // 击杀一级角色获得的加分
         public const int commonSkillCD = 30000;    //普通技能标准冷却时间
         public const int commonSkillTime = 10000;  //普通技能标准持续时间
@@ -64,10 +65,11 @@ namespace Preparation.GameData
         public const int MaxPropTypeNum = 10;
         public const int PropRadius = numOfPosGridPerCell / 2;
         public const int PropMoveSpeed = 3000;
+        public const int PropMaxMoveDistance = 15 * numOfPosGridPerCell;
         public const int MaxGemSize = 5; //随机生成的宝石最大size
         public const long GemProduceTime = 10000;
         public const long PropProduceTime = 10000;
-        public const int PropDuration = 5000;
+        public const int PropDuration = 10000;
         #endregion
         #region 游戏帧相关
         public const long checkInterval = 50;  //检查位置标志、补充子弹的帧时长

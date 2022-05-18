@@ -23,7 +23,7 @@ namespace Gaming
                     gameMap: gameMap,
                     OnCollision: (obj, collisionObj, moveVec) =>
                      {
-                         BulletBomb((Bullet)obj, (GameObj)collisionObj);
+                         //BulletBomb((Bullet)obj, (GameObj)collisionObj);
                          return MoveEngine.AfterCollision.Destroyed;
                      },
                     EndMove: obj =>
@@ -42,20 +42,21 @@ namespace Gaming
                 {
                     playerBeingShot.CanMove = false;
                     playerBeingShot.IsResetting = true;
-                    gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
-                    try
-                    {
-                        gameMap.GameObjDict[GameObjIdx.Player].Remove(playerBeingShot);
-                    }
-                    finally
-                    {
-                        gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock();
-                    }
+                    //gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
+                    //try
+                    //{
+                    //    gameMap.GameObjDict[GameObjIdx.Player].Remove(playerBeingShot);
+                    //}
+                    //finally
+                    //{
+                    //    gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock();
+                    //}
 
                     //人死了应该要生成宝石的
                     if(playerBeingShot.GemNum > 0)
                     {
                         Gem gem = new Gem(playerBeingShot.Position, playerBeingShot.GemNum);
+                        playerBeingShot.GemNum = 0;
                         gameMap.GameObjLockDict[GameObjIdx.Gem].EnterWriteLock();
                         try 
                         {
@@ -63,6 +64,20 @@ namespace Gaming
                         }
                         finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitWriteLock(); }
                     }
+
+                    Prop? dropProp = null;
+                    if (playerBeingShot.PropInventory != null) // 若角色原来有道具，则原始道具掉落在原地
+                    {
+                        dropProp = playerBeingShot.PropInventory;
+                        dropProp.SetNewPos(GameData.GetCellCenterPos(playerBeingShot.Position.x / GameData.numOfPosGridPerCell, playerBeingShot.Position.y / GameData.numOfPosGridPerCell));
+                    }
+                    gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
+                    try
+                    {
+                        if (dropProp != null)
+                            gameMap.GameObjDict[GameObjIdx.Prop].Add(dropProp);
+                    }
+                    finally { gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock(); }
 
                     playerBeingShot.Reset();
                     ((Character?)bullet.Parent)?.AddScore(GameData.addScoreWhenKillOneLevelPlayer);  //给击杀者加分
@@ -75,12 +90,12 @@ namespace Gaming
 
                             playerBeingShot.AddShield(GameData.shieldTimeAtBirth);  //复活加个盾
 
-                            gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
-                            try
-                            {
-                                gameMap.GameObjDict[GameObjIdx.Player].Add(playerBeingShot);
-                            }
-                            finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
+                            //gameMap.GameObjLockDict[GameObjIdx.Player].EnterWriteLock();
+                            //try
+                            //{
+                            //    gameMap.GameObjDict[GameObjIdx.Player].Add(playerBeingShot);
+                            //}
+                            //finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitWriteLock(); }
 
                             if (gameMap.Timer.IsGaming)
                             {
@@ -117,19 +132,14 @@ namespace Gaming
                     }
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Bullet].ExitWriteLock(); }
-                if (objBeingShot != null)
+
+                /*if (objBeingShot != null)
                 {
-                    if (objBeingShot.Type == GameObjType.Character)
-                    {
-                        //BombOnePlayer(bullet, (Character)objBeingShot); //这里不计算伤害，等到爆炸的时候计算
-                        bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * bullet.AP));  //造成伤害根据吸血率来吸血
-                    }
-                    /*else if (objBeingShot is Bullet)        //子弹不能相互引爆，若要更改这一设定，取消注释即可。
+                    else if (objBeingShot is Bullet)        //子弹不能相互引爆，若要更改这一设定，取消注释即可。
                     {
                         new Thread(() => { BulletBomb((Bullet)objBeingShot, null); }) { IsBackground = true }.Start();
-                    }*/
-
-                }
+                    }
+                }*/
 
                 //子弹爆炸会发生的事↓↓↓
                 var beAttackedList = new List<Character>();
@@ -141,10 +151,13 @@ namespace Gaming
                         if (bullet.CanAttack(player))
                         {
                             beAttackedList.Add(player);
+                            if(player.ID != bullet.Parent.ID)
+                                bullet.Parent.HP = (int)(bullet.Parent.HP + (bullet.Parent.Vampire * bullet.AP));
                         }
                     }
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Player].ExitReadLock(); }
+
                 foreach (Character beAttackedPlayer in beAttackedList)
                 {
                     BombOnePlayer(bullet, beAttackedPlayer);

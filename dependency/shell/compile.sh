@@ -7,15 +7,17 @@ while (( $i <= 4 ))
 do
     cp -f ../mnt/player$i.cpp ./API/src
     mv ./API/src/player$i.cpp ./API/src/AI.cpp
-    cmake ./CMakeLists.txt && make >build.log 2>&1
-    mv ./build.log ../mnt/build_log$i && mv ./capi ../mnt/capi$i
+    cmake ./CMakeLists.txt && make >compile_log$i.txt 2>&1
+    mv ./capi ../mnt/capi$i
     if [ $? -ne 0 ]; then
         flag=0
     fi
+    mv ./compile_log$i.txt ../mnt/compile_log$i.txt
     let "i++"
 done
+
 if [ $flag -eq 1 ]; then
-    curl http://localhost:28888/code/compileInfo -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer ${COMPILER_TOKEN}" -d '{"compile_status":"compiled"}'
+    curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"compile_status":"compiled"}' > ../mnt/curl_log.txt
 else
-    curl http://localhost:28888/code/compileInfo -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer ${COMPILER_TOKEN}" -d '{"compile_status":"failed"}'
+    curl $URL -X PUT -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"compile_status":"failed"}' > ../mnt/curl_log.txt
 fi

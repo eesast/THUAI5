@@ -31,7 +31,7 @@ namespace Gaming
 
             public void UseProp(Character player)
             {
-                if (!player.IsAvailable)
+                if (player.IsResetting)
                     return;
                 Prop? prop = player.UseProp();
                 switch(prop?.GetPropType())
@@ -61,6 +61,8 @@ namespace Gaming
             /// <returns></returns>
             public bool PickProp(Character player,PropType propType = PropType.Null)
             {
+                if (player.IsResetting)
+                    return false;
                 Prop? pickProp = null;
                 if(propType == PropType.Null)  //自动检查有无道具可捡
                 {
@@ -69,7 +71,7 @@ namespace Gaming
                     {
                         foreach(Prop prop in gameMap.GameObjDict[GameObjIdx.Prop])
                         {
-                            if(GameData.IsInTheSameCell(prop.Position,player.Position))
+                            if(GameData.IsInTheSameCell(prop.Position,player.Position) && prop.CanMove == false)
                             {
                                 pickProp = prop;
                             }
@@ -86,7 +88,7 @@ namespace Gaming
                         {
                             if(prop.GetPropType() == propType)
                             {
-                                if (GameData.IsInTheSameCell(prop.Position, player.Position))
+                                if (GameData.IsInTheSameCell(prop.Position, player.Position) && prop.CanMove == false)
                                 {
                                     pickProp = prop;
                                 }
@@ -98,11 +100,12 @@ namespace Gaming
 
                 if (pickProp != null)
                 {
+                    //pickProp.CanMove = false;
                     Prop? dropProp = null;
                     if (player.PropInventory != null) // 若角色原来有道具，则原始道具掉落在原地
                     {
                         dropProp = player.PropInventory;
-                        dropProp.SetNewPos(player.Position);
+                        dropProp.SetNewPos(GameData.GetCellCenterPos(player.Position.x / GameData.numOfPosGridPerCell, player.Position.y / GameData.numOfPosGridPerCell));
                     }
                     player.PropInventory = pickProp;
                     gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
@@ -113,13 +116,13 @@ namespace Gaming
                             gameMap.GameObjDict[GameObjIdx.Prop].Add(dropProp);
                     }
                     finally { gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock(); }
-
                     gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
                     try
                     {
-                        gameMap.GameObjDict[GameObjIdx.PickedProp].Add(pickProp);
+                        gameMap.GameObjDict[GameObjIdx.PickedProp].Add(new PickedProp(pickProp));
                     }
                     finally { gameMap.GameObjLockDict[GameObjIdx.PickedProp].ExitWriteLock(); }
+
                     return true;
                 }
                 else return false;
@@ -129,10 +132,13 @@ namespace Gaming
             {
                 if (!gameMap.Timer.IsGaming)
                     return;
-                if (player.PropInventory == null)
+                if (player.IsResetting) // 移动中也能扔，但由于“惯性”，可能初始位置会有点变化
                     return;
-                Prop prop = player.PropInventory;
-                player.PropInventory = null;
+                Prop? prop = player.UseProp();
+                if (prop == null)
+                    return;
+
+                prop.CanMove = true;
                 prop.SetNewPos(player.Position);
                 gameMap.GameObjLockDict[GameObjIdx.Prop].EnterWriteLock();
                 try
@@ -140,6 +146,7 @@ namespace Gaming
                     gameMap.GameObjDict[GameObjIdx.Prop].Add(prop);
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Prop].ExitWriteLock(); }
+                timeInMilliseconds = timeInMilliseconds < GameData.PropMaxMoveDistance / prop.MoveSpeed * 1000 ? timeInMilliseconds : GameData.PropMaxMoveDistance / prop.MoveSpeed * 1000;
                 moveEngine.MoveObj(prop, timeInMilliseconds, angle);
             }
             private void ProduceProp()
@@ -150,6 +157,8 @@ namespace Gaming
                 (
                     () =>
                     {
+                        while (!gameMap.Timer.IsGaming)
+                            Thread.Sleep(1000);
                         new FrameRateTaskExecutor<int>
                         (
                             () => gameMap.Timer.IsGaming,
@@ -201,6 +210,7 @@ namespace Gaming
                     EndMove: obj =>
                     {
                         // obj.Place = gameMap.GetPlaceType((GameObj)obj);
+                        obj.CanMove = false;
                         Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                     }
                 );

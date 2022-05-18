@@ -28,7 +28,7 @@ namespace Client
             switch (obj.ActiveSkillType)
             {
                 case ActiveSkillType.BecomeVampire:
-                    coolTime = 30000;
+                    coolTime = 40000;
                     serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓"
                         + Convert.ToString(obj.PlayerID) + "\n软件：Emission";
                     break;
@@ -38,7 +38,7 @@ namespace Client
                         + Convert.ToString(obj.PlayerID) + "\n软件：Booster";
                     break;
                 case ActiveSkillType.NuclearWeapon:
-                    coolTime = 30000;
+                    coolTime = 70000;
                     serial.Text = "👥" + Convert.ToString(obj.TeamID) + "🧓"
                         + Convert.ToString(obj.PlayerID) + "\n软件：Amplifier";
                     break;
@@ -57,8 +57,13 @@ namespace Client
         }
         private void SetDynamicValue(MessageOfCharacter obj)
         {
-            skillprogress.Value = obj.TimeUntilCommonSkillAvailable / coolTime * 100;
-            if (obj.IsResetting) skillprogress.Background = Brushes.Gray;
+            skillprogress.Value = 100 - obj.TimeUntilCommonSkillAvailable / coolTime * 100;
+            if (obj.IsResetting)
+            {
+                skillprogress.Value = 0;
+                skillprogress.Background = Brushes.Gray;
+            }
+            else skillprogress.Background = Brushes.White;
             Func<MessageOfCharacter,int> life=
             (obj) =>
             {

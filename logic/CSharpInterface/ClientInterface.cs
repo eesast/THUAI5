@@ -74,7 +74,7 @@ namespace CSharpInterface
             bulletDataLock.EnterReadLock();
             try
             {
-                foreach (var data in playerData)
+                foreach (var data in bulletData)
                 {
                     if (CanSee(data.MessageOfBullet))
                     {
@@ -91,7 +91,7 @@ namespace CSharpInterface
             propDataLock.EnterReadLock();
             try
             {
-                foreach (var data in playerData)
+                foreach (var data in propData)
                 {
                     if (CanSee(data.MessageOfProp) && data.MessageOfProp.Type != Communication.Proto.PropType.Gem)
                     {
@@ -108,7 +108,7 @@ namespace CSharpInterface
             propDataLock.EnterReadLock();
             try
             {
-                foreach (var data in playerData)
+                foreach (var data in propData)
                 {
                     if (CanSee(data.MessageOfProp) && data.MessageOfProp.Type == Communication.Proto.PropType.Gem)
                     {

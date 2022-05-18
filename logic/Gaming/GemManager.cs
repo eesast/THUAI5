@@ -32,18 +32,22 @@ namespace Gaming
                  自动生成宝石。
                 宝石的生成可能应该分为两类：
                 1、宝石井附近生成。
-                2、地图上随机生成。
+                2、地图上随机生成。 (这个已经弃用了)
                 地图上随机生成还没写。
                  */
             }
             private void ProduceGemsInWell()
             {
                 int len = gemWellList.Count;
+                if (len == 0)
+                    return;
                 Random r = new Random(Environment.TickCount);
                 new Thread
                 (
                     () =>
                     {
+                        while (!gameMap.Timer.IsGaming)
+                            Thread.Sleep(1000);
                         new FrameRateTaskExecutor<int>
                         (
                             () => gameMap.Timer.IsGaming,
@@ -103,7 +107,7 @@ namespace Gaming
             }
             public bool PickGem(Character player)
             {
-                if (!player.IsAvailable)
+                if (player.IsResetting)
                     return false;
                 Gem? gem = null;
                 gameMap.GameObjLockDict[GameObjIdx.Gem].EnterReadLock();
@@ -111,7 +115,7 @@ namespace Gaming
                 {
                     foreach (Gem g in gameMap.GameObjDict[GameObjIdx.Gem])
                     {
-                        if (GameData.IsInTheSameCell(g.Position,player.Position))
+                        if (GameData.IsInTheSameCell(g.Position,player.Position) && g.CanMove == false)
                         {
                             gem = g;
                             break;
@@ -119,7 +123,16 @@ namespace Gaming
                     }
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitReadLock(); }
-
+                if (gem != null)
+                {
+                    //gem.CanMove = false;
+                    gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
+                    try
+                    {
+                        gameMap.GameObjDict[GameObjIdx.PickedProp].Add(new PickedProp(gem));
+                    }
+                    finally { gameMap.GameObjLockDict[GameObjIdx.PickedProp].ExitWriteLock(); }
+                }
                 RemoveGem(gem);
 
                 if (gem != null)
@@ -132,35 +145,30 @@ namespace Gaming
 
             public void ThrowGem(Character player, int moveMillisecondTime, double angle, int size=1)
             {
-                if (!player.IsAvailable)
+                if (player.IsResetting)  // 移动中也能扔，但由于“惯性”，可能初始位置会有点变化
                     return;
-                if (size <= 0 || player.GemNum <= 0)
+                Gem? gem = player.UseGems(size);
+                if (gem == null)
                     return;
-                else if (size > player.GemNum)
-                    size = player.GemNum;
-                player.GemNum -= size;
-                Gem gem = new Gem(player.Position, size);
                 gameMap.GameObjLockDict[GameObjIdx.Gem].EnterWriteLock();
                 try
                 {
                     gameMap.GameObjDict[GameObjIdx.Gem].Add(gem);
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitWriteLock(); }
+                moveMillisecondTime = moveMillisecondTime < GameData.PropMaxMoveDistance / gem.MoveSpeed * 1000 ? moveMillisecondTime : GameData.PropMaxMoveDistance / gem.MoveSpeed * 1000;
+                gem.CanMove = true;
                 moveEngine.MoveObj(gem, moveMillisecondTime, angle);
             }
 
             public void UseGem(Character character, int num)
             {
-                if (!character.IsAvailable)
+                if (character.IsResetting)
                     return;
-                if (num > character.GemNum)
-                    num = character.GemNum;
-
-                if (num > 0)
-                {
-                    character.GemNum -= num;
-                    character.AddScore(GemToScore(num));
-                }
+                Gem? gem = character.UseGems(num);
+                if (gem == null)
+                    return;
+                character.AddScore(GemToScore(gem.Size));
             }
             public void UseAllGem(Character character)
             {
@@ -175,19 +183,19 @@ namespace Gaming
             private int GemToScore(int num)
             {
                 //先用分段线性
-                if (num < 5)
+                if (num < 3)
                     return 0;
+                else if (num < 5)
+                    return num * GameData.gemToScore / 4 * 3;
                 else if (num < 10)
-                    return num * GameData.gemToScore / 4;
+                    return num * GameData.gemToScore / 4 * 6;
                 else if (num < 15)
-                    return num * GameData.gemToScore / 2;
+                    return num * GameData.gemToScore / 4 * 10;
                 else if (num < 20)
-                    return num * GameData.gemToScore;
+                    return num * GameData.gemToScore / 4 * 15;
                 else if (num < 25)
-                    return 2 * num * GameData.gemToScore;
-                else if (num < 30)
-                    return 4 * num * GameData.gemToScore;
-                else return 8 * num * GameData.gemToScore;
+                    return num * GameData.gemToScore / 4 * 22;
+                else return num * GameData.gemToScore * 8;
             }
 
             public GemManager(Map gameMap)  //宝石不能扔过墙
@@ -202,7 +210,7 @@ namespace Gaming
                     },
                     EndMove: obj =>
                      {
-                         // obj.Place = gameMap.GetPlaceType((GameObj)obj);
+                         obj.CanMove = false;
                          Debugger.Output(obj, " end move at " + obj.Position.ToString() + " At time: " + Environment.TickCount64);
                      }
                 );

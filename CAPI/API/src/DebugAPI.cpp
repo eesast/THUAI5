@@ -54,17 +54,14 @@ bool DebugAPI::Attack(double angleInRadian)
     Out << "Call Attack(" << angleInRadian << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting)
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (selfInfo->signalJammerNum == 0)
         {
             Out << "[Warning: You are out of signal jammers.]" << std::endl;
-            return false;
         }
     }
 
@@ -79,16 +76,37 @@ bool DebugAPI::UseCommonSkill()
     Out << "Call UseCommonSkill() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting)
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
-        if(!CanUseSoftware(selfInfo))
+        if (!CanUseSoftware(selfInfo))
         {
-            return false;
+        }
+        else
+        {
+            Out << "[Info: Using " << THUAI5::software_dict[selfInfo->softwareType] << ".]" << std::endl;
+        }
+    }
+
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::UseCommonSkill);
+    return logic.SendInfo(message);
+}
+
+bool DebugAPI::UseSoftware()
+{
+    Out << "Call UseCommonSkill() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (ExamineValidity)
+    {
+        auto selfInfo = logic.GetSelfInfo();
+        if (selfInfo->isResetting)
+        {
+            Out << "[Warning: You have been slained.]" << std::endl;
+        }
+        if (!CanUseSoftware(selfInfo))
+        {
         }
         else
         {
@@ -109,11 +127,10 @@ bool DebugAPI::Send(int toPlayerID, std::string to_message)
         if (toPlayerID < 0 || toPlayerID >= 4)
         {
             Out << "[Error: Illegal player ID.]" << std::endl;
-            return false;
         }
         else
         {
-            Out << "[Info: The message is " << to_message << ".]" << std::endl;
+            Out << "[Info: The message is: " << to_message << ".]" << std::endl;
         }
     }
 
@@ -129,23 +146,20 @@ bool DebugAPI::Pick(THUAI5::PropType proptype)
     Out << "Call Pick(" << THUAI5::prop_dict[proptype] << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     if (ExamineValidity)
     {
-        
         auto selfInfo = logic.GetSelfInfo();
         if (selfInfo->isResetting)
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (!CanPick(proptype, selfInfo))
         {
             Out << "[Warning: No such property to pick within the cell.]" << std::endl;
-            return false;
         }
     }
 
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Pick);
-    message.set_proptype(Protobuf::PropType(proptype));
+    message.set_proptype(_propdict_rev[proptype]);
     return logic.SendInfo(message);
 }
 
@@ -159,12 +173,10 @@ bool DebugAPI::ThrowProp(uint32_t timeInMilliseconds, double angleInRadian)
         if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (selfInfo->prop == THUAI5::PropType::NullPropType)
         {
             Out << "[Warning: You don't have any props.]" << std::endl;
-            return false;
         }
         else
         {
@@ -189,12 +201,10 @@ bool DebugAPI::UseProp()
         if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (selfInfo->prop == THUAI5::PropType::NullPropType)
         {
             Out << "[Warning: You don't have any props.]" << std::endl;
-            return false;
         }
         else
         {
@@ -217,12 +227,10 @@ bool DebugAPI::ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian, uint3
         if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (selfInfo->cpuNum == 0)
         {
             Out << "[Warning: You don't have any CPUs.]" << std::endl;
-            return false;
         }
     }
 
@@ -244,12 +252,10 @@ bool DebugAPI::UseCPU(uint32_t cpuNum)
         if (selfInfo->isResetting) // 正在复活中
         {
             Out << "[Warning: You have been slained.]" << std::endl;
-            return false;
         }
         if (selfInfo->cpuNum == 0)
         {
             Out << "[Warning: You don't have any CPUs.]" << std::endl;
-            return false;
         }
     }
 
@@ -320,8 +326,19 @@ std::shared_ptr<const THUAI5::Robot> DebugAPI::GetSelfInfo() const
 
 THUAI5::PlaceType DebugAPI::GetPlaceType(int32_t CellX, int32_t CellY) const
 {
-    Out << "Call GetPlaceType(" << CellX << "," << CellY << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    // Out << "Call GetPlaceType(" << CellX << "," << CellY << ") at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    if (CellX < 0 || CellX >= 50 || CellY < 0 || CellY >= 50)
+    {
+        Out << "[Warning: index out of bounds. You will get `NullPlaceType`.]" << std::endl;
+        return THUAI5::PlaceType::NullPlaceType;
+    }
     return logic.GetPlaceType(CellX, CellY);
+}
+
+std::array<std::array<THUAI5::PlaceType, 50>, 50> DebugAPI::GetFullMap() const
+{   
+    Out << "Call GetFullMap() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetFullMap();
 }
 
 uint32_t DebugAPI::GetTeamScore() const
@@ -363,14 +380,15 @@ bool DebugAPI::CanUseSoftware(std::shared_ptr<const THUAI5::Robot>& selfInfo)
     {
         return true;
     }
-    Out << "[Warning: common skill is not available, please wait for " << timeUntilCommonSkillAvailable << " s.]" << std::endl;  
+    Out << "[Warning: common skill is not available, please wait for " << timeUntilCommonSkillAvailable << " ms.]" << std::endl;  
     return false;
 }
 
 void DebugAPI::PrintSignalJammers() const
 {
+    std::ios::sync_with_stdio(false);
     Out << "Call PrintSignalJammers() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
-    Out << "******************Bullets******************" << std::endl;
+    Out << "******************SignalJammers******************" << std::endl;
     auto jammers = logic.GetSignalJammers();
     for (int i = 0;i< jammers.size();i++)
     {
@@ -383,13 +401,14 @@ void DebugAPI::PrintSignalJammers() const
                   << "x: " << jammers[i]->x << std::endl
                   << "y: " << jammers[i]->y << std::endl;
     }
-    Out << "*******************************************" << std::endl;
+    Out << "*************************************************" << std::endl;
 }
 
 void DebugAPI::PrintRobots() const
 {
+    std::ios::sync_with_stdio(false);
     Out << "Call PrintRobots() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
-    Out << "******************Characters******************" << std::endl;
+    Out << "******************Robots******************" << std::endl;
     auto robots = logic.GetRobots();
     for(int i = 0;i<robots.size();i++)
     {
@@ -427,12 +446,18 @@ void DebugAPI::PrintRobots() const
             }
             std::cout << std::endl;
         }
+        else
+        {
+            std::cout << "no buff." << std::endl;
+        }
+
     }
-    Out << "**********************************************" << std::endl;
+    Out << "******************************************" << std::endl;
 }
 
 void DebugAPI::PrintProps() const
 {
+    std::ios::sync_with_stdio(false);
     Out << "Call PrintProps() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
     Out << "******************Props******************" << std::endl;
     auto props = logic.GetProps();
@@ -489,6 +514,10 @@ void DebugAPI::PrintSelfInfo() const
                 std::cout << THUAI5::buff_dict[selfinfo->buff[j]] << ' ';
             }
             std::cout << std::endl;
+        }
+        else
+        {
+            std::cout << "no buff." << std::endl;
         }
     }
     Out << "********************************************" << std::endl;

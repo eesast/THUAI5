@@ -1,12 +1,19 @@
 name: "upload_deploy"
 
+###############################################################################
+# This ci is skipped in THUAI5 for THUAI5 use cloud disk to distribute.
+# To use automatically distribution, comment out `if: false` in the following
+# two jobs.
+###############################################################################
+
 on:
   push:
-    branches: [ master, dev, test/ci]
+    branches: [ master, dev ]
 
 jobs:
   build_upload:
     runs-on: windows-latest
+    if: false        # Skip this job
     steps:
     - uses: actions/checkout@v1
 
@@ -28,7 +35,7 @@ jobs:
         architecture: 'x64'
       
     - name: Git Submodule
-      run: cd ./CAPI && git submodule update --init --recursive && cd ..
+      run: git submodule update --init --recursive
 
     - name: Pip Install paramiko
       run: pip install paramiko
@@ -56,7 +63,7 @@ jobs:
         dotnet-version: 5.0.x
 
     - name: Git Submodule
-      run: cd ./CAPI && git submodule update --init --recursive && cd ..
+      run: pushd ./CAPI && git submodule update --init --recursive && popd
 
     - name: Build CAPI_compile docker image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/thuai5_compiler:latest -f ./dependency/Dockerfile/Dockerfile_compile .

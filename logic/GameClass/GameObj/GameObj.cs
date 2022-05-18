@@ -168,12 +168,11 @@ namespace GameClass.GameObj
         {
             lock (gameObjLock)
             {
-
-                FacingDirection = 0.0;
-                IsMoving = false;
-                CanMove = false;
-                IsResetting = true;
-                this.Position = birthPos;
+                facingDirection = 0.0;
+                isMoving = false;
+                canMove = false;
+                isResetting = true;
+                this.position = birthPos;
             }
         }
         /// <summary>
@@ -185,13 +184,10 @@ namespace GameClass.GameObj
         bool IMoveable.IgnoreCollide(IGameObj targetObj) => IgnoreCollideExecutor(targetObj);
         public GameObj(XYPosition initPos, int initRadius, PlaceType initPlace)
         {
-            lock (gameObjLock)
-            {
-                this.birthPos = initPos;
-                this.Position = initPos;
-                this.Radius = initRadius;
-                this.place = initPlace;
-            }
+            this.birthPos = initPos;
+            this.Position = initPos;
+            this.Radius = initRadius;
+            this.place = initPlace;
             ID = Interlocked.Increment(ref currentMaxID);
         }
     }

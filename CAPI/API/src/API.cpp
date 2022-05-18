@@ -48,6 +48,13 @@ bool API::UseCommonSkill()
     return logic.SendInfo(message);
 }
 
+bool API::UseSoftware()
+{
+    Protobuf::MessageToServer message;
+    message.set_messagetype(Protobuf::MessageType::UseCommonSkill);
+    return logic.SendInfo(message);
+}
+
 bool API::Send(int toPlayerID, std::string to_message)
 {
     Protobuf::MessageToServer message;
@@ -61,7 +68,7 @@ bool API::Pick(THUAI5::PropType proptype)
 {
     Protobuf::MessageToServer message;
     message.set_messagetype(Protobuf::MessageType::Pick);
-    message.set_proptype(Protobuf::PropType(proptype));
+    message.set_proptype(_propdict_rev[proptype]);
     return logic.SendInfo(message);
 }
 
@@ -156,17 +163,27 @@ int API::GetFrameCount() const
 
 THUAI5::PlaceType API::GetPlaceType(int32_t CellX, int32_t CellY) const
 {
+    if (CellX < 0 || CellX >= 50 || CellY < 0 || CellY >= 50)
+    {
+        return THUAI5::PlaceType::NullPlaceType;
+    }
     return logic.GetPlaceType(CellX, CellY);
+}
+
+std::array<std::array<THUAI5::PlaceType, 50>, 50> API::GetFullMap() const
+{
+    return logic.GetFullMap();
 }
 
 void API::PrintSignalJammers() const
 {
-    std::cout << "******************Bullets******************" << std::endl;
+    std::ios::sync_with_stdio(false);
+    std::cout << "******************SignalJammers******************" << std::endl;
     auto jammers = logic.GetSignalJammers();
-    for (int i = 0;i<jammers.size();i++)
+    for (int i = 0; i < jammers.size(); i++)
     {
         std::cout << "SignalJammer " << i << ":" << std::endl;
-        std::cout << "facingDirection: " <<jammers[i]->facingDirection << std::endl
+        std::cout << "facingDirection: " << jammers[i]->facingDirection << std::endl
                   << "guid: " << jammers[i]->guid << std::endl
                   << "parentTeamID: " << jammers[i]->parentTeamID << std::endl
                   << "place: " << THUAI5::place_dict[jammers[i]->place] << std::endl
@@ -174,14 +191,15 @@ void API::PrintSignalJammers() const
                   << "x: " << jammers[i]->x << std::endl
                   << "y: " << jammers[i]->y << std::endl;
     }
-    std::cout << "*******************************************" << std::endl;
+    std::cout << "*************************************************" << std::endl;
 }
 
 void API::PrintRobots() const
 {
-    std::cout << "******************Characters******************" << std::endl;
+    std::ios::sync_with_stdio(false);
+    std::cout << "******************Robots******************" << std::endl;
     auto robots = logic.GetRobots();
-    for(int i = 0;i< robots.size();i++)
+    for (int i = 0; i < robots.size(); i++)
     {
         std::cout << "Robot " << i << ":" << std::endl;
         std::cout << "softwareType: " << THUAI5::software_dict[robots[i]->softwareType] << std::endl
@@ -217,15 +235,20 @@ void API::PrintRobots() const
             }
             std::cout << std::endl;
         }
+        else
+        {
+            std::cout << "no buff." << std::endl;
+        }
     }
-    std::cout << "**********************************************" << std::endl;
+    std::cout << "******************************************" << std::endl;
 }
 
 void API::PrintProps() const
 {
+    std::ios::sync_with_stdio(false);
     std::cout << "******************Props******************" << std::endl;
     auto props = logic.GetProps();
-    for(int i = 0;i<props.size();i++)
+    for (int i = 0; i < props.size(); i++)
     {
         std::cout << "Prop " << i << ":" << std::endl;
         std::cout << "facingDirection: " << props[i]->facingDirection << std::endl
@@ -241,6 +264,7 @@ void API::PrintProps() const
 
 void API::PrintSelfInfo() const
 {
+    std::ios::sync_with_stdio(false);
     std::cout << "******************Selfinfo******************" << std::endl;
     auto selfinfo = logic.GetSelfInfo();
     if (selfinfo != nullptr)
@@ -277,6 +301,10 @@ void API::PrintSelfInfo() const
                 std::cout << THUAI5::buff_dict[selfinfo->buff[j]] << ' ';
             }
             std::cout << std::endl;
+        }
+        else
+        {
+            std::cout << "no buff." << std::endl;
         }
     }
     std::cout << "********************************************" << std::endl;
