@@ -63,9 +63,11 @@ namespace Gaming
                                     {
                                         if (gem.Position.x == randPos.x && gem.Position.y == randPos.y)
                                         {
-                                            gem.TryAddGemSize();
-                                            flag = true;
-                                            break;
+                                            if (gem.TryAddGemSize())
+                                            {
+                                                flag = true;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -145,7 +147,7 @@ namespace Gaming
 
             public void ThrowGem(Character player, int moveMillisecondTime, double angle, int size=1)
             {
-                if (player.IsResetting)  // 移动中也能扔，但由于“惯性”，可能初始位置会有点变化
+                if (player.IsResetting)  // 人物移动中也能扔，但由于“惯性”，可能初始位置会有点变化
                     return;
                 Gem? gem = player.UseGems(size);
                 if (gem == null)
