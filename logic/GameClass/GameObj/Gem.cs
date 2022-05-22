@@ -20,11 +20,12 @@ namespace GameClass.GameObj
         private int size = 1;
         public int Size => size;
 
-        public void TryAddGemSize(int addSize=1)
+        public bool TryAddGemSize(int addSize = 1)
         {
             if (this.size >= GameData.MaxGemSize)
-                return;
-            else this.size++;
+                return false;
+            this.size++;
+            return true;
         }
         public override ShapeType Shape => ShapeType.Circle;
         protected override bool IgnoreCollideExecutor(IGameObj targetObj)
