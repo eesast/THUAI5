@@ -63,9 +63,11 @@ namespace Gaming
                                     {
                                         if (gem.Position.x == randPos.x && gem.Position.y == randPos.y)
                                         {
-                                            gem.TryAddGemSize();
-                                            flag = true;
-                                            break;
+                                            if (gem.TryAddGemSize())
+                                            {
+                                                flag = true;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -115,7 +117,7 @@ namespace Gaming
                 {
                     foreach (Gem g in gameMap.GameObjDict[GameObjIdx.Gem])
                     {
-                        if (GameData.IsInTheSameCell(g.Position,player.Position))
+                        if (GameData.IsInTheSameCell(g.Position,player.Position) && g.CanMove == false)
                         {
                             gem = g;
                             break;
@@ -125,7 +127,7 @@ namespace Gaming
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitReadLock(); }
                 if (gem != null)
                 {
-                    gem.CanMove = false;
+                    //gem.CanMove = false;
                     gameMap.GameObjLockDict[GameObjIdx.PickedProp].EnterWriteLock();
                     try
                     {
@@ -145,7 +147,7 @@ namespace Gaming
 
             public void ThrowGem(Character player, int moveMillisecondTime, double angle, int size=1)
             {
-                if (player.IsResetting)  // 移动中也能扔，但由于“惯性”，可能初始位置会有点变化
+                if (player.IsResetting)  // 人物移动中也能扔，但由于“惯性”，可能初始位置会有点变化
                     return;
                 Gem? gem = player.UseGems(size);
                 if (gem == null)
@@ -156,6 +158,7 @@ namespace Gaming
                     gameMap.GameObjDict[GameObjIdx.Gem].Add(gem);
                 }
                 finally { gameMap.GameObjLockDict[GameObjIdx.Gem].ExitWriteLock(); }
+                moveMillisecondTime = moveMillisecondTime < GameData.PropMaxMoveDistance / gem.MoveSpeed * 1000 ? moveMillisecondTime : GameData.PropMaxMoveDistance / gem.MoveSpeed * 1000;
                 gem.CanMove = true;
                 moveEngine.MoveObj(gem, moveMillisecondTime, angle);
             }
@@ -182,19 +185,19 @@ namespace Gaming
             private int GemToScore(int num)
             {
                 //先用分段线性
-                if (num < 5)
+                if (num < 3)
                     return 0;
+                else if (num < 5)
+                    return num * GameData.gemToScore / 4 * 3;
                 else if (num < 10)
-                    return num * GameData.gemToScore / 4;
+                    return num * GameData.gemToScore / 4 * 6;
                 else if (num < 15)
-                    return num * GameData.gemToScore / 2;
+                    return num * GameData.gemToScore / 4 * 10;
                 else if (num < 20)
-                    return num * GameData.gemToScore;
+                    return num * GameData.gemToScore / 4 * 15;
                 else if (num < 25)
-                    return 2 * num * GameData.gemToScore;
-                else if (num < 30)
-                    return 4 * num * GameData.gemToScore;
-                else return 8 * num * GameData.gemToScore;
+                    return num * GameData.gemToScore / 4 * 22;
+                else return num * GameData.gemToScore * 8;
             }
 
             public GemManager(Map gameMap)  //宝石不能扔过墙

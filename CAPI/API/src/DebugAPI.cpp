@@ -335,6 +335,12 @@ THUAI5::PlaceType DebugAPI::GetPlaceType(int32_t CellX, int32_t CellY) const
     return logic.GetPlaceType(CellX, CellY);
 }
 
+std::array<std::array<THUAI5::PlaceType, 50>, 50> DebugAPI::GetFullMap() const
+{   
+    Out << "Call GetFullMap() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;
+    return logic.GetFullMap();
+}
+
 uint32_t DebugAPI::GetTeamScore() const
 {
     Out << "Call GetTeamScore() at " << Time::TimeSinceStart(StartPoint) << "ms" << std::endl;

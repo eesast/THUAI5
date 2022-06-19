@@ -2,7 +2,7 @@
   "profiles": {
     "Client": {
       "commandName": "Project",
-      "commandLineArgs": "-u --port=7777 --teamID=3330 --characterID=3330 --software=2 --hardware=2"
+      "commandLineArgs": "--cl --playbackFile=E:\\清华\\软件部\\队式\\THUAI5-TCL\\logic\\cmd\\video.thuaipb"
     }
   }
 }

@@ -81,7 +81,7 @@ int thuai5_main(int argc, char** argv, CreateAIFunc AIBuilder)
     std::cout << "server IP: " << sIP.c_str() << std::endl;
     std::cout << "server port: " << sPort << std::endl;
     std::cout << "team ID: " << tID << std::endl;
-    std::cout << "port ID: " << pID << std::endl;
+    std::cout << "player ID: " << pID << std::endl;
     std::cout << "software type: " << THUAI5::software_dict[software] << std::endl;
     std::cout << "hardware type: " << THUAI5::hardware_dict[hardware] << std::endl;
     std::cout << "debug level: " << level << std::endl;

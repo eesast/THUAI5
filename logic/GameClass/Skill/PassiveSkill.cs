@@ -11,8 +11,6 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
     {
         private readonly BulletType initBullet = BulletType.OrdinaryBullet;
         public BulletType InitBullet => initBullet;
-        private const double attackRange = GameData.basicAttackRange / 2;
-        public double AttackRange => attackRange;
         //以上参数以后再改
         public void SkillEffect(Character player)
         {
@@ -20,7 +18,7 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
             int nowHP = player.HP;
             int lastHP = nowHP;
             long waitTime = 0;
-            const long interval = 30000; //每隔interval时间不受伤害，角色即开始回血
+            const long interval = 10000; //每隔interval时间不受伤害，角色即开始回血
             new Thread
             (
                 () =>
@@ -72,8 +70,6 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
     {
         private readonly BulletType initBullet = BulletType.FastBullet;
         public BulletType InitBullet => initBullet;
-        private const double attackRange = GameData.basicAttackRange;
-        public double AttackRange => attackRange;
         //以上参数以后再改
         public void SkillEffect(Character player)
         {
@@ -134,8 +130,6 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
     {
         private readonly BulletType initBullet = BulletType.LineBullet;
         public BulletType InitBullet => initBullet;
-        private const double attackRange = 0.1 * GameData.basicAttackRange;
-        public double AttackRange => attackRange;
         //以上参数以后再改
         public void SkillEffect(Character player)
         {
@@ -148,8 +142,6 @@ namespace GameClass.Skill  //被动技能开局时就释放，持续到游戏结
     {
         private readonly BulletType initBullet = BulletType.OrdinaryBullet;
         public BulletType InitBullet => initBullet;
-        private const double attackRange = GameData.basicAttackRange;
-        public double AttackRange => attackRange;
         //以上参数以后再改
         public void SkillEffect(Character player)
         {

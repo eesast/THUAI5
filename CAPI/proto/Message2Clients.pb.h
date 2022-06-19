@@ -672,6 +672,7 @@ class MessageOfProp final :
     kSizeFieldNumber = 6,
     kGuidFieldNumber = 5,
     kPlaceFieldNumber = 7,
+    kIsMovingFieldNumber = 8,
   };
   // .Protobuf.PropType type = 1;
   void clear_type();
@@ -736,6 +737,15 @@ class MessageOfProp final :
   void _internal_set_place(::Protobuf::PlaceType value);
   public:
 
+  // bool isMoving = 8;
+  void clear_ismoving();
+  bool ismoving() const;
+  void set_ismoving(bool value);
+  private:
+  bool _internal_ismoving() const;
+  void _internal_set_ismoving(bool value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protobuf.MessageOfProp)
  private:
   class _Internal;
@@ -750,6 +760,7 @@ class MessageOfProp final :
   int32_t size_;
   int64_t guid_;
   int place_;
+  bool ismoving_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
 };
@@ -884,6 +895,7 @@ class MessageOfBullet final :
     kYFieldNumber = 3,
     kPlaceFieldNumber = 7,
     kParentTeamIDFieldNumber = 6,
+    kBombRangeFieldNumber = 8,
   };
   // .Protobuf.BulletType type = 1;
   void clear_type();
@@ -948,6 +960,15 @@ class MessageOfBullet final :
   void _internal_set_parentteamid(int64_t value);
   public:
 
+  // double bombRange = 8;
+  void clear_bombrange();
+  double bombrange() const;
+  void set_bombrange(double value);
+  private:
+  double _internal_bombrange() const;
+  void _internal_set_bombrange(double value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protobuf.MessageOfBullet)
  private:
   class _Internal;
@@ -962,6 +983,7 @@ class MessageOfBullet final :
   int32_t y_;
   int place_;
   int64_t parentteamid_;
+  double bombrange_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
 };
@@ -1093,6 +1115,7 @@ class MessageOfBombedBullet final :
     kXFieldNumber = 2,
     kFacingDirectionFieldNumber = 4,
     kMappingIDFieldNumber = 5,
+    kBombRangeFieldNumber = 6,
     kYFieldNumber = 3,
   };
   // .Protobuf.BulletType type = 1;
@@ -1131,6 +1154,15 @@ class MessageOfBombedBullet final :
   void _internal_set_mappingid(int64_t value);
   public:
 
+  // double bombRange = 6;
+  void clear_bombrange();
+  double bombrange() const;
+  void set_bombrange(double value);
+  private:
+  double _internal_bombrange() const;
+  void _internal_set_bombrange(double value);
+  public:
+
   // int32 y = 3;
   void clear_y();
   int32_t y() const;
@@ -1151,6 +1183,7 @@ class MessageOfBombedBullet final :
   int32_t x_;
   double facingdirection_;
   int64_t mappingid_;
+  double bombrange_;
   int32_t y_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Message2Clients_2eproto;
@@ -3025,6 +3058,26 @@ inline void MessageOfProp::set_place(::Protobuf::PlaceType value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfProp.place)
 }
 
+// bool isMoving = 8;
+inline void MessageOfProp::clear_ismoving() {
+  ismoving_ = false;
+}
+inline bool MessageOfProp::_internal_ismoving() const {
+  return ismoving_;
+}
+inline bool MessageOfProp::ismoving() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfProp.isMoving)
+  return _internal_ismoving();
+}
+inline void MessageOfProp::_internal_set_ismoving(bool value) {
+  
+  ismoving_ = value;
+}
+inline void MessageOfProp::set_ismoving(bool value) {
+  _internal_set_ismoving(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfProp.isMoving)
+}
+
 // -------------------------------------------------------------------
 
 // MessageOfBullet
@@ -3169,6 +3222,26 @@ inline void MessageOfBullet::set_place(::Protobuf::PlaceType value) {
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfBullet.place)
 }
 
+// double bombRange = 8;
+inline void MessageOfBullet::clear_bombrange() {
+  bombrange_ = 0;
+}
+inline double MessageOfBullet::_internal_bombrange() const {
+  return bombrange_;
+}
+inline double MessageOfBullet::bombrange() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfBullet.bombRange)
+  return _internal_bombrange();
+}
+inline void MessageOfBullet::_internal_set_bombrange(double value) {
+  
+  bombrange_ = value;
+}
+inline void MessageOfBullet::set_bombrange(double value) {
+  _internal_set_bombrange(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfBullet.bombRange)
+}
+
 // -------------------------------------------------------------------
 
 // MessageOfBombedBullet
@@ -3271,6 +3344,26 @@ inline void MessageOfBombedBullet::_internal_set_mappingid(int64_t value) {
 inline void MessageOfBombedBullet::set_mappingid(int64_t value) {
   _internal_set_mappingid(value);
   // @@protoc_insertion_point(field_set:Protobuf.MessageOfBombedBullet.mappingID)
+}
+
+// double bombRange = 6;
+inline void MessageOfBombedBullet::clear_bombrange() {
+  bombrange_ = 0;
+}
+inline double MessageOfBombedBullet::_internal_bombrange() const {
+  return bombrange_;
+}
+inline double MessageOfBombedBullet::bombrange() const {
+  // @@protoc_insertion_point(field_get:Protobuf.MessageOfBombedBullet.bombRange)
+  return _internal_bombrange();
+}
+inline void MessageOfBombedBullet::_internal_set_bombrange(double value) {
+  
+  bombrange_ = value;
+}
+inline void MessageOfBombedBullet::set_bombrange(double value) {
+  _internal_set_bombrange(value);
+  // @@protoc_insertion_point(field_set:Protobuf.MessageOfBombedBullet.bombRange)
 }
 
 // -------------------------------------------------------------------

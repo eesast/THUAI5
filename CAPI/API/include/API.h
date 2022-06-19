@@ -3,6 +3,8 @@
 #define API_H
 
 #include <string>
+#include <vector>
+#include <array>
 #include <optional>
 #include <fstream>
 #include <Message2Server.pb.h>
@@ -12,9 +14,8 @@
 #include "state.h"
 #include "constants.h"
 
-
 #ifdef _MSC_VER
-#pragma warning(disable:4996)
+#pragma warning(disable : 4996)
 #endif
 
 const constexpr int num_of_grid_per_cell = 1000;
@@ -29,7 +30,7 @@ public:
     /// 向Server端发送信息
     /// </summary>
     /// <returns></returns>
-    virtual bool SendInfo(Protobuf::MessageToServer&) = 0;
+    virtual bool SendInfo(Protobuf::MessageToServer &) = 0;
 
     /// <summary>
     /// Logic中的队友消息队列是否为空
@@ -89,6 +90,12 @@ public:
     virtual THUAI5::PlaceType GetPlaceType(int CellX, int CellY) const = 0;
 
     /// <summary>
+    /// 获取完整地图信息
+    /// </summary>
+    /// <returns></returns>
+    virtual std::array<std::array<THUAI5::PlaceType, 50>, 50> GetFullMap() const = 0;
+
+    /// <summary>
     /// 获取队伍分数
     /// </summary>
     /// <returns></returns>
@@ -106,9 +113,9 @@ public:
 /// </summary>
 class IAPI
 {
-public: 
+public:
     //***********选手可执行的操作***********//
-    
+
     // 移动
 
     // 指挥本角色进行移动，`timeInMilliseconds` 为移动时间，单位为毫秒；`angleInRadian` 表示移动的方向，单位是弧度，使用极坐标——竖直向下方向为 x 轴，水平向右方向为 y 轴
@@ -128,7 +135,7 @@ public:
     virtual bool UseSoftware() = 0;
 
     // 给同队的队友发送消息。`toPlayerID` 指定发送的对象，`message` 指定发送的内容
-    virtual bool Send(int toPlayerID,std::string) = 0;
+    virtual bool Send(int toPlayerID, std::string) = 0;
 
     // 捡起与自己处于同一个格子（cell）的道具。需要指定道具种类
     virtual bool Pick(THUAI5::PropType) = 0;
@@ -140,7 +147,7 @@ public:
     virtual bool UseProp() = 0;
 
     // 扔出手中的CPU
-    virtual bool ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian,uint32_t cpuNum) = 0;
+    virtual bool ThrowCPU(uint32_t timeInMilliseconds, double angleInRadian, uint32_t cpuNum) = 0;
 
     // 使用手中的CPU
     virtual bool UseCPU(uint32_t cpuNum) = 0;
@@ -170,6 +177,9 @@ public:
     // 返回某一位置场地种类信息。注意此处的`CellX`和`CellY`指的是地图格数，而不是绝对坐标
     [[nodiscard]] virtual THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const = 0;
 
+    // 返回全部地图信息
+    [[nodiscard]] virtual std::array<std::array<THUAI5::PlaceType, 50>, 50> GetFullMap() const = 0;
+
     // 获取队伍分数
     [[nodiscard]] virtual uint32_t GetTeamScore() const = 0;
 
@@ -189,7 +199,7 @@ public:
 
     //***********选手可能用到的辅助函数***********//
 
-     // 获取指定格子中心的坐标
+    // 获取指定格子中心的坐标
     [[nodiscard]] static inline int CellToGrid(int cell) noexcept
     {
         return cell * num_of_grid_per_cell + num_of_grid_per_cell / 2;
@@ -202,22 +212,22 @@ public:
     }
 
     //***********构造函数************//
-    IAPI(ILogic& logic) :logic(logic) {}
+    IAPI(ILogic &logic) : logic(logic) {}
 
     //***********析构函数************//
     virtual ~IAPI() {}
 
 protected:
-    ILogic& logic;
+    ILogic &logic;
 };
 
 /// <summary>
 /// 给Logic使用的IAPI接口，至于为什么这样写会在issue中解释
 /// </summary>
-class IAPI_For_Logic :public IAPI
+class IAPI_For_Logic : public IAPI
 {
 public:
-    IAPI_For_Logic(ILogic& logic) :IAPI(logic) {}
+    IAPI_For_Logic(ILogic &logic) : IAPI(logic) {}
     virtual void StartTimer() = 0;
     virtual void EndTimer() = 0;
 };
@@ -225,10 +235,10 @@ public:
 /// <summary>
 /// 一般API
 /// </summary>
-class API final :public IAPI_For_Logic
+class API final : public IAPI_For_Logic
 {
 public:
-    API(ILogic& logic) :IAPI_For_Logic(logic) {}
+    API(ILogic &logic) : IAPI_For_Logic(logic) {}
 
     //***********选手可执行的操作***********//
 
@@ -258,7 +268,7 @@ public:
     bool Wait() override;
 
     //***********选手可获取的信息***********//
-    // 待补充，此处只写了和THUAI4相同的内容
+
     bool MessageAvailable() override;
     std::optional<std::string> TryGetMessage() override;
 
@@ -267,6 +277,7 @@ public:
     std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const override;
     std::shared_ptr<const THUAI5::Robot> GetSelfInfo() const override;
     THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
+    std::array<std::array<THUAI5::PlaceType, 50>, 50> GetFullMap() const override;
 
     void PrintRobots() const override;
     void PrintProps() const override;
@@ -282,10 +293,10 @@ private:
     void EndTimer() override {}
 };
 
-class DebugAPI final :public IAPI_For_Logic
+class DebugAPI final : public IAPI_For_Logic
 {
 public:
-    DebugAPI(ILogic& logic, std::ostream& Out = std::cout, bool ExamineValidity = true) :IAPI_For_Logic(logic), Out(Out), ExamineValidity(ExamineValidity) {}
+    DebugAPI(ILogic &logic, std::ostream &Out = std::cout, bool ExamineValidity = true) : IAPI_For_Logic(logic), Out(Out), ExamineValidity(ExamineValidity) {}
 
     //***********选手可执行的操作***********//
     // 移动
@@ -323,6 +334,7 @@ public:
     std::vector<std::shared_ptr<const THUAI5::SignalJammer>> GetSignalJammers() const override;
     std::shared_ptr<const THUAI5::Robot> GetSelfInfo() const override;
     THUAI5::PlaceType GetPlaceType(int32_t CellX, int32_t CellY) const override;
+    std::array<std::array<THUAI5::PlaceType, 50>, 50> GetFullMap() const override;
 
     uint32_t GetTeamScore() const override;
     const std::vector<int64_t> GetPlayerGUIDs() const override;
@@ -338,10 +350,10 @@ private:
     bool CanUseSoftware(std::shared_ptr<const THUAI5::Robot> &selfInfo);
 
     bool ExamineValidity;
-    std::ostream& Out;
+    std::ostream &Out;
     std::chrono::system_clock::time_point StartPoint; // 记录起始时间
 
-    void StartTimer()override;
+    void StartTimer() override;
     void EndTimer() override;
 };
 

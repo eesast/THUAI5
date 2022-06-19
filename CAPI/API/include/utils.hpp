@@ -198,7 +198,7 @@ PROTO2THUAI_NAMESPACE_BEGIN
         prop->type = _propdict[p.type()];
         prop->x = p.x();
         prop->y = p.y();
-
+        prop->isMoving = p.ismoving();
         return prop;
     }
 

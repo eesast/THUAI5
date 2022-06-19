@@ -170,15 +170,20 @@ THUAI5::PlaceType API::GetPlaceType(int32_t CellX, int32_t CellY) const
     return logic.GetPlaceType(CellX, CellY);
 }
 
+std::array<std::array<THUAI5::PlaceType, 50>, 50> API::GetFullMap() const
+{
+    return logic.GetFullMap();
+}
+
 void API::PrintSignalJammers() const
 {
     std::ios::sync_with_stdio(false);
     std::cout << "******************SignalJammers******************" << std::endl;
     auto jammers = logic.GetSignalJammers();
-    for (int i = 0;i<jammers.size();i++)
+    for (int i = 0; i < jammers.size(); i++)
     {
         std::cout << "SignalJammer " << i << ":" << std::endl;
-        std::cout << "facingDirection: " <<jammers[i]->facingDirection << std::endl
+        std::cout << "facingDirection: " << jammers[i]->facingDirection << std::endl
                   << "guid: " << jammers[i]->guid << std::endl
                   << "parentTeamID: " << jammers[i]->parentTeamID << std::endl
                   << "place: " << THUAI5::place_dict[jammers[i]->place] << std::endl
@@ -194,7 +199,7 @@ void API::PrintRobots() const
     std::ios::sync_with_stdio(false);
     std::cout << "******************Robots******************" << std::endl;
     auto robots = logic.GetRobots();
-    for(int i = 0;i< robots.size();i++)
+    for (int i = 0; i < robots.size(); i++)
     {
         std::cout << "Robot " << i << ":" << std::endl;
         std::cout << "softwareType: " << THUAI5::software_dict[robots[i]->softwareType] << std::endl
@@ -243,7 +248,7 @@ void API::PrintProps() const
     std::ios::sync_with_stdio(false);
     std::cout << "******************Props******************" << std::endl;
     auto props = logic.GetProps();
-    for(int i = 0;i<props.size();i++)
+    for (int i = 0; i < props.size(); i++)
     {
         std::cout << "Prop " << i << ":" << std::endl;
         std::cout << "facingDirection: " << props[i]->facingDirection << std::endl
@@ -304,5 +309,3 @@ void API::PrintSelfInfo() const
     }
     std::cout << "********************************************" << std::endl;
 }
-
-

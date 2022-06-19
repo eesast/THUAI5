@@ -51,6 +51,7 @@ message MessageOfProp
     int64 guid=5;
     int32 size=6;  //宝石大小
     PlaceType place = 7;
+    bool isMoving = 8;
 }
 
 message MessageOfBullet
@@ -62,6 +63,7 @@ message MessageOfBullet
     int64 guid=5;
     int64 parentTeamID=6;
     PlaceType place = 7;
+    double bombRange = 8; 
 }
 
 message MessageOfBombedBullet  //for Unity
@@ -71,6 +73,7 @@ message MessageOfBombedBullet  //for Unity
     int32 y=3;
     double facingDirection=4;
     int64 mappingID=5;
+    double bombRange = 6; 
 }
 
 message MessageOfPickedProp  //for Unity

@@ -4,6 +4,8 @@ THUAI5：清华大学第五届人工智能挑战赛电子系赛道（原电子�
 
 Gitee 镜像仓库地址：[https://gitee.com/eesast/THUAI5](https://gitee.com/eesast/THUAI5)  
 
+GitLink 镜像仓库地址：[https://www.gitlink.org.cn/EESAST/thuai5](https://www.gitlink.org.cn/EESAST/thuai5)
+
 更多内容参见 [THUAI5 Github Wiki](https://github.com/eesast/THUAI5/wiki)  
 
 ## 赛题简介

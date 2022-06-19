@@ -53,16 +53,7 @@ namespace GameClass.GameObj
             get => score;
         }
 
-        private double attackRange;
-        public double AttackRange => attackRange;
-
-        public void SetAttackRange(double range)
-        {
-            lock(gameObjLock)
-            {
-                this.attackRange = range;
-            }
-        }
+        public double AttackRange => BulletFactory.BulletAttackRange(this.BulletOfPlayer);
 
         private double vampire = 0; // 回血率：0-1之间
         public double Vampire
@@ -83,6 +74,7 @@ namespace GameClass.GameObj
         }
         public double OriVampire = 0;
 
+        public readonly BulletType OriBulletOfPlayer;
         private BulletType bulletOfPlayer;
         public BulletType BulletOfPlayer
         {
@@ -455,7 +447,7 @@ namespace GameClass.GameObj
             HP = MaxHp;
             GemNum = 0;
             PropInventory = null;
-
+            BulletOfPlayer = OriBulletOfPlayer;
             lock(gameObjLock)
                 bulletNum = maxBulletNum;
 
