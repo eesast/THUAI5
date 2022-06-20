@@ -18,7 +18,7 @@ namespace Playback
 
     public class MessageReader : IDisposable
     {
-        private FileStream fs;
+        private FileStream? fs;
         private CodedInputStream cos;
         private GZipStream gzs;
         private byte[] buffer;
@@ -123,6 +123,8 @@ namespace Playback
         public void Dispose()
         {
             Finished = true;
+            if (fs == null)
+                return;
             if (fs.CanRead)
             {
                 fs.Close();
