@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace GameClass.GameObj
 {
-    public partial class Character : GameObj, ICharacter	// 负责人LHR摆烂中...
+    public partial class Character : GameObj, ICharacter	// 负责人LHR摆烂终了
     {
         private readonly object beAttackedLock = new();
 
