@@ -6,6 +6,8 @@ Gitee 镜像仓库地址：[https://gitee.com/eesast/THUAI5](https://gitee.com/e
 
 GitLink 镜像仓库地址：[https://www.gitlink.org.cn/EESAST/thuai5](https://www.gitlink.org.cn/EESAST/thuai5)
 
+项目主页：[THUAI5 Project Home Page](https://eesast.github.io/THUAI5)
+
 更多内容参见 [THUAI5 Github Wiki](https://github.com/eesast/THUAI5/wiki)  
 
 ## 赛题简介
