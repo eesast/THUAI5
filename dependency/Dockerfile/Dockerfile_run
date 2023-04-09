@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 Maintainer eesast.com
 WORKDIR /usr/local
 RUN mkdir /usr/local/team1 && mkdir /usr/local/team2 && mkdir /usr/local/playback && mkdir /usr/local/Server
